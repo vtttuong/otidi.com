@@ -1,0 +1,16 @@
+export { FruitsVegetable } from "assets/icons/FruitsVegetable";
+export { FacialCare } from "assets/icons/FacialCare";
+export { Handbag } from "assets/icons/Handbag";
+export { DressIcon } from "assets/icons/DressIcon";
+export { FurnitureIcon } from "assets/icons/FurnitureIcon";
+export { BookIcon } from "assets/icons/BookIcon";
+export { MedicineIcon } from "assets/icons/MedicineIcon";
+export { Restaurant } from "assets/icons/Restaurant";
+export { Vehicle } from "assets/icons/Vehicle";
+export { AccessoriesElec } from "assets/icons/AccessoriesElec";
+export { Techonology } from "assets/icons/Techonology";
+export { Clother } from "assets/icons/Clother";
+export { Decoration } from "assets/icons/Decoration";
+export { Sport } from "assets/icons/Sport";
+export { OtherOffice } from "assets/icons/OtherOffice";
+export { Animal } from "assets/icons/Animal";

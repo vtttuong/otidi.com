@@ -1,0 +1,164 @@
+.wrap-middle-header {
+  display: flex;
+  padding: 15px 0;
+}
+
+.wrap-item-header {
+  font-size: 14px;
+  margin-left: 15px;
+  padding-right: 5px;
+  border-right: 1px solid #e4e4e4;
+  display: flex;
+  width: 130px;
+}
+
+.wrap-item-header .like-icon {
+  color: #ff37b1;
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.wrap-item-header .content-like {
+  padding-top: 2px;
+  margin-left: 5px;
+}
+
+.wrap-end-header {
+  padding: 10px 15px 0px 15px;
+}
+
+.wrap-end-header .type-account {
+  display: flex;
+}
+
+.type-account .icon-check {
+  font-size: 30px;
+  color: "#D0DAE1";
+}
+
+.type-account .text-account {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.wrap-end-header .wrap-action {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0px 20px;
+}
+
+.wrap-action .action-item {
+  height: 28px;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  font-weight: "bold";
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  padding: 5px;
+  font-size: 12px;
+}
+
+.tooltip {
+  /* position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; */
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content, mặc định sẽ được ẩn đi */
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 300px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+}
+
+/* Định dạng các thẻ a là các menu con */
+
+.dropdown-content span {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: flex;
+  cursor: pointer;
+}
+
+.dropdown-content span:hover {
+  background-color: rgb(211, 211, 211);
+}
+
+.dropdown-content span .action-icon {
+  padding-top: 2px;
+}
+
+.dropdown-content span .description {
+  font-size: 13px;
+  color: rgb(78, 78, 78);
+}
+
+.wrap-enter-chat {
+  height: 52px;
+}
+
+.button-edit {
+  background-color: #009e7f !important;
+  text-align: center;
+  padding: 3px 8px;
+  color: white;
+  border: unset;
+  margin-top: 0;
+  height: 28px;
+  width: 100%;
+}
+
+.button-edit:hover {
+  color: white;
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 1440px) {
+  .button-edit {
+    width: 80px;
+  }
+}

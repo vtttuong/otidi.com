@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="158" height="41" viewBox="0 0 158 41">
+  <defs>
+    <clipPath id="clip-Artboard_1">
+      <rect width="158" height="41"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_1" data-name="Artboard – 1" clip-path="url(#clip-Artboard_1)">
+    <rect width="158" height="41" fill="#fff"/>
+    <text id="_2HandApp" data-name="2HandApp" transform="translate(10 31)" fill="#009e7f" font-size="28" font-family="Hatinh-ExtraBold, Hatinh" font-weight="800"><tspan x="0" y="0" fill="#000">2</tspan><tspan y="0" fill="#009e7f" font-family="Vinhan" font-weight="400">HandApp</tspan></text>
+  </g>
+</svg>

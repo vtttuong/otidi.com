@@ -1,0 +1,29 @@
+.carousel-with-custom-dots {
+  padding-bottom: 100px;
+  margin-top: 10px;
+}
+.carousel-with-custom-dots > ul {
+  height: 400px;
+}
+.carousel-with-custom-dots > ul img.product-image {
+  height: 400px !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .carousel-with-custom-dots {
+    padding-bottom: 65px;
+    margin-top: 20px;
+  }
+}
+@media only screen and (max-width: 426px) {
+  .carousel-with-custom-dots > ul {
+    height: 300px;
+  }
+  .carousel-with-custom-dots > ul img.product-image {
+    height: 300px !important;
+  }
+}
+
+.react-multiple-carousel__arrow {
+  z-index: 10;
+}

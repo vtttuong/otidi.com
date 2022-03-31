@@ -1,0 +1,75 @@
+.button-tabs {
+  background-color: white;
+  width: fit-content;
+  border-color: transparent;
+  border-right: 1px solid rgba(231, 231, 231, 0.582);
+  padding: 20px;
+  outline: none;
+  color: black;
+}
+.button-tabs:hover {
+  color: #009e7f;
+  border-bottom: transparent !important;
+  border-color: rgb(228, 228, 228) !important;
+  border-top: 3px solid #009e7f !important;
+  background-color: white;
+  cursor: pointer;
+}
+.button-tabs.active,
+.button-tabs-2:focus,
+.button-tabs-2.active {
+  color: #009e7f !important;
+  border-color: rgb(228, 228, 228) !important;
+  border-bottom: transparent !important;
+  border-top: 3px solid #009e7f !important;
+  background-color: white !important;
+  cursor: pointer;
+}
+.button-tabs-2 {
+  color: black;
+  background-color: white;
+  width: fit-content;
+  border-color: rgb(228, 228, 228);
+  border-right-color: 1px solid rgb(228, 228, 228) !important;
+  padding: 10px;
+  outline: none;
+}
+.button-tabs-2:hover {
+  border-bottom: transparent !important;
+  border-color: rgb(228, 228, 228) !important;
+  background-color: white;
+  color: #009e7f;
+  cursor: pointer;
+}
+
+td {
+  border-bottom: none !important;
+  padding: 10px 10px;
+}
+
+th {
+  border: 1px solid rgb(221, 221, 221) !important;
+  padding: 10px 10px;
+  font-size: 14px;
+}
+
+.form-control {
+  height: 48px;
+  width: 100%;
+}
+select.form-control {
+  height: 35px;
+  width: 150px;
+  margin-right: 10px;
+}
+@keyframes rubberBand {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
