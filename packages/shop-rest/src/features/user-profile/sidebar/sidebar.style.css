@@ -1,0 +1,12 @@
+.div-icon {
+  margin-right: 5px;
+  width: 18px;
+  display: flex;
+  align-self: center;
+}
+
+.row-manage {
+  display: flex;
+  margin-top: 10px;
+  cursor: pointer;
+}

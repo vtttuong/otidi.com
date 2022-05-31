@@ -1,0 +1,41 @@
+{
+  "name": "secondhand-shop",
+  "private": true,
+  "author": "Nguyen",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "clean": "lerna clean --yes && rimraf node_modules",
+    "clean:build": "lerna exec -- rimraf \"{.next,dist,build}\"",
+    "dev:shop-rest": "yarn workspace @secondhand-shop/shop-rest dev",
+    "build:shop": "yarn workspace @secondhand-shop/shop build",
+    "build:shop-rest": "yarn workspace @secondhand-shop/shop-rest build",
+    "dev:admin": "yarn workspace @secondhand-shop/admin dev",
+    "build:admin": "yarn workspace @secondhand-shop/admin build",
+    "serve:admin": "lerna run --parallel serve"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
+    "husky": "^4.2.5",
+    "lerna": "^3.22.0",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,md,css}": [
+      "prettier --trailing-comma es5 --single-quote --write"
+    ]
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "currency-formatter": "^1.5.6"
+  }
+}

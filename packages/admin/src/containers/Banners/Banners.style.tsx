@@ -1,0 +1,53 @@
+import { styled, withStyle } from "baseui";
+import stylede from "styled-components";
+import {
+  StyledTable as BaseStyledTable,
+  StyledHeadCell as BaseStyledHeadCell,
+  StyledBodyCell as BaseStyledCell,
+} from "baseui/table-grid";
+
+export const TableWrapper = styled("div", () => ({
+  width: "100%",
+  height: "450px",
+}));
+
+export const StyledTable = withStyle(BaseStyledTable, () => ({
+  borderTopLeftRadius: "0 !important",
+  borderTopRightRadius: "0 !important",
+  borderBottomLeftRadius: "0 !important",
+  borderBottomRightRadius: "0 !important",
+  alignContent: "start",
+}));
+export const StyledHeadCell = withStyle(BaseStyledHeadCell, () => ({
+  fontFamily: "'Lato', sans-serif",
+  fontWeight: 700,
+  color: "#161F6A !important",
+  alignItems: "center",
+  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+  borderTopColor: "rgba(0, 0, 0, 0.12)",
+  borderRightColor: "rgba(0, 0, 0, 0.12)",
+  borderBottomColor: "rgba(0, 0, 0, 0.12)",
+  borderLeftColor: "rgba(0, 0, 0, 0.12)",
+  alignSelf: "start",
+}));
+
+export const StyledBodyCell = withStyle(BaseStyledCell, () => ({
+  fontFamily: "'Lato', sans-serif",
+  fontWeight: 400,
+  color: "#161F6A !important",
+  alignSelf: "center",
+}));
+export const ButtonDel = stylede.button`
+  background: #e25757;
+  text-decoration: dashed;
+  color: #fff;
+  padding: 13px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: 0;
+  min-width: 86px;
+  cursor: pointer;
+  &.deleted{
+    background: #009e7f;
+  },
+`;

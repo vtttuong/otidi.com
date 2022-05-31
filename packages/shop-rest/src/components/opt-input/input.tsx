@@ -1,0 +1,104 @@
+import Notice from "components/notice/notice";
+import Router from "next/router";
+import React from "react";
+import { FormattedMessage } from "react-intl";
+import OtpInput from "react-otp-input";
+import { sendOtp } from "utils/api/profile";
+import { getCookie, setCookie } from "utils/session";
+import { Button, Container, Wrapper } from "./index.style";
+
+type Props = {
+  token?: string;
+};
+const OTPInput: React.FC<Props> = ({ token }) => {
+  const [values, setValue] = React.useState("");
+  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [errorContent, setErrorC] = React.useState("");
+  const [success, setSuccess] = React.useState(false);
+  const [loadingClear, setLoadingClear] = React.useState(false);
+
+  const onSubmit = async () => {
+    setLoadingSubmit(true);
+    if (values.length === 6) {
+      const object = {
+        phone_number: getCookie("verify-phone"),
+        verify_code: values,
+      };
+      const data = await sendOtp(object, token);
+      if (!data.error) {
+        setSuccess(true);
+        setLoadingSubmit(false);
+        setCookie("phone_verified_at", new Date());
+        setTimeout(() => {
+          Router.push("/post");
+          return;
+        }, 1000);
+      } else {
+        if (data.error.phone_number) {
+          setErrorC(data.error.phone_number[0]);
+          setError(true);
+        }
+        setLoadingSubmit(false);
+        setTimeout(() => {
+          setError(false);
+          return;
+        }, 2000);
+      }
+    } else {
+      setError(true);
+      setLoadingSubmit(false);
+      setTimeout(() => {
+        setError(false);
+        return;
+      }, 2000);
+    }
+  };
+  setTimeout(() => {
+    setValue("");
+  }, 60000);
+  const onClear = () => {
+    setValue("");
+  };
+  return (
+    <>
+      <div className="box-otp">
+        <OtpInput
+          value={values}
+          onChange={(otp) => setValue(otp)}
+          numInputs={6}
+          separator={<span>--</span>}
+        />
+        {error ? (
+          <p style={{ color: "red", marginTop: 20 }}>
+            {errorContent || " Vui lòng thử lại, có lỗi xảy ra !"}
+          </p>
+        ) : null}
+      </div>
+      <div className="box-button">
+        <Button
+          variant="primary"
+          size="big"
+          style={{ width: "30%" }}
+          loading={loadingClear}
+          onClick={() => onClear()}
+        >
+          <FormattedMessage id="clear" defaultMessage="Clear" />
+        </Button>
+        <Button
+          variant="primary"
+          size="big"
+          style={{ width: "30%" }}
+          loading={loadingSubmit}
+          onClick={() => onSubmit()}
+        >
+          <FormattedMessage id="verify" defaultMessage="Verify" />
+        </Button>
+        {success ? (
+          <Notice status="success" content="Verified success !" />
+        ) : null}
+      </div>
+    </>
+  );
+};
+export default OTPInput;
