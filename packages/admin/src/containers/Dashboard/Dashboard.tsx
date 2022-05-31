@@ -4,6 +4,7 @@ import PostByYear from "feature/dashboard-postByYear";
 import PostClassifyByYear from "feature/dashboard-postClassifyByYear";
 import PostsDay from "feature/dashboard-postDay";
 import RevenueDay from "feature/dashboard-revenueDay";
+import RevenueTotal from "feature/dashboard-revenueTotal";
 import RevenueYear from "feature/dashboard-revenueYear";
 import UserPhase from "feature/dashboard-userPhase";
 import UserTop from "feature/dashboard-userTop";
@@ -113,8 +114,8 @@ const AllTab = stylede.div`
   `;
 
 const Dashboard = () => {
-
   const [year, setYear] = useState(2020);
+  console.log("RENDER DASHBOARD");
 
   return (
     <Grid fluid={true}>
@@ -127,24 +128,24 @@ const Dashboard = () => {
           </TabList>
 
           <TabPanel>
-            {/* <RevenueTotal/> */}
+            <RevenueTotal />
             <RevenueYear />
-            <RevenueDay />
-            {/* <RevenueCats/> */}
+            {/* <RevenueDay /> */}
+            {/* <RevenueCats /> */}
           </TabPanel>
 
           <TabPanel>
             <PostByYear year={year} setYear={setYear} />
-            <PostClassifyByYear year={year} setYear={setYear} />
+            {/* <PostClassifyByYear year={year} setYear={setYear} />
             <PostsDay />
-            <PostByCats />
+            <PostByCats /> */}
           </TabPanel>
-
+          {/* 
           <TabPanel>
             <UserYear />
             <UserPhase />
             <UserTop />
-          </TabPanel>
+          </TabPanel> */}
         </Tabs>
       </AllTab>
     </Grid>

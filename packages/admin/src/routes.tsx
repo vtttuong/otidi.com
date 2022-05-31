@@ -76,7 +76,10 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={POSTS}>
+          <Route path={LOGIN}>
+            <Login />
+          </Route>
+          {/* <PrivateRoute path={POSTS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Posts />
@@ -153,10 +156,7 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <Route path={LOGIN}>
-            <Login />
-          </Route>
-          <Route component={NotFound} />
+        <Route component={NotFound} /> */}
         </Switch>
       </Suspense>
     </AuthProvider>

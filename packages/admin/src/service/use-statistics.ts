@@ -7,7 +7,7 @@ export async function getRevenueStatisticsByYear(year, userId = null) {
     year: year,
     user_id: userId,
   };
-console.log(userId)
+  console.log(userId);
   let newParams = {};
   // eslint-disable-next-line array-callback-return
   Object.keys(queryParams).map((key) => {
@@ -24,8 +24,7 @@ console.log(userId)
     { sort: false }
   );
 
-  let url = `${baseUrl}/api/admin/v1/statistics/revenue/total?` + parsed;
-console.log(url)
+  let url = `${baseUrl}/api/admin/v1/statistics/revenue?type=1y&` + parsed;
   const options = {
     method: "GET",
     headers: {
@@ -33,19 +32,22 @@ console.log(url)
       "Content-Type": "application/json",
     },
   };
-  const res = await fetch(url,options);
+  const res = await fetch(url, options);
   return Object.values(await res.json());
 }
 
 export async function getCategories() {
-    const options = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-    const res = await fetch(`${baseUrl}/api/v1/categories/type?locale=en`, options);
-    return Object.values(await res.json());
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const res = await fetch(
+    `${baseUrl}/api/v1/categories/type?locale=en`,
+    options
+  );
+  return Object.values(await res.json());
 }
 
 export async function getRevenueStatisticsDaily(from, to) {
@@ -100,6 +102,7 @@ export async function getPostStatisticsByYear(
   isPriority = null
 ) {
   let queryParams = {
+    type: "1y",
     is_sold: isSold,
     is_priority: isPriority,
     year: year,
@@ -121,7 +124,7 @@ export async function getPostStatisticsByYear(
     { sort: false }
   );
 
-  let url = baseUrl + "/api/admin/v1/statistics/posts/total?" + parsed;
+  let url = baseUrl + "/api/admin/v1/statistics/post?" + parsed;
 
   const options = {
     method: "GET",
@@ -134,10 +137,7 @@ export async function getPostStatisticsByYear(
   return Object.values(await res.json());
 }
 
-export async function getPostStatisticsByTypeInYear(
-  year,
-  type,
-) {
+export async function getPostStatisticsByTypeInYear(year, type) {
   let queryParams = {
     type: type,
     year: year,
@@ -159,7 +159,8 @@ export async function getPostStatisticsByTypeInYear(
     { sort: false }
   );
 
-  let url = baseUrl + "/api/admin/v1/statistics/posts/daily/classify-by-type?" + parsed;
+  let url =
+    baseUrl + "/api/admin/v1/statistics/posts/daily/classify-by-type?" + parsed;
 
   const options = {
     method: "GET",
@@ -253,7 +254,6 @@ export async function getUserStage(from, to) {
   );
   return await res.json();
 }
-
 
 export async function getTopUser() {
   const options = {
