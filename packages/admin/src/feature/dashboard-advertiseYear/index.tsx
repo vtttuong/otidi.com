@@ -1,11 +1,9 @@
 import { useStyletron, withStyle } from "baseui";
 import { Col as Column, Row } from "components/FlexBox/FlexBox";
-import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import ColumnChart from "components/Widgets/ColumnChart/ColumnChart";
+import React, { useState, useEffect } from "react";
+import { getAdvertiseStatisticsByYear } from "service/use-statistics";
 import Select from "components/Select/Select";
-import ColumnChart from "components/Widgets/ColumnChart/MultipleColumnChart";
-import React, { useEffect, useState } from "react";
-import "react-tabs/style/react-tabs.css";
-import { getPostStatisticsByYear } from "service/use-statistics";
 
 const Col = withStyle(Column, () => ({
   "@media only screen and (max-width: 574px)": {
@@ -17,8 +15,7 @@ const Col = withStyle(Column, () => ({
   },
 }));
 
-const PostByYear = ({ ...props }) => {
-  const { year, setYear } = props;
+const AdvertiseYear = ({ ...props }) => {
   const [css] = useStyletron();
   const mb30 = css({
     "@media only screen and (max-width: 990px)": {
@@ -26,11 +23,9 @@ const PostByYear = ({ ...props }) => {
     },
   });
 
-  const [postTotal, setPostTotal] = useState([]);
-  const [postSold, setPostSold] = useState([]);
-  const [postPriority, setPostPriority] = useState([]);
   const [yearOption, setYearOption] = useState([]);
-  // const [year, setYear] = useState(2020);
+  const [year, setYear] = useState(2020);
+  const [advertiseTotal, setAdvertiseTotal] = useState([]);
 
   function handleYear({ value }) {
     setYearOption(value);
@@ -43,12 +38,8 @@ const PostByYear = ({ ...props }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const postTotal = await getPostStatisticsByYear(year, 0, 0);
-      const postSold = await getPostStatisticsByYear(year, 1, 0);
-      const postPriority = await getPostStatisticsByYear(year, 0, 1);
-      setPostTotal(postTotal);
-      setPostSold(postSold);
-      setPostPriority(postPriority);
+      const data = await getAdvertiseStatisticsByYear(year);
+      setAdvertiseTotal(data);
     };
     fetchData();
   }, [year]);
@@ -57,18 +48,6 @@ const PostByYear = ({ ...props }) => {
 
   for (let i = 2010; i <= 2021; i++) {
     years.push({ value: i, label: i.toString() });
-  }
-
-  if (postTotal.length === 0) {
-    return (
-      <div className="box-relative-no">
-        <div className="load-wrapp">
-          <div className="load-1">
-            <InLineLoader />
-          </div>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -90,10 +69,14 @@ const PostByYear = ({ ...props }) => {
         </div>
 
         <ColumnChart
-          widgetTitle={`Total Post (${year === new Date().getFullYear() ? "This year" : year})`}
-          colors={["#03D3B5"]}
-          series={[postTotal, postSold, postPriority]}
-          textCol={["Total", "Sold", "Priority"]}
+          widgetTitle={`Total Advertise (${
+            year === new Date().getFullYear() ? "This year" : year
+          })`}
+          colors={["#008ffb"]}
+          totalValue={parseInt(
+            advertiseTotal.reduce((a, b) => a + b, 0)
+          ).toLocaleString()}
+          series={advertiseTotal}
           categories={[
             "January",
             "February",
@@ -114,4 +97,4 @@ const PostByYear = ({ ...props }) => {
   );
 };
 
-export default PostByYear;
+export default AdvertiseYear;

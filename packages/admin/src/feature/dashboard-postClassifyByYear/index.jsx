@@ -17,7 +17,7 @@ const Col = withStyle(Column, () => ({
 }));
 
 const PostClassifyByYear = ({ ...props }) => {
-    const { year } = props; 
+    const { year } = props;
     const [css] = useStyletron();
     const mb30 = css({
         "@media only screen and (max-width: 990px)": {

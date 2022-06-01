@@ -25,7 +25,6 @@ const AuthProvider = (props: any) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
       },
       body: JSON.stringify({
         username: username,
@@ -67,7 +66,7 @@ const AuthProvider = (props: any) => {
       },
     };
     const res = await fetch(
-      process.env.REACT_APP_LARAVEL_API_URL + "/api/admin/v1/me/logout",
+      process.env.REACT_APP_LARAVEL_API_URL_ADMIN + "/me/logout",
       options
     );
 
