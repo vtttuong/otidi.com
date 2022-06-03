@@ -1,5 +1,5 @@
-import { useCreateContext } from "./create-context";
-import { ANCHOR } from "components/Drawer/Drawer";
+import {useCreateContext} from "./create-context";
+import {ANCHOR} from "components/Drawer/Drawer";
 
 const initialState = {
   isOpen: false,
@@ -12,7 +12,7 @@ const initialState = {
   createdVoucher: null,
   updatedVoucher: null,
   dataLength: null,
-  createdCategory: null,
+  savedBrand: null,
   maxId: null,
   createdUser: null,
 };
@@ -27,7 +27,7 @@ function reducer(state: State, action: Action) {
         drawerComponent: action.drawerComponent,
         anchor: action.anchor ? action.anchor : ANCHOR.right,
         data: action.data,
-        maxId: action.maxId
+        maxId: action.maxId,
       };
     case "CLOSE_DRAWER":
       return {
@@ -50,7 +50,7 @@ function reducer(state: State, action: Action) {
       return {
         ...state,
         dataLength: action.data,
-      };  
+      };
     case "SAVE_DELETED_ID":
       return {
         ...state,
@@ -66,16 +66,16 @@ function reducer(state: State, action: Action) {
         ...state,
         updatedVoucher: action.data,
       };
-    case "SAVE_CREATED_CATEGORY":
+    case "SAVE_SAVED_BRAND":
       return {
         ...state,
-        createdCategory: action.data,
+        savedBrand: action.data,
       };
     case "SAVE_CREATED_USER":
       return {
         ...state,
         userCreated: action.data,
-      };         
+      };
     default:
       return state;
   }
@@ -85,4 +85,4 @@ const [useDrawerState, useDrawerDispatch, DrawerProvider] = useCreateContext(
   reducer
 );
 
-export { useDrawerState, useDrawerDispatch, DrawerProvider };
+export {useDrawerState, useDrawerDispatch, DrawerProvider};

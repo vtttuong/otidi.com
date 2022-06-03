@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
-import { styled } from "baseui";
+import React, {useCallback} from "react";
+import {styled} from "baseui";
 import Drawer from "components/Drawer/Drawer";
-import { CloseIcon } from "assets/icons/CloseIcon";
-import { useDrawerState, useDrawerDispatch } from "context/DrawerContext";
+import {CloseIcon} from "assets/icons/CloseIcon";
+import {useDrawerState, useDrawerDispatch} from "context/DrawerContext";
 
 /** Drawer Components */
 import ProductForm from "../ProductForm/ProductForm";
@@ -17,7 +17,8 @@ import CreateFaqForm from "../CreateFaq/CreateFaq";
 import UpdateFaqForm from "../UpdateFaq/UpdateFaq";
 import CreateBannerForm from "../CreateBanner/CreateBanner";
 import UpdateBannerForm from "../BannerDetail/BannerDetail";
-import CategoryForm from "../CategoryForm/CategoryForm";
+// import CategoryForm from "../CategoryForm/CategoryForm";
+import BrandForm from "containers/BrandForm/BrandForm";
 import StaffMemberForm from "../StaffMemberForm/StaffMemberForm";
 import Sidebar from "../Layout/Sidebar/Sidebar";
 import RevenueByUser from "../StatisticRevenueUser/StatisticRevenueUser";
@@ -35,13 +36,13 @@ const DRAWER_COMPONENTS = {
   UPDATEFAQ_FORM: UpdateFaqForm,
   CREATEBANNER_FORM: CreateBannerForm,
   UPDATEBANNER_FORM: UpdateBannerForm,
-  CATEGORY_FORM: CategoryForm,
+  BRAND_FORM: BrandForm,
   STAFF_MEMBER_FORM: StaffMemberForm,
   SIDEBAR: Sidebar,
   REVENUE_USER_DETAIL: RevenueByUser,
 };
 
-const CloseButton = styled("button", ({ $theme }) => ({
+const CloseButton = styled("button", ({$theme}) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.textNormal,
   lineHeight: 1.2,
@@ -74,7 +75,7 @@ export default function DrawerItems() {
   const drawerComponent = useDrawerState("drawerComponent");
   const data = useDrawerState("data");
   const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
+  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
     dispatch,
   ]);
   if (!drawerComponent) {
@@ -114,8 +115,9 @@ export default function DrawerItems() {
         },
         DrawerContainer: {
           style: {
-            height: drawerComponent === 'REVENUE_USER_DETAIL' ? "85vh" : "100vh",
-            width: drawerComponent === 'REVENUE_USER_DETAIL' ? "100vw" : "70vw",
+            height:
+              drawerComponent === "REVENUE_USER_DETAIL" ? "85vh" : "100vh",
+            width: drawerComponent === "REVENUE_USER_DETAIL" ? "100vw" : "70vw",
             backgroundColor: "#f7f7f7",
             "@media only screen and (max-width: 767px)": {
               width: "100%",
