@@ -1,4 +1,4 @@
-import { Grid } from "components/FlexBox/FlexBox";
+import {Grid} from "components/FlexBox/FlexBox";
 import AdvertiseYear from "feature/dashboard-advertiseYear";
 import PostByCats from "feature/dashboard-postByCats";
 import PostByYear from "feature/dashboard-postByYear";
@@ -10,8 +10,8 @@ import RevenueYear from "feature/dashboard-revenueYear";
 import UserPhase from "feature/dashboard-userPhase";
 import UserTop from "feature/dashboard-userTop";
 import UserYear from "feature/dashboard-userYear";
-import React, { useState } from "react";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import React, {useState} from "react";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import stylede from "styled-components";
 
@@ -116,7 +116,6 @@ const AllTab = stylede.div`
 
 const Dashboard = () => {
   const [year, setYear] = useState(2020);
-  console.log("RENDER DASHBOARD");
 
   return (
     <Grid fluid={true}>

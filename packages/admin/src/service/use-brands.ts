@@ -185,3 +185,18 @@ export async function addCategory(data) {
   const cats = await fetch(`${baseUrl}/api/admin/v1/categories`, options);
   return cats.json();
 }
+
+export async function getBrands() {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const brands = await fetch(`${baseUrl}/brands`, options);
+  const brandsJson = await brands.json();
+
+  return brandsJson?.data;
+}
