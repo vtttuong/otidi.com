@@ -1,15 +1,15 @@
-import Button, { KIND } from "components/Button/Button";
+import Button, {KIND} from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import { Col, Row } from "components/FlexBox/FlexBox";
-import { FormFields, FormLabel } from "components/FormFields/FormFields";
+import {Col, Row} from "components/FlexBox/FlexBox";
+import {FormFields, FormLabel} from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
-import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
-import React, { useCallback, useState } from "react";
-import { useAlert } from "react-alert";
-import { Scrollbars } from "react-custom-scrollbars";
+import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import React, {useCallback, useState} from "react";
+import {useAlert} from "react-alert";
+import {Scrollbars} from "react-custom-scrollbars";
 import DropdownTreeSelect from "react-dropdown-tree-select";
-import { useForm } from "react-hook-form";
-import { addCategory } from "service/use-category";
+import {useForm} from "react-hook-form";
+import {addCategory} from "service/use-category";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -25,10 +25,10 @@ const AddCategory: React.FC<Props> = (props) => {
   const data = useDrawerState("data");
   const alert = useAlert();
   const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
+  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
     dispatch,
   ]);
-  const { register, handleSubmit } = useForm();
+  const {register, handleSubmit} = useForm();
   const [loading, setLoading] = useState(false);
   var pId = null;
   const onChange = (currentNode) => {
@@ -72,16 +72,16 @@ const AddCategory: React.FC<Props> = (props) => {
         <DrawerTitle>Add Category</DrawerTitle>
       </DrawerTitleWrapper>
 
-      <Form onSubmit={handleSubmit(onSubmit)} style={{ height: "100%" }}>
+      <Form onSubmit={handleSubmit(onSubmit)} style={{height: "100%"}}>
         <Scrollbars
           autoHide
           renderView={(props) => (
-            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
+            <div {...props} style={{...props.style, overflowX: "hidden"}} />
           )}
           renderTrackHorizontal={(props) => (
             <div
               {...props}
-              style={{ display: "none" }}
+              style={{display: "none"}}
               className="track-horizontal"
             />
           )}
@@ -110,21 +110,21 @@ const AddCategory: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Title En</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({required: true, maxLength: 20})}
                     name="title_en"
                   />
                 </FormFields>
                 <FormFields>
                   <FormLabel>Title Vi</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({required: true, maxLength: 20})}
                     name="title_vi"
                   />
                 </FormFields>
                 <FormFields>
                   <FormLabel>Icon</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({required: true, maxLength: 20})}
                     name="icon"
                   />
                 </FormFields>
@@ -139,7 +139,7 @@ const AddCategory: React.FC<Props> = (props) => {
             onClick={closeDrawer}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: ({$theme}) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
@@ -159,7 +159,7 @@ const AddCategory: React.FC<Props> = (props) => {
             isLoading={loading}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: ({$theme}) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",

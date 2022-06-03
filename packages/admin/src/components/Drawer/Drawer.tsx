@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
-import { Drawer, SIZE, ANCHOR } from 'baseui/drawer';
+import React, {Fragment} from "react";
+import {Drawer, SIZE, ANCHOR} from "baseui/drawer";
 
-const BWDrawer = ({ children, ...props }: any) => {
+const BWDrawer = ({children, ...props}: any) => {
   return (
     <Fragment>
       <Drawer {...props}>{children}</Drawer>
@@ -9,5 +9,5 @@ const BWDrawer = ({ children, ...props }: any) => {
   );
 };
 
-export { SIZE, ANCHOR };
+export {SIZE, ANCHOR};
 export default BWDrawer;
