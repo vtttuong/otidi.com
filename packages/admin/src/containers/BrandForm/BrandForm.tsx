@@ -51,7 +51,8 @@ const AddBrand: React.FC<Props> = (props) => {
   const handleAddModelInput = () => {
     if (
       models.length === 0 ||
-      Object.keys(models[models.length - 1]).length !== 0
+      (Object.keys(models[models.length - 1]).length !== 0 &&
+        models[models.length - 1].name.trim().length !== 0)
     ) {
       setModels((prev) => [...prev, {}]);
     }
@@ -73,6 +74,9 @@ const AddBrand: React.FC<Props> = (props) => {
       const existsModel = models[index];
       let newModels = [...prev];
       newModels[index] = {...existsModel, name: value};
+
+      console.log("After change: ", newModels);
+
       return newModels;
     });
   };
@@ -84,14 +88,17 @@ const AddBrand: React.FC<Props> = (props) => {
       ...data,
       name: formData.name,
       logo: formData.logo,
-      models: models,
+      models: models.filter((model) => model.name.trim().length !== 0),
     };
+
     const datas = brand.id ? await updateBrand(brand) : await addBrand(brand);
 
+    console.log(datas);
+
     if (!datas.success) {
-      const result = datas.error;
-      const keys = Object.values(result);
-      keys.map((i) => alert.error(i));
+      const result = datas.result;
+      alert.error(result);
+      setLoading(false);
     } else {
       dispatch({
         type: "SAVE_SAVED_BRAND",

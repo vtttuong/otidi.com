@@ -1,8 +1,8 @@
-import { useStyletron, withStyle } from "baseui";
-import { Col as Column, Row } from "components/FlexBox/FlexBox";
+import {useStyletron, withStyle} from "baseui";
+import {Col as Column, Row} from "components/FlexBox/FlexBox";
 import ColumnChart from "components/Widgets/ColumnChart/ColumnChart";
-import React, { useState, useEffect } from "react";
-import { getAdvertiseStatisticsByYear } from "service/use-statistics";
+import React, {useState, useEffect} from "react";
+import {getAdvertiseStatisticsByYear} from "service/use-statistics";
 import Select from "components/Select/Select";
 
 const Col = withStyle(Column, () => ({
@@ -15,7 +15,7 @@ const Col = withStyle(Column, () => ({
   },
 }));
 
-const AdvertiseYear = ({ ...props }) => {
+const AdvertiseYear = ({...props}) => {
   const [css] = useStyletron();
   const mb30 = css({
     "@media only screen and (max-width: 990px)": {
@@ -27,7 +27,7 @@ const AdvertiseYear = ({ ...props }) => {
   const [year, setYear] = useState(2020);
   const [advertiseTotal, setAdvertiseTotal] = useState([]);
 
-  function handleYear({ value }) {
+  function handleYear({value}) {
     setYearOption(value);
     if (value.length === 0) {
       setYear(2020);
@@ -37,22 +37,24 @@ const AdvertiseYear = ({ ...props }) => {
   }
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       const data = await getAdvertiseStatisticsByYear(year);
-      setAdvertiseTotal(data);
+      if (isMounted) setAdvertiseTotal(data);
     };
     fetchData();
+    return () => (isMounted = false);
   }, [year]);
 
   const years = [];
 
   for (let i = 2010; i <= 2021; i++) {
-    years.push({ value: i, label: i.toString() });
+    years.push({value: i, label: i.toString()});
   }
 
   return (
     <Row
-      style={{ marginTop: 20, marginBottom: 20 }}
+      style={{marginTop: 20, marginBottom: 20}}
       className="style-select-absolute"
     >
       <Col md={12} lg={12} className={mb30}>
