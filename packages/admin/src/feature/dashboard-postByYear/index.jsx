@@ -42,15 +42,19 @@ const PostByYear = ({ ...props }) => {
   }
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       const postTotal = await getPostStatisticsByYear(year, 0, 0);
       const postSold = await getPostStatisticsByYear(year, 1, 0);
       const postPriority = await getPostStatisticsByYear(year, 0, 1);
-      setPostTotal(postTotal);
-      setPostSold(postSold);
-      setPostPriority(postPriority);
+      if (isMounted) {
+        setPostTotal(postTotal);
+        setPostSold(postSold);
+        setPostPriority(postPriority);
+      }
     };
     fetchData();
+    return () => isMounted = false;
   }, [year]);
 
   const years = [];

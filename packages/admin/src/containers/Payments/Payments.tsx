@@ -8,13 +8,17 @@ import {Wrapper, Header, Heading} from "components/Wrapper.style";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import usePayments from "service/use-payment";
 import NoResult from "components/NoResult/NoResult";
+import moment from "moment";
+import DateRangePicker from "@wojtekmaj/react-daterange-picker";
+import "react-tabs/style/react-tabs.css";
 
 import {
   TableWrapper,
   StyledTable,
   StyledHeadCell,
   StyledCell,
-} from "./Orders.style";
+  DateRangePickerWrapper,
+} from "./Payments.style";
 
 type CustomThemeT = {red400: string; textNormal: string; colors: any};
 const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
@@ -58,16 +62,16 @@ const Row = withStyle(Rows, () => ({
 }));
 
 const statusSelectOptions = [
-  {value: "success", label: "Success"},
-  {value: "failed", label: "Failed"},
-];
-const limitSelectOptions = [
-  {value: 7, label: "Last 7 orders"},
-  {value: 15, label: "Last 15 orders"},
-  {value: 30, label: "Last 30 orders"},
+  {value: "authorized", label: "Authorized"},
+  {value: "captured", label: "Capture"},
 ];
 
-export default function Orders() {
+const sortSelectOptions = [
+  {value: "asc", label: "Amount ascending"},
+  {value: "desc", label: "Amount descending"},
+];
+
+export default function Payments() {
   const [useCss, theme] = themedUseStyletron();
   const success = useCss({
     ":before": {
@@ -82,15 +86,23 @@ export default function Orders() {
     },
   });
   const [statusOptions, setStatusOptions] = useState([]);
-  const [dayAgoOptions, setDayAgoOptions] = useState([]);
+  const [sortOptions, setSortOptions] = useState([]);
+
+  const [dateRange, setDateRange] = useState(null);
 
   const [status, setStatus] = useState("");
-  const [dayAgo, setDayAgo] = useState(30);
-  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
 
-  const {data} = usePayments({});
+  const {data} = usePayments({
+    from: dateRange ? moment(dateRange[0]).format("YYYY-MM-DD") : "",
+    to: dateRange ? moment(dateRange[1]).format("YYYY-MM-DD") : "",
+    status: status,
+    sort: sort,
+  });
 
-  useEffect(() => {}, [status, dayAgo]);
+  console.log(data);
+
+  useEffect(() => {}, [status, sort]);
 
   function handleStatus({value}) {
     setStatusOptions(value);
@@ -101,39 +113,18 @@ export default function Orders() {
     }
   }
 
-  function handleLimit({value}) {
-    setDayAgoOptions(value);
+  function handleSort({value}) {
+    setSortOptions(value);
     if (value.length) {
-      setDayAgo(value[0].value);
+      setSort(value[0].value);
     } else {
-      setDayAgo(value);
+      setSort("");
     }
   }
-  function handleSearch(event) {
-    const {value} = event.currentTarget;
-    setSearch(value);
-    // refetch({ searchText: value });
-  }
+  const onDateChange = (value) => {
+    setDateRange(value);
+  };
 
-  const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
-
-  const ImageWrapper = styled("div", ({$theme}) => ({
-    width: "38px",
-    height: "38px",
-    overflow: "hidden",
-    display: "inline-block",
-    borderTopLeftRadius: "20px",
-    borderTopRightRadius: "20px",
-    borderBottomRightRadius: "20px",
-    borderBottomLeftRadius: "20px",
-    backgroundColor: $theme.colors.backgroundF7,
-  }));
-
-  const Image = styled("img", () => ({
-    width: "100%",
-    height: "auto",
-  }));
-  console.log(data);
   return (
     <Grid fluid={true}>
       <Row>
@@ -144,13 +135,17 @@ export default function Orders() {
               boxShadow: "0 0 8px rgba(0, 0 ,0, 0.1)",
             }}
           >
-            <Col md={3} xs={12}>
+            <Col md={2} xs={12}>
               <Heading>Payments</Heading>
             </Col>
 
-            <Col md={9} xs={12}>
-              <Row>
-                <Col md={3} xs={12}>
+            <Col md={10} xs={12}>
+              <Row
+                style={{
+                  rowGap: "10px",
+                }}
+              >
+                <Col lg={3} xs={12}>
                   <Select
                     options={statusSelectOptions}
                     labelKey="label"
@@ -162,25 +157,27 @@ export default function Orders() {
                   />
                 </Col>
 
-                <Col md={3} xs={12}>
+                <Col lg={3} xs={12}>
                   <Select
-                    options={limitSelectOptions}
+                    options={sortSelectOptions}
                     labelKey="label"
                     valueKey="value"
-                    value={dayAgoOptions}
-                    placeholder="Limits"
+                    value={sortOptions}
+                    placeholder="Sort by amount"
                     searchable={false}
-                    onChange={handleLimit}
+                    onChange={handleSort}
                   />
                 </Col>
 
-                <Col md={6} xs={12}>
-                  <Input
-                    value={search}
-                    placeholder="Ex: Search By User"
-                    onChange={handleSearch}
-                    clearable
-                  />
+                <Col lg={6} xs={12} className="style-select-absolute">
+                  <div className="style-select-absolute-child select-year">
+                    <DateRangePickerWrapper className="daterange-picker">
+                      <DateRangePicker
+                        onChange={onDateChange}
+                        value={dateRange}
+                      />
+                    </DateRangePickerWrapper>
+                  </div>
                 </Col>
               </Row>
             </Col>
@@ -188,49 +185,46 @@ export default function Orders() {
 
           <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(150px, auto) minmax(150px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
+              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(120px,120px) minmax(150px, auto) minmax(150px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
                 <StyledHeadCell>ID</StyledHeadCell>
-                <StyledHeadCell>Image</StyledHeadCell>
-                <StyledHeadCell>Customer Name</StyledHeadCell>
-                <StyledHeadCell>Time</StyledHeadCell>
-                <StyledHeadCell>Delivery Address</StyledHeadCell>
-                <StyledHeadCell>Amount</StyledHeadCell>
-                <StyledHeadCell>Payment Method</StyledHeadCell>
-                <StyledHeadCell>Contact</StyledHeadCell>
+                <StyledHeadCell>User Name</StyledHeadCell>
+                <StyledHeadCell>Order ID</StyledHeadCell>
+                <StyledHeadCell>Order Info</StyledHeadCell>
                 <StyledHeadCell>Status</StyledHeadCell>
-                <StyledHeadCell>Message</StyledHeadCell>
+                <StyledHeadCell>Amount</StyledHeadCell>
+                <StyledHeadCell>Created At</StyledHeadCell>
+                <StyledHeadCell>Updated At</StyledHeadCell>
+                <StyledHeadCell>Contact</StyledHeadCell>
+
+                {/* "id": 2,
+      "user_id": 1,
+      "request_id": "625fdf33248d0",
+      "amount": "50000",
+      "order_id": "625fdf3315020",
+      "order_info": "Register subscription",
+      "status": "authorized",
+      "voucher_id": null,
+      "created_at": "2022-04-20T03:23:47.000000Z",
+      "updated_at": "2022-04-20T03:23:47.000000Z" */}
 
                 {data ? (
                   data.length !== 0 ? (
                     data.map((item) => (
                       <React.Fragment key={item.id}>
                         <StyledCell>{item.id}</StyledCell>
+                        <StyledCell>{item["user_id"]}</StyledCell>
+                        <StyledCell>{item["order_id"]}</StyledCell>
+                        <StyledCell>{item["order_info"]}</StyledCell>
+                        <StyledCell>{item["status"]}</StyledCell>
+                        <StyledCell>{item["amount"]}</StyledCell>
+                        <StyledCell>{item["status"]}</StyledCell>
                         <StyledCell>
-                          <ImageWrapper>
-                            <Image
-                              src={urlServer + item.user?.avatar_url}
-                              alt={"avatar"}
-                            />
-                          </ImageWrapper>
-                        </StyledCell>
-                        <StyledCell>{item.user.name}</StyledCell>
-                        <StyledCell>
-                          {dayjs(item.created_at).format("DD MMM YYYY")}
-                        </StyledCell>
-                        <StyledCell>{item.order_info}</StyledCell>
-                        <StyledCell>{item.amount}</StyledCell>
-                        <StyledCell>{item.amount}</StyledCell>
-                        <StyledCell>{item.order_info}</StyledCell>
-                        <StyledCell style={{justifyContent: "center"}}>
-                          <Status
-                            className={item.error_code === 0 ? success : failed}
-                          >
-                            {item.error_code === 0 ? "Success" : "Failed"}
-                          </Status>
+                          {dayjs(item["created_at"]).format("DD MMM YYYY")}
                         </StyledCell>
                         <StyledCell>
-                          {item.message || "Error connect"}
+                          {dayjs(item["updated_at"]).format("DD MMM YYYY")}
                         </StyledCell>
+                        <StyledCell>{item.email || ""}</StyledCell>
                       </React.Fragment>
                     ))
                   ) : (

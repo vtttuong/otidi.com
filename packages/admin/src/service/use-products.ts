@@ -80,7 +80,6 @@ export default function useProducts(variables: Props) {
   );
 
   let url = baseUrl + "/posts?" + parsed;
-  console.log(url);
 
   const {data, mutate, error} = useSWR(url, productFetcher);
 

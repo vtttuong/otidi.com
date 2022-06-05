@@ -1,12 +1,12 @@
-import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 import { Refund } from "assets/icons/Refund";
 import { Revenue } from "assets/icons/Revenue";
 import { withStyle } from "baseui";
 import { Col as Column, Row } from "components/FlexBox/FlexBox";
 import DonutChart from "components/Widgets/DonutChart/DonutChart";
 import GraphChart from "components/Widgets/GraphChart/GraphChart";
-import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
+import moment from "moment";
+import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 import "react-tabs/style/react-tabs.css";
 import {
   getRevenueStatisticsDaily,

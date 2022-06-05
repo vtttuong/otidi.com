@@ -38,11 +38,13 @@ const RevenueYear = ({ ...props }) => {
   }
 
   useEffect(() => {
+    let isMounted = true;               // note mutable flag
     const fetchData = async () => {
       const data = await getRevenueStatisticsByYear(year);
-      setRevenueTotal(data);
+      if (isMounted) setRevenueTotal(data);
     };
     fetchData();
+    return () => { isMounted = false }
   }, [year]);
 
   const years = [];
