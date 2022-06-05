@@ -1,15 +1,15 @@
-import { Plus } from "assets/icons/Plus";
-import { withStyle } from "baseui";
+import {Plus} from "assets/icons/Plus";
+import {withStyle} from "baseui";
 import Button from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
-import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
-import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
+import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
-import { Header, Heading, Wrapper } from "components/Wrapper.style";
-import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
-import React, { useCallback, useEffect, useState } from "react";
+import {Header, Heading, Wrapper} from "components/Wrapper.style";
+import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import React, {useCallback, useEffect, useState} from "react";
 import useCategories, {
   useCategoriesRoot,
   usePlanCategories,
@@ -38,8 +38,8 @@ const Row = withStyle(Rows, () => ({
 }));
 
 const localeOptions = [
-  { value: "en", label: "EN" },
-  { value: "vi", label: "VI" },
+  {value: "en", label: "EN"},
+  {value: "vi", label: "VI"},
 ];
 
 export default function Category() {
@@ -50,19 +50,17 @@ export default function Category() {
   const [search, setSearch] = useState("");
   const dispatch = useDrawerDispatch();
   const [checkedId, setCheckedId] = useState([]);
-  const { dataRoot } = useCategoriesRoot({
+  const {dataRoot} = useCategoriesRoot({
     locale: locale,
   });
 
-  const createdCategory = useDrawerState("createdCategory");
-
-  const { data, maxId } = usePlanCategories({
+  const {data, maxId} = usePlanCategories({
     locale: locale,
     parent_id: parentId !== "" ? parentId : null,
     text: search ? search : "",
   });
 
-  const { dataTree } = useCategories({
+  const {dataTree} = useCategories({
     locale: "en",
   });
 
@@ -78,17 +76,12 @@ export default function Category() {
     [dataTree, dispatch]
   );
 
-  useEffect(() => {
-    if (createdCategory) {
-    }
-  }, [createdCategory]);
-
   function handleSearch(event) {
     const value = event.currentTarget.value;
     setSearch(value);
   }
 
-  function handleFilterCategory({ value }) {
+  function handleFilterCategory({value}) {
     setCategoryOption(value);
 
     if (value.length) {
@@ -98,7 +91,7 @@ export default function Category() {
     }
   }
 
-  function handleFilterLocale({ value }) {
+  function handleFilterLocale({value}) {
     setLocaleOption(value);
 
     if (value.length) {
@@ -109,7 +102,7 @@ export default function Category() {
   }
 
   function handleCheckbox(event) {
-    const { name } = event.currentTarget;
+    const {name} = event.currentTarget;
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
     } else {
@@ -194,7 +187,7 @@ export default function Category() {
             </Col>
           </Header>
 
-          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
+          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
             <TableWrapper>
               <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(80px, 80px) minmax(150px, auto) minmax(150px, auto) ">
                 <StyledHeadCell>Check</StyledHeadCell>

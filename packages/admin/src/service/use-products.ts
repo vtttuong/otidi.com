@@ -2,7 +2,8 @@ import Fuse from "fuse.js";
 import useSWR from "swr";
 // import { useState } from 'react';
 const queryString = require("query-string");
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
+
 const options = {
   isCaseSensitive: false,
   // includeScore: false,
@@ -40,7 +41,7 @@ interface Props {
   status?: string;
   categoryType?: string;
   text?: any;
-  category?: any;
+  brand?: any;
   offset?: number;
   page?: any;
   limit?: number;
@@ -50,21 +51,13 @@ interface Props {
   isExpired?: boolean;
 }
 export default function useProducts(variables: Props) {
-  const {
-    postType,
-    status,
-    categoryType,
-    text,
-    dir,
-    isSold,
-    isPriority,
-    isExpired,
-  } = variables ?? {};
+  const {postType, status, brand, text, dir, isSold, isPriority, isExpired} =
+    variables ?? {};
 
   let queryParams = {
     dir: dir,
     status: status,
-    category_type: categoryType,
+    brand: brand,
     type: postType,
     is_sold: isSold ? 1 : 0,
     is_priority: isPriority ? 1 : 0,
@@ -83,12 +76,13 @@ export default function useProducts(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
-  let url = baseUrl + "/api/admin/v1/posts?" + parsed;
+  let url = baseUrl + "/posts?" + parsed;
+  console.log(url);
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
   // need to remove when you using real API integration
@@ -117,10 +111,11 @@ export default function useProducts(variables: Props) {
   // ],
   // need to implement fetchMore
   // const hasMore = posts?.length > localOffset + localLimit;
+
   return {
     loading,
     error,
-    data: posts,
+    data: posts?.data,
     // hasMore,
     mutate,
     // fetchMore,

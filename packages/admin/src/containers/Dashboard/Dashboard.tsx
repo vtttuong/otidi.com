@@ -1,15 +1,17 @@
-import { Grid } from "components/FlexBox/FlexBox";
+import {Grid} from "components/FlexBox/FlexBox";
+import AdvertiseYear from "feature/dashboard-advertiseYear";
 import PostByCats from "feature/dashboard-postByCats";
 import PostByYear from "feature/dashboard-postByYear";
 import PostClassifyByYear from "feature/dashboard-postClassifyByYear";
 import PostsDay from "feature/dashboard-postDay";
 import RevenueDay from "feature/dashboard-revenueDay";
+import RevenueTotal from "feature/dashboard-revenueTotal";
 import RevenueYear from "feature/dashboard-revenueYear";
 import UserPhase from "feature/dashboard-userPhase";
 import UserTop from "feature/dashboard-userTop";
 import UserYear from "feature/dashboard-userYear";
-import React, { useState } from "react";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import React, {useState} from "react";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import stylede from "styled-components";
 
@@ -113,7 +115,6 @@ const AllTab = stylede.div`
   `;
 
 const Dashboard = () => {
-
   const [year, setYear] = useState(2020);
 
   return (
@@ -123,28 +124,32 @@ const Dashboard = () => {
           <TabList>
             <Tab>Revenue</Tab>
             <Tab>Posts</Tab>
-            <Tab>Users</Tab>
+            <Tab>Advertise</Tab>
           </TabList>
 
           <TabPanel>
-            {/* <RevenueTotal/> */}
+            <RevenueTotal />
             <RevenueYear />
-            <RevenueDay />
-            {/* <RevenueCats/> */}
+            {/* <RevenueDay /> */}
+            {/* <RevenueCats /> */}
           </TabPanel>
 
           <TabPanel>
             <PostByYear year={year} setYear={setYear} />
-            <PostClassifyByYear year={year} setYear={setYear} />
-            <PostsDay />
-            <PostByCats />
+            {/* <PostClassifyByYear year={year} setYear={setYear} /> */}
+            {/* <PostsDay /> */}
+            {/* <PostByCats /> */}
           </TabPanel>
 
           <TabPanel>
+            <AdvertiseYear />
+          </TabPanel>
+
+          {/* <TabPanel>
             <UserYear />
             <UserPhase />
-            <UserTop />
-          </TabPanel>
+             <UserTop />
+          </TabPanel> */}
         </Tabs>
       </AllTab>
     </Grid>

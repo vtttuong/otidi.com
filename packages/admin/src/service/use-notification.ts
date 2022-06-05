@@ -56,10 +56,12 @@ export async function handleMapperNotification(noti) {
   return notification;
 }
 
-export async function getNotifications(page, limit) {
+export async function getNotifications(page, count) {
   let queryParams = {
-    limit: limit,
+    count: count,
     page: page,
+    order_by: "created_at",
+    dir: "desc",
   };
 
   let newParams = {};
@@ -95,9 +97,9 @@ export async function getNotifications(page, limit) {
     return null;
   }
 
-  let notiList = await res.json();
+  let responseJson = await res.json();
 
-  await notiList.map(async function (noti) {
+  await responseJson.data.map(async function (noti) {
     const notification = await handleMapperNotification(noti);
     notifications.push(notification);
   });

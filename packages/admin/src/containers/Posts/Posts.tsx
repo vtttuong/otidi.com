@@ -1,18 +1,19 @@
-import { styled, withStyle } from "baseui";
-import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
+import {styled, withStyle} from "baseui";
+import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Placeholder from "components/Placeholder/Placeholder";
 import ProductCard from "components/ProductCard/ProductCard";
 import Select from "components/Select/Select";
-import { Header } from "components/Wrapper.style";
-import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
-import React, { useState } from "react";
+import {Header} from "components/Wrapper.style";
+import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import React, {useState} from "react";
 import Fade from "react-reveal/Fade";
-import { CURRENCY } from "settings/constants";
+import {getBrands} from "service/use-brands";
+import {CURRENCY} from "settings/constants";
 import useProducts from "../../service/use-products";
 
-export const ProductsRow = styled("div", ({ $theme }) => ({
+export const ProductsRow = styled("div", ({$theme}) => ({
   display: "flex",
   flexWrap: "wrap",
   marginTop: "25px",
@@ -60,33 +61,24 @@ export const LoaderItem = styled("div", () => ({
   marginBottom: "30px",
 }));
 
-const categoryTypeSelectOptions = [
-  { value: "vehicle", label: "Vehicle" },
-  { value: "electronic", label: "Electronic" },
-  { value: "technology", label: "Technology Equipment" },
-  { value: "fashion", label: "Fashion" },
-  { value: "sport_relax", label: "Sport & Relax" },
-  { value: "office", label: "Office" },
-  { value: "others", label: "Others" },
-];
 const productStatusSelectOptions = [
-  { value: "active", label: "Active" },
-  { value: "approving", label: "Waiting approve" },
-  { value: "reported", label: "Reported" },
-  { value: "expired", label: "Expired" },
-  { value: "isSold", label: "Sold" },
-  { value: "isPriority", label: "Priority" },
-  { value: "deactive", label: "Blocked" },
+  {value: "active", label: "Active"},
+  {value: "approving", label: "Waiting approve"},
+  {value: "reported", label: "Reported"},
+  {value: "expired", label: "Expired"},
+  {value: "isSold", label: "Sold"},
+  {value: "isPriority", label: "Priority"},
+  {value: "deactive", label: "Blocked"},
 ];
 
 const sortSelectOptions = [
-  { value: "lasted", label: "Lasted" },
-  { value: "oldest", label: "Oldest" },
+  {value: "lasted", label: "Lasted"},
+  {value: "oldest", label: "Oldest"},
 ];
 
 const typeSelectOptions = [
-  { value: "sell", label: "Sell" },
-  { value: "buy", label: "Buy" },
+  {value: "sell", label: "Sell"},
+  {value: "buy", label: "Buy"},
 ];
 
 type ProductsProps = {
@@ -95,15 +87,17 @@ type ProductsProps = {
   type?: string;
 };
 export default function Posts() {
+  const [brandSelectOptions, setBrandsSelectOptions] = useState([]);
+
   const [postStatusOption, setPostStatusOption] = useState({});
-  const [categoryTypeOption, setCategoryTypeOption] = useState({});
+  const [brandOption, setBrandOption] = useState({});
   const [sortByOption, setSortByOption] = useState({});
   const [postTypeOption, setPostTypeOption] = useState({});
 
   const [search, setSearch] = useState("");
   const [postType, setPostType] = useState("");
   const [postStatus, setPostStatus] = useState("");
-  const [categoryType, setCategoryType] = useState("");
+  const [brand, setBrand] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [isSoldType, setIsSoldType] = useState(false);
   const [isPriorityType, setIsPriorityType] = useState(false);
@@ -112,18 +106,30 @@ export default function Posts() {
   const approvePostId = useDrawerState("approvedPostId");
   const dispatch = useDrawerDispatch();
 
-  const { data, error } = useProducts({
+  const {data, error} = useProducts({
     postType: postType,
     status: postStatus,
     text: search ? search : "",
     dir: sortBy === "lasted" ? "desc" : "asc",
-    categoryType: categoryType,
+    brand: brand,
     isSold: isSoldType,
     isPriority: isPriorityType,
     isExpired: isExpired,
   });
 
   let posts = data;
+
+  React.useEffect(() => {
+    const fetchBrands = async () => {
+      const brands = await getBrands();
+      const options = brands.map((brand) => ({
+        value: brand.id + "",
+        label: brand.name,
+      }));
+      setBrandsSelectOptions(options);
+    };
+    fetchBrands();
+  }, []);
 
   React.useEffect(() => {
     if (approvePostId != null) {
@@ -141,7 +147,7 @@ export default function Posts() {
     postStatus,
     search,
     sortBy,
-    categoryType,
+    brand,
     isSoldType,
     isPriorityType,
     isExpired,
@@ -151,7 +157,7 @@ export default function Posts() {
     return <div>Error! {error.message}</div>;
   }
 
-  function handleSort({ value }) {
+  function handleSort({value}) {
     setSortByOption(value);
 
     if (value.length === 0) {
@@ -160,16 +166,16 @@ export default function Posts() {
       setSortBy(value[0].value);
     }
   }
-  function handleCategoryType({ value }) {
-    setCategoryTypeOption(value);
+  function handleBrand({value}) {
+    setBrandOption(value);
 
     if (value.length === 0) {
-      setCategoryType("");
+      setBrand("");
     } else {
-      setCategoryType(value[0].value);
+      setBrand(value[0].value);
     }
   }
-  function handlePostStatus({ value }) {
+  function handlePostStatus({value}) {
     setPostStatusOption(value);
 
     if (value.length === 0) {
@@ -194,7 +200,7 @@ export default function Posts() {
     setSearch(value);
   }
 
-  function handlePostType({ value }) {
+  function handlePostType({value}) {
     setPostTypeOption(value);
 
     if (value.length === 0) {
@@ -208,7 +214,7 @@ export default function Posts() {
     <Grid fluid={true}>
       <Row>
         <Col md={12}>
-          <Header style={{ marginBottom: 15 }}>
+          <Header style={{marginBottom: 15}}>
             <Col md={12} xs={12}>
               <Row>
                 <Col md={4} xs={12}>
@@ -245,13 +251,13 @@ export default function Posts() {
                 </Col>
                 <Col md={2} xs={12}>
                   <Select
-                    options={categoryTypeSelectOptions}
+                    options={brandSelectOptions}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Category"
-                    value={categoryTypeOption}
+                    placeholder="Brand"
+                    value={brandOption}
                     searchable={false}
-                    onChange={handleCategoryType}
+                    onChange={handleBrand}
                   />
                 </Col>
 
@@ -280,7 +286,7 @@ export default function Posts() {
                     sm={6}
                     xs={12}
                     key={index}
-                    style={{ margin: "15px 0" }}
+                    style={{margin: "15px 0"}}
                   >
                     <Fade bottom duration={800} delay={index * 10}>
                       <ProductCard

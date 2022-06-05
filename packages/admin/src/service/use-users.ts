@@ -1,4 +1,4 @@
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
 
 export async function getUsers() {
@@ -9,7 +9,7 @@ export async function getUsers() {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/api/admin/v1/users`, options);
+  const users = await fetch(`${baseUrl}/users`, options);
 
   return await users.json();
 }
@@ -27,7 +27,7 @@ export async function createUser(email, name, password) {
       password: password,
     }),
   };
-  const users = await fetch(`${baseUrl}/api/admin/v1/users`, options);
+  const users = await fetch(`${baseUrl}/users`, options);
 
   return await users.json();
 }
@@ -40,10 +40,7 @@ export async function getUsersType(id) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(
-    `${baseUrl}/api/admin/v1/users?level=${id}`,
-    options
-  );
+  const users = await fetch(`${baseUrl}/users?level=${id}`, options);
 
   return await users.json();
 }
@@ -56,10 +53,7 @@ export async function deleteUser(id: number) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(
-    `${baseUrl}/api/admin/v1/users/block/${id}`,
-    options
-  );
+  const users = await fetch(`${baseUrl}/users/block/${id}`, options);
   if (users.status === 200) {
     return { status: true };
   }
@@ -73,10 +67,7 @@ export async function unDeleteUser(id: number) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(
-    `${baseUrl}/api/admin/v1/users/unblock/${id}`,
-    options
-  );
+  const users = await fetch(`${baseUrl}/users/unblock/${id}`, options);
   if (users.status === 200) {
     return { status: true };
   }
@@ -91,10 +82,7 @@ export async function verifyId(id: number) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(
-    `${baseUrl}/api/admin/v1/users/identify/confirm/${id}`,
-    options
-  );
+  const users = await fetch(`${baseUrl}/users/identify/confirm/${id}`, options);
   console.log(users);
   return users;
 }

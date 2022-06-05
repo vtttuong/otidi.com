@@ -14,6 +14,8 @@ export const TASKS = "/tasks";
 export const SETTINGS = "/settings";
 export const STAFF_MEMBERS = "/staff-members";
 export const SITE_SETTINGS = "/site-settings";
+export const BRANDS = "/brands";
+
 // **************** ROUTE CONSTANT END **************************
 
 export const CURRENCY = "$";
