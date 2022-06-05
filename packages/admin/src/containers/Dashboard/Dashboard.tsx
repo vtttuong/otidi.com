@@ -1,4 +1,5 @@
 import { Grid } from "components/FlexBox/FlexBox";
+import AdvertiseYear from "feature/dashboard-advertiseYear";
 import PostByCats from "feature/dashboard-postByCats";
 import PostByYear from "feature/dashboard-postByYear";
 import PostClassifyByYear from "feature/dashboard-postClassifyByYear";
@@ -124,7 +125,7 @@ const Dashboard = () => {
           <TabList>
             <Tab>Revenue</Tab>
             <Tab>Posts</Tab>
-            <Tab>Users</Tab>
+            <Tab>Advertise</Tab>
           </TabList>
 
           <TabPanel>
@@ -136,15 +137,19 @@ const Dashboard = () => {
 
           <TabPanel>
             <PostByYear year={year} setYear={setYear} />
-            {/* <PostClassifyByYear year={year} setYear={setYear} />
-            <PostsDay />
-            <PostByCats /> */}
+            {/* <PostClassifyByYear year={year} setYear={setYear} /> */}
+            {/* <PostsDay /> */}
+            {/* <PostByCats /> */}
           </TabPanel>
-          {/* 
+
           <TabPanel>
+            <AdvertiseYear />
+          </TabPanel>
+
+          {/* <TabPanel>
             <UserYear />
             <UserPhase />
-            <UserTop />
+             <UserTop />
           </TabPanel> */}
         </Tabs>
       </AllTab>

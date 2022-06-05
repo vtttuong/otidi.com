@@ -70,11 +70,7 @@ const RevenueYear = ({ ...props }) => {
         </div>
 
         <ColumnChart
-          widgetTitle={
-            props.type === "post"
-              ? "Total Posts (this year )"
-              : "Total Revenue (this year )"
-          }
+          widgetTitle={`Total revenue (${year === new Date().getFullYear() ? "This year" : year})`}
           colors={["#03D3B5"]}
           totalValue={parseInt(
             revenueTotal.reduce((a, b) => a + b, 0)

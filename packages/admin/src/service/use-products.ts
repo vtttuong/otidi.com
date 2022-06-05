@@ -2,7 +2,8 @@ import Fuse from "fuse.js";
 import useSWR from "swr";
 // import { useState } from 'react';
 const queryString = require("query-string");
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
+
 const options = {
   isCaseSensitive: false,
   // includeScore: false,
@@ -86,7 +87,7 @@ export default function useProducts(variables: Props) {
     { sort: false }
   );
 
-  let url = baseUrl + "/api/admin/v1/posts?" + parsed;
+  let url = baseUrl + "/posts?" + parsed;
 
   const { data, mutate, error } = useSWR(url, productFetcher);
 
@@ -117,10 +118,11 @@ export default function useProducts(variables: Props) {
   // ],
   // need to implement fetchMore
   // const hasMore = posts?.length > localOffset + localLimit;
+
   return {
     loading,
     error,
-    data: posts,
+    data: posts?.data,
     // hasMore,
     mutate,
     // fetchMore,
