@@ -1,18 +1,18 @@
 {
-  "name": "otody",
+  "name": "secondhand-shop",
   "private": true,
-  "author": "Haitech",
+  "author": "Nguyen",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "clean": "lerna clean --yes && rimraf node_modules",
     "clean:build": "lerna exec -- rimraf \"{.next,dist,build}\"",
-    "dev:shop-rest": "yarn workspace @otody/shop-rest dev",
-    "build:shop": "yarn workspace @otody/shop build",
-    "build:shop-rest": "yarn workspace @otody/shop-rest build",
-    "dev:admin": "yarn workspace @otody/admin dev",
-    "build:admin": "yarn workspace @otody/admin build",
+    "dev:shop-rest": "yarn workspace @secondhand-shop/shop-rest dev",
+    "build:shop": "yarn workspace @secondhand-shop/shop build",
+    "build:shop-rest": "yarn workspace @secondhand-shop/shop-rest build",
+    "dev:admin": "yarn workspace @secondhand-shop/admin dev",
+    "build:admin": "yarn workspace @secondhand-shop/admin build",
     "serve:admin": "lerna run --parallel serve"
   },
   "devDependencies": {
