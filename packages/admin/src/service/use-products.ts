@@ -41,7 +41,7 @@ interface Props {
   status?: string;
   categoryType?: string;
   text?: any;
-  category?: any;
+  brand?: any;
   offset?: number;
   page?: any;
   limit?: number;
@@ -51,21 +51,13 @@ interface Props {
   isExpired?: boolean;
 }
 export default function useProducts(variables: Props) {
-  const {
-    postType,
-    status,
-    categoryType,
-    text,
-    dir,
-    isSold,
-    isPriority,
-    isExpired,
-  } = variables ?? {};
+  const {postType, status, brand, text, dir, isSold, isPriority, isExpired} =
+    variables ?? {};
 
   let queryParams = {
     dir: dir,
     status: status,
-    category_type: categoryType,
+    brand: brand,
     type: postType,
     is_sold: isSold ? 1 : 0,
     is_priority: isPriority ? 1 : 0,
@@ -84,12 +76,13 @@ export default function useProducts(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
   let url = baseUrl + "/posts?" + parsed;
+  console.log(url);
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
   // need to remove when you using real API integration

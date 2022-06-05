@@ -1,5 +1,5 @@
-import React, { useContext, lazy, Suspense } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import React, {useContext, lazy, Suspense} from "react";
+import {Route, Switch, Redirect} from "react-router-dom";
 import {
   LOGIN,
   POSTS,
@@ -14,9 +14,10 @@ import {
   TASKS,
   STAFF_MEMBERS,
   SITE_SETTINGS,
+  BRANDS,
 } from "settings/constants";
-import AuthProvider, { AuthContext } from "context/auth";
-import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import AuthProvider, {AuthContext} from "context/auth";
+import {InLineLoader} from "components/InlineLoader/InlineLoader";
 const Posts = lazy(() => import("containers/Posts/Posts"));
 const AdminLayout = lazy(() => import("containers/Layout/Layout"));
 const Dashboard = lazy(() => import("containers/Dashboard/Dashboard"));
@@ -42,20 +43,20 @@ const NotFound = lazy(() => import("containers/NotFound/NotFound"));
  *
  */
 
-function PrivateRoute({ children, ...rest }) {
-  const { isAuthenticated } = useContext(AuthContext);
+function PrivateRoute({children, ...rest}) {
+  const {isAuthenticated} = useContext(AuthContext);
 
   return (
     <Route
       {...rest}
-      render={({ location }) =>
+      render={({location}) =>
         isAuthenticated ? (
           children
         ) : (
           <Redirect
             to={{
               pathname: "/login",
-              state: { from: location },
+              state: {from: location},
             }}
           />
         )
@@ -86,14 +87,15 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          {/* <PrivateRoute path={CATEGORY}>
+          <PrivateRoute path={BRANDS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Category />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={ORDERS}>
+
+          {/* <PrivateRoute path={ORDERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Orders />
