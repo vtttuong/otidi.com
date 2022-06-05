@@ -130,7 +130,7 @@ const Dashboard = () => {
           <TabPanel>
             <RevenueTotal />
             <RevenueYear />
-            {/* <RevenueDay /> */}
+            <RevenueDay />
             {/* <RevenueCats /> */}
           </TabPanel>
 

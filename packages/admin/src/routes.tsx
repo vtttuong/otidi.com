@@ -18,7 +18,8 @@ import {
 } from "settings/constants";
 import AuthProvider, {AuthContext} from "context/auth";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
-import Brand from "containers/Brand/Brand";
+import Brands from "containers/Brand/Brand";
+import Payments from "containers/Payments/Payments";
 const Posts = lazy(() => import("containers/Posts/Posts"));
 const AdminLayout = lazy(() => import("containers/Layout/Layout"));
 const Dashboard = lazy(() => import("containers/Dashboard/Dashboard"));
@@ -91,19 +92,20 @@ const Routes = () => {
           <PrivateRoute path={BRANDS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Brand />
+                <Brands />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
 
-          {/* <PrivateRoute path={ORDERS}>
+          <PrivateRoute path={ORDERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Orders />
+                <Payments />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={CUSTOMERS}>
+
+          {/* <PrivateRoute path={CUSTOMERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Customers />
