@@ -74,9 +74,6 @@ const AddBrand: React.FC<Props> = (props) => {
       const existsModel = models[index];
       let newModels = [...prev];
       newModels[index] = {...existsModel, name: value};
-
-      console.log("After change: ", newModels);
-
       return newModels;
     });
   };
@@ -92,8 +89,6 @@ const AddBrand: React.FC<Props> = (props) => {
     };
 
     const datas = brand.id ? await updateBrand(brand) : await addBrand(brand);
-
-    console.log(datas);
 
     if (!datas.success) {
       const result = datas.result;
