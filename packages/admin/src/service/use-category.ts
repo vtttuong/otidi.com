@@ -43,7 +43,7 @@ interface Props {
 }
 
 export function usePlanCategories(variables: Props) {
-  const { locale, parent_id, text } = variables ?? {};
+  const {locale, parent_id, text} = variables ?? {};
 
   let queryParams = {
     locale: locale,
@@ -62,12 +62,12 @@ export function usePlanCategories(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
   let url = baseUrl + "/api/admin/v1/categories/plane/tree?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
 
@@ -87,7 +87,7 @@ export function usePlanCategories(variables: Props) {
 }
 
 export function useCategoriesRoot(variables: Props) {
-  const { locale } = variables ?? {};
+  const {locale} = variables ?? {};
 
   let queryParams = {
     locale: locale,
@@ -105,12 +105,12 @@ export function useCategoriesRoot(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
   let url = baseUrl + "/api/admin/v1/categories?only_root=1&" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
 
@@ -136,7 +136,7 @@ export function useCategoriesRoot(variables: Props) {
 }
 
 export default function useCategories(variables: Props) {
-  const { locale } = variables ?? {};
+  const {locale} = variables ?? {};
 
   let queryParams = {
     locale: locale,
@@ -154,12 +154,12 @@ export default function useCategories(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
   let url = baseUrl + "/api/admin/v1/categories?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
 

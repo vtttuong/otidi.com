@@ -17,8 +17,8 @@ const options = {
   // useExtendedSearch: false,
   // ignoreLocation: false,
   // ignoreFieldNorm: false,
-  minMatchCharLength: 2,
-  keys: ["label", "slug"],
+  // minMatchCharLength: 2,
+  keys: ["label", "name"],
 };
 function search(list, pattern) {
   const fuse = new Fuse(list, options);
@@ -27,8 +27,8 @@ function search(list, pattern) {
 }
 // import productFetcher from 'utils/api/product';
 const token = localStorage.getItem("secondhand_token");
-const productFetcher = (url) =>
-  fetch(url, {
+const productFetcher = async (url) =>
+  await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -37,18 +37,13 @@ const productFetcher = (url) =>
   }).then((res) => res.json());
 interface Props {
   locale?: string;
-  type?: string;
   text?: string;
-  parent_id?: any;
 }
 
-export function usePlanCategories(variables: Props) {
-  const { locale, parent_id, text } = variables ?? {};
+export default function useBrands(variables: Props) {
+  const {text} = variables ?? {};
 
-  let queryParams = {
-    locale: locale,
-    parent_id: parent_id,
-  };
+  let queryParams = {};
 
   let newParams = {};
   // eslint-disable-next-line array-callback-return
@@ -62,127 +57,58 @@ export function usePlanCategories(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
-  let url = baseUrl + "/api/admin/v1/categories/plane/tree?" + parsed;
+  let url = baseUrl + "/brands?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
 
-  let categories = data;
+  let brands = data && data.data;
 
-  if (text) {
-    categories = search(categories, text);
+  if (text && text.trim().length !== 0) {
+    brands = search(brands, text.trim());
   }
 
   return {
     loading,
     error,
-    data: categories,
-    maxId: categories ? categories[0]?.id : null,
+    data: brands,
     mutate,
   };
 }
 
-export function useCategoriesRoot(variables: Props) {
-  const { locale } = variables ?? {};
-
-  let queryParams = {
-    locale: locale,
-  };
-
-  let newParams = {};
-  // eslint-disable-next-line array-callback-return
-  Object.keys(queryParams).map((key) => {
-    if (typeof queryParams[key] !== "undefined" && queryParams[key] !== "") {
-      newParams[key] = queryParams[key];
-    }
+export async function addBrand(brand) {
+  var formdata = new FormData();
+  formdata.append("name", brand.name);
+  formdata.append("logo", brand.logo[0]);
+  brand.models.map((model, idx) => {
+    formdata.append(`models[${idx}][name]`, model.name);
   });
 
-  const parsed = queryString.stringify(
-    {
-      ...newParams,
-    },
-    { sort: false }
-  );
-
-  let url = baseUrl + "/api/admin/v1/categories?only_root=1&" + parsed;
-
-  const { data, mutate, error } = useSWR(url, productFetcher);
-
-  const loading = !data && !error;
-
-  let categories = [];
-
-  if (data) {
-    // eslint-disable-next-line array-callback-return
-    data.map((item) => {
-      categories.push({
-        value: item.value,
-        label: item.label,
-        id: item.id,
-      });
-    });
-  }
-
-  return {
-    loading,
-    error,
-    dataRoot: categories,
-    mutate,
-  };
-}
-
-export default function useCategories(variables: Props) {
-  const { locale } = variables ?? {};
-
-  let queryParams = {
-    locale: locale,
-  };
-
-  let newParams = {};
-  // eslint-disable-next-line array-callback-return
-  Object.keys(queryParams).map((key) => {
-    if (typeof queryParams[key] !== "undefined" && queryParams[key] !== "") {
-      newParams[key] = queryParams[key];
-    }
-  });
-
-  const parsed = queryString.stringify(
-    {
-      ...newParams,
-    },
-    { sort: false }
-  );
-
-  let url = baseUrl + "/api/admin/v1/categories?" + parsed;
-
-  const { data, mutate, error } = useSWR(url, productFetcher);
-
-  const loading = !data && !error;
-
-  let categories = data;
-
-  return {
-    loading,
-    error,
-    dataTree: categories,
-    mutate,
-  };
-}
-
-export async function addCategory(data) {
   const options = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    body: formdata,
+  };
+  const brands = await fetch(`${baseUrl}/brands`, options);
+  return brands.json();
+}
+
+export async function updateBrand(brand) {
+  const options = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(brand),
   };
-  const cats = await fetch(`${baseUrl}/api/admin/v1/categories`, options);
+  const cats = await fetch(`${baseUrl}/brands/${brand.id}`, options);
   return cats.json();
 }
 
