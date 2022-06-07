@@ -1,5 +1,5 @@
 import React from "react";
-import { getUsers, getUsersType } from "service/use-users";
+import {getUsers, getUsersType} from "service/use-users";
 import Fuse from "fuse.js";
 import UpdateContext from "./updateContext";
 const options = {
@@ -41,7 +41,10 @@ const UpdateProvider = (props) => {
   };
 
   const getUser = async () => {
-    const users = await getUsers();
+    const response = await getUsers();
+    const users = response.data;
+    console.log(users);
+
     setDataUsers(users);
     setDataSearch(users);
   };

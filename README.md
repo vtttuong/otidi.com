@@ -50,3 +50,8 @@ email: miinhnguyen98@gmail.com
 password: min123456
 
 ```
+
+### API PROBLEMS
+
+1. User
+   1.1. Get all, return wrong name -> email, no avatar returned

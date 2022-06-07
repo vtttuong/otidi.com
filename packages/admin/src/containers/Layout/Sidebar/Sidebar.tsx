@@ -14,14 +14,13 @@ import {withRouter} from "react-router-dom";
 import {
   BANNERS,
   BRANDS,
-  CATEGORY,
   COUPONS,
-  CUSTOMERS,
   DASHBOARD,
   FAQS,
   ORDERS,
   POSTS,
   TASKS,
+  USERS,
 } from "settings/constants";
 import {
   LogoutBtn,
@@ -58,7 +57,7 @@ const sidebarMenus = [
   },
   {
     name: "Users",
-    path: CUSTOMERS,
+    path: USERS,
     exact: false,
     icon: <CustomerIcon />,
   },

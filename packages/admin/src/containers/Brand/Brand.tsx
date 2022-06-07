@@ -122,7 +122,7 @@ export default function Brand() {
                       },
                     }}
                   >
-                    Add Category
+                    Add Brand
                   </Button>
                 </Col>
               </Row>

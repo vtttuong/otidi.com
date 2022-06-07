@@ -12,6 +12,7 @@ import Fade from "react-reveal/Fade";
 import {getBrands} from "service/use-brands";
 import {CURRENCY} from "settings/constants";
 import useProducts from "../../service/use-products";
+import {getUsers} from "../../service/use-users";
 
 export const ProductsRow = styled("div", ({$theme}) => ({
   display: "flex",
@@ -102,9 +103,7 @@ export default function Posts() {
   const [isSoldType, setIsSoldType] = useState(false);
   const [isPriorityType, setIsPriorityType] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
-
-  const approvePostId = useDrawerState("approvedPostId");
-  const dispatch = useDrawerDispatch();
+  const [users, setUsers] = useState([]);
 
   const {data, error} = useProducts({
     postType: postType,
@@ -132,16 +131,12 @@ export default function Posts() {
   }, []);
 
   React.useEffect(() => {
-    if (approvePostId != null) {
-      const index = posts.findIndex((item) => item.id === approvePostId);
-      posts.splice(index, 1);
-
-      dispatch({
-        type: "SAVE_APPROVE_POST_ID",
-        data: null,
-      });
-    }
-  }, [approvePostId, dispatch, posts]);
+    const fetchUser = async () => {
+      const response = await getUsers();
+      setUsers(response.data);
+    };
+    fetchUser();
+  }, []);
 
   React.useEffect(() => {}, [
     postStatus,
@@ -208,6 +203,11 @@ export default function Posts() {
     } else {
       setPostType(value[0].value);
     }
+  }
+
+  function getUserAvatar(userId: number): string {
+    const user = users.filter((u) => u.id === userId)[0];
+    return user?.avatar;
   }
 
   return (
@@ -292,13 +292,13 @@ export default function Posts() {
                       <ProductCard
                         title={item.title}
                         weight={item.unit}
-                        image={item.main_img_url}
-                        avatar={item.user?.avatar_img_url}
+                        image={item.main_image[0].url}
+                        avatar={getUserAvatar(item.user_id)}
                         currency={CURRENCY}
                         price={item.price}
                         salePrice={0}
                         typeOfPost={item.type}
-                        data={item}
+                        data={item.created_at}
                       />
                     </Fade>
                   </Col>

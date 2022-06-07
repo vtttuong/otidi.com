@@ -1,8 +1,8 @@
-import { styled } from "baseui";
+import {styled} from "baseui";
 import stylede from "styled-components";
 import Images from "../Image/Image";
 
-export const ProductCardWrapper = styled("div", ({ $theme }) => ({
+export const ProductCardWrapper = styled("div", ({$theme}) => ({
   height: "100%",
   width: "100%",
   backgroundColor: "#ffffff",
@@ -33,7 +33,6 @@ export const Image = styled(Images, () => ({
   maxWidth: "100%",
   maxHeight: "100%",
   display: "inline-block",
-  
 }));
 export const ImageAvatar = styled(Images, () => ({
   maxWidth: "100%",
@@ -42,7 +41,7 @@ export const ImageAvatar = styled(Images, () => ({
   borderRadius: "50%",
 }));
 
-export const SaleTag = styled("span", ({ $theme }) => ({
+export const SaleTag = styled("span", ({$theme}) => ({
   ...$theme.typography.fontBold12,
   color: "#ffffff",
   // backgroundColor: $theme.colors.warning,
@@ -55,7 +54,7 @@ export const SaleTag = styled("span", ({ $theme }) => ({
   right: "15px",
 }));
 
-export const DiscountPercent = styled("span", ({ $theme }) => ({
+export const DiscountPercent = styled("span", ({$theme}) => ({
   ...$theme.typography.fontBold12,
   color: "#ffffff",
   lineHeight: "2",
@@ -92,7 +91,7 @@ export const DiscountPercent = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const SellPost = styled("span", ({ $theme }) => ({
+export const SellPost = styled("span", ({$theme}) => ({
   ...$theme.typography.fontBold12,
   color: "#ffffff",
   lineHeight: "2",
@@ -129,7 +128,7 @@ export const SellPost = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const BuyPost = styled("span", ({ $theme }) => ({
+export const BuyPost = styled("span", ({$theme}) => ({
   ...$theme.typography.fontBold12,
   color: "#ffffff",
   lineHeight: "2",
@@ -166,7 +165,7 @@ export const BuyPost = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const ProductInfo = styled("div", ({ $theme }) => ({
+export const ProductInfo = styled("div", ({$theme}) => ({
   padding: "20px 25px 30px",
 
   "@media only screen and (max-width: 767px)": {
@@ -192,7 +191,7 @@ export const ProductTitle = stylede.div`
   };
 `;
 
-export const ProductWeight = styled("span", ({ $theme }) => ({
+export const ProductWeight = styled("span", ({$theme}) => ({
   ...$theme.typography.font14,
   color: $theme.colors.textNormal,
 
@@ -232,7 +231,7 @@ export const ProductAvatar = styled("div", () => ({
   "@media only screen and (max-width: 767px)": {},
 }));
 
-export const ProductMeta = styled("div", ({ $theme }) => ({
+export const ProductMeta = styled("div", ({$theme}) => ({
   marginTop: "15px",
   display: "flex",
   alignItems: "center",
@@ -243,7 +242,7 @@ export const ProductMeta = styled("div", ({ $theme }) => ({
   },
 }));
 
-export const OrderID = styled("span", ({ $theme }) => ({
+export const OrderID = styled("span", ({$theme}) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.textDark,
 
@@ -252,13 +251,13 @@ export const OrderID = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const ProductPriceWrapper = styled("div", ({ $theme }) => ({
+export const ProductPriceWrapper = styled("div", ({$theme}) => ({
   display: "flex",
   alignItems: "center",
   position: "relative",
 }));
 
-export const ProductPrice = styled("span", ({ $theme }) => ({
+export const ProductPrice = styled("span", ({$theme}) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.primary,
 
@@ -267,7 +266,7 @@ export const ProductPrice = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const DiscountedPrice = styled("span", ({ $theme }) => ({
+export const DiscountedPrice = styled("span", ({$theme}) => ({
   ...$theme.typography.font11,
   color: $theme.colors.textNormal,
   padding: "0 5px",
