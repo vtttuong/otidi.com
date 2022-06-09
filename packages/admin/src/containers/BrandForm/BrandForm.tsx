@@ -5,8 +5,7 @@ import {Col, Row} from "components/FlexBox/FlexBox";
 import {FormFields, FormLabel} from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
 import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import {isLoaded} from "google-maps";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import {useAlert} from "react-alert";
 import {Scrollbars} from "react-custom-scrollbars";
 import {useForm} from "react-hook-form";
@@ -25,8 +24,6 @@ import {
 import "./index.css";
 
 type Props = any;
-
-//model: {id: 1, name: 'LX 600', brand_id: 1, deleted_at: null, created_at: '2022-06-01T22:02:48+07:00', …}
 
 const AddBrand: React.FC<Props> = (props) => {
   const data = useDrawerState("data");
