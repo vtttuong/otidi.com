@@ -90,10 +90,10 @@ type ProductsProps = {
 export default function Posts() {
   const [brandSelectOptions, setBrandsSelectOptions] = useState([]);
 
-  const [postStatusOption, setPostStatusOption] = useState({});
-  const [brandOption, setBrandOption] = useState({});
-  const [sortByOption, setSortByOption] = useState({});
-  const [postTypeOption, setPostTypeOption] = useState({});
+  const [postStatusOption, setPostStatusOption] = useState([]);
+  const [brandOption, setBrandOption] = useState([]);
+  const [sortByOption, setSortByOption] = useState([]);
+  const [postTypeOption, setPostTypeOption] = useState([]);
 
   const [search, setSearch] = useState("");
   const [postType, setPostType] = useState("");

@@ -84,7 +84,7 @@ export async function addBrand(brand) {
   var formdata = new FormData();
   formdata.append("name", brand.name);
   formdata.append("logo", brand.logo[0]);
-  brand.models.map((model, idx) => {
+  brand.models.forEach((model, idx) => {
     formdata.append(`models[${idx}][name]`, model.name);
   });
 

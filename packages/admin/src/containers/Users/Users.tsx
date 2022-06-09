@@ -6,8 +6,10 @@ import Checkbox from "components/CheckBox/CheckBox";
 import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
+import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
 import {Header, Heading, Wrapper} from "components/Wrapper.style";
+import UserDetailForm from "containers/DetailUserForm";
 import {useDrawerDispatch} from "context/DrawerContext";
 import {Consumer} from "context/updateContext";
 import React, {useCallback, useState} from "react";
@@ -19,7 +21,7 @@ import {
 } from "./Users.style";
 
 const Col = withStyle(Column, () => ({
-  "@media only screen and (max-width: 767px)": {
+  "@media only screen and (max-width: 992px)": {
     marginBottom: "20px",
 
     ":last-child": {
@@ -51,13 +53,15 @@ const Image = styled("img", () => ({
   height: "auto",
 }));
 
-const userType = [
-  {value: "1", label: "Normal", id: "1"},
-  {value: "2", label: "Copper", id: "2"},
-  {value: "3", label: "Silver", id: "3"},
-  {value: "4", label: "Gold", id: "4"},
+const sortDirection = [
+  {value: "asc", label: "Ascending", id: "1"},
+  {value: "desc", label: "Descending", id: "2"},
 ];
+
+const sortBy = [{value: "id", label: "Id", id: "1"}];
+
 type CustomThemeT = {red400: string; textNormal: string; colors: any};
+
 const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
 const Status = styled("div", ({$theme}) => ({
   ...$theme.typography.fontBold14,
@@ -101,12 +105,12 @@ export default function Users() {
     },
   });
   const [dataUsers, setDataUsers] = useState([]);
-  const [stock, setStock] = useState([]);
   const [checked, setChecked] = useState(false);
   const [checkedId, setCheckedId] = useState([]);
   const [dataDetail, setDataDetail] = useState<any>({});
   const [search, setSearch] = useState("");
-  const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
+  const [sortTypeOption, setSortTypeOption] = useState([]);
+  const [sortDirOption, setSDirOption] = useState([]);
 
   const dispatch = useDrawerDispatch();
   const openDrawer = useCallback(
@@ -114,14 +118,26 @@ export default function Users() {
     [dispatch]
   );
 
-  function handleSort({value}, searchType, getUser) {
-    setStock(value);
+  function handleSortType({value}, sortType, getUser) {
+    setSearch("");
+    setSortTypeOption(value);
     if (value.length) {
-      searchType(value[0].value);
+      sortType(value[0].value);
     } else {
-      getUser();
+      sortType("");
     }
   }
+
+  function handleSortDir({value}, sortDir, getUser) {
+    setSearch("");
+    setSDirOption(value);
+    if (value.length) {
+      sortDir(value[0].value);
+    } else {
+      sortDir("");
+    }
+  }
+
   function handleSearch(event, searchName) {
     const value = event.currentTarget.value;
     searchName(value);
@@ -131,6 +147,8 @@ export default function Users() {
   function onAllCheck(event) {
     if (event.target.checked) {
       const idx = dataUsers && dataUsers.map((coupon) => coupon.id);
+      console.log(idx);
+
       setCheckedId(idx);
     } else {
       setCheckedId([]);
@@ -176,26 +194,26 @@ export default function Users() {
 
   return (
     <Consumer>
-      {({dataUsers, searchName, searchType, getUser}) => {
+      {({dataUsers, getUser, searchName, sortType, sortDir, page}) => {
         setDataUsers(dataUsers);
         return (
           <>
             <Grid fluid={true}>
               <Row>
-                <Col md={12}>
+                <Col lg={12}>
                   <Header
                     style={{
                       marginBottom: 30,
                       boxShadow: "0 0 5px rgba(0, 0 ,0, 0.05)",
                     }}
                   >
-                    <Col md={2}>
+                    <Col lg={1}>
                       <Heading>Users</Heading>
                     </Col>
 
-                    <Col md={10}>
+                    <Col lg={11}>
                       <Row>
-                        <Col md={5}>
+                        <Col lg={3}>
                           <Input
                             value={search}
                             placeholder="Ex: Search By Name"
@@ -205,20 +223,34 @@ export default function Users() {
                             clearable
                           />
                         </Col>
-                        <Col md={3}>
+
+                        <Col lg={3} style={{marginLeft: "auto"}}>
                           <Select
-                            options={userType}
+                            options={sortBy}
                             labelKey="label"
                             // valueKey="value"
-                            placeholder="Users Type"
-                            value={stock}
+                            placeholder="Sort by"
+                            value={sortTypeOption}
                             searchable={false}
                             onChange={(value) =>
-                              handleSort(value, searchType, getUser)
+                              handleSortType(value, sortType, getUser)
                             }
                           />
                         </Col>
-                        <Col md={3}>
+                        <Col lg={3}>
+                          <Select
+                            options={sortDirection}
+                            labelKey="label"
+                            // valueKey="value"
+                            placeholder="Sort direction"
+                            value={sortDirOption}
+                            searchable={false}
+                            onChange={(value) =>
+                              handleSortDir(value, sortDir, getUser)
+                            }
+                          />
+                        </Col>
+                        <Col lg={3}>
                           <Button
                             onClick={openDrawer}
                             startEnhancer={() => <Plus />}
@@ -245,7 +277,7 @@ export default function Users() {
 
                   <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
                     <TableWrapper>
-                      <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(30px, 70px) minmax(70px, auto) minmax(70px, auto) minmax(70px, auto) minmax(150px, auto) minmax(150px, max-content) minmax(150px, auto) ">
+                      <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(50px, 70px) minmax(70px, auto) minmax(100px, auto) minmax(150px, auto) minmax(100px, auto) minmax(130px, max-content) minmax(100px, auto) ">
                         <StyledHeadCell>
                           <Checkbox
                             type="checkbox"
@@ -277,89 +309,104 @@ export default function Users() {
                         <StyledHeadCell>Verify</StyledHeadCell>
                         <StyledHeadCell>Status</StyledHeadCell>
 
-                        {dataUsers.length !== 0 ? (
-                          dataUsers.map((item) => (
-                            <React.Fragment key={item.id}>
-                              <StyledBodyCell>
-                                <Checkbox
-                                  name={item.id}
-                                  checked={checkedId.includes(item.id)}
-                                  onChange={handleCheckbox}
-                                  overrides={{
-                                    Checkmark: {
-                                      style: {
-                                        borderTopWidth: "2px",
-                                        borderRightWidth: "2px",
-                                        borderBottomWidth: "2px",
-                                        borderLeftWidth: "2px",
-                                        borderTopLeftRadius: "4px",
-                                        borderTopRightRadius: "4px",
-                                        borderBottomRightRadius: "4px",
-                                        borderBottomLeftRadius: "4px",
+                        {dataUsers ? (
+                          dataUsers.length !== 0 ? (
+                            dataUsers.map((item) => (
+                              <React.Fragment key={item.id}>
+                                <StyledBodyCell>
+                                  <Checkbox
+                                    name={item.id}
+                                    checked={checkedId.includes(item.id)}
+                                    onChange={handleCheckbox}
+                                    overrides={{
+                                      Checkmark: {
+                                        style: {
+                                          borderTopWidth: "2px",
+                                          borderRightWidth: "2px",
+                                          borderBottomWidth: "2px",
+                                          borderLeftWidth: "2px",
+                                          borderTopLeftRadius: "4px",
+                                          borderTopRightRadius: "4px",
+                                          borderBottomRightRadius: "4px",
+                                          borderBottomLeftRadius: "4px",
+                                        },
                                       },
-                                    },
-                                  }}
-                                />
-                              </StyledBodyCell>
-
-                              <StyledBodyCell>{item.id}</StyledBodyCell>
-                              <StyledBodyCell>
-                                <ImageWrapper>
-                                  <Image
-                                    src={urlServer + item.avatar_url}
-                                    alt={"avatar"}
+                                    }}
                                   />
-                                </ImageWrapper>
-                              </StyledBodyCell>
-                              <StyledBodyCell>{item.name}</StyledBodyCell>
-                              <StyledBodyCell>
-                                {item.phone_number}
-                              </StyledBodyCell>
-                              <StyledBodyCell>
-                                {
-                                  <span>
-                                    {item.rating === 0
-                                      ? 0
-                                      : parseFloat(item.rating).toFixed(1)}
-                                    {"   "}
-                                    <Star />
-                                  </span>
-                                }
-                              </StyledBodyCell>
-                              <StyledBodyCell>
-                                <Status
-                                  className={
-                                    item.email_verified_at &&
+                                </StyledBodyCell>
+
+                                <StyledBodyCell>{item.id}</StyledBodyCell>
+                                <StyledBodyCell>
+                                  <ImageWrapper>
+                                    <Image src={item.avatar} alt={"avatar"} />
+                                  </ImageWrapper>
+                                </StyledBodyCell>
+                                <StyledBodyCell>{item.name}</StyledBodyCell>
+                                <StyledBodyCell>
+                                  {item.phone_number}
+                                </StyledBodyCell>
+                                <StyledBodyCell>
+                                  {
+                                    <span
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "5px",
+                                      }}
+                                    >
+                                      {item.rating === 0
+                                        ? 0
+                                        : parseFloat(item.rating).toFixed(1)}
+                                      {"   "}
+                                      <Star />
+                                    </span>
+                                  }
+                                </StyledBodyCell>
+                                <StyledBodyCell>
+                                  <Status
+                                    className={
+                                      item.email_verified_at &&
+                                      item.phone_verified_at &&
+                                      item.identity_verified_at
+                                        ? success
+                                        : item.email_verified_at &&
+                                          item.phone_verified_at &&
+                                          !item.identity_verified_at
+                                        ? pedding
+                                        : failed
+                                    }
+                                  >
+                                    {item.email_verified_at &&
                                     item.phone_verified_at &&
-                                    item.identify?.identified_at
-                                      ? success
+                                    item.identity_verified_at
+                                      ? "Verified"
                                       : item.email_verified_at &&
                                         item.phone_verified_at &&
-                                        !item.identify?.identified_at
-                                      ? pedding
-                                      : failed
-                                  }
-                                >
-                                  {item.email_verified_at &&
-                                  item.phone_verified_at &&
-                                  item.identify?.identified_at
-                                    ? "Verified"
-                                    : item.email_verified_at &&
-                                      item.phone_verified_at &&
-                                      !item.identify?.identified_at
-                                    ? "Pending"
-                                    : "Not Verify"}
-                                </Status>
-                              </StyledBodyCell>
-                              <StyledBodyCell>
-                                <Status
-                                  className={item.deleted_at ? failed : success}
-                                >
-                                  {item.deleted_at ? "Blocked" : "Active"}
-                                </Status>
-                              </StyledBodyCell>
-                            </React.Fragment>
-                          ))
+                                        !item.identity_verified_at
+                                      ? "Pending"
+                                      : "Not Verify"}
+                                  </Status>
+                                </StyledBodyCell>
+                                <StyledBodyCell>
+                                  <Status
+                                    className={
+                                      item.deleted_at ? failed : success
+                                    }
+                                  >
+                                    {item.deleted_at ? "Blocked" : "Active"}
+                                  </Status>
+                                </StyledBodyCell>
+                              </React.Fragment>
+                            ))
+                          ) : (
+                            <NoResult
+                              hideButton={false}
+                              style={{
+                                gridColumnStart: "1",
+                                gridColumnEnd: "-1",
+                              }}
+                            />
+                          )
                         ) : (
                           <div className="box-relative-no">
                             <div className="load-wrapp">

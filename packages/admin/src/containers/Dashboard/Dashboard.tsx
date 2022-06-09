@@ -1,7 +1,6 @@
 import {Grid} from "components/FlexBox/FlexBox";
 import AdvertiseYear from "feature/dashboard-advertiseYear";
 import PostByYear from "feature/dashboard-postByYear";
-import RevenueDay from "feature/dashboard-revenueDay";
 import RevenueTotal from "feature/dashboard-revenueTotal";
 import RevenueYear from "feature/dashboard-revenueYear";
 import React, {useState} from "react";
@@ -115,7 +114,7 @@ const Dashboard = () => {
           <TabPanel>
             <RevenueTotal />
             <RevenueYear />
-            <RevenueDay />
+            {/* <RevenueDay /> */}
             {/* <RevenueCats /> */}
           </TabPanel>
 

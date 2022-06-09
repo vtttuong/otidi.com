@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from "react";
-import {styled, withStyle, createThemedUseStyletron} from "baseui";
+import {withStyle} from "baseui";
 import dayjs from "dayjs";
 import {Grid, Row as Rows, Col as Column} from "components/FlexBox/FlexBox";
 import Select from "components/Select/Select";
-import Input from "components/Input/Input";
 import {Wrapper, Header, Heading} from "components/Wrapper.style";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import usePayments from "service/use-payment";
@@ -21,30 +20,31 @@ import {
 } from "./Payments.style";
 import {getUsers} from "service/use-users";
 
-type CustomThemeT = {red400: string; textNormal: string; colors: any};
-const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
+// type CustomThemeT = {red400: string; textNormal: string; colors: any};
 
-const Status = styled("div", ({$theme}) => ({
-  ...$theme.typography.fontBold14,
-  color: $theme.colors.textDark,
-  display: "flex",
-  alignItems: "center",
-  lineHeight: "1",
-  textTransform: "capitalize",
+// const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
 
-  ":before": {
-    content: '""',
-    width: "10px",
-    height: "10px",
-    display: "inline-block",
-    borderTopLeftRadius: "10px",
-    borderTopRightRadius: "10px",
-    borderBottomRightRadius: "10px",
-    borderBottomLeftRadius: "10px",
-    backgroundColor: $theme.borders.borderE6,
-    marginRight: "10px",
-  },
-}));
+// const Status = styled("div", ({$theme}) => ({
+//   ...$theme.typography.fontBold14,
+//   color: $theme.colors.textDark,
+//   display: "flex",
+//   alignItems: "center",
+//   lineHeight: "1",
+//   textTransform: "capitalize",
+
+//   ":before": {
+//     content: '""',
+//     width: "10px",
+//     height: "10px",
+//     display: "inline-block",
+//     borderTopLeftRadius: "10px",
+//     borderTopRightRadius: "10px",
+//     borderBottomRightRadius: "10px",
+//     borderBottomLeftRadius: "10px",
+//     backgroundColor: $theme.borders.borderE6,
+//     marginRight: "10px",
+//   },
+// }));
 
 const Col = withStyle(Column, () => ({
   "@media only screen and (max-width: 767px)": {
@@ -73,19 +73,19 @@ const sortSelectOptions = [
 ];
 
 export default function Payments() {
-  const [useCss, theme] = themedUseStyletron();
-  const success = useCss({
-    ":before": {
-      content: '""',
-      backgroundColor: theme.colors.primary,
-    },
-  });
-  const failed = useCss({
-    ":before": {
-      content: '""',
-      backgroundColor: theme.colors.red400,
-    },
-  });
+  // const [useCss, theme] = themedUseStyletron();
+  // const success = useCss({
+  //   ":before": {
+  //     content: '""',
+  //     backgroundColor: theme.colors.primary,
+  //   },
+  // });
+  // const failed = useCss({
+  //   ":before": {
+  //     content: '""',
+  //     backgroundColor: theme.colors.red400,
+  //   },
+  // });
   const [users, setUsers] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [sortOptions, setSortOptions] = useState([]);

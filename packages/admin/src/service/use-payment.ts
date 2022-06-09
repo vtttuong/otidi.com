@@ -1,30 +1,7 @@
 import useSWR from "swr";
-import Fuse from "fuse.js";
-// import { useState } from 'react';
 const queryString = require("query-string");
 const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
-const options = {
-  isCaseSensitive: false,
-  // includeScore: false,
-  shouldSort: true,
-  // includeMatches: false,
-  // findAllMatches: false,
-  // minMatchCharLength: 1,
-  // location: 0,
-  threshold: 0.3,
-  // distance: 100,
-  // useExtendedSearch: false,
-  // ignoreLocation: false,
-  // ignoreFieldNorm: false,
-  minMatchCharLength: 2,
-  keys: ["user.name"],
-};
-function search(list, pattern) {
-  const fuse = new Fuse(list, options);
 
-  return fuse.search(pattern).map((current) => current.item);
-}
-// import productFetcher from 'utils/api/product';
 const token = localStorage.getItem("secondhand_token");
 const productFetcher = (url) =>
   fetch(url, {

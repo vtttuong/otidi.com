@@ -1,7 +1,41 @@
+import queryString from "query-string";
+
 const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
 
-export async function getUsers() {
+// https://api.otodi.vn/api/admin/v1/users?count=10&page=1&order_by=id&dir=asc
+interface PROPS {
+  sortType?: string;
+  sortDir?: string;
+  page?: number;
+  count?: number;
+}
+
+export async function getUsers(variables?: PROPS) {
+  const {sortType, sortDir, page, count} = variables ?? {};
+
+  let queryParams = {
+    page: page,
+    count: count,
+    order_by: sortType,
+    dir: sortDir,
+  };
+
+  let newParams = {};
+  // eslint-disable-next-line array-callback-return
+  Object.keys(queryParams).map((key) => {
+    if (typeof queryParams[key] !== "undefined" && queryParams[key] !== "") {
+      newParams[key] = queryParams[key];
+    }
+  });
+
+  const parsed = queryString.stringify(
+    {
+      ...newParams,
+    },
+    {sort: false}
+  );
+
   const options = {
     method: "GET",
     headers: {
@@ -9,7 +43,7 @@ export async function getUsers() {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/users`, options);
+  const users = await fetch(`${baseUrl}/users?${parsed}`, options);
 
   return await users.json();
 }
@@ -27,9 +61,17 @@ export async function createUser(email, name, password) {
       password: password,
     }),
   };
-  const users = await fetch(`${baseUrl}/users`, options);
-
-  return await users.json();
+  try {
+    const usersResponse = await fetch(`${baseUrl}/users`, options);
+    const users = await usersResponse.json();
+    console.log(users);
+    return await users.json();
+  } catch (ex) {
+    return {
+      isError: true,
+      message: ex.message,
+    };
+  }
 }
 
 export async function getUsersType(id) {
@@ -47,15 +89,15 @@ export async function getUsersType(id) {
 
 export async function deleteUser(id: number) {
   const options = {
-    method: "POST",
+    method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/users/block/${id}`, options);
+  const users = await fetch(`${baseUrl}/users/${id}`, options);
   if (users.status === 200) {
-    return { status: true };
+    return {status: true};
   }
   // return await users.json();
 }
@@ -69,7 +111,7 @@ export async function unDeleteUser(id: number) {
   };
   const users = await fetch(`${baseUrl}/users/unblock/${id}`, options);
   if (users.status === 200) {
-    return { status: true };
+    return {status: true};
   }
   // return await users.json();
 }
@@ -83,7 +125,6 @@ export async function verifyId(id: number) {
     },
   };
   const users = await fetch(`${baseUrl}/users/identify/confirm/${id}`, options);
-  console.log(users);
   return users;
 }
 

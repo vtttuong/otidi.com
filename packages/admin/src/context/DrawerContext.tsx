@@ -16,6 +16,7 @@ const initialState = {
   maxId: null,
   createdUser: null,
 };
+
 type State = typeof initialState;
 type Action = any;
 function reducer(state: State, action: Action) {
