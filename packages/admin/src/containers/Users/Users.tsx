@@ -9,7 +9,6 @@ import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
 import {Header, Heading, Wrapper} from "components/Wrapper.style";
-import UserDetailForm from "containers/DetailUserForm";
 import {useDrawerDispatch} from "context/DrawerContext";
 import {Consumer} from "context/updateContext";
 import React, {useCallback, useState} from "react";
@@ -147,7 +146,6 @@ export default function Users() {
   function onAllCheck(event) {
     if (event.target.checked) {
       const idx = dataUsers && dataUsers.map((coupon) => coupon.id);
-      console.log(idx);
 
       setCheckedId(idx);
     } else {
