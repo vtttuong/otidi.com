@@ -43,7 +43,6 @@ const AddCampaing: React.FC<Props> = (props) => {
   const [tag, setTag] = useState([]);
   const [level, setLevel] = useState([]);
   const dispatch = useDrawerDispatch();
-  const maxId = useDrawerState("maxId");
   const alert = useAlert();
   const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
     dispatch,
@@ -80,24 +79,6 @@ const AddCampaing: React.FC<Props> = (props) => {
       return;
     }
 
-    const newVoucher = {
-      id: maxId,
-      name: data.name,
-      level_ids: level,
-      value: data.discount,
-      using: 0,
-      total: data.total,
-      start_at: new Date(),
-      end_at: data.expired,
-      type: type[0].value,
-      image: image[0]?.path,
-    };
-
-    dispatch({
-      type: "SAVE_CREATED_VOUCHER",
-      data: newVoucher,
-    });
-
     const formData: any = new FormData();
     formData.set("name", data.name);
 
@@ -119,8 +100,7 @@ const AddCampaing: React.FC<Props> = (props) => {
     }
 
     formData.set("type", type[0].value);
-
-    addVoucher(formData);
+    await addVoucher(formData);
   };
 
   const addVoucher = (formData: any) => {
@@ -132,8 +112,6 @@ const AddCampaing: React.FC<Props> = (props) => {
     };
 
     axios.post(baseUrl + `/vouchers`, formData, configs).then((response) => {
-      console.log(response);
-
       if (response.status === 200 && !response.data.success) {
         const result = response.data.data;
         const keys = Object.values(result);
@@ -146,8 +124,8 @@ const AddCampaing: React.FC<Props> = (props) => {
         });
       } else {
         dispatch({
-          type: "SAVE_ID",
-          data: 2,
+          type: "SAVE_CREATED_VOUCHER",
+          data: response.data.data,
         });
         closeDrawer();
         alert.success("Add voucher successfully");

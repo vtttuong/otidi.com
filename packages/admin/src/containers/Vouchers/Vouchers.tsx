@@ -111,55 +111,42 @@ export default function Vouchers() {
 
   const {data, mutate, maxId} = useVouchers({status, type, text});
 
-  console.log(maxId);
-
   const Image = styled("img", () => ({
     width: "100%",
     height: "auto",
   }));
 
   useEffect(() => {
-    console.log("CREATED: ", createdVoucher);
-    console.log("UPDATED: ", updatedVoucher);
-
-    mutate();
-    // data?.unshift(createdVoucher);
+    data?.unshift(createdVoucher);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createdVoucher, updatedVoucher]);
+  }, [createdVoucher]);
 
-  // useEffect(() => {
-  //   console.log("UPDATE");
+  useEffect(() => {
+    console.log("UPDATE");
 
-  //   if (updatedVoucher) {
-  //     // eslint-disable-next-line array-callback-return
-  //     data.map((item) => {
-  //       console.log(item.id === updatedVoucher.id);
+    if (updatedVoucher) {
+      // eslint-disable-next-line array-callback-return
+      data.map((item) => {
+        console.log(item.id === updatedVoucher.id);
 
-  //       if (item.id === updatedVoucher.id) {
-  //         if (item.type === "exchangeable") {
-  //           item.name = updatedVoucher.name;
-  //           item.type = updatedVoucher.type;
-  //           item.discount = updatedVoucher.discount;
-  //           item.used = updatedVoucher.used;
-  //           item.total = updatedVoucher.total;
-  //           item.expired = updatedVoucher.expired;
-  //           item.image = updatedVoucher.image;
-  //           item.reward_point = updatedVoucher.reward_point;
-  //         } else {
-  //           item.name = updatedVoucher.name;
-  //           item.type = updatedVoucher.type;
-  //           item.discount = updatedVoucher.discount;
-  //           item.used = updatedVoucher.used;
-  //           item.total = updatedVoucher.total;
-  //           item.expired = updatedVoucher.expired;
-  //           item.image = updatedVoucher.image;
-  //           item.levels = updatedVoucher.levels;
-  //         }
-  //       }
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [updatedVoucher]);
+        if (item.id === updatedVoucher.id) {
+          item.name = updatedVoucher.name;
+          item.type = updatedVoucher.type;
+          item.value = updatedVoucher.value;
+          item.used = updatedVoucher.used;
+          item.total = updatedVoucher.total;
+          item.end_at = updatedVoucher.end_at;
+          item.image = updatedVoucher.image;
+          if (item.type === "exchangeable") {
+            item.reward_point = updatedVoucher.reward_point;
+          } else {
+            item.levels = updatedVoucher.levels;
+          }
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatedVoucher]);
 
   useEffect(() => {
     if (deletedVoucherIds != null) {
@@ -180,30 +167,36 @@ export default function Vouchers() {
   const onDelete = async () => {
     setLoadingDel(true);
 
-    if (checkedId.length > 0) {
-      await checkedId.map(async (item) => {
-        await delVoucher(item);
-        alert.success("Deleted success!");
-      });
+    let newCheckedId = [...checkedId];
+    await Promise.all(
+      checkedId.map(async (item) => {
+        const result = await delVoucher(item);
+        if (!result) {
+          newCheckedId = newCheckedId.filter((id) => id !== item);
+          console.log(newCheckedId);
 
-      setLoadingDel(false);
-    }
-
+          alert.success("Deleted failed!");
+        } else {
+          alert.success("Deleted success!");
+        }
+        console.log(newCheckedId);
+      })
+    );
     dispatch({
       type: "SAVE_DELETED_ID",
-      data: checkedId,
+      data: newCheckedId,
     });
+    setLoadingDel(false);
   };
 
-  const onEdit = React.useCallback(
-    () =>
-      dispatch({
-        type: "OPEN_DRAWER",
-        drawerComponent: "CAMPAING_UPDATE_FORM",
-        data: dataDetail,
-      }),
-    [dispatch, dataDetail]
-  );
+  const onEdit = React.useCallback(() => {
+    dispatch({
+      type: "OPEN_DRAWER",
+      drawerComponent: "CAMPAING_UPDATE_FORM",
+      data: dataDetail,
+    });
+    setCheckedId([]);
+  }, [dispatch, dataDetail]);
 
   function handleSelectStatus({value}) {
     setStatusOptions(value);

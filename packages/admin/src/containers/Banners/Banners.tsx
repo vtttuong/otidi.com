@@ -84,8 +84,6 @@ export default function BannersAll() {
   );
 
   function handleCheckbox(event) {
-    console.log(event.currentTarget);
-
     const name = parseInt(event.currentTarget.name);
     if (datas.length !== 0) {
       // eslint-disable-next-line array-callback-return
