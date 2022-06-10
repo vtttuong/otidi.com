@@ -1,15 +1,15 @@
-import Button, { KIND } from "components/Button/Button";
+import Button, {KIND} from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import { Col, Row } from "components/FlexBox/FlexBox";
-import { FormFields, FormLabel } from "components/FormFields/FormFields";
+import {Col, Row} from "components/FlexBox/FlexBox";
+import {FormFields, FormLabel} from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
 import Select from "components/Select/Select";
 import Uploader from "components/UploaderBanner/UploaderBanner";
-import { useDrawerDispatch } from "context/DrawerContext";
-import React, { useCallback, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
-import { useForm } from "react-hook-form";
-import { useAlert } from "react-alert";
+import {useDrawerDispatch} from "context/DrawerContext";
+import React, {useCallback, useState} from "react";
+import {Scrollbars} from "react-custom-scrollbars";
+import {useForm} from "react-hook-form";
+import {useAlert} from "react-alert";
 // import { addBanner } from "service/use-banner";
 import {
   ButtonGroup,
@@ -21,20 +21,15 @@ import {
 import axios from "axios";
 
 const categoryTypeOptions = [
-  { value: "vehicle", name: "Vehicle", id: "1" },
-  { value: "electronic", name: "Electronic", id: "3" },
-  { value: "technology", name: "Technology", id: "5" },
-  { value: "fashion", name: "Fashion", id: "7" },
-  { value: "furniture", name: "Furniture", id: "9" },
-  { value: "sport_relax", name: "Sport & relax", id: "11" },
-  { value: "office", name: "Office", id: "13" },
-  { value: "animal", name: "Animal", id: "15" },
-  { value: "others", name: "Others", id: "16" },
-];
-
-const localeOptions = [
-  { value: "en", name: "EN" },
-  { value: "vi", name: "VI" },
+  {value: "vehicle", name: "Vehicle", id: "1"},
+  {value: "electronic", name: "Electronic", id: "3"},
+  {value: "technology", name: "Technology", id: "5"},
+  {value: "fashion", name: "Fashion", id: "7"},
+  {value: "furniture", name: "Furniture", id: "9"},
+  {value: "sport_relax", name: "Sport & relax", id: "11"},
+  {value: "office", name: "Office", id: "13"},
+  {value: "animal", name: "Animal", id: "15"},
+  {value: "others", name: "Others", id: "16"},
 ];
 
 type Props = any;
@@ -42,15 +37,13 @@ type Props = any;
 const AddBanner: React.FC<Props> = (props) => {
   const alert = useAlert();
   const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
+  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
     dispatch,
   ]);
-  const { register } = useForm();
+  const {register} = useForm();
   const [loading, setLoading] = useState(false);
   const [categoryOption, setCategoryOption] = useState([]);
-  const [localeOption, setLocaleOption] = useState([]);
 
-  const [locale, setLocale] = useState("en");
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -63,7 +56,6 @@ const AddBanner: React.FC<Props> = (props) => {
     var formData = new FormData();
     formData.set("title", title);
     formData.set("sub_title", subTitle);
-    formData.set("locale", locale);
     formData.set("type", category);
     formData.set("image", image);
 
@@ -100,15 +92,8 @@ const AddBanner: React.FC<Props> = (props) => {
         }
       });
   };
-  async function handleSelectLocale({ value }) {
-    setLocaleOption(value);
-    if (value.length) {
-      setLocale(value[0].value);
-    } else {
-      setLocale("en");
-    }
-  }
-  async function handleSelectCategory({ value }) {
+
+  async function handleSelectCategory({value}) {
     setCategoryOption(value);
     if (value.length) {
       setCategory(value[0].value);
@@ -120,7 +105,7 @@ const AddBanner: React.FC<Props> = (props) => {
     setImage(files[0]);
   };
   const handleChangeInput = (e) => {
-    const { value, name } = e.target;
+    const {value, name} = e.target;
 
     if (name === "title") {
       setTitle(value);
@@ -134,16 +119,16 @@ const AddBanner: React.FC<Props> = (props) => {
         <DrawerTitle>Add Banner</DrawerTitle>
       </DrawerTitleWrapper>
 
-      <Form style={{ height: "100%" }}>
+      <Form style={{height: "100%"}}>
         <Scrollbars
           autoHide
           renderView={(props) => (
-            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
+            <div {...props} style={{...props.style, overflowX: "hidden"}} />
           )}
           renderTrackHorizontal={(props) => (
             <div
               {...props}
-              style={{ display: "none" }}
+              style={{display: "none"}}
               className="track-horizontal"
             />
           )}
@@ -184,64 +169,6 @@ const AddBanner: React.FC<Props> = (props) => {
             <Col lg={8}>
               <DrawerBox>
                 <FormFields>
-                  <FormLabel>Locale</FormLabel>
-                  <Select
-                    options={localeOptions}
-                    labelKey="name"
-                    valueKey="value"
-                    placeholder="Locate"
-                    value={localeOption}
-                    searchable={false}
-                    onChange={handleSelectLocale}
-                    overrides={{
-                      Placeholder: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
-                        },
-                      },
-                      DropdownListItem: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
-                        },
-                      },
-                      OptionContent: {
-                        style: ({ $theme, $selected }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $selected
-                              ? $theme.colors.textDark
-                              : $theme.colors.textNormal,
-                          };
-                        },
-                      },
-                      SingleValue: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
-                        },
-                      },
-                      Popover: {
-                        props: {
-                          overrides: {
-                            Body: {
-                              style: { zIndex: 5 },
-                            },
-                          },
-                        },
-                      },
-                    }}
-                  />
-                </FormFields>
-
-                <FormFields>
                   <FormLabel>Type</FormLabel>
                   <Select
                     options={categoryTypeOptions}
@@ -253,7 +180,7 @@ const AddBanner: React.FC<Props> = (props) => {
                     onChange={handleSelectCategory}
                     overrides={{
                       Placeholder: {
-                        style: ({ $theme }) => {
+                        style: ({$theme}) => {
                           return {
                             ...$theme.typography.fontBold14,
                             color: $theme.colors.textNormal,
@@ -261,7 +188,7 @@ const AddBanner: React.FC<Props> = (props) => {
                         },
                       },
                       DropdownListItem: {
-                        style: ({ $theme }) => {
+                        style: ({$theme}) => {
                           return {
                             ...$theme.typography.fontBold14,
                             color: $theme.colors.textNormal,
@@ -269,7 +196,7 @@ const AddBanner: React.FC<Props> = (props) => {
                         },
                       },
                       OptionContent: {
-                        style: ({ $theme, $selected }) => {
+                        style: ({$theme, $selected}) => {
                           return {
                             ...$theme.typography.fontBold14,
                             color: $selected
@@ -279,7 +206,7 @@ const AddBanner: React.FC<Props> = (props) => {
                         },
                       },
                       SingleValue: {
-                        style: ({ $theme }) => {
+                        style: ({$theme}) => {
                           return {
                             ...$theme.typography.fontBold14,
                             color: $theme.colors.textNormal,
@@ -290,7 +217,7 @@ const AddBanner: React.FC<Props> = (props) => {
                         props: {
                           overrides: {
                             Body: {
-                              style: { zIndex: 5 },
+                              style: {zIndex: 5},
                             },
                           },
                         },
@@ -302,7 +229,7 @@ const AddBanner: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Title</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({required: true, maxLength: 20})}
                     value={title}
                     name="title"
                     onChange={handleChangeInput}
@@ -312,7 +239,7 @@ const AddBanner: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Content</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({required: true, maxLength: 20})}
                     value={subTitle}
                     name="subtitle"
                     onChange={handleChangeInput}
@@ -329,7 +256,7 @@ const AddBanner: React.FC<Props> = (props) => {
             onClick={closeDrawer}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: ({$theme}) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
@@ -350,7 +277,7 @@ const AddBanner: React.FC<Props> = (props) => {
             isLoading={loading}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: ({$theme}) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
