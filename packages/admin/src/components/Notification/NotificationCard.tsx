@@ -17,11 +17,13 @@ export default function NotificationCard({
   message,
   readAt,
   onRead,
+  onUnread,
 }) {
   const [read_at, setRead] = React.useState("");
   React.useEffect(() => {
     setRead(readAt);
   }, [readAt]);
+
   return (
     <Message className={!read_at ? "unread" : ""}>
       <TitleWrapper>
@@ -39,7 +41,16 @@ export default function NotificationCard({
         >
           Mark read
         </ButtonRead>
-      ) : null}
+      ) : (
+        <ButtonRead
+          onClick={() => {
+            onUnread(id);
+            setRead(null);
+          }}
+        >
+          Unread
+        </ButtonRead>
+      )}
     </Message>
   );
 }

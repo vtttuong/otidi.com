@@ -1,14 +1,14 @@
-import {Plus} from "assets/icons/Plus";
-import {styled, withStyle} from "baseui";
+import { Plus } from "assets/icons/Plus";
+import { styled, withStyle } from "baseui";
 import Button from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
-import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
-import {InLineLoader} from "components/InlineLoader/InlineLoader";
+import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
+import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
-import {Header, Heading, Wrapper} from "components/Wrapper.style";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import React, {useCallback, useState} from "react";
+import { Header, Heading, Wrapper } from "components/Wrapper.style";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import React, { useCallback, useState } from "react";
 import useBanners from "service/use-banners";
 import {
   StyledBodyCell,
@@ -33,7 +33,7 @@ const Row = withStyle(Rows, () => ({
   },
 }));
 
-const ImageWrapper = styled("div", ({$theme}) => ({
+const ImageWrapper = styled("div", ({ $theme }) => ({
   width: "200px",
   height: "100px",
   overflow: "hidden",
@@ -74,43 +74,62 @@ export default function BannersAll() {
   const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
 
   const [datas, setDatas] = useState(FAKE_DATA);
+  const [checkedAll, setCheckedAll] = useState(false);
   const [bannerDetail, setBannerDetail] = useState<any>({});
   const [checkedId, setCheckedId] = useState([]);
   const saveId = useDrawerState("saveId");
   const dispatch = useDrawerDispatch();
   const openDrawer = useCallback(
-    () => dispatch({type: "OPEN_DRAWER", drawerComponent: "CREATEBANNER_FORM"}),
+    () =>
+      dispatch({ type: "OPEN_DRAWER", drawerComponent: "CREATEBANNER_FORM" }),
     [dispatch]
   );
 
+  function onAllCheck(event) {
+    if (event.target.checked) {
+      const idx = datas && datas.map((banner) => banner.id);
+      setCheckedId(idx);
+    } else {
+      setCheckedId([]);
+    }
+    setCheckedAll(event.target.checked);
+  }
+
   function handleCheckbox(event) {
     const name = parseInt(event.currentTarget.name);
-    if (datas.length !== 0) {
-      // eslint-disable-next-line array-callback-return
-      datas.map((i) => {
-        if (i.id === name) {
-          setBannerDetail(i);
-        }
-      });
-    }
+
+    console.log("Before checked: ", checkedId);
 
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
     } else {
       setCheckedId((prevState) => prevState.filter((id) => id !== name));
+      setCheckedAll(false);
     }
   }
 
   const onEdit = React.useCallback(() => {
-    setCheckedId([]);
-    dispatch({
-      type: "OPEN_DRAWER",
-      drawerComponent: "UPDATEBANNER_FORM",
-      data: bannerDetail,
-    });
-  }, [dispatch, bannerDetail]);
+    console.log(checkedId);
 
-  var {data} = useBanners();
+    let updatedBanner = datas
+      ? datas.filter((i) => i.id === checkedId.slice(-1)[0])[0]
+      : null;
+
+    console.log(updatedBanner);
+
+    if (updatedBanner) {
+      dispatch({
+        type: "OPEN_DRAWER",
+        drawerComponent: "UPDATEBANNER_FORM",
+        data: updatedBanner,
+      });
+
+      setCheckedId([]);
+      setCheckedAll(false);
+    }
+  }, [dispatch, checkedId, datas]);
+
+  var { data } = useBanners();
   // React.useEffect(() => {
   //   setDatas(data);
   //   dispatch({
@@ -135,14 +154,14 @@ export default function BannersAll() {
 
             <Col md={10}>
               <Row>
-                <Col md={9}></Col>
-                <Col md={3}>
+                <Col md={7}></Col>
+                <Col md={5}>
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => <Plus />}
                     overrides={{
                       BaseButton: {
-                        style: ({$theme, $size, $shape}) => {
+                        style: ({ $theme, $size, $shape }) => {
                           return {
                             width: "100%",
                             borderTopLeftRadius: "3px",
@@ -161,10 +180,31 @@ export default function BannersAll() {
             </Col>
           </Header>
 
-          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
+          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
               <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, 200px) minmax(200px, auto) minmax(150px, auto)">
-                <StyledHeadCell>Check</StyledHeadCell>
+                <StyledHeadCell>
+                  <Checkbox
+                    type="checkbox"
+                    value="checkAll"
+                    checked={checkedAll}
+                    onChange={onAllCheck}
+                    overrides={{
+                      Checkmark: {
+                        style: {
+                          borderTopWidth: "2px",
+                          borderRightWidth: "2px",
+                          borderBottomWidth: "2px",
+                          borderLeftWidth: "2px",
+                          borderTopLeftRadius: "4px",
+                          borderTopRightRadius: "4px",
+                          borderBottomRightRadius: "4px",
+                          borderBottomLeftRadius: "4px",
+                        },
+                      },
+                    }}
+                  />
+                </StyledHeadCell>
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Image</StyledHeadCell>
                 <StyledHeadCell>Title</StyledHeadCell>
@@ -240,7 +280,7 @@ export default function BannersAll() {
               startEnhancer={() => <Plus />}
               overrides={{
                 BaseButton: {
-                  style: ({$theme, $size, $shape}) => {
+                  style: ({ $theme, $size, $shape }) => {
                     return {
                       width: "100%",
                       borderTopLeftRadius: "3px",

@@ -1,20 +1,20 @@
-import {styled, withStyle} from "baseui";
-import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
+import { styled, withStyle } from "baseui";
+import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Placeholder from "components/Placeholder/Placeholder";
 import ProductCard from "components/ProductCard/ProductCard";
 import Select from "components/Select/Select";
-import {Header} from "components/Wrapper.style";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import React, {useState} from "react";
+import { Header } from "components/Wrapper.style";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import React, { useState } from "react";
 import Fade from "react-reveal/Fade";
-import {getBrands} from "service/use-brands";
-import {CURRENCY} from "settings/constants";
-import useProducts from "../../service/use-products";
-import {getUsers} from "../../service/use-users";
+import { getBrands } from "service/use-brands";
+import { CURRENCY } from "settings/constants";
+import useProducts from "../../service/use-posts";
+import { getUsers } from "../../service/use-users";
 
-export const ProductsRow = styled("div", ({$theme}) => ({
+export const ProductsRow = styled("div", ({ $theme }) => ({
   display: "flex",
   flexWrap: "wrap",
   marginTop: "25px",
@@ -63,23 +63,23 @@ export const LoaderItem = styled("div", () => ({
 }));
 
 const productStatusSelectOptions = [
-  {value: "active", label: "Active"},
-  {value: "approving", label: "Waiting approve"},
-  {value: "reported", label: "Reported"},
-  {value: "expired", label: "Expired"},
-  {value: "isSold", label: "Sold"},
-  {value: "isPriority", label: "Priority"},
-  {value: "deactive", label: "Blocked"},
+  { value: "active", label: "Active" },
+  { value: "approving", label: "Waiting approve" },
+  { value: "reported", label: "Reported" },
+  { value: "expired", label: "Expired" },
+  { value: "isSold", label: "Sold" },
+  { value: "isPriority", label: "Priority" },
+  { value: "deactive", label: "Blocked" },
 ];
 
 const sortSelectOptions = [
-  {value: "lasted", label: "Lasted"},
-  {value: "oldest", label: "Oldest"},
+  { value: "lasted", label: "Lasted" },
+  { value: "oldest", label: "Oldest" },
 ];
 
 const typeSelectOptions = [
-  {value: "sell", label: "Sell"},
-  {value: "buy", label: "Buy"},
+  { value: "sell", label: "Sell" },
+  { value: "buy", label: "Buy" },
 ];
 
 type ProductsProps = {
@@ -87,6 +87,94 @@ type ProductsProps = {
   loadMore?: boolean;
   type?: string;
 };
+
+const FAKE_DATA = [
+  {
+    id: 1,
+    title: "Cần bán xe gấp",
+    status: "waiting",
+    slug: "can-ban-xe-gap",
+    views: 0,
+    price: 1500000000,
+    description:
+      '<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Jean LEVIS 501</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Dáng Slim lên form chuẩn</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Chất jean co giãn, mặc siêu thoải mái</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Màu đẹp: trung và đậm</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Size:29-30-31-32-34</span></p>',
+    user_id: 1,
+    brand_id: 4,
+    deleted_at: null,
+    created_at: "2022-04-12T06:52:02+00:00",
+    updated_at: "2022-04-12T06:52:02+00:00",
+    brand_model_id: 6,
+    latitude: null,
+    longitude: null,
+    main_image: [
+      {
+        id: 2,
+        path: "products/1/1_OMUUycO3k4uppkHo.jpg",
+        url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        is_main: 1,
+        position: 0,
+      },
+    ],
+  },
+  {
+    id: 1,
+    title: "Cần bán xe gấp",
+    status: "waiting",
+    slug: "can-ban-xe-gap",
+    views: 0,
+    price: 1500000000,
+    description:
+      '<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Jean LEVIS 501</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Dáng Slim lên form chuẩn</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Chất jean co giãn, mặc siêu thoải mái</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Màu đẹp: trung và đậm</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Size:29-30-31-32-34</span></p>',
+    user_id: 1,
+    brand_id: 4,
+    deleted_at: null,
+    created_at: "2022-04-12T06:52:02+00:00",
+    updated_at: "2022-04-12T06:52:02+00:00",
+    brand_model_id: 6,
+    latitude: null,
+    longitude: null,
+    main_image: [
+      {
+        id: 2,
+        path: "products/1/1_OMUUycO3k4uppkHo.jpg",
+        url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        is_main: 1,
+        position: 0,
+      },
+    ],
+  },
+  {
+    id: 1,
+    title: "Cần bán xe gấp",
+    status: "waiting",
+    slug: "can-ban-xe-gap",
+    views: 0,
+    price: 1500000000,
+    description:
+      '<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Jean LEVIS 501</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Dáng Slim lên form chuẩn</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Chất jean co giãn, mặc siêu thoải mái</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Màu đẹp: trung và đậm</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Size:29-30-31-32-34</span></p>',
+    user_id: 1,
+    brand_id: 4,
+    deleted_at: null,
+    created_at: "2022-04-12T06:52:02+00:00",
+    updated_at: "2022-04-12T06:52:02+00:00",
+    brand_model_id: 6,
+    latitude: null,
+    longitude: null,
+    main_image: [
+      {
+        id: 2,
+        path: "products/1/1_OMUUycO3k4uppkHo.jpg",
+        url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        is_main: 1,
+        position: 0,
+      },
+    ],
+  },
+];
+
 export default function Posts() {
   const [brandSelectOptions, setBrandsSelectOptions] = useState([]);
 
@@ -105,7 +193,7 @@ export default function Posts() {
   const [isExpired, setIsExpired] = useState(false);
   const [users, setUsers] = useState([]);
 
-  const {data, error} = useProducts({
+  const { data, error } = useProducts({
     postType: postType,
     status: postStatus,
     text: search ? search : "",
@@ -119,23 +207,27 @@ export default function Posts() {
   let posts = data;
 
   React.useEffect(() => {
+    let isMounted = true;
     const fetchBrands = async () => {
       const brands = await getBrands();
       const options = brands.map((brand) => ({
         value: brand.id + "",
         label: brand.name,
       }));
-      setBrandsSelectOptions(options);
+      if (isMounted) {
+        setBrandsSelectOptions(options);
+      }
     };
-    fetchBrands();
-  }, []);
-
-  React.useEffect(() => {
     const fetchUser = async () => {
       const response = await getUsers();
-      setUsers(response.data);
+      if (isMounted) {
+        setUsers(response.data);
+      }
     };
+
     fetchUser();
+    fetchBrands();
+    return () => (isMounted = false);
   }, []);
 
   React.useEffect(() => {}, [
@@ -152,7 +244,7 @@ export default function Posts() {
     return <div>Error! {error.message}</div>;
   }
 
-  function handleSort({value}) {
+  function handleSort({ value }) {
     setSortByOption(value);
 
     if (value.length === 0) {
@@ -161,7 +253,7 @@ export default function Posts() {
       setSortBy(value[0].value);
     }
   }
-  function handleBrand({value}) {
+  function handleBrand({ value }) {
     setBrandOption(value);
 
     if (value.length === 0) {
@@ -170,7 +262,7 @@ export default function Posts() {
       setBrand(value[0].value);
     }
   }
-  function handlePostStatus({value}) {
+  function handlePostStatus({ value }) {
     setPostStatusOption(value);
 
     if (value.length === 0) {
@@ -195,7 +287,7 @@ export default function Posts() {
     setSearch(value);
   }
 
-  function handlePostType({value}) {
+  function handlePostType({ value }) {
     setPostTypeOption(value);
 
     if (value.length === 0) {
@@ -214,7 +306,7 @@ export default function Posts() {
     <Grid fluid={true}>
       <Row>
         <Col md={12}>
-          <Header style={{marginBottom: 15}}>
+          <Header style={{ marginBottom: 15 }}>
             <Col md={12} xs={12}>
               <Row>
                 <Col md={4} xs={12}>
@@ -277,16 +369,16 @@ export default function Posts() {
           </Header>
 
           <Row>
-            {posts ? (
-              posts.length !== 0 ? (
-                posts.map((item: any, index: number) => (
+            {FAKE_DATA ? (
+              FAKE_DATA.length !== 0 ? (
+                FAKE_DATA.map((item: any, index: number) => (
                   <Col
                     md={4}
                     lg={3}
                     sm={6}
                     xs={12}
                     key={index}
-                    style={{margin: "15px 0"}}
+                    style={{ margin: "15px 0" }}
                   >
                     <Fade bottom duration={800} delay={index * 10}>
                       <ProductCard

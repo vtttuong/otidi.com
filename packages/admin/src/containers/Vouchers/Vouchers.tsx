@@ -1,18 +1,18 @@
-import {Plus} from "assets/icons/PlusMinus";
-import {createThemedUseStyletron, styled, withStyle} from "baseui";
+import { Plus } from "assets/icons/PlusMinus";
+import { createThemedUseStyletron, styled, withStyle } from "baseui";
 import Button from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
-import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
-import {InLineLoader} from "components/InlineLoader/InlineLoader";
+import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
+import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
 import ProgressBar from "components/ProgressBar/ProgressBar";
 import Select from "components/Select/Select";
-import {Header, Heading, Wrapper} from "components/Wrapper.style";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import { Header, Heading, Wrapper } from "components/Wrapper.style";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
 import dayjs from "dayjs";
-import React, {useCallback, useState, useEffect} from "react";
-import {useAlert} from "react-alert";
-import useVouchers, {delVoucher, getVoucher} from "service/use-vouchers";
+import React, { useCallback, useState, useEffect } from "react";
+import { useAlert } from "react-alert";
+import useVouchers, { delVoucher, getVoucher } from "service/use-vouchers";
 import {
   ProgressText,
   ProgressWrapper,
@@ -24,10 +24,10 @@ import {
 } from "./Vouchers.style";
 import NoResult from "components/NoResult/NoResult";
 
-type CustomThemeT = {red400: string; textNormal: string; colors: any};
+type CustomThemeT = { red400: string; textNormal: string; colors: any };
 const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
 
-const ImageWrapper = styled("div", ({$theme}) => ({
+const ImageWrapper = styled("div", ({ $theme }) => ({
   width: "200px",
   height: "100px",
   overflow: "hidden",
@@ -43,6 +43,9 @@ const Col = withStyle(Column, () => ({
       marginBottom: 0,
     },
   },
+  "@media only screen and (max-width: 992px)": {
+    marginBottom: "20px",
+  },
 }));
 
 const Row = withStyle(Rows, () => ({
@@ -52,21 +55,19 @@ const Row = withStyle(Rows, () => ({
 }));
 
 const statusSelectOptions = [
-  {value: "active", label: "Active"},
-  {value: "expired", label: "Expired"},
+  { value: "active", label: "Active" },
+  { value: "expired", label: "Expired" },
 ];
 
 const typeSelectOptions = [
-  {value: "exchangeable", label: "Exchangeable"},
-  {value: "personal", label: "Personal"},
+  { value: "exchangeable", label: "Exchangeable" },
+  { value: "personal", label: "Personal" },
 ];
-
-const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
 
 export default function Vouchers() {
   const dispatch = useDrawerDispatch();
   const [checkedId, setCheckedId] = useState([]);
-  const [dataDetail, setDataDetail] = useState({});
+  const [checkedAll, setCheckedAll] = useState(false);
 
   const openDrawer = useCallback(
     () =>
@@ -109,7 +110,9 @@ export default function Vouchers() {
     },
   });
 
-  const {data, mutate, maxId} = useVouchers({status, type, text});
+  const { data, mutate, maxId } = useVouchers({ status, type, text });
+
+  console.log("DATA: ", data);
 
   const Image = styled("img", () => ({
     width: "100%",
@@ -117,18 +120,16 @@ export default function Vouchers() {
   }));
 
   useEffect(() => {
-    data?.unshift(createdVoucher);
+    if (createdVoucher) {
+      data?.unshift(createdVoucher);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createdVoucher]);
 
   useEffect(() => {
-    console.log("UPDATE");
-
     if (updatedVoucher) {
       // eslint-disable-next-line array-callback-return
       data.map((item) => {
-        console.log(item.id === updatedVoucher.id);
-
         if (item.id === updatedVoucher.id) {
           item.name = updatedVoucher.name;
           item.type = updatedVoucher.type;
@@ -173,13 +174,11 @@ export default function Vouchers() {
         const result = await delVoucher(item);
         if (!result) {
           newCheckedId = newCheckedId.filter((id) => id !== item);
-          console.log(newCheckedId);
 
           alert.success("Deleted failed!");
         } else {
           alert.success("Deleted success!");
         }
-        console.log(newCheckedId);
       })
     );
     dispatch({
@@ -189,16 +188,28 @@ export default function Vouchers() {
     setLoadingDel(false);
   };
 
-  const onEdit = React.useCallback(() => {
-    dispatch({
-      type: "OPEN_DRAWER",
-      drawerComponent: "CAMPAING_UPDATE_FORM",
-      data: dataDetail,
-    });
-    setCheckedId([]);
-  }, [dispatch, dataDetail]);
+  const onEdit = async () => {
+    const getUpdatedVoucher = async () => {
+      if (checkedId.length !== 0) {
+        const selectedVoucher = await getVoucher(checkedId.slice(-1)[0]);
+        return selectedVoucher;
+      }
+      return null;
+    };
+    const updatedVoucher = await getUpdatedVoucher();
 
-  function handleSelectStatus({value}) {
+    if (updatedVoucher) {
+      dispatch({
+        type: "OPEN_DRAWER",
+        drawerComponent: "CAMPAING_UPDATE_FORM",
+        data: updatedVoucher,
+      });
+      setCheckedId([]);
+      setCheckedAll(false);
+    }
+  };
+
+  function handleSelectStatus({ value }) {
     setStatusOptions(value);
     if (value.length) {
       setStatus(value[0].value);
@@ -207,7 +218,7 @@ export default function Vouchers() {
     }
   }
 
-  function handleSelectType({value}) {
+  function handleSelectType({ value }) {
     setTypeOptions(value);
     if (value.length) {
       setType(value[0].value);
@@ -217,29 +228,27 @@ export default function Vouchers() {
   }
 
   function handleSearch(event) {
-    const {value} = event.currentTarget;
+    const { value } = event.currentTarget;
     setText(value);
+  }
+
+  function onAllCheck(event) {
+    if (event.target.checked) {
+      const idx = data ? data.map((voucher) => voucher.id) : [];
+      setCheckedId(idx);
+    } else {
+      setCheckedId([]);
+    }
+    setCheckedAll(event.target.checked);
   }
 
   function handleCheckbox(event) {
     const name = parseInt(event.currentTarget.name);
-    if (data.length !== 0) {
-      // eslint-disable-next-line array-callback-return
-      data.map((i) => {
-        if (i.id === name) {
-          const setUpdatedVoucher = async () => {
-            const selectedVoucher = await getVoucher(name);
-
-            setDataDetail(selectedVoucher);
-          };
-          setUpdatedVoucher();
-        }
-      });
-    }
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
     } else {
       setCheckedId((prevState) => prevState.filter((id) => id !== name));
+      setCheckedAll(false);
     }
   }
 
@@ -263,7 +272,7 @@ export default function Vouchers() {
 
             <Col md={10}>
               <Row>
-                <Col md={2}>
+                <Col lg={2} md={6}>
                   <Select
                     options={statusSelectOptions}
                     labelKey="label"
@@ -275,7 +284,7 @@ export default function Vouchers() {
                   />
                 </Col>
 
-                <Col md={2}>
+                <Col lg={2} md={6}>
                   <Select
                     options={typeSelectOptions}
                     labelKey="label"
@@ -287,7 +296,7 @@ export default function Vouchers() {
                   />
                 </Col>
 
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   <Input
                     value={text}
                     placeholder="Ex: Search By Name"
@@ -296,13 +305,13 @@ export default function Vouchers() {
                   />
                 </Col>
 
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => <Plus />}
                     overrides={{
                       BaseButton: {
-                        style: ({$theme, $size, $shape}) => {
+                        style: ({ $theme, $size, $shape }) => {
                           return {
                             width: "100%",
                             borderTopLeftRadius: "3px",
@@ -321,10 +330,31 @@ export default function Vouchers() {
             </Col>
           </Header>
 
-          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
+          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
               <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(250px, 100px) minmax(200px, auto) minmax(200px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
-                <StyledHeadCell>Check</StyledHeadCell>
+                <StyledHeadCell>
+                  <Checkbox
+                    type="checkbox"
+                    value="checkAll"
+                    checked={checkedAll}
+                    onChange={onAllCheck}
+                    overrides={{
+                      Checkmark: {
+                        style: {
+                          borderTopWidth: "2px",
+                          borderRightWidth: "2px",
+                          borderBottomWidth: "2px",
+                          borderLeftWidth: "2px",
+                          borderTopLeftRadius: "4px",
+                          borderTopRightRadius: "4px",
+                          borderBottomRightRadius: "4px",
+                          borderBottomLeftRadius: "4px",
+                        },
+                      },
+                    }}
+                  />
+                </StyledHeadCell>
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Image</StyledHeadCell>
                 <StyledHeadCell>Vouchers Name</StyledHeadCell>
@@ -335,7 +365,7 @@ export default function Vouchers() {
                 <StyledHeadCell>Status</StyledHeadCell>
 
                 {data ? (
-                  data.length ? (
+                  data.length > 0 ? (
                     data.map((item) => {
                       return (
                         <React.Fragment key={item.id}>
@@ -390,7 +420,7 @@ export default function Vouchers() {
                                     },
                                   },
                                   BarProgress: {
-                                    style: ({$theme}) => {
+                                    style: ({ $theme }) => {
                                       return {
                                         backgroundColor: $theme.colors.primary,
                                         borderTopLeftRadius: "5px",
@@ -456,7 +486,7 @@ export default function Vouchers() {
               startEnhancer={() => <Plus />}
               overrides={{
                 BaseButton: {
-                  style: ({$theme, $size, $shape}) => {
+                  style: ({ $theme, $size, $shape }) => {
                     return {
                       width: "100%",
                       borderTopLeftRadius: "3px",
@@ -478,7 +508,7 @@ export default function Vouchers() {
               startEnhancer={() => <Plus />}
               overrides={{
                 BaseButton: {
-                  style: ({$theme, $size, $shape}) => {
+                  style: ({ $theme, $size, $shape }) => {
                     return {
                       width: "100%",
                       borderTopLeftRadius: "3px",
@@ -493,6 +523,7 @@ export default function Vouchers() {
               Delete
             </Button>
           </Col>
+          <Col md={8}></Col>
         </Row>
       ) : null}
     </Grid>

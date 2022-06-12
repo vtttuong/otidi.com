@@ -49,7 +49,7 @@ const RevenueYear = ({ ...props }) => {
 
   const years = [];
 
-  for (let i = 2010; i <= 2021; i++) {
+  for (let i = 2020; i <= new Date().getFullYear(); i++) {
     years.push({ value: i, label: i.toString() });
   }
 
