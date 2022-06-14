@@ -114,14 +114,15 @@ const Routes = () => {
             </AdminLayout>
           </PrivateRoute>
 
-          {/*<PrivateRoute path={FAQS}>
+          <PrivateRoute path={FAQS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Faqs />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={BANNERS}>
+
+          {/*<PrivateRoute path={BANNERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Banners />

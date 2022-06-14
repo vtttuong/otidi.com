@@ -1,15 +1,16 @@
-import { Plus } from "assets/icons/Plus";
-import { withStyle } from "baseui";
+import {Plus} from "assets/icons/Plus";
+import {withStyle} from "baseui";
 import Button from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
-import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
-import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
+import {InLineLoader} from "components/InlineLoader/InlineLoader";
+import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
-import { Header, Heading, Wrapper } from "components/Wrapper.style";
-import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
-import React, { useCallback, useState } from "react";
-import { useAlert } from "react-alert";
-import { deleteFaq, getFaqs } from "service/use-faqs";
+import {Header, Heading, Wrapper} from "components/Wrapper.style";
+import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import React, {useCallback, useState} from "react";
+import {useAlert} from "react-alert";
+import {deleteFaq, getFaqs} from "service/use-faqs";
 import {
   StyledBodyCell,
   StyledHeadCell,
@@ -34,14 +35,14 @@ const Row = withStyle(Rows, () => ({
 }));
 
 const userType = [
-  { value: "en", label: "En" },
-  { value: "vi", label: "Vi" },
+  {value: "en", label: "En"},
+  {value: "vi", label: "Vi"},
 ];
 
 export default function Faqs() {
   const dispatch = useDrawerDispatch();
   const [checkedId, setCheckedId] = useState([]);
-  const [dataFaqs, setDataFaqs] = useState([]);
+  const [dataFaqs, setDataFaqs] = useState(null);
   const [locale, setLocale] = useState("en");
   const [stock, setStock] = useState([]);
   const [checked, setChecked] = useState(false);
@@ -50,8 +51,9 @@ export default function Faqs() {
   const [loadingDel, setLoadingDel] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loadingEdit, setLoadingEdit] = useState(false);
+
   const openDrawer = useCallback(
-    () => dispatch({ type: "OPEN_DRAWER", drawerComponent: "CREATEFAQ_FORM" }),
+    () => dispatch({type: "OPEN_DRAWER", drawerComponent: "CREATEFAQ_FORM"}),
     [dispatch]
   );
   const saveId = useDrawerState("saveId");
@@ -74,7 +76,7 @@ export default function Faqs() {
     setLoadingDel(true);
     checkedId.length !== 0 &&
       checkedId.map(async (item) => {
-        await deleteFaq(item, locale);
+        await deleteFaq(item);
       });
     setUpdate(!update);
 
@@ -95,15 +97,6 @@ export default function Faqs() {
       }),
     [dispatch, dataDetail]
   );
-
-  function handleSelect({ value }) {
-    setStock(value);
-    if (value.length) {
-      setLocale(value[0].value);
-    } else {
-      setLocale("en");
-    }
-  }
 
   function onAllCheck(event) {
     if (event.target.checked) {
@@ -148,26 +141,13 @@ export default function Faqs() {
 
             <Col md={10}>
               <Row>
-                <Col md={5}></Col>
-                <Col md={3}>
-                  <Select
-                    options={userType}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder="Locate"
-                    value={stock}
-                    searchable={false}
-                    onChange={handleSelect}
-                  />
-                </Col>
-
-                <Col md={3}>
+                <Col style={{marginLeft: "auto"}} md={3}>
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => <Plus />}
                     overrides={{
                       BaseButton: {
-                        style: ({ $theme, $size, $shape }) => {
+                        style: ({$theme, $size, $shape}) => {
                           return {
                             width: "100%",
                             borderTopLeftRadius: "3px",
@@ -186,7 +166,7 @@ export default function Faqs() {
             </Col>
           </Header>
 
-          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
+          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
             <TableWrapper>
               <StyledTable $gridTemplateColumns="minmax(70px, 70px)  minmax(50px, 70px) minmax(300px, 300px)  minmax(500px, auto) ">
                 <StyledHeadCell>
@@ -216,35 +196,45 @@ export default function Faqs() {
                 <StyledHeadCell>Title</StyledHeadCell>
                 <StyledHeadCell>Content</StyledHeadCell>
 
-                {dataFaqs.length !== 0 ? (
-                  dataFaqs.map((item) => (
-                    <React.Fragment key={item.id}>
-                      <StyledBodyCell>
-                        <Checkbox
-                          name={item.id}
-                          checked={checkedId.includes(item.id)}
-                          onChange={handleCheckbox}
-                          overrides={{
-                            Checkmark: {
-                              style: {
-                                borderTopWidth: "2px",
-                                borderRightWidth: "2px",
-                                borderBottomWidth: "2px",
-                                borderLeftWidth: "2px",
-                                borderTopLeftRadius: "4px",
-                                borderTopRightRadius: "4px",
-                                borderBottomRightRadius: "4px",
-                                borderBottomLeftRadius: "4px",
+                {dataFaqs ? (
+                  dataFaqs.length !== 0 ? (
+                    dataFaqs.map((item) => (
+                      <React.Fragment key={item.id}>
+                        <StyledBodyCell>
+                          <Checkbox
+                            name={item.id}
+                            checked={checkedId.includes(item.id)}
+                            onChange={handleCheckbox}
+                            overrides={{
+                              Checkmark: {
+                                style: {
+                                  borderTopWidth: "2px",
+                                  borderRightWidth: "2px",
+                                  borderBottomWidth: "2px",
+                                  borderLeftWidth: "2px",
+                                  borderTopLeftRadius: "4px",
+                                  borderTopRightRadius: "4px",
+                                  borderBottomRightRadius: "4px",
+                                  borderBottomLeftRadius: "4px",
+                                },
                               },
-                            },
-                          }}
-                        />
-                      </StyledBodyCell>
-                      <StyledBodyCell>{item.id}</StyledBodyCell>
-                      <StyledBodyCell>{item.title}</StyledBodyCell>
-                      <StyledBodyCell>{item.content}</StyledBodyCell>
-                    </React.Fragment>
-                  ))
+                            }}
+                          />
+                        </StyledBodyCell>
+                        <StyledBodyCell>{item.id}</StyledBodyCell>
+                        <StyledBodyCell>{item.title}</StyledBodyCell>
+                        <StyledBodyCell>{item.content}</StyledBodyCell>
+                      </React.Fragment>
+                    ))
+                  ) : (
+                    <NoResult
+                      hideButton={false}
+                      style={{
+                        gridColumnStart: "1",
+                        gridColumnEnd: "-1",
+                      }}
+                    />
+                  )
                 ) : (
                   <div className="box-relative-no">
                     <div className="load-wrapp">
@@ -268,7 +258,7 @@ export default function Faqs() {
               startEnhancer={() => <Plus />}
               overrides={{
                 BaseButton: {
-                  style: ({ $theme, $size, $shape }) => {
+                  style: ({$theme, $size, $shape}) => {
                     return {
                       width: "100%",
                       borderTopLeftRadius: "3px",
@@ -290,7 +280,7 @@ export default function Faqs() {
               startEnhancer={() => <Plus />}
               overrides={{
                 BaseButton: {
-                  style: ({ $theme, $size, $shape }) => {
+                  style: ({$theme, $size, $shape}) => {
                     return {
                       width: "100%",
                       borderTopLeftRadius: "3px",
