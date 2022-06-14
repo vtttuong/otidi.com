@@ -1,14 +1,14 @@
-import { Plus } from "assets/icons/Plus";
-import { styled, withStyle } from "baseui";
+import {Plus} from "assets/icons/Plus";
+import {styled, withStyle} from "baseui";
 import Button from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
-import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
-import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
+import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
-import { Header, Heading, Wrapper } from "components/Wrapper.style";
-import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
-import React, { useCallback, useState } from "react";
+import {Header, Heading, Wrapper} from "components/Wrapper.style";
+import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import React, {useCallback, useState} from "react";
 import useBanners from "service/use-banners";
 import {
   StyledBodyCell,
@@ -33,7 +33,7 @@ const Row = withStyle(Rows, () => ({
   },
 }));
 
-const ImageWrapper = styled("div", ({ $theme }) => ({
+const ImageWrapper = styled("div", ({$theme}) => ({
   width: "200px",
   height: "100px",
   overflow: "hidden",
@@ -50,37 +50,42 @@ const Image = styled("img", () => ({
   height: "auto",
 }));
 
+const FAKE_DATA = [
+  {
+    id: 1,
+    url:
+      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/8VDdzPMsQqxgg6Qt.png",
+    created_at: "2022-05-15T10:06:36.000000Z",
+    updated_at: "2022-05-15T10:06:36.000000Z",
+    title: "Banner 1",
+    content: "Content 1",
+  },
+  {
+    id: 2,
+    url:
+      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/HRbiWH8QhRx80RqN.png",
+    created_at: "2022-05-15T10:06:54.000000Z",
+    updated_at: "2022-05-15T10:06:54.000000Z",
+    title: "Banner 2",
+    content: "Content 2",
+  },
+];
 export default function BannersAll() {
   const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
 
-  const [locale, setLocale] = useState("en");
-  const [localeOption, setLocaleOption] = useState([]);
-  const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState(FAKE_DATA);
   const [bannerDetail, setBannerDetail] = useState<any>({});
   const [checkedId, setCheckedId] = useState([]);
   const saveId = useDrawerState("saveId");
   const dispatch = useDrawerDispatch();
   const openDrawer = useCallback(
-    () =>
-      dispatch({ type: "OPEN_DRAWER", drawerComponent: "CREATEBANNER_FORM" }),
+    () => dispatch({type: "OPEN_DRAWER", drawerComponent: "CREATEBANNER_FORM"}),
     [dispatch]
   );
 
-  const localeSelectOptions = [
-    { value: "en", label: "En" },
-    { value: "vi", label: "Vi" },
-  ];
-
-  async function handleSelect({ value }) {
-    setLocaleOption(value);
-    if (value.length) {
-      setLocale(value[0].value);
-    } else {
-      setLocale("en");
-    }
-  }
-
   function handleCheckbox(event) {
+    console.log(event.currentTarget);
+
     const name = parseInt(event.currentTarget.name);
     if (datas.length !== 0) {
       // eslint-disable-next-line array-callback-return
@@ -90,6 +95,7 @@ export default function BannersAll() {
         }
       });
     }
+
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
     } else {
@@ -106,14 +112,14 @@ export default function BannersAll() {
     });
   }, [dispatch, bannerDetail]);
 
-  var { data } = useBanners(locale);
-  React.useEffect(() => {
-    setDatas(data);
-    dispatch({
-      type: "SAVE_ID",
-      data: null,
-    });
-  }, [saveId, dispatch, data]);
+  var {data} = useBanners();
+  // React.useEffect(() => {
+  //   setDatas(data);
+  //   dispatch({
+  //     type: "SAVE_ID",
+  //     data: null,
+  //   });
+  // }, [saveId, dispatch, data]);
 
   return (
     <Grid fluid={true}>
@@ -131,26 +137,14 @@ export default function BannersAll() {
 
             <Col md={10}>
               <Row>
-                <Col md={5}></Col>
-                <Col md={3}>
-                  <Select
-                    options={localeSelectOptions}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder="Locale"
-                    value={localeOption}
-                    searchable={false}
-                    onChange={handleSelect}
-                  />
-                </Col>
-
+                <Col md={9}></Col>
                 <Col md={3}>
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => <Plus />}
                     overrides={{
                       BaseButton: {
-                        style: ({ $theme, $size, $shape }) => {
+                        style: ({$theme, $size, $shape}) => {
                           return {
                             width: "100%",
                             borderTopLeftRadius: "3px",
@@ -169,15 +163,15 @@ export default function BannersAll() {
             </Col>
           </Header>
 
-          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
+          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, 200px) minmax(200px, auto) minmax(150px, auto) minmax(150px, max-content)">
+              <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, 200px) minmax(200px, auto) minmax(150px, auto)">
                 <StyledHeadCell>Check</StyledHeadCell>
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Image</StyledHeadCell>
                 <StyledHeadCell>Title</StyledHeadCell>
                 <StyledHeadCell>Content</StyledHeadCell>
-                <StyledHeadCell>Type</StyledHeadCell>
+                {/* <StyledHeadCell>Type</StyledHeadCell> */}
 
                 {datas ? (
                   datas.length !== 0 ? (
@@ -208,15 +202,12 @@ export default function BannersAll() {
                         <StyledBodyCell>{item.id}</StyledBodyCell>
                         <StyledBodyCell>
                           <ImageWrapper>
-                            <Image
-                              src={urlServer + item.image}
-                              alt={"avatar"}
-                            />
+                            <Image src={item.url} alt={"avatar"} />
                           </ImageWrapper>
                         </StyledBodyCell>
                         <StyledBodyCell>{item.title}</StyledBodyCell>
-                        <StyledBodyCell>{item.sub_title}</StyledBodyCell>
-                        <StyledBodyCell>{item.type}</StyledBodyCell>
+                        <StyledBodyCell>{item.content}</StyledBodyCell>
+                        {/* <StyledBodyCell>{item.content}</StyledBodyCell> */}
                       </React.Fragment>
                     ))
                   ) : (
@@ -224,7 +215,7 @@ export default function BannersAll() {
                       hideButton={false}
                       style={{
                         gridColumnStart: "1",
-                        gridColumnEnd: "one",
+                        gridColumnEnd: "-1",
                       }}
                     />
                   )
@@ -251,7 +242,7 @@ export default function BannersAll() {
               startEnhancer={() => <Plus />}
               overrides={{
                 BaseButton: {
-                  style: ({ $theme, $size, $shape }) => {
+                  style: ({$theme, $size, $shape}) => {
                     return {
                       width: "100%",
                       borderTopLeftRadius: "3px",

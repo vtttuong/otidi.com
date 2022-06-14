@@ -14,7 +14,7 @@ import {withRouter} from "react-router-dom";
 import {
   BANNERS,
   BRANDS,
-  COUPONS,
+  VOUCHERS,
   DASHBOARD,
   FAQS,
   ORDERS,
@@ -75,7 +75,7 @@ const sidebarMenus = [
   },
   {
     name: "Vouchers",
-    path: COUPONS,
+    path: VOUCHERS,
     exact: false,
     icon: <CouponIcon />,
   },

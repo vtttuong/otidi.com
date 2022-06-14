@@ -53,7 +53,10 @@ password: min123456
 
 ### API PROBLEMS
 
-1. User
+1. Users
    1.1. Get all, return wrong name -> email, no avatar returned
    1.2. Block/Unblock user
    1.3. No create user api
+2. Banners
+3. Voucher:
+   3.1: Get all, no return image, no return used
