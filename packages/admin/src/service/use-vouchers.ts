@@ -93,8 +93,8 @@ export function addVoucher(formData: any) {
   };
 
   axios.post(baseUrl + `/vouchers`, formData, configs).then((response) => {
-    if (response.status === 200 && response.data.error) {
-      return response.data.error;
+    if (response.status === 200) {
+      return response.data.data;
     } else {
       return {error: ""};
     }
@@ -109,10 +109,11 @@ export async function delVoucher(id: number) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/vouchers/${id}`, options);
-  if (users.status === 200) {
+  const response = await fetch(`${baseUrl}/vouchers/${id}`, options);
+  if (response.status === 200) {
     return {status: true};
   }
+  return null;
   // return await users.json();
 }
 export async function updateVoucher(id: number, vc: any) {
@@ -124,10 +125,10 @@ export async function updateVoucher(id: number, vc: any) {
     },
     body: JSON.stringify(vc),
   };
-  const users = await fetch(`${baseUrl}/vouchers/${id}`, options);
+  const response = await fetch(`${baseUrl}/vouchers/${id}`, options);
 
-  if (users.status === 200) {
-    return await users.json();
+  if (response.status === 200) {
+    return await response.json();
   }
   return null;
 }

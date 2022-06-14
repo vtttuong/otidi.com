@@ -48,7 +48,7 @@ const AddBanner: React.FC<Props> = (props) => {
   // const [locale, setLocale] = useState(data.locale);
   const [category, setCategory] = useState(data.type);
   const [title, setTitle] = useState(data.title);
-  const [subTitle, setSubTitle] = useState(data.sub_title);
+  const [content, setContent] = useState(data.content);
   const [image, setImage] = useState("");
 
   React.useEffect(() => {
@@ -62,7 +62,7 @@ const AddBanner: React.FC<Props> = (props) => {
     const token = localStorage.getItem("secondhand_token");
     const formData = new FormData();
     formData.set("title", title);
-    formData.set("sub_title", subTitle);
+    formData.set("content", content);
     if (category !== data.type) {
       formData.set("type", category);
     }
@@ -123,8 +123,8 @@ const AddBanner: React.FC<Props> = (props) => {
 
     if (name === "title") {
       setTitle(value);
-    } else if (name === "subtitle") {
-      setSubTitle(value);
+    } else if (name === "content") {
+      setContent(value);
     }
   };
 
@@ -258,8 +258,8 @@ const AddBanner: React.FC<Props> = (props) => {
                   <FormLabel>Content</FormLabel>
                   <Input
                     inputRef={register({required: true, maxLength: 20})}
-                    value={subTitle}
-                    name="subtitle"
+                    value={content}
+                    name="content"
                     onChange={handleChangeInput}
                   />
                 </FormFields>
