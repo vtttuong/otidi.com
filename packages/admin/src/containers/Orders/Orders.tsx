@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { styled, withStyle, createThemedUseStyletron } from "baseui";
+import React, {useState, useEffect} from "react";
+import {styled, withStyle, createThemedUseStyletron} from "baseui";
 import dayjs from "dayjs";
-import { Grid, Row as Rows, Col as Column } from "components/FlexBox/FlexBox";
+import {Grid, Row as Rows, Col as Column} from "components/FlexBox/FlexBox";
 import Select from "components/Select/Select";
 import Input from "components/Input/Input";
-import { Wrapper, Header, Heading } from "components/Wrapper.style";
-import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import {Wrapper, Header, Heading} from "components/Wrapper.style";
+import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import usePayments from "service/use-payment";
 import NoResult from "components/NoResult/NoResult";
 
@@ -16,10 +16,10 @@ import {
   StyledCell,
 } from "./Orders.style";
 
-type CustomThemeT = { red400: string; textNormal: string; colors: any };
+type CustomThemeT = {red400: string; textNormal: string; colors: any};
 const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
 
-const Status = styled("div", ({ $theme }) => ({
+const Status = styled("div", ({$theme}) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.textDark,
   display: "flex",
@@ -58,13 +58,13 @@ const Row = withStyle(Rows, () => ({
 }));
 
 const statusSelectOptions = [
-  { value: "success", label: "Success" },
-  { value: "failed", label: "Failed" },
+  {value: "success", label: "Success"},
+  {value: "failed", label: "Failed"},
 ];
 const limitSelectOptions = [
-  { value: 7, label: "Last 7 orders" },
-  { value: 15, label: "Last 15 orders" },
-  { value: 30, label: "Last 30 orders" },
+  {value: 7, label: "Last 7 orders"},
+  {value: 15, label: "Last 15 orders"},
+  {value: 30, label: "Last 30 orders"},
 ];
 
 export default function Orders() {
@@ -88,16 +88,11 @@ export default function Orders() {
   const [dayAgo, setDayAgo] = useState(30);
   const [search, setSearch] = useState("");
 
-  const { data } = usePayments({
-    limit: 50,
-    status: status,
-    dayAgo: dayAgo,
-    text: search ? search : "",
-  });
+  const {data} = usePayments({});
 
   useEffect(() => {}, [status, dayAgo]);
 
-  function handleStatus({ value }) {
+  function handleStatus({value}) {
     setStatusOptions(value);
     if (value.length) {
       setStatus(value[0].value);
@@ -106,7 +101,7 @@ export default function Orders() {
     }
   }
 
-  function handleLimit({ value }) {
+  function handleLimit({value}) {
     setDayAgoOptions(value);
     if (value.length) {
       setDayAgo(value[0].value);
@@ -115,14 +110,14 @@ export default function Orders() {
     }
   }
   function handleSearch(event) {
-    const { value } = event.currentTarget;
+    const {value} = event.currentTarget;
     setSearch(value);
     // refetch({ searchText: value });
   }
 
   const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
 
-  const ImageWrapper = styled("div", ({ $theme }) => ({
+  const ImageWrapper = styled("div", ({$theme}) => ({
     width: "38px",
     height: "38px",
     overflow: "hidden",
@@ -191,7 +186,7 @@ export default function Orders() {
             </Col>
           </Header>
 
-          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
+          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
             <TableWrapper>
               <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(150px, auto) minmax(150px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
                 <StyledHeadCell>ID</StyledHeadCell>
@@ -226,7 +221,7 @@ export default function Orders() {
                         <StyledCell>{item.amount}</StyledCell>
                         <StyledCell>{item.amount}</StyledCell>
                         <StyledCell>{item.order_info}</StyledCell>
-                        <StyledCell style={{ justifyContent: "center" }}>
+                        <StyledCell style={{justifyContent: "center"}}>
                           <Status
                             className={item.error_code === 0 ? success : failed}
                           >

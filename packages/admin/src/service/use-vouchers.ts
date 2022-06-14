@@ -3,14 +3,14 @@ import useSWR from "swr";
 import Fuse from "fuse.js";
 import queryString from "query-string";
 
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
 
 const options = {
   isCaseSensitive: false,
   shouldSort: true,
   threshold: 0.3,
-  minMatchCharLength: 2,
+  // minMatchCharLength: 2,
   keys: ["name"],
 };
 
@@ -32,14 +32,19 @@ interface Props {
   status?: string;
   text?: string;
   type?: string;
+  page?: number;
 }
 
 export default function useVouchers(variables: Props) {
-  const { status, type, text } = variables ?? {};
+  const {status, type, text, page} = variables ?? {};
+
+  const COUNT = 10;
 
   let queryParams = {
     status: status,
     type: type,
+    page: page ? page : 1,
+    count: COUNT,
   };
 
   let newParams = {};
@@ -54,19 +59,19 @@ export default function useVouchers(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
-  let url = baseUrl + "/api/admin/v1/vouchers?" + parsed;
+  let url = baseUrl + "/vouchers?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
   // need to remove when you using real API integration
 
-  let vouchers = data;
+  let vouchers = data?.data;
 
-  if (text) {
+  if (text && vouchers) {
     vouchers = search(vouchers, text);
   }
 
@@ -87,15 +92,13 @@ export function addVoucher(formData: any) {
     },
   };
 
-  axios
-    .post(baseUrl + `/api/admin/v1/vouchers`, formData, configs)
-    .then((response) => {
-      if (response.status === 200 && response.data.error) {
-        return response.data.error;
-      } else {
-        return { error: "" };
-      }
-    });
+  axios.post(baseUrl + `/vouchers`, formData, configs).then((response) => {
+    if (response.status === 200) {
+      return response.data.data;
+    } else {
+      return {error: ""};
+    }
+  });
 }
 
 export async function delVoucher(id: number) {
@@ -106,10 +109,11 @@ export async function delVoucher(id: number) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/api/admin/v1/vouchers/${id}`, options);
-  if (users.status === 200) {
-    return { status: true };
+  const response = await fetch(`${baseUrl}/vouchers/${id}`, options);
+  if (response.status === 200) {
+    return {status: true};
   }
+  return null;
   // return await users.json();
 }
 export async function updateVoucher(id: number, vc: any) {
@@ -121,10 +125,27 @@ export async function updateVoucher(id: number, vc: any) {
     },
     body: JSON.stringify(vc),
   };
-  const users = await fetch(`${baseUrl}/api/admin/v1/vouchers/${id}`, options);
+  const response = await fetch(`${baseUrl}/vouchers/${id}`, options);
 
-  if (users.status === 200) {
-    return await users.json();
+  if (response.status === 200) {
+    return await response.json();
+  }
+  return null;
+}
+
+export async function getVoucher(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await fetch(`${baseUrl}/vouchers/${id}`, options);
+
+  if (response.status === 200) {
+    const voucherJson = await response.json();
+    return voucherJson.data;
   }
   return null;
 }

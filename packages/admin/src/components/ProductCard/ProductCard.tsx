@@ -20,6 +20,7 @@ import {
   ImageAvatar,
 } from "./ProductCard.style";
 import LocationIcon from "assets/image/location.png";
+import { Avatar } from "baseui/avatar";
 
 type ProductCardProps = {
   title: string;
@@ -62,7 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <ProductCardWrapper
       {...props}
       className="product-card"
-      onClick={openDrawer}
+      // onClick={openDrawer}
     >
       <ProductImageWrapper>
         <Image url={image} className="product-image" />
@@ -92,7 +93,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 displayType={"text"}
                 thousandSeparator={true}
                 // prefix={"$"}
-                renderText={(value) => <div>{value}</div>}
+                // renderText={(value) => <div>{value}</div>}
               />
               <ProductWeight>{weight}</ProductWeight>
             </ProductPrice>
@@ -100,7 +101,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           <OrderID>{orderId}</OrderID>
           <ProductAvatar>
-            <ImageAvatar url={avatar} />
+            <Avatar name="N O" size="scale1200" src={avatar} />
           </ProductAvatar>
         </ProductMeta>
       </ProductInfo>

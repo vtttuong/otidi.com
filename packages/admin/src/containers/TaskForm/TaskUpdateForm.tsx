@@ -8,7 +8,7 @@ import React, { useCallback, useState } from "react";
 import { useAlert } from "react-alert";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useForm } from "react-hook-form";
-import { updateTask } from "service/use-tasks";
+import { Task, updateTask } from "service/use-tasks";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -21,11 +21,9 @@ type Props = any;
 
 const EditTask: React.FC<Props> = (props) => {
   const data = useDrawerState("data");
-  const [dfDescription, setDescription] = useState(
-    data.translate[0].description
-  );
-  const [defaultName, setName] = useState(data.translate[0].name);
-  const [dfExchangePoint, setExchange] = useState(data.exchange_point);
+  const [dfDescription, setDescription] = useState(data.description);
+  const [defaultName, setName] = useState(data.name);
+  const [dfRewardPoint, setReward] = useState(data.reward_point);
   const [dfMaxExcute, setMaxExcute] = useState(data.max_number_excute);
   const [perUnit, setPerUnit] = useState(data.per_unit);
   const [link, setLink] = useState(data.redirect_link);
@@ -38,15 +36,29 @@ const EditTask: React.FC<Props> = (props) => {
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (dataVc) => {
+  const onSubmit = async () => {
     setLoading(true);
-    await updateTask(data.id, dataVc);
-    dispatch({
-      type: "SAVE_ID",
-      data: 4,
-    });
-    closeDrawer();
-    alert.success("Update success!");
+    const task: Task = {
+      name: defaultName,
+      description: dfDescription,
+      reward_point: dfRewardPoint,
+      max_number_excute: dfMaxExcute,
+      per_unit: perUnit,
+      redirect_link: link,
+    };
+    const result = await updateTask(data.id, task);
+    if (result) {
+      console.log(result.data);
+
+      dispatch({
+        type: "SAVE_ID",
+        data: data.id,
+      });
+      closeDrawer();
+      alert.success("Update success!");
+    } else {
+      alert.success("Update failed!");
+    }
   };
 
   return (
@@ -83,7 +95,7 @@ const EditTask: React.FC<Props> = (props) => {
                   <Input
                     inputRef={register}
                     name="name"
-                    value={defaultName}
+                    value={defaultName || ""}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </FormFields>
@@ -102,9 +114,9 @@ const EditTask: React.FC<Props> = (props) => {
                   <Input
                     type="number"
                     inputRef={register({ required: true })}
-                    name="exchange_point"
-                    value={dfExchangePoint}
-                    onChange={(e) => setExchange(e.target.value)}
+                    name="reward_point"
+                    value={dfRewardPoint}
+                    onChange={(e) => setReward(e.target.value)}
                   />
                 </FormFields>
                 <FormFields>
@@ -136,15 +148,6 @@ const EditTask: React.FC<Props> = (props) => {
                     name="redirect_link"
                     value={link || "/"}
                     onChange={(e) => setLink(e.target.value)}
-                  />
-                </FormFields>
-                <FormFields>
-                  <FormLabel>Locale</FormLabel>
-                  <Input
-                    type="text"
-                    inputRef={register}
-                    name="locale"
-                    value={data.translate[0].locale}
                   />
                 </FormFields>
               </DrawerBox>

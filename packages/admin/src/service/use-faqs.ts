@@ -1,7 +1,8 @@
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
 
-export async function getFaqs(locate: string) {
+export async function getFaqs(page?: number) {
+  const COUNT = 10;
   const options = {
     method: "GET",
     headers: {
@@ -9,15 +10,15 @@ export async function getFaqs(locate: string) {
       "Content-Type": "application/json",
     },
   };
-  const faqs = await fetch(
-    `${baseUrl}/api/admin/v1/faqs?locale=${locate}`,
+  const faqsResponse = await fetch(
+    `${baseUrl}/faqs?page=${page ? page : 1}&count=${COUNT}`,
     options
   );
-
-  return await faqs.json();
+  const faqs = await faqsResponse.json();
+  return faqs.data;
 }
 
-export async function deleteFaq(id: number, lang: string) {
+export async function deleteFaq(id: number) {
   const options = {
     method: "DELETE",
     headers: {
@@ -25,14 +26,14 @@ export async function deleteFaq(id: number, lang: string) {
       "Content-Type": "application/json",
     },
   };
-  const result = await fetch(
-    `${baseUrl}/api/admin/v1/faqs/${id}/${lang}`,
-    options
-  );
-  return result;
+  const response = await fetch(`${baseUrl}/faqs/${id}`, options);
+  if (response.status === 200) {
+    return await response.json();
+  }
+  return null;
 }
 
-export async function updateFaq(id: number, faq: any) {
+export async function updateFaq(id: number, faq: FaqItem) {
   const options = {
     method: "PUT",
     headers: {
@@ -41,25 +42,31 @@ export async function updateFaq(id: number, faq: any) {
     },
     body: JSON.stringify(faq),
   };
-  const result = await fetch(
-    `${baseUrl}/api/admin/v1/faqs/${id}/${faq.locale}`,
-    options
-  );
-  return result;
+  const response = await fetch(`${baseUrl}/faqs/${id}/`, options);
+  if (response.status === 200) {
+    return await response.json();
+  }
+  return null;
 }
 
-export async function addFaq(vc: any) {
+interface FaqItem {
+  title: string;
+  content: string;
+}
+export async function addFaq(fItem: FaqItem) {
+  var formdata = new FormData();
+  formdata.append("title", fItem.title);
+  formdata.append("content", fItem.content);
   const options = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
     },
-    body: JSON.stringify(vc),
+    body: formdata,
   };
-  const voucher = await fetch(`${baseUrl}/api/admin/v1/faqs`, options);
-  if (voucher.status === 200) {
-    return await voucher.json();
+  const response = await fetch(`${baseUrl}/faqs`, options);
+  if (response.status === 200) {
+    return await response.json();
   }
   return null;
 }

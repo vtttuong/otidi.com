@@ -1,18 +1,18 @@
-import { CoinIcon } from "assets/icons/CoinIcon";
-import { Star } from "assets/icons/Star";
-import Button, { KIND } from "components/Button/Button";
+import {CoinIcon} from "assets/icons/CoinIcon";
+import {Star} from "assets/icons/Star";
+import Button, {KIND} from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import { Col, Row } from "components/FlexBox/FlexBox";
-import { FormFields, FormLabel } from "components/FormFields/FormFields";
+import {Col, Row} from "components/FlexBox/FlexBox";
+import {FormFields, FormLabel} from "components/FormFields/FormFields";
 import Image from "components/Image/Image";
 import Input from "components/Input/Input";
-import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
-import { Consumer } from "context/updateContext";
-import React, { useCallback, useState } from "react";
-import { useAlert } from "react-alert";
-import { Scrollbars } from "react-custom-scrollbars";
-import { useForm } from "react-hook-form";
-import { unDeleteUser, deleteUser } from "service/use-users";
+import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
+import {Consumer} from "context/updateContext";
+import React, {useCallback, useState} from "react";
+import {useAlert} from "react-alert";
+import {Scrollbars} from "react-custom-scrollbars";
+import {useForm} from "react-hook-form";
+import {unDeleteUser, deleteUser} from "service/use-users";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -29,15 +29,15 @@ const UserDetailForm: React.FC<Props> = (props) => {
   const [defaultName, setName] = useState(data.name);
   const dispatch = useDrawerDispatch();
   const alert = useAlert();
-  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
+  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
     dispatch,
   ]);
 
-  const { register } = useForm();
+  const {register} = useForm();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
   React.useEffect(() => {
-    register({ name: "category" });
+    register({name: "category"});
   }, [register]);
 
   const onBlock = async (on) => {
@@ -55,25 +55,22 @@ const UserDetailForm: React.FC<Props> = (props) => {
 
   return (
     <Consumer>
-      {({ getUser }) => (
+      {({getUser}) => (
         <>
           <DrawerTitleWrapper>
             <DrawerTitle>Detail user</DrawerTitle>
           </DrawerTitleWrapper>
 
-          <Form style={{ height: "100%" }}>
+          <Form style={{height: "100%"}}>
             <Scrollbars
               autoHide
               renderView={(props) => (
-                <div
-                  {...props}
-                  style={{ ...props.style, overflowX: "hidden" }}
-                />
+                <div {...props} style={{...props.style, overflowX: "hidden"}} />
               )}
               renderTrackHorizontal={(props) => (
                 <div
                   {...props}
-                  style={{ display: "none" }}
+                  style={{display: "none"}}
                   className="track-horizontal"
                 />
               )}
@@ -174,7 +171,9 @@ const UserDetailForm: React.FC<Props> = (props) => {
                       <Input
                         inputRef={register}
                         name="vP"
-                        value={data.identify?.identified_at || ""}
+                        value={
+                          data.identify_card ? data.identity_verified_at : ""
+                        }
                       />
                     </FormFields>
                   </DrawerBox>
@@ -188,7 +187,7 @@ const UserDetailForm: React.FC<Props> = (props) => {
                 onClick={closeDrawer}
                 overrides={{
                   BaseButton: {
-                    style: ({ $theme }) => ({
+                    style: ({$theme}) => ({
                       width: "50%",
                       borderTopLeftRadius: "3px",
                       borderTopRightRadius: "3px",
@@ -209,7 +208,7 @@ const UserDetailForm: React.FC<Props> = (props) => {
                 isLoading={loading}
                 overrides={{
                   BaseButton: {
-                    style: ({ $theme }) => ({
+                    style: ({$theme}) => ({
                       width: "50%",
                       borderTopLeftRadius: "3px",
                       borderTopRightRadius: "3px",

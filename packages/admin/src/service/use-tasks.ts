@@ -1,5 +1,15 @@
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
+
+export interface Task {
+  name?: string;
+  type?: string;
+  description?: string;
+  reward_point: number;
+  max_number_excute: number;
+  per_unit: string;
+  redirect_link?: string;
+}
 
 export async function getTasks() {
   const options = {
@@ -9,8 +19,13 @@ export async function getTasks() {
       "Content-Type": "application/json",
     },
   };
-  const tasks = await fetch(`${baseUrl}/api/admin/v1/tasks`, options);
-  return tasks.json();
+  const response = await fetch(`${baseUrl}/tasks`, options);
+  const jsonData = await response.json();
+  if (response.status === 200) {
+    return jsonData.data;
+  } else {
+    return null;
+  }
 }
 
 export async function sortTasks(object: any) {
@@ -23,30 +38,29 @@ export async function sortTasks(object: any) {
   };
   if (object.locale && object.sort) {
     const voucher = await fetch(
-      `${baseUrl}/api/admin/v1/tasks?locale=${object.locale}&sort=created_at`,
+      `${baseUrl}/tasks?locale=${object.locale}&sort=created_at`,
       options
     );
     return voucher.json();
   }
   if (object.locale && !object.sort) {
     const voucher = await fetch(
-      `${baseUrl}/api/admin/v1/tasks?locale=${object.locale}`,
+      `${baseUrl}/tasks?locale=${object.locale}`,
       options
     );
     return voucher.json();
   }
   if (!object.locale && object.sort) {
-    const voucher = await fetch(
-      `${baseUrl}/api/admin/v1/tasks?sort=created_at`,
-      options
-    );
+    const voucher = await fetch(`${baseUrl}/tasks?sort=created_at`, options);
     return voucher.json();
   }
 
   return null;
 }
 
-export async function updateTask(id: number, vc: any) {
+export async function updateTask(id: number, vc: Task) {
+  console.log(vc);
+
   const options = {
     method: "PUT",
     headers: {
@@ -55,6 +69,11 @@ export async function updateTask(id: number, vc: any) {
     },
     body: JSON.stringify(vc),
   };
-  await fetch(`${baseUrl}/api/admin/v1/tasks/${id}`, options);
+  const response = await fetch(`${baseUrl}/tasks/${id}`, options);
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    return null;
+  }
   // return await tasks.json();
 }

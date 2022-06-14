@@ -28,6 +28,15 @@ export const Header = styled("div", ({ $theme }) => ({
   justifyContent: "space-between",
   borderBottom: "1px solid #E6E6E6",
 }));
+export const NoItemMessage = styled("div", ({ $theme }) => ({
+  padding: "50px 0",
+  display: "flex",
+  alignItems: "center",
+  textAlign: "center",
+  justifyContent: "center",
+  fontFamily: $theme.typography.primaryFontFamily,
+  color: $theme.colors.textDark,
+}));
 
 export const Heading = styled("span", ({ $theme }) => ({
   fontFamily: $theme.typography.primaryFontFamily,

@@ -1,16 +1,15 @@
-import {CloseIcon} from "assets/icons/CloseIcon";
-import Button, {KIND} from "components/Button/Button";
+import { CloseIcon } from "assets/icons/CloseIcon";
+import Button, { KIND } from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import {Col, Row} from "components/FlexBox/FlexBox";
-import {FormFields, FormLabel} from "components/FormFields/FormFields";
+import { Col, Row } from "components/FlexBox/FlexBox";
+import { FormFields, FormLabel } from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import {isLoaded} from "google-maps";
-import React, {useCallback, useEffect, useState} from "react";
-import {useAlert} from "react-alert";
-import {Scrollbars} from "react-custom-scrollbars";
-import {useForm} from "react-hook-form";
-import {addBrand, updateBrand} from "service/use-brands";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import React, { useCallback, useState } from "react";
+import { useAlert } from "react-alert";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useForm } from "react-hook-form";
+import { addBrand, updateBrand } from "service/use-brands";
 
 import {
   ButtonGroup,
@@ -26,17 +25,15 @@ import "./index.css";
 
 type Props = any;
 
-//model: {id: 1, name: 'LX 600', brand_id: 1, deleted_at: null, created_at: '2022-06-01T22:02:48+07:00', …}
-
 const AddBrand: React.FC<Props> = (props) => {
   const data = useDrawerState("data");
 
   const alert = useAlert();
   const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
+  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
   ]);
-  const {register, handleSubmit} = useForm();
+  const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState(
     data && data["brand_models"]
@@ -51,7 +48,8 @@ const AddBrand: React.FC<Props> = (props) => {
   const handleAddModelInput = () => {
     if (
       models.length === 0 ||
-      Object.keys(models[models.length - 1]).length !== 0
+      (Object.keys(models[models.length - 1]).length !== 0 &&
+        models[models.length - 1].name.trim().length !== 0)
     ) {
       setModels((prev) => [...prev, {}]);
     }
@@ -72,7 +70,7 @@ const AddBrand: React.FC<Props> = (props) => {
     setModels((prev) => {
       const existsModel = models[index];
       let newModels = [...prev];
-      newModels[index] = {...existsModel, name: value};
+      newModels[index] = { ...existsModel, name: value };
       return newModels;
     });
   };
@@ -84,14 +82,20 @@ const AddBrand: React.FC<Props> = (props) => {
       ...data,
       name: formData.name,
       logo: formData.logo,
-      models: models,
+      models: models.filter((model) => model.name.trim().length !== 0),
     };
+
+    if (brand.models.length === 0) {
+      alert.error("Brand required at least one model");
+      setLoading(false);
+      return;
+    }
+
     const datas = brand.id ? await updateBrand(brand) : await addBrand(brand);
 
     if (!datas.success) {
-      const result = datas.error;
-      const keys = Object.values(result);
-      keys.map((i) => alert.error(i));
+      const result = datas.result;
+      alert.error(result);
     } else {
       dispatch({
         type: "SAVE_SAVED_BRAND",
@@ -104,6 +108,7 @@ const AddBrand: React.FC<Props> = (props) => {
       closeDrawer();
       alert.success("Save brand successfully");
     }
+    setLoading(false);
   };
 
   return (
@@ -112,16 +117,16 @@ const AddBrand: React.FC<Props> = (props) => {
         <DrawerTitle>Add Brand</DrawerTitle>
       </DrawerTitleWrapper>
 
-      <Form onSubmit={handleSubmit(onSubmit)} style={{height: "100%"}}>
+      <Form onSubmit={handleSubmit(onSubmit)} style={{ height: "100%" }}>
         <Scrollbars
           autoHide
           renderView={(props) => (
-            <div {...props} style={{...props.style, overflowX: "hidden"}} />
+            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
           )}
           renderTrackHorizontal={(props) => (
             <div
               {...props}
-              style={{display: "none"}}
+              style={{ display: "none" }}
               className="track-horizontal"
             />
           )}
@@ -139,7 +144,7 @@ const AddBrand: React.FC<Props> = (props) => {
                   <FormLabel>Brand Name</FormLabel>
                   <Input
                     onChange={handleNameChange}
-                    inputRef={register({required: true, maxLength: 20})}
+                    inputRef={register({ required: true, maxLength: 20 })}
                     name="name"
                     value={name}
                   />
@@ -149,7 +154,7 @@ const AddBrand: React.FC<Props> = (props) => {
                     <FormLabel>Logo</FormLabel>
                     <Input
                       type="file"
-                      inputRef={register({required: true})}
+                      inputRef={register({ required: true })}
                       name="logo"
                     />
                   </FormFields>
@@ -160,7 +165,7 @@ const AddBrand: React.FC<Props> = (props) => {
                       <FormFields>
                         <FormLabel>{`Model ${i + 1}`}</FormLabel>
                         <Input
-                          inputRef={register({required: true, maxLength: 20})}
+                          inputRef={register({ required: true, maxLength: 20 })}
                           onChange={(e) => handleAddModel(e, i)}
                           name="model"
                           value={
@@ -181,7 +186,7 @@ const AddBrand: React.FC<Props> = (props) => {
                   onClick={handleAddModelInput}
                   overrides={{
                     BaseButton: {
-                      style: ({$theme}) => ({
+                      style: ({ $theme }) => ({
                         width: "50%",
                         borderTopLeftRadius: "3px",
                         borderTopRightRadius: "3px",
@@ -204,7 +209,7 @@ const AddBrand: React.FC<Props> = (props) => {
             onClick={closeDrawer}
             overrides={{
               BaseButton: {
-                style: ({$theme}) => ({
+                style: ({ $theme }) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
@@ -224,7 +229,7 @@ const AddBrand: React.FC<Props> = (props) => {
             isLoading={loading}
             overrides={{
               BaseButton: {
-                style: ({$theme}) => ({
+                style: ({ $theme }) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",

@@ -1,30 +1,7 @@
 import useSWR from "swr";
-import Fuse from "fuse.js";
-// import { useState } from 'react';
 const queryString = require("query-string");
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
-const options = {
-  isCaseSensitive: false,
-  // includeScore: false,
-  shouldSort: true,
-  // includeMatches: false,
-  // findAllMatches: false,
-  // minMatchCharLength: 1,
-  // location: 0,
-  threshold: 0.3,
-  // distance: 100,
-  // useExtendedSearch: false,
-  // ignoreLocation: false,
-  // ignoreFieldNorm: false,
-  minMatchCharLength: 2,
-  keys: ["user.name"],
-};
-function search(list, pattern) {
-  const fuse = new Fuse(list, options);
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 
-  return fuse.search(pattern).map((current) => current.item);
-}
-// import productFetcher from 'utils/api/product';
 const token = localStorage.getItem("secondhand_token");
 const productFetcher = (url) =>
   fetch(url, {
@@ -35,18 +12,19 @@ const productFetcher = (url) =>
     },
   }).then((res) => res.json());
 interface Props {
-  limit?: number;
+  from?: string;
+  to?: string;
   status?: string;
-  dayAgo?: number;
-  text?: string;
+  sort?: string;
 }
 export default function usePayments(variables: Props) {
-  const { limit, status, dayAgo, text } = variables ?? {};
+  const {from, to, status, sort} = variables ?? {};
 
   let queryParams = {
-    limit: limit,
-    status: status,
-    days_ago: dayAgo,
+    from: from,
+    to: to,
+    dir: sort ? sort : "",
+    status: status ? status : "",
   };
 
   let newParams = {};
@@ -61,21 +39,19 @@ export default function usePayments(variables: Props) {
     {
       ...newParams,
     },
-    { sort: false }
+    {sort: false}
   );
 
-  let url = baseUrl + "/api/admin/v1/payments?" + parsed;
+  let url = baseUrl + "/payment-transactions?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  console.log(url);
+
+  const {data, mutate, error} = useSWR(url, productFetcher);
 
   const loading = !data && !error;
   // need to remove when you using real API integration
 
-  let payments = data;
-
-  if (text) {
-    payments = search(payments, text);
-  }
+  let payments = data && data.data;
 
   return {
     loading,

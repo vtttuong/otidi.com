@@ -1,13 +1,14 @@
-import Button, { KIND } from "components/Button/Button";
+import Button, {KIND} from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import { Col, Row } from "components/FlexBox/FlexBox";
-import { FormFields, FormLabel } from "components/FormFields/FormFields";
+import {Col, Row} from "components/FlexBox/FlexBox";
+import {FormFields, FormLabel} from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
-import { useDrawerDispatch } from "context/DrawerContext";
-import { createUser } from "service/use-users";
-import React, { useCallback, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
-import { useForm } from "react-hook-form";
+import {useDrawerDispatch} from "context/DrawerContext";
+import {createUser} from "service/use-users";
+import React, {useCallback, useState} from "react";
+import {Scrollbars} from "react-custom-scrollbars";
+import {useForm} from "react-hook-form";
+import {useAlert} from "react-alert";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -19,8 +20,10 @@ import {
 type Props = any;
 
 const AddCampaing: React.FC<Props> = (props) => {
+  const alert = useAlert();
+
   const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
+  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
     dispatch,
   ]);
 
@@ -30,7 +33,7 @@ const AddCampaing: React.FC<Props> = (props) => {
   const [email, setEmail] = useState("");
 
   const handleChangeInput = (e) => {
-    const { value, name } = e.target;
+    const {value, name} = e.target;
 
     if (name === "name") {
       setName(value);
@@ -41,31 +44,44 @@ const AddCampaing: React.FC<Props> = (props) => {
     }
   };
 
-  const { register } = useForm();
+  const {register, handleSubmit} = useForm();
+
   React.useEffect(() => {
-    register({ name: "category" });
+    register({name: "category"});
   }, [register]);
 
   const onSubmit = async () => {
     setLoading(true);
 
     const newUser = await createUser(email, name, password);
+    console.log(newUser);
 
-    const userCreated = {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      rating: newUser.rating,
-      avatar_url: newUser.avatar_url,
-      email_verified_at: null,
-      phone_verified_at: null,
-      identify: null,
-    };
+    if (newUser.isError) {
+      alert.error("Create user failed");
+    } else {
+      const userCreated = {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        rating: newUser.rating,
+        avatar: newUser.avatar,
+        phone_number: null,
+        created_at: null,
+        updated_at: null,
+        address: null,
+        balance: null,
+        email_verified_at: null,
+        phone_verified_at: null,
+        identity_verified_at: null,
+        identity_card: null,
+      };
 
-    dispatch({
-      type: "SAVE_CREATED_USER",
-      data: userCreated,
-    });
+      dispatch({
+        type: "SAVE_CREATED_USER",
+        data: userCreated,
+      });
+      alert.success("Create user successfully");
+    }
 
     setLoading(false);
     closeDrawer();
@@ -77,23 +93,23 @@ const AddCampaing: React.FC<Props> = (props) => {
         <DrawerTitle>Add User</DrawerTitle>
       </DrawerTitleWrapper>
 
-      <Form style={{ height: "100%" }}>
+      <Form style={{height: "100%"}} onSubmit={handleSubmit(onSubmit)}>
         <Scrollbars
           autoHide
           renderView={(props) => (
-            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
+            <div {...props} style={{...props.style, overflowX: "hidden"}} />
           )}
           renderTrackHorizontal={(props) => (
             <div
               {...props}
-              style={{ display: "none" }}
+              style={{display: "none"}}
               className="track-horizontal"
             />
           )}
         >
           <Row>
             <Col lg={4}>
-              <FieldDetails>Add informations of user from here</FieldDetails>
+              <FieldDetails>Add information of user from here</FieldDetails>
             </Col>
 
             <Col lg={8}>
@@ -101,7 +117,7 @@ const AddCampaing: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel> Name</FormLabel>
                   <Input
-                    inputRef={register({ required: true })}
+                    inputRef={register({required: true})}
                     name="name"
                     value={name}
                     onChange={handleChangeInput}
@@ -112,7 +128,7 @@ const AddCampaing: React.FC<Props> = (props) => {
                   <FormLabel>Email</FormLabel>
                   <Input
                     type="email"
-                    inputRef={register({ required: true })}
+                    inputRef={register({required: true})}
                     name="email"
                     value={email}
                     onChange={handleChangeInput}
@@ -123,7 +139,7 @@ const AddCampaing: React.FC<Props> = (props) => {
                   <FormLabel>PassWord</FormLabel>
                   <Input
                     type="password"
-                    inputRef={register({ required: true })}
+                    inputRef={register({required: true})}
                     name="password"
                     value={password}
                     onChange={handleChangeInput}
@@ -140,7 +156,7 @@ const AddCampaing: React.FC<Props> = (props) => {
             onClick={closeDrawer}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: ({$theme}) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
@@ -156,12 +172,11 @@ const AddCampaing: React.FC<Props> = (props) => {
           </Button>
 
           <Button
-            type="button"
+            type="submit"
             isLoading={loading}
-            onClick={onSubmit}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: ({$theme}) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",

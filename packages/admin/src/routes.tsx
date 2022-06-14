@@ -1,38 +1,36 @@
-import React, {useContext, lazy, Suspense} from "react";
-import {Route, Switch, Redirect} from "react-router-dom";
+import React, { useContext, lazy, Suspense } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 import {
   LOGIN,
   POSTS,
-  CATEGORY,
   DASHBOARD,
   ORDERS,
   SETTINGS,
-  CUSTOMERS,
   BANNERS,
   FAQS,
-  COUPONS,
+  VOUCHERS,
   TASKS,
   STAFF_MEMBERS,
   SITE_SETTINGS,
+  USERS,
   BRANDS,
 } from "settings/constants";
-import AuthProvider, {AuthContext} from "context/auth";
-import {InLineLoader} from "components/InlineLoader/InlineLoader";
-import Brand from "containers/Brand/Brand";
+import AuthProvider, { AuthContext } from "context/auth";
+import { InLineLoader } from "components/InlineLoader/InlineLoader";
+import Brands from "containers/Brand/Brand";
+import Payments from "containers/Payments/Payments";
+import Users from "containers/Users/Users";
+import Vouchers from "containers/Vouchers/Vouchers";
 const Posts = lazy(() => import("containers/Posts/Posts"));
 const AdminLayout = lazy(() => import("containers/Layout/Layout"));
 const Dashboard = lazy(() => import("containers/Dashboard/Dashboard"));
-const Category = lazy(() => import("containers/Category/Category"));
-const Orders = lazy(() => import("containers/Orders/Orders"));
 const Settings = lazy(() => import("containers/Settings/Settings"));
 const SiteSettingForm = lazy(
   () => import("containers/SiteSettingForm/SiteSettingForm")
 );
 const StaffMembers = lazy(() => import("containers/StaffMembers/StaffMembers"));
-const Customers = lazy(() => import("containers/Customers/Customers"));
 const Banners = lazy(() => import("containers/Banners/Banners"));
 const Faqs = lazy(() => import("containers/Faqs/Faqs"));
-const Coupons = lazy(() => import("containers/Coupons/Coupons"));
 const Tasks = lazy(() => import("containers/Tasks/Tasks"));
 const Login = lazy(() => import("containers/Login/Login"));
 const NotFound = lazy(() => import("containers/NotFound/NotFound"));
@@ -44,20 +42,20 @@ const NotFound = lazy(() => import("containers/NotFound/NotFound"));
  *
  */
 
-function PrivateRoute({children, ...rest}) {
-  const {isAuthenticated} = useContext(AuthContext);
+function PrivateRoute({ children, ...rest }) {
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <Route
       {...rest}
-      render={({location}) =>
+      render={({ location }) =>
         isAuthenticated ? (
           children
         ) : (
           <Redirect
             to={{
               pathname: "/login",
-              state: {from: location},
+              state: { from: location },
             }}
           />
         )
@@ -91,25 +89,27 @@ const Routes = () => {
           <PrivateRoute path={BRANDS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Brand />
+                <Brands />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
 
-          {/* <PrivateRoute path={ORDERS}>
+          <PrivateRoute path={ORDERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Orders />
+                <Payments />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={CUSTOMERS}>
+
+          <PrivateRoute path={USERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Customers />
+                <Users />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
+
           <PrivateRoute path={FAQS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
@@ -117,6 +117,7 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
+
           <PrivateRoute path={BANNERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
@@ -124,10 +125,10 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={COUPONS}>
+          <PrivateRoute path={VOUCHERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Coupons />
+                <Vouchers />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
@@ -138,7 +139,7 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={SETTINGS}>
+          {/*    <PrivateRoute path={SETTINGS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Settings />
@@ -158,8 +159,8 @@ const Routes = () => {
                 <SiteSettingForm />
               </Suspense>
             </AdminLayout>
-          </PrivateRoute>
-        <Route component={NotFound} /> */}
+          </PrivateRoute>*/}
+          <Route component={NotFound} />
         </Switch>
       </Suspense>
     </AuthProvider>
