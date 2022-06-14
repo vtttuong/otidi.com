@@ -50,3 +50,10 @@ email: miinhnguyen98@gmail.com
 password: min123456
 
 ```
+
+### API PROBLEMS
+
+1. User
+   1.1. Get all, return wrong name -> email, no avatar returned
+   1.2. Block/Unblock user
+   1.3. No create user api

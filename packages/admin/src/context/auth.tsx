@@ -20,7 +20,7 @@ const AuthProvider = (props: any) => {
   const [isAuthenticated, makeAuthenticated] = React.useState(isValidToken());
 
   const [logicError, setLogicError] = React.useState(false);
-  async function authenticate({ username, password }, cb) {
+  async function authenticate({username, password}, cb) {
     const options = {
       method: "POST",
       headers: {

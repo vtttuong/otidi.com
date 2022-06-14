@@ -7,19 +7,20 @@ import {
   DASHBOARD,
   ORDERS,
   SETTINGS,
-  CUSTOMERS,
   BANNERS,
   FAQS,
   COUPONS,
   TASKS,
   STAFF_MEMBERS,
   SITE_SETTINGS,
+  USERS,
   BRANDS,
 } from "settings/constants";
 import AuthProvider, {AuthContext} from "context/auth";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import Brands from "containers/Brand/Brand";
 import Payments from "containers/Payments/Payments";
+import Users from "containers/Users/Users";
 const Posts = lazy(() => import("containers/Posts/Posts"));
 const AdminLayout = lazy(() => import("containers/Layout/Layout"));
 const Dashboard = lazy(() => import("containers/Dashboard/Dashboard"));
@@ -105,14 +106,15 @@ const Routes = () => {
             </AdminLayout>
           </PrivateRoute>
 
-          {/* <PrivateRoute path={CUSTOMERS}>
+          <PrivateRoute path={USERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
-                <Customers />
+                <Users />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={FAQS}>
+
+          {/*<PrivateRoute path={FAQS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Faqs />

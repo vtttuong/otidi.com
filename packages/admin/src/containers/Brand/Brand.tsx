@@ -3,16 +3,14 @@ import {Plus} from "assets/icons/Plus";
 import {TrashIcon} from "assets/icons/TrashIcon";
 import {withStyle} from "baseui";
 import Button from "components/Button/Button";
-import Checkbox from "components/CheckBox/CheckBox";
 import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
-import Select from "components/Select/Select";
 import {Header, Heading, Wrapper} from "components/Wrapper.style";
 import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import React, {useCallback, useEffect, useState} from "react";
-import useBrands, {getBrands} from "service/use-brands";
+import React, {useEffect, useState} from "react";
+import useBrands from "service/use-brands";
 
 import {
   ActionButton,
@@ -55,7 +53,7 @@ export default function Brand() {
     if (savedBrand) {
       mutate();
     }
-  }, [savedBrand]);
+  }, [savedBrand, mutate]);
 
   const openDrawer = (type, brand = undefined) => {
     if (type === "add") {
@@ -122,7 +120,7 @@ export default function Brand() {
                       },
                     }}
                   >
-                    Add Category
+                    Add Brand
                   </Button>
                 </Col>
               </Row>

@@ -62,12 +62,17 @@ export const StyledCellCenter = withStyle(BaseStyledCell, () => ({
 }));
 
 export const DateRangePickerWrapper = sc.div`
-    $ .react-daterange-picker {
-    height: "44px" !important,
-    background: "#eeeeee" !important,
-    padding: "0 5px" !important,
-    font-family: "lato" !important,
-    font-weight: "600" !important,
-    font-size: "14.5px" !important,
-    color: "#20286f" !important,
+    .react-daterange-picker {
+      height: 48px !important;
+      background: #eeeeee !important;
+      padding: 0 15px !important;
+      font-family: lato !important;
+      font-weight: 600 !important;
+      font-size: 14.5px !important;
+      color: #20286f !important;
+      outline: none;
+    }
+    * {
+      border: none;
+    }
   `;

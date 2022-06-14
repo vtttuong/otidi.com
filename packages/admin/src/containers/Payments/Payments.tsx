@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from "react";
-import {styled, withStyle, createThemedUseStyletron} from "baseui";
+import {withStyle} from "baseui";
 import dayjs from "dayjs";
 import {Grid, Row as Rows, Col as Column} from "components/FlexBox/FlexBox";
 import Select from "components/Select/Select";
-import Input from "components/Input/Input";
 import {Wrapper, Header, Heading} from "components/Wrapper.style";
 import {InLineLoader} from "components/InlineLoader/InlineLoader";
 import usePayments from "service/use-payment";
@@ -19,31 +18,33 @@ import {
   StyledCell,
   DateRangePickerWrapper,
 } from "./Payments.style";
+import {getUsers} from "service/use-users";
 
-type CustomThemeT = {red400: string; textNormal: string; colors: any};
-const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
+// type CustomThemeT = {red400: string; textNormal: string; colors: any};
 
-const Status = styled("div", ({$theme}) => ({
-  ...$theme.typography.fontBold14,
-  color: $theme.colors.textDark,
-  display: "flex",
-  alignItems: "center",
-  lineHeight: "1",
-  textTransform: "capitalize",
+// const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
 
-  ":before": {
-    content: '""',
-    width: "10px",
-    height: "10px",
-    display: "inline-block",
-    borderTopLeftRadius: "10px",
-    borderTopRightRadius: "10px",
-    borderBottomRightRadius: "10px",
-    borderBottomLeftRadius: "10px",
-    backgroundColor: $theme.borders.borderE6,
-    marginRight: "10px",
-  },
-}));
+// const Status = styled("div", ({$theme}) => ({
+//   ...$theme.typography.fontBold14,
+//   color: $theme.colors.textDark,
+//   display: "flex",
+//   alignItems: "center",
+//   lineHeight: "1",
+//   textTransform: "capitalize",
+
+//   ":before": {
+//     content: '""',
+//     width: "10px",
+//     height: "10px",
+//     display: "inline-block",
+//     borderTopLeftRadius: "10px",
+//     borderTopRightRadius: "10px",
+//     borderBottomRightRadius: "10px",
+//     borderBottomLeftRadius: "10px",
+//     backgroundColor: $theme.borders.borderE6,
+//     marginRight: "10px",
+//   },
+// }));
 
 const Col = withStyle(Column, () => ({
   "@media only screen and (max-width: 767px)": {
@@ -72,19 +73,20 @@ const sortSelectOptions = [
 ];
 
 export default function Payments() {
-  const [useCss, theme] = themedUseStyletron();
-  const success = useCss({
-    ":before": {
-      content: '""',
-      backgroundColor: theme.colors.primary,
-    },
-  });
-  const failed = useCss({
-    ":before": {
-      content: '""',
-      backgroundColor: theme.colors.red400,
-    },
-  });
+  // const [useCss, theme] = themedUseStyletron();
+  // const success = useCss({
+  //   ":before": {
+  //     content: '""',
+  //     backgroundColor: theme.colors.primary,
+  //   },
+  // });
+  // const failed = useCss({
+  //   ":before": {
+  //     content: '""',
+  //     backgroundColor: theme.colors.red400,
+  //   },
+  // });
+  const [users, setUsers] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [sortOptions, setSortOptions] = useState([]);
 
@@ -100,7 +102,13 @@ export default function Payments() {
     sort: sort,
   });
 
-  console.log(data);
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      const response = await getUsers();
+      setUsers(response.data);
+    };
+    fetchUser();
+  }, []);
 
   useEffect(() => {}, [status, sort]);
 
@@ -123,6 +131,11 @@ export default function Payments() {
   }
   const onDateChange = (value) => {
     setDateRange(value);
+  };
+
+  const getUsername = (userId: number) => {
+    const user = users.filter((u) => u.id === userId)[0];
+    return user.name || "";
   };
 
   return (
@@ -171,7 +184,7 @@ export default function Payments() {
 
                 <Col lg={6} xs={12} className="style-select-absolute">
                   <div className="style-select-absolute-child select-year">
-                    <DateRangePickerWrapper className="daterange-picker">
+                    <DateRangePickerWrapper>
                       <DateRangePicker
                         onChange={onDateChange}
                         value={dateRange}
@@ -185,9 +198,9 @@ export default function Payments() {
 
           <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(120px,120px) minmax(150px, auto) minmax(150px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
+              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(200px,auto) minmax(100px, 1fr) minmax(150px, 1fr) minmax(150px, max-content) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr)">
                 <StyledHeadCell>ID</StyledHeadCell>
-                <StyledHeadCell>User Name</StyledHeadCell>
+                <StyledHeadCell>User name</StyledHeadCell>
                 <StyledHeadCell>Order ID</StyledHeadCell>
                 <StyledHeadCell>Order Info</StyledHeadCell>
                 <StyledHeadCell>Status</StyledHeadCell>
@@ -196,28 +209,16 @@ export default function Payments() {
                 <StyledHeadCell>Updated At</StyledHeadCell>
                 <StyledHeadCell>Contact</StyledHeadCell>
 
-                {/* "id": 2,
-      "user_id": 1,
-      "request_id": "625fdf33248d0",
-      "amount": "50000",
-      "order_id": "625fdf3315020",
-      "order_info": "Register subscription",
-      "status": "authorized",
-      "voucher_id": null,
-      "created_at": "2022-04-20T03:23:47.000000Z",
-      "updated_at": "2022-04-20T03:23:47.000000Z" */}
-
                 {data ? (
                   data.length !== 0 ? (
                     data.map((item) => (
                       <React.Fragment key={item.id}>
                         <StyledCell>{item.id}</StyledCell>
-                        <StyledCell>{item["user_id"]}</StyledCell>
+                        <StyledCell>{getUsername(item["user_id"])}</StyledCell>
                         <StyledCell>{item["order_id"]}</StyledCell>
                         <StyledCell>{item["order_info"]}</StyledCell>
                         <StyledCell>{item["status"]}</StyledCell>
                         <StyledCell>{item["amount"]}</StyledCell>
-                        <StyledCell>{item["status"]}</StyledCell>
                         <StyledCell>
                           {dayjs(item["created_at"]).format("DD MMM YYYY")}
                         </StyledCell>
