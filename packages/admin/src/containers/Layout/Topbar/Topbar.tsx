@@ -14,6 +14,7 @@ import {
   getNotifications,
   markAsAllRead,
   markAsRead,
+  markAsUnread,
 } from "service/use-notification";
 import { STAFF_MEMBERS } from "settings/constants";
 import Sidebar from "../Sidebar/Sidebar";
@@ -43,10 +44,10 @@ const Topbar = ({ refs }: any) => {
   const [loading, setLoading] = useState(false);
   const [outOfData, setOutOfData] = React.useState(false);
   const [notiUnRead, setNotiUnRead] = React.useState(0);
-
+  const [allRead, setAllRead] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const newData = await getNotifications(page, 10);
+      const newData = await getNotifications(page, 2);
 
       if (newData && newData.length === 0) {
         setOutOfData(true);
@@ -63,8 +64,9 @@ const Topbar = ({ refs }: any) => {
     };
 
     fetchData();
+    setAllRead(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, allRead]);
 
   const feedBtnClick = () => {
     if (outOfData) return;
@@ -75,10 +77,16 @@ const Topbar = ({ refs }: any) => {
   const read = async (id) => {
     markAsRead(id);
   };
+  const unread = async (id) => {
+    markAsUnread(id);
+  };
 
   const readAll = async () => {
     setNotiUnRead(0);
-    markAsAllRead();
+    const result = await markAsAllRead();
+    if (result) {
+      setAllRead(true);
+    }
   };
 
   return (
@@ -141,6 +149,7 @@ const Topbar = ({ refs }: any) => {
             <Notification
               data={data}
               read={read}
+              unread={unread}
               readAll={readAll}
               feedBtnClick={feedBtnClick}
               loading={loading}

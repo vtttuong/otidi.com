@@ -1,3 +1,8 @@
+<style>
+red { color: #e03131 }
+yellow { color: yellow }
+</style>
+
 # Getting Started & Installation
 
 For getting started with the template you have to follow the below procedure. First navigate to the `packages` directory. Then run below command for getting started with specific part.
@@ -51,12 +56,23 @@ password: min123456
 
 ```
 
-### API PROBLEMS
+## <red>API PROBLEMS <red>
 
 1. Users
-   1.1. Get all, return wrong name -> email, no avatar returned
-   1.2. Block/Unblock user
-   1.3. No create user api
-2. Banners
+   1. Return nhầm name thành email, name return null.
+   2. Block nhưng xóa luôn user
+   3. Thiếu API unblock user
+2. Brands
+   1. Thiếu API xóa brand
 3. Voucher:
-   3.1: Get all, no return image, no return used
+   1. Trong API index, không return image và used fields
+4. Tasks
+
+   1. Trong API index, không return name field (null)
+   2. Thiếu API xóa task
+
+5. Banner
+
+   1. Thiếu API xóa Banner
+
+6. Paging: Không return tổng số page => Không paging được

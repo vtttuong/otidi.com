@@ -20,7 +20,7 @@ const AuthProvider = (props: any) => {
   const [isAuthenticated, makeAuthenticated] = React.useState(isValidToken());
 
   const [logicError, setLogicError] = React.useState(false);
-  async function authenticate({username, password}, cb) {
+  async function authenticate({ username, password }, cb) {
     const options = {
       method: "POST",
       headers: {
@@ -58,23 +58,26 @@ const AuthProvider = (props: any) => {
 
   async function signout(cb) {
     const token = localStorage.getItem("secondhand_token");
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const res = await fetch(
-      process.env.REACT_APP_LARAVEL_API_URL_ADMIN + "/me/logout",
-      options
-    );
+    // const options = {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // };
+    // const res = await fetch(
+    //   process.env.REACT_APP_LARAVEL_API_URL + "/me/logout",
+    //   options
+    // );
 
-    if (res.ok) {
-      makeAuthenticated(false);
-      localStorage.removeItem("secondhand_token");
-    }
+    // if (res.ok) {
+    //   const json = await res.json();
+    //   console.log(json);
 
+    // }
+
+    makeAuthenticated(false);
+    localStorage.removeItem("secondhand_token");
     setTimeout(cb, 100);
   }
   return (

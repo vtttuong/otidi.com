@@ -1,10 +1,10 @@
-import {Grid} from "components/FlexBox/FlexBox";
+import { Grid } from "components/FlexBox/FlexBox";
 import AdvertiseYear from "feature/dashboard-advertiseYear";
 import PostByYear from "feature/dashboard-postByYear";
 import RevenueTotal from "feature/dashboard-revenueTotal";
 import RevenueYear from "feature/dashboard-revenueYear";
-import React, {useState} from "react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import React, { useState } from "react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import styled from "styled-components";
 
@@ -114,26 +114,15 @@ const Dashboard = () => {
           <TabPanel>
             <RevenueTotal />
             <RevenueYear />
-            {/* <RevenueDay /> */}
-            {/* <RevenueCats /> */}
           </TabPanel>
 
           <TabPanel>
             <PostByYear year={year} setYear={setYear} />
-            {/* <PostClassifyByYear year={year} setYear={setYear} /> */}
-            {/* <PostsDay /> */}
-            {/* <PostByCats /> */}
           </TabPanel>
 
           <TabPanel>
             <AdvertiseYear />
           </TabPanel>
-
-          {/* <TabPanel>
-            <UserYear />
-            <UserPhase />
-             <UserTop />
-          </TabPanel> */}
         </Tabs>
       </AllTab>
     </Grid>

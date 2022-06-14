@@ -1,7 +1,7 @@
 import queryString from "query-string";
 import { formatRelativeTime } from "utils/format-relative-time";
 
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
 
 interface Props {
@@ -87,7 +87,7 @@ export async function getNotifications(page, count) {
     },
   };
 
-  let url = baseUrl + "/api/admin/v1/notifications?" + parsed;
+  let url = baseUrl + "/notifications?" + parsed;
 
   const res = await fetch(url, options);
 
@@ -99,10 +99,43 @@ export async function getNotifications(page, count) {
 
   let responseJson = await res.json();
 
-  await responseJson.data.map(async function (noti) {
-    const notification = await handleMapperNotification(noti);
-    notifications.push(notification);
-  });
+  const notis = [
+    {
+      id: "b8a1d3f4-eb26-49af-a3bd-34f2b9bf0340",
+      type: "App\\Notifications\\PostCreated",
+      notifiable_type: "App\\Models\\Admin",
+      notifiable_id: 1,
+      data:
+        '{"type":"post_created","post_id":1,"post_slug":"can-ban-xe-gap","user_name":"Minh hihi","title":"C\\u1ea7n b\\u00e1n xe g\\u1ea5p","created_at":"2022-04-12T06:52:02.000000Z"}',
+      read_at: null,
+      created_at: "2022-04-12T06:52:03+00:00",
+      updated_at: "2022-04-12T06:52:03+00:00",
+    },
+    {
+      id: "9ec1e143-b492-404b-af8a-23a0b8a04528",
+      type: "App\\Notifications\\PostCreated",
+      notifiable_type: "App\\Models\\Admin",
+      notifiable_id: 1,
+      data:
+        '{"type":"post_created","post_id":2,"post_slug":"can-ban-xe-gap","user_name":"Nguyen Van A","title":"C\\u1ea7n b\\u00e1n xe g\\u1ea5p","created_at":"2022-04-12T06:53:58.000000Z"}',
+      read_at: null,
+      created_at: "2022-04-12T06:53:59+00:00",
+      updated_at: "2022-04-12T06:53:59+00:00",
+    },
+  ];
+  // await responseJson.data.map(async function (noti) {
+  //   const notification = await handleMapperNotification(noti);
+  //   notifications.push(notification);
+  // });
+  const mappingNotification = async () =>
+    notis.forEach(async function (noti) {
+      const notification = await handleMapperNotification(noti);
+
+      notifications.push(notification);
+    });
+
+  await mappingNotification();
+  console.log("Notis: ", notifications);
 
   return notifications;
 }
@@ -116,10 +149,21 @@ export async function markAsRead(id: string) {
     },
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/admin/v1/notifications/read/${id}`,
-    options
-  );
+  const data = await fetch(`${baseUrl}/notifications/${id}/read`, options);
+
+  return await data.json();
+}
+
+export async function markAsUnread(id: string) {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const data = await fetch(`${baseUrl}/notifications/${id}/unread`, options);
 
   return await data.json();
 }
@@ -133,10 +177,11 @@ export async function markAsAllRead() {
     },
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/admin/v1/notifications/read-all`,
-    options
-  );
+  const response = await fetch(`${baseUrl}/notifications/read-all`, options);
 
-  return await data.json();
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    return null;
+  }
 }

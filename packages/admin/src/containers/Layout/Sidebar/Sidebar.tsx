@@ -1,16 +1,16 @@
-import {CheckMark} from "assets/icons/CheckMark";
-import {CouponIcon} from "assets/icons/CouponIcon";
-import {CustomerIcon} from "assets/icons/CustomerIcon";
-import {DashboardIcon} from "assets/icons/DashboardIcon";
-import {HelpIcon} from "assets/icons/HelpIcon";
-import {LogoutIcon} from "assets/icons/LogoutIcon";
-import {OrderIcon} from "assets/icons/OrderIcon";
-import {Plus} from "assets/icons/Plus";
-import {ProductIcon} from "assets/icons/ProductIcon";
-import {SidebarCategoryIcon} from "assets/icons/SidebarCategoryIcon";
-import {AuthContext} from "context/auth";
-import React, {useContext} from "react";
-import {withRouter} from "react-router-dom";
+import { CheckMark } from "assets/icons/CheckMark";
+import { CouponIcon } from "assets/icons/CouponIcon";
+import { CustomerIcon } from "assets/icons/CustomerIcon";
+import { DashboardIcon } from "assets/icons/DashboardIcon";
+import { HelpIcon } from "assets/icons/HelpIcon";
+import { LogoutIcon } from "assets/icons/LogoutIcon";
+import { OrderIcon } from "assets/icons/OrderIcon";
+import { Plus } from "assets/icons/Plus";
+import { ProductIcon } from "assets/icons/ProductIcon";
+import { SidebarCategoryIcon } from "assets/icons/SidebarCategoryIcon";
+import { AuthContext } from "context/auth";
+import React, { useContext } from "react";
+import { withRouter } from "react-router-dom";
 import {
   BANNERS,
   BRANDS,
@@ -100,7 +100,7 @@ export default withRouter(function Sidebar({
   style,
   onMenuItemClick,
 }: any) {
-  const {signout} = useContext(AuthContext);
+  const { signout } = useContext(AuthContext);
   return (
     <SidebarWrapper ref={refs} style={style}>
       <MenuWrapper className="left-menu-wrapper">

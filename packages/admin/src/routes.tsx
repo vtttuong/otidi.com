@@ -1,9 +1,8 @@
-import React, {useContext, lazy, Suspense} from "react";
-import {Route, Switch, Redirect} from "react-router-dom";
+import React, { useContext, lazy, Suspense } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 import {
   LOGIN,
   POSTS,
-  CATEGORY,
   DASHBOARD,
   ORDERS,
   SETTINGS,
@@ -16,8 +15,8 @@ import {
   USERS,
   BRANDS,
 } from "settings/constants";
-import AuthProvider, {AuthContext} from "context/auth";
-import {InLineLoader} from "components/InlineLoader/InlineLoader";
+import AuthProvider, { AuthContext } from "context/auth";
+import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import Brands from "containers/Brand/Brand";
 import Payments from "containers/Payments/Payments";
 import Users from "containers/Users/Users";
@@ -43,20 +42,20 @@ const NotFound = lazy(() => import("containers/NotFound/NotFound"));
  *
  */
 
-function PrivateRoute({children, ...rest}) {
-  const {isAuthenticated} = useContext(AuthContext);
+function PrivateRoute({ children, ...rest }) {
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <Route
       {...rest}
-      render={({location}) =>
+      render={({ location }) =>
         isAuthenticated ? (
           children
         ) : (
           <Redirect
             to={{
               pathname: "/login",
-              state: {from: location},
+              state: { from: location },
             }}
           />
         )
@@ -133,14 +132,14 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          {/* <PrivateRoute path={TASKS}>
+          <PrivateRoute path={TASKS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Tasks />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={SETTINGS}>
+          {/*    <PrivateRoute path={SETTINGS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <Settings />

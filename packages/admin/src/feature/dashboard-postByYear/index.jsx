@@ -18,7 +18,6 @@ const Col = withStyle(Column, () => ({
 }));
 
 const PostByYear = ({ ...props }) => {
-  const { year, setYear } = props;
   const [css] = useStyletron();
   const mb30 = css({
     "@media only screen and (max-width: 990px)": {
@@ -30,12 +29,12 @@ const PostByYear = ({ ...props }) => {
   const [postSold, setPostSold] = useState([]);
   const [postPriority, setPostPriority] = useState([]);
   const [yearOption, setYearOption] = useState([]);
-  // const [year, setYear] = useState(2020);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   function handleYear({ value }) {
     setYearOption(value);
     if (value.length === 0) {
-      setYear(2020);
+      setYear(new Date().getFullYear());
     } else {
       setYear(value[0].value);
     }
@@ -59,7 +58,7 @@ const PostByYear = ({ ...props }) => {
 
   const years = [];
 
-  for (let i = 2010; i <= 2021; i++) {
+  for (let i = 2020; i <= new Date().getFullYear(); i++) {
     years.push({ value: i, label: i.toString() });
   }
 

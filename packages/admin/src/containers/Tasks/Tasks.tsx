@@ -5,6 +5,7 @@ import Checkbox from "components/CheckBox/CheckBox";
 import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
+import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
 import { Header, Heading, Wrapper } from "components/Wrapper.style";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
@@ -53,19 +54,18 @@ const options = {
   // useExtendedSearch: false,
   // ignoreLocation: false,
   // ignoreFieldNorm: false,
-  minMatchCharLength: 2,
+  // minMatchCharLength: 2,
   keys: ["type"],
 };
 export default function Tasks() {
   const dispatch = useDrawerDispatch();
   const [checkedId, setCheckedId] = useState([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [dataSearch, setDataSearch] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
   const [checked, setChecked] = useState(false);
 
   const saveId = useDrawerState("saveId");
-  const [lang, setLang] = useState([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sort, setSort] = useState([]);
   const [search, setSearch] = useState("");
@@ -74,65 +74,84 @@ export default function Tasks() {
   const [loadingEdit, setLoadingEdit] = useState(false);
 
   React.useEffect(() => {
-    getTasksAll();
-    setUpdate(false);
-    dispatch({
-      type: "SAVE_ID",
-      data: null,
-    });
+    let isMounted = true;
+
+    const fetchData = async () => {
+      const tasks = await getTasks();
+
+      if (isMounted) {
+        setData(tasks);
+        setDataSearch(tasks);
+        setUpdate(false);
+
+        dispatch({
+          type: "SAVE_ID",
+          data: null,
+        });
+      }
+    };
+
+    fetchData();
+
+    return () => (isMounted = false);
   }, [update, saveId, dispatch]);
 
-  const getTasksAll = async () => {
-    setData(await getTasks());
-    setDataSearch(await getTasks());
-  };
+  const onEdit = () => {
+    let updatedTask = data
+      ? data.filter((i) => i.id === checkedId.slice(-1)[0])[0]
+      : null;
 
-  const onEdit = React.useCallback(
-    () =>
+    if (updatedTask) {
       dispatch({
         type: "OPEN_DRAWER",
         drawerComponent: "TASK_UPDATE_FORM",
-        data: dataDetail,
-      }),
-    [dispatch, dataDetail]
-  );
-
-  async function handleSelect({ value }) {
-    setLang(value);
-    if (value.length !== 0) {
-      if (sort.length !== 0) {
-        const object: any = {
-          locale: value[0].value,
-          sort: sort[0].value,
-        };
-        setData(await sortTasks(object));
-      } else {
-        const object: any = {
-          locale: value[0].value,
-        };
-        setData(await sortTasks(object));
-      }
-    } else {
-      getTasksAll();
+        data: updatedTask,
+      });
+      setCheckedId([]);
+      setChecked(false);
     }
-  }
+  };
+
+  // async function handleSelect({ value }) {
+  //   setLang(value);
+  //   if (value.length !== 0) {
+  //     if (sort.length !== 0) {
+  //       const object: any = {
+  //         locale: value[0].value,
+  //         sort: sort[0].value,
+  //       };
+  //       setData(await sortTasks(object));
+  //     } else {
+  //       const object: any = {
+  //         locale: value[0].value,
+  //       };
+  //       setData(await sortTasks(object));
+  //     }
+  //   } else {
+  //     getTasksAll();
+  //   }
+  // }
 
   const searchN = (list, pattern) => {
     const fuse = new Fuse(list, options);
     return fuse.search(pattern).map((current) => current.item);
   };
-  function handleSearch(event) {
+  const handleSearch = async (event) => {
     const value = event.currentTarget.value;
 
     setSearch(value);
-    if (value.length === 0) getTasksAll();
+    if (value.length === 0) {
+      const tasks = await getTasks();
+      setData(tasks);
+      setDataSearch(tasks);
+    }
     const results = searchN(dataSearch, value);
     setData(results);
     // refetch({
     //   status: status.length ? status[0].value : null,
     //   searchBy: value,
     // });
-  }
+  };
   function onAllCheck(event) {
     if (event.target.checked) {
       const idx = data && data.map((coupon) => coupon.id);
@@ -145,20 +164,11 @@ export default function Tasks() {
 
   function handleCheckbox(event) {
     const name = parseInt(event.currentTarget.name);
-    if (data.length !== 0) {
-      // eslint-disable-next-line array-callback-return
-      data.map((i) => {
-        if (i.id === name) {
-          setDataDetail(i);
-          // eslint-disable-next-line array-callback-return
-          return;
-        }
-      });
-    }
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
     } else {
       setCheckedId((prevState) => prevState.filter((id) => id !== name));
+      setChecked(false);
     }
   }
 
@@ -178,17 +188,7 @@ export default function Tasks() {
 
             <Col md={10}>
               <Row>
-                <Col md={5}>
-                  <Select
-                    options={statusSelectOptions}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder="Locale"
-                    value={lang}
-                    searchable={false}
-                    onChange={handleSelect}
-                  />
-                </Col>
+                <Col md={5}></Col>
                 {/* <Col md={3}>
                   <Select
                     options={sortCreatedAt}
@@ -215,7 +215,7 @@ export default function Tasks() {
 
           <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(200px, auto) minmax(200px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
+              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(200px, auto) minmax(200px, auto) minmax(200px, max-content) minmax(180px, auto) minmax(150px, auto) minmax(200px, max-content)">
                 <StyledHeadCell>
                   <Checkbox
                     type="checkbox"
@@ -241,7 +241,7 @@ export default function Tasks() {
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Tasks Name</StyledHeadCell>
                 <StyledHeadCell>Description</StyledHeadCell>
-                <StyledHeadCell>Exchange point</StyledHeadCell>
+                <StyledHeadCell>Reward point</StyledHeadCell>
                 <StyledHeadCell> Max number excute</StyledHeadCell>
                 <StyledHeadCell> Per unit</StyledHeadCell>
                 <StyledHeadCell>Link</StyledHeadCell>
@@ -273,35 +273,9 @@ export default function Tasks() {
                             />
                           </StyledBodyCell>
                           <StyledBodyCell>{item.id}</StyledBodyCell>
-                          <StyledBodyCell>
-                            {item.translate.map((i) => (
-                              <>
-                                <span
-                                  style={{
-                                    color: i.locale === "vi" ? "#007e7f" : "",
-                                  }}
-                                >
-                                  {i.name}
-                                  <br />
-                                </span>
-                              </>
-                            ))}
-                          </StyledBodyCell>
-                          <StyledBodyCell>
-                            {item.translate.map((i) => (
-                              <>
-                                <span
-                                  style={{
-                                    color: i.locale === "vi" ? "#007e7f" : "",
-                                  }}
-                                >
-                                  {i.description}
-                                </span>{" "}
-                                <br />
-                              </>
-                            ))}
-                          </StyledBodyCell>
-                          <StyledBodyCell>{item.exchange_point}</StyledBodyCell>
+                          <StyledBodyCell>{item.name}</StyledBodyCell>
+                          <StyledBodyCell>{item.description}</StyledBodyCell>
+                          <StyledBodyCell>{item.reward_point}</StyledBodyCell>
                           <StyledBodyCell>
                             {item.max_number_excute}
                           </StyledBodyCell>
@@ -311,15 +285,23 @@ export default function Tasks() {
                       );
                     })
                   ) : (
-                    <div className="box-relative-no">
-                      <div className="load-wrapp">
-                        <div className="load-1">
-                          <InLineLoader />
-                        </div>
+                    <NoResult
+                      hideButton={false}
+                      style={{
+                        gridColumnStart: "1",
+                        gridColumnEnd: "-1",
+                      }}
+                    />
+                  )
+                ) : (
+                  <div className="box-relative-no">
+                    <div className="load-wrapp">
+                      <div className="load-1">
+                        <InLineLoader />
                       </div>
                     </div>
-                  )
-                ) : null}
+                  </div>
+                )}
               </StyledTable>
             </TableWrapper>
           </Wrapper>

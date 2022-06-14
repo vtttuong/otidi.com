@@ -12,7 +12,7 @@ interface PROPS {
 }
 
 export async function getUsers(variables?: PROPS) {
-  const {sortType, sortDir, page, count} = variables ?? {};
+  const { sortType, sortDir, page, count } = variables ?? {};
 
   let queryParams = {
     page: page,
@@ -33,7 +33,7 @@ export async function getUsers(variables?: PROPS) {
     {
       ...newParams,
     },
-    {sort: false}
+    { sort: false }
   );
 
   const options = {
@@ -97,7 +97,7 @@ export async function deleteUser(id: number) {
   };
   const users = await fetch(`${baseUrl}/users/${id}`, options);
   if (users.status === 200) {
-    return {status: true};
+    return { status: true };
   }
   // return await users.json();
 }
@@ -111,7 +111,7 @@ export async function unDeleteUser(id: number) {
   };
   const users = await fetch(`${baseUrl}/users/unblock/${id}`, options);
   if (users.status === 200) {
-    return {status: true};
+    return { status: true };
   }
   // return await users.json();
 }

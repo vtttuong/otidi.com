@@ -1,4 +1,4 @@
-import {styled, withStyle} from "baseui";
+import { styled, withStyle } from "baseui";
 import sc from "styled-components";
 import {
   StyledTable as BaseStyledTable,
@@ -66,13 +66,13 @@ export const DateRangePickerWrapper = sc.div`
       height: 48px !important;
       background: #eeeeee !important;
       padding: 0 15px !important;
-      font-family: lato !important;
-      font-weight: 600 !important;
+      font-weight: 700 !important;
       font-size: 14.5px !important;
       color: #20286f !important;
       outline: none;
     }
     * {
       border: none;
+      color: #20286f !important;
     }
   `;

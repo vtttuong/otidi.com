@@ -1,17 +1,17 @@
 /* eslint-disable array-callback-return */
 import axios from "axios";
-import Button, {KIND} from "components/Button/Button";
+import Button, { KIND } from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import {Col, Row} from "components/FlexBox/FlexBox";
-import {FormFields, FormLabel} from "components/FormFields/FormFields";
+import { Col, Row } from "components/FlexBox/FlexBox";
+import { FormFields, FormLabel } from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
 import Select from "components/Select/Select";
 import UploaderBanner from "components/UploaderBanner/UploaderBanner";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import React, {useCallback, useState} from "react";
-import {useAlert} from "react-alert";
-import {Scrollbars} from "react-custom-scrollbars";
-import {useForm} from "react-hook-form";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import React, { useCallback, useState } from "react";
+import { useAlert } from "react-alert";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useForm } from "react-hook-form";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -24,14 +24,14 @@ import moment from "moment";
 const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 
 const optionsType = [
-  {value: "1", name: "Normal", id: "1"},
-  {value: "2", name: "Copper", id: "2"},
-  {value: "3", name: "Silver", id: "3"},
-  {value: "4", name: "Gold", id: "4"},
+  { value: "1", name: "Normal", id: "1" },
+  { value: "2", name: "Copper", id: "2" },
+  { value: "3", name: "Silver", id: "3" },
+  { value: "4", name: "Gold", id: "4" },
 ];
 const userType = [
-  {value: "exchangeable", label: "Exchangeable", id: "1"},
-  {value: "personal", label: "Personal", id: "2"},
+  { value: "exchangeable", label: "Exchangeable", id: "1" },
+  { value: "personal", label: "Personal", id: "2" },
 ];
 type Props = any;
 
@@ -70,10 +70,10 @@ const EditCampaing: React.FC<Props> = (props) => {
 
   const dispatch = useDrawerDispatch();
   const alert = useAlert();
-  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
+  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
   ]);
-  const handleMultiChange = ({value}) => {
+  const handleMultiChange = ({ value }) => {
     setValue("categories", value);
     setTag(value);
     let newTag = [];
@@ -83,10 +83,10 @@ const EditCampaing: React.FC<Props> = (props) => {
     setLevel(newTag);
   };
 
-  const {register, handleSubmit, setValue} = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const [loading, setLoading] = useState(false);
   React.useEffect(() => {
-    register({name: "category"});
+    register({ name: "category" });
   }, [register]);
 
   const onSubmit = async (fData) => {
@@ -185,7 +185,7 @@ const EditCampaing: React.FC<Props> = (props) => {
   const handleUploader = (files) => {
     setImage(files[0]);
   };
-  const handleSelectType = ({value}) => {
+  const handleSelectType = ({ value }) => {
     setType(value);
     if (value.length) {
     }
@@ -197,16 +197,16 @@ const EditCampaing: React.FC<Props> = (props) => {
         <DrawerTitle>Update Voucher</DrawerTitle>
       </DrawerTitleWrapper>
 
-      <Form onSubmit={handleSubmit(onSubmit)} style={{height: "100%"}}>
+      <Form onSubmit={handleSubmit(onSubmit)} style={{ height: "100%" }}>
         <Scrollbars
           autoHide
           renderView={(props) => (
-            <div {...props} style={{...props.style, overflowX: "hidden"}} />
+            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
           )}
           renderTrackHorizontal={(props) => (
             <div
               {...props}
-              style={{display: "none"}}
+              style={{ display: "none" }}
               className="track-horizontal"
             />
           )}
@@ -246,7 +246,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Voucher Name</FormLabel>
                   <Input
-                    inputRef={register({required: true})}
+                    inputRef={register({ required: true })}
                     name="name"
                     value={defaultName}
                     onChange={(e) => setName(e.target.value)}
@@ -257,7 +257,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                   <FormLabel>Discount Percent</FormLabel>
                   <Input
                     type="number"
-                    inputRef={register({required: true})}
+                    inputRef={register({ required: true })}
                     name="discount"
                     value={defaultDiscount}
                     onChange={(e) => setDiscount(e.target.value)}
@@ -274,7 +274,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                     onChange={handleSelectType}
                     overrides={{
                       Placeholder: {
-                        style: ({$theme}) => {
+                        style: ({ $theme }) => {
                           return {
                             ...$theme.typography.fontBold14,
                             color: $theme.colors.textNormal,
@@ -282,7 +282,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                         },
                       },
                       DropdownListItem: {
-                        style: ({$theme}) => {
+                        style: ({ $theme }) => {
                           return {
                             ...$theme.typography.fontBold14,
                             color: $theme.colors.textNormal,
@@ -293,7 +293,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                         props: {
                           overrides: {
                             Body: {
-                              style: {zIndex: 5},
+                              style: { zIndex: 5 },
                             },
                           },
                         },
@@ -307,7 +307,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                   <FormLabel>Number of Coupon</FormLabel>
                   <Input
                     type="number"
-                    inputRef={register({required: true})}
+                    inputRef={register({ required: true })}
                     name="total"
                     value={defaultTotal}
                     onChange={(e) => setTotal(e.target.value)}
@@ -325,7 +325,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                       onChange={handleMultiChange}
                       overrides={{
                         Placeholder: {
-                          style: ({$theme}) => {
+                          style: ({ $theme }) => {
                             return {
                               ...$theme.typography.fontBold14,
                               color: $theme.colors.textNormal,
@@ -333,7 +333,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                           },
                         },
                         DropdownListItem: {
-                          style: ({$theme}) => {
+                          style: ({ $theme }) => {
                             return {
                               ...$theme.typography.fontBold14,
                               color: $theme.colors.textNormal,
@@ -344,7 +344,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                           props: {
                             overrides: {
                               Body: {
-                                style: {zIndex: 5},
+                                style: { zIndex: 5 },
                               },
                             },
                           },
@@ -360,7 +360,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                     <FormLabel>Exchange point</FormLabel>
                     <Input
                       type="number"
-                      inputRef={register({required: true})}
+                      inputRef={register({ required: true })}
                       name="exchange_point"
                       value={exchange}
                       onChange={(e) => setExchange(e.target.value)}
@@ -371,7 +371,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                   <FormLabel>Date Expired</FormLabel>
                   <Input
                     type="date"
-                    inputRef={register({required: true})}
+                    inputRef={register({ required: true })}
                     name="expired"
                     value={expired.substr(0, 10)}
                     onChange={(e) => setExpired(e.target.value)}
@@ -388,7 +388,7 @@ const EditCampaing: React.FC<Props> = (props) => {
             onClick={closeDrawer}
             overrides={{
               BaseButton: {
-                style: ({$theme}) => ({
+                style: ({ $theme }) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
@@ -408,7 +408,7 @@ const EditCampaing: React.FC<Props> = (props) => {
             isLoading={loading}
             overrides={{
               BaseButton: {
-                style: ({$theme}) => ({
+                style: ({ $theme }) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",

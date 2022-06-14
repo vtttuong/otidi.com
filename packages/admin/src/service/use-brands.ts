@@ -41,7 +41,7 @@ interface Props {
 }
 
 export default function useBrands(variables: Props) {
-  const {text} = variables ?? {};
+  const { text } = variables ?? {};
 
   let queryParams = {};
 
@@ -57,12 +57,12 @@ export default function useBrands(variables: Props) {
     {
       ...newParams,
     },
-    {sort: false}
+    { sort: false }
   );
 
   let url = baseUrl + "/brands?" + parsed;
 
-  const {data, mutate, error} = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, productFetcher);
 
   const loading = !data && !error;
 
@@ -80,7 +80,15 @@ export default function useBrands(variables: Props) {
   };
 }
 
-export async function addBrand(brand) {
+interface Brand {
+  name: string;
+  logo: Array<File>;
+  models: Array<any>;
+}
+
+export async function addBrand(brand: Brand) {
+  console.log(brand);
+
   var formdata = new FormData();
   formdata.append("name", brand.name);
   formdata.append("logo", brand.logo[0]);
@@ -95,8 +103,11 @@ export async function addBrand(brand) {
     },
     body: formdata,
   };
-  const brands = await fetch(`${baseUrl}/brands`, options);
-  return brands.json();
+  const response = await fetch(`${baseUrl}/brands`, options);
+  const json = await response.json();
+  console.log(json);
+
+  return json;
 }
 
 export async function updateBrand(brand) {
