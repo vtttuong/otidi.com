@@ -107,8 +107,6 @@ export async function getPostStatisticsByYear(
 ) {
   let queryParams = {
     type: "1y",
-    is_sold: isSold,
-    is_priority: isPriority,
     year: year,
   };
 
@@ -146,7 +144,7 @@ export async function getPostStatisticsByYear(
 
 export async function getPostStatisticsByTypeInYear(year, type) {
   let queryParams = {
-    type: type,
+    type: type || "1y",
     year: year,
   };
 

@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { useAlert } from "react-alert";
 import axios from "axios";
 import Uploader from "components/Uploader/Uploader";
+import moment from "moment";
+
 import {
   ButtonGroup,
   DrawerTitle,
@@ -19,7 +21,9 @@ import {
   FieldDetails,
   Form,
 } from "../DrawerItems/DrawerItems.style";
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+import { date } from "yup";
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
+
 const optionsType = [
   { value: "1", name: "Normal", id: "1" },
   { value: "2", name: "Copper", id: "2" },
@@ -40,7 +44,6 @@ const AddCampaing: React.FC<Props> = (props) => {
   const [level, setLevel] = useState([]);
   const dispatch = useDrawerDispatch();
   const alert = useAlert();
-  const maxId = useDrawerState("data");
   const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
   ]);
@@ -53,7 +56,7 @@ const AddCampaing: React.FC<Props> = (props) => {
     });
     setLevel(newTag);
   };
-  
+
   const { register, handleSubmit, setValue } = useForm();
   const [loading, setLoading] = useState(false);
 
@@ -64,45 +67,40 @@ const AddCampaing: React.FC<Props> = (props) => {
   const onSubmit = async (data) => {
     setLoading(true);
 
-    const newVoucher = {
-      id: maxId + 1,
-      name: data.name,
-      level_ids: level,
-      discount: data.discount,
-      using: 0,
-      total: data.total,
-      expired: data.expired,
-      type: type[0].value,
-      image: image[0].path,
+    if (data.discount <= 0 || data.discount > 100) {
+      alert.error("Invalid discount percent");
+      setLoading(false);
+      return;
     }
 
-    dispatch({
-      type: "SAVE_CREATED_VOUCHER",
-      data: newVoucher,
-    });
-
-    const formData: any = new FormData();
-    formData.set("name", data.name);
-
-    if (level.length > 0) {
-      level.forEach((l) => {
-        formData.append("level_ids[]", l);
-      });
-    }
-    formData.set("discount", data.discount);
-    formData.set("total", data.total);
-    formData.set("expired", data.expired);
-    if (type[0].value === "exchangeable") {
-      formData.set("exchange_point", data.exchange_point);
-    }
-    formData.set("image", image[0]);
     if (type.length === 0) {
       alert.error("Please choose type");
       setLoading(false);
       return;
     }
+
+    const formData: any = new FormData();
+    formData.set("name", data.name);
+
+    formData.set("value", data.discount);
+    formData.set("total", data.total);
+    formData.set("start_at", moment(new Date()).format("YYYY-MM-DD HH:mm"));
+    formData.set("end_at", moment(data.expired).format("YYYY-MM-DD HH:mm"));
+
+    if (type[0].value === "personal" && level.length > 0) {
+      level.forEach((l) => {
+        formData.append("level_ids[]", l);
+      });
+    }
+    if (type[0].value === "exchangeable") {
+      formData.set("reward_point", data.reward_point);
+    }
+    if (image.length !== 0) {
+      formData.set("image", image[0]);
+    }
+
     formData.set("type", type[0].value);
-    addVoucher(formData);
+    await addVoucher(formData);
   };
 
   const addVoucher = (formData: any) => {
@@ -113,32 +111,34 @@ const AddCampaing: React.FC<Props> = (props) => {
       },
     };
 
-    axios
-      .post(baseUrl + `/api/admin/v1/vouchers`, formData, configs)
-      .then((response) => {
-        if (response.status === 200 && response.data.error) {
-          const result = response.data.error;
-          const keys = Object.values(result);
-          keys.map((i) => {
-            alert.error(i);
-            setLoading(false);
-          });
-        } else {
-          dispatch({
-            type: "SAVE_ID",
-            data: 2,
-          });
-          closeDrawer();
-          alert.success("Add voucher successfully");
-        }
-      });
+    axios.post(baseUrl + `/vouchers`, formData, configs).then((response) => {
+      if (response.status === 200 && !response.data.success) {
+        const result = response.data.data;
+        const keys = Object.values(result);
+        keys.map((i) => {
+          Array.isArray(i) &&
+            i.map((err) => {
+              alert.error(i);
+              setLoading(false);
+            });
+        });
+      } else {
+        dispatch({
+          type: "SAVE_CREATED_VOUCHER",
+          data: response.data.data,
+        });
+        closeDrawer();
+        alert.success("Add voucher successfully");
+      }
+    });
   };
 
-  const handleSort = ({ value }) => {
+  const handleSelectType = ({ value }) => {
     setType(value);
     if (value.length) {
     }
   };
+
   const handleUploader = (files) => {
     setImage(files);
   };
@@ -166,8 +166,7 @@ const AddCampaing: React.FC<Props> = (props) => {
           <Row>
             <Col lg={4}>
               <FieldDetails>
-                Add your Voucher description and necessary informations from
-                here
+                Add your Voucher description and necessary information from here
               </FieldDetails>
             </Col>
 
@@ -175,7 +174,7 @@ const AddCampaing: React.FC<Props> = (props) => {
               <DrawerBox>
                 <FormFields>
                   <FormLabel>Voucher Name</FormLabel>
-                  <Input inputRef={register} name="name" />
+                  <Input inputRef={register({ required: true })} name="name" />
                 </FormFields>
 
                 <FormFields>
@@ -195,7 +194,7 @@ const AddCampaing: React.FC<Props> = (props) => {
                     valueKey="value"
                     placeholder="User type"
                     value={type}
-                    onChange={handleSort}
+                    onChange={handleSelectType}
                     overrides={{
                       Placeholder: {
                         style: ({ $theme }) => {
@@ -283,11 +282,11 @@ const AddCampaing: React.FC<Props> = (props) => {
                 </FormFields>
                 {type.length !== 0 && type[0].value === "exchangeable" ? (
                   <FormFields>
-                    <FormLabel>Exchange point</FormLabel>
+                    <FormLabel>Reward point</FormLabel>
                     <Input
                       type="number"
                       inputRef={register({ required: true })}
-                      name="exchange_point"
+                      name="reward_point"
                     />
                   </FormFields>
                 ) : null}

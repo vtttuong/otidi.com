@@ -50,12 +50,31 @@ const Image = styled("img", () => ({
   height: "auto",
 }));
 
+const FAKE_DATA = [
+  {
+    id: 1,
+    url:
+      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/8VDdzPMsQqxgg6Qt.png",
+    created_at: "2022-05-15T10:06:36.000000Z",
+    updated_at: "2022-05-15T10:06:36.000000Z",
+    title: "Banner 1",
+    content: "Content 1",
+  },
+  {
+    id: 2,
+    url:
+      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/HRbiWH8QhRx80RqN.png",
+    created_at: "2022-05-15T10:06:54.000000Z",
+    updated_at: "2022-05-15T10:06:54.000000Z",
+    title: "Banner 2",
+    content: "Content 2",
+  },
+];
 export default function BannersAll() {
   const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
 
-  const [locale, setLocale] = useState("en");
-  const [localeOption, setLocaleOption] = useState([]);
-  const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState(FAKE_DATA);
+  const [checkedAll, setCheckedAll] = useState(false);
   const [bannerDetail, setBannerDetail] = useState<any>({});
   const [checkedId, setCheckedId] = useState([]);
   const saveId = useDrawerState("saveId");
@@ -66,54 +85,58 @@ export default function BannersAll() {
     [dispatch]
   );
 
-  const localeSelectOptions = [
-    { value: "en", label: "En" },
-    { value: "vi", label: "Vi" },
-  ];
-
-  async function handleSelect({ value }) {
-    setLocaleOption(value);
-    if (value.length) {
-      setLocale(value[0].value);
+  function onAllCheck(event) {
+    if (event.target.checked) {
+      const idx = datas && datas.map((banner) => banner.id);
+      setCheckedId(idx);
     } else {
-      setLocale("en");
+      setCheckedId([]);
     }
+    setCheckedAll(event.target.checked);
   }
 
   function handleCheckbox(event) {
     const name = parseInt(event.currentTarget.name);
-    if (datas.length !== 0) {
-      // eslint-disable-next-line array-callback-return
-      datas.map((i) => {
-        if (i.id === name) {
-          setBannerDetail(i);
-        }
-      });
-    }
+
+    console.log("Before checked: ", checkedId);
+
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
     } else {
       setCheckedId((prevState) => prevState.filter((id) => id !== name));
+      setCheckedAll(false);
     }
   }
 
   const onEdit = React.useCallback(() => {
-    setCheckedId([]);
-    dispatch({
-      type: "OPEN_DRAWER",
-      drawerComponent: "UPDATEBANNER_FORM",
-      data: bannerDetail,
-    });
-  }, [dispatch, bannerDetail]);
+    console.log(checkedId);
 
-  var { data } = useBanners(locale);
-  React.useEffect(() => {
-    setDatas(data);
-    dispatch({
-      type: "SAVE_ID",
-      data: null,
-    });
-  }, [saveId, dispatch, data]);
+    let updatedBanner = datas
+      ? datas.filter((i) => i.id === checkedId.slice(-1)[0])[0]
+      : null;
+
+    console.log(updatedBanner);
+
+    if (updatedBanner) {
+      dispatch({
+        type: "OPEN_DRAWER",
+        drawerComponent: "UPDATEBANNER_FORM",
+        data: updatedBanner,
+      });
+
+      setCheckedId([]);
+      setCheckedAll(false);
+    }
+  }, [dispatch, checkedId, datas]);
+
+  var { data } = useBanners();
+  // React.useEffect(() => {
+  //   setDatas(data);
+  //   dispatch({
+  //     type: "SAVE_ID",
+  //     data: null,
+  //   });
+  // }, [saveId, dispatch, data]);
 
   return (
     <Grid fluid={true}>
@@ -131,20 +154,8 @@ export default function BannersAll() {
 
             <Col md={10}>
               <Row>
-                <Col md={5}></Col>
-                <Col md={3}>
-                  <Select
-                    options={localeSelectOptions}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder="Locale"
-                    value={localeOption}
-                    searchable={false}
-                    onChange={handleSelect}
-                  />
-                </Col>
-
-                <Col md={3}>
+                <Col md={7}></Col>
+                <Col md={5}>
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => <Plus />}
@@ -171,13 +182,34 @@ export default function BannersAll() {
 
           <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, 200px) minmax(200px, auto) minmax(150px, auto) minmax(150px, max-content)">
-                <StyledHeadCell>Check</StyledHeadCell>
+              <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, 200px) minmax(200px, auto) minmax(150px, auto)">
+                <StyledHeadCell>
+                  <Checkbox
+                    type="checkbox"
+                    value="checkAll"
+                    checked={checkedAll}
+                    onChange={onAllCheck}
+                    overrides={{
+                      Checkmark: {
+                        style: {
+                          borderTopWidth: "2px",
+                          borderRightWidth: "2px",
+                          borderBottomWidth: "2px",
+                          borderLeftWidth: "2px",
+                          borderTopLeftRadius: "4px",
+                          borderTopRightRadius: "4px",
+                          borderBottomRightRadius: "4px",
+                          borderBottomLeftRadius: "4px",
+                        },
+                      },
+                    }}
+                  />
+                </StyledHeadCell>
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Image</StyledHeadCell>
                 <StyledHeadCell>Title</StyledHeadCell>
                 <StyledHeadCell>Content</StyledHeadCell>
-                <StyledHeadCell>Type</StyledHeadCell>
+                {/* <StyledHeadCell>Type</StyledHeadCell> */}
 
                 {datas ? (
                   datas.length !== 0 ? (
@@ -208,15 +240,12 @@ export default function BannersAll() {
                         <StyledBodyCell>{item.id}</StyledBodyCell>
                         <StyledBodyCell>
                           <ImageWrapper>
-                            <Image
-                              src={urlServer + item.image}
-                              alt={"avatar"}
-                            />
+                            <Image src={item.url} alt={"avatar"} />
                           </ImageWrapper>
                         </StyledBodyCell>
                         <StyledBodyCell>{item.title}</StyledBodyCell>
-                        <StyledBodyCell>{item.sub_title}</StyledBodyCell>
-                        <StyledBodyCell>{item.type}</StyledBodyCell>
+                        <StyledBodyCell>{item.content}</StyledBodyCell>
+                        {/* <StyledBodyCell>{item.content}</StyledBodyCell> */}
                       </React.Fragment>
                     ))
                   ) : (
@@ -224,7 +253,7 @@ export default function BannersAll() {
                       hideButton={false}
                       style={{
                         gridColumnStart: "1",
-                        gridColumnEnd: "one",
+                        gridColumnEnd: "-1",
                       }}
                     />
                   )

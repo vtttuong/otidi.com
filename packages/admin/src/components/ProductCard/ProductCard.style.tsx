@@ -33,13 +33,15 @@ export const Image = styled(Images, () => ({
   maxWidth: "100%",
   maxHeight: "100%",
   display: "inline-block",
-  
 }));
 export const ImageAvatar = styled(Images, () => ({
   maxWidth: "100%",
   maxHeight: "100%",
   display: "inline-block",
   borderRadius: "50%",
+  objectFit: "cover",
+  width: "100% !important",
+  height: "auto",
 }));
 
 export const SaleTag = styled("span", ({ $theme }) => ({

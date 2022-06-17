@@ -19,7 +19,9 @@ import {
   FieldDetails,
   Form,
 } from "../DrawerItems/DrawerItems.style";
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+import moment from "moment";
+
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 
 const optionsType = [
   { value: "1", name: "Normal", id: "1" },
@@ -45,22 +47,25 @@ const EditCampaing: React.FC<Props> = (props) => {
   const token = localStorage.getItem("secondhand_token");
   const voucherId = data.id;
   const imageUrl = data.image;
-  const using = data.using;
+  const used = data.used;
   const typeVoucher = data.type;
 
   let levelIds = [];
-  data.levels.map(level => {
+  data.levels.map((level) => {
     levelIds.push(level.id);
   });
 
-  const [tag, setTag] = useState(data.levels);
+  const [tag, setTag] = useState(
+    data.levels.map((level) => optionsType[level.id - 1])
+  );
+
   const [image, setImage] = useState<any>({});
-  const [exchange, setExchange] = useState(data.exchange_point);
+  const [exchange, setExchange] = useState(data.reward_point);
   const [defaultName, setName] = useState(data.name);
-  const [defaulDiscount, setDiscount] = useState(data.discount);
+  const [defaultDiscount, setDiscount] = useState(data.value);
   const [defaultTotal, setTotal] = useState(data.total);
-  const [expired, setExpired] = useState(data.expired);
-  const [level, setLevel] = useState([]);
+  const [expired, setExpired] = useState(data.end_at);
+  const [level, setLevel] = useState(levelIds);
   const [type, setType] = useState(dfType);
 
   const dispatch = useDrawerDispatch();
@@ -77,28 +82,41 @@ const EditCampaing: React.FC<Props> = (props) => {
     });
     setLevel(newTag);
   };
-  
+
   const { register, handleSubmit, setValue } = useForm();
   const [loading, setLoading] = useState(false);
   React.useEffect(() => {
     register({ name: "category" });
   }, [register]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (fData) => {
     setLoading(true);
+
+    if (fData.discount <= 0 || fData.discount > 100) {
+      alert.error("Invalid discount percent");
+      setLoading(false);
+      return;
+    }
+
+    if (type.length === 0) {
+      alert.error("Please choose type");
+      setLoading(false);
+      return;
+    }
 
     const updatedVoucher = {
       id: voucherId,
-      name: data.name,
+      name: fData.name,
       levels: level.length ? level : levelIds,
-      discount: data.discount,
-      using: using,
-      total: data.total,
-      expired: data.expired,
+      value: fData.discount,
+      used: used,
+      total: fData.total,
+      start_at: data.start_at,
+      end_at: fData.end_at,
       type: typeVoucher,
       image: image.path ? image.path : imageUrl,
-      exchange_point: exchange,
-    }
+      reward_point: exchange,
+    };
 
     dispatch({
       type: "SAVE_UPDATED_VOUCHER",
@@ -106,29 +124,29 @@ const EditCampaing: React.FC<Props> = (props) => {
     });
 
     const formData: any = new FormData();
-    formData.set("name", data.name);
+    formData.append("name", fData.name);
 
     if (level.length > 0) {
       level.forEach((l) => {
         formData.append("level_ids[]", l);
       });
     }
-    formData.set("discount", data.discount);
-    formData.set("total", data.total);
-    formData.set("expired", data.expired);
+    formData.append("value", fData.discount);
+    formData.append("total", fData.total);
+    formData.append(
+      "start_at",
+      moment(data.start_at).format("YYYY-MM-DD HH:mm")
+    );
+    formData.append("end_at", moment(fData.expired).format("YYYY-MM-DD HH:mm"));
     if (type[0].value === "exchangeable") {
-      formData.set("exchange_point", data.exchange_point);
+      formData.append("reward_point", fData.exchange_point);
     }
 
     if (image.path) {
-      formData.set("image", image);
+      formData.append("image", image);
     }
-    if (type.length === 0) {
-      alert.error("Please choose type");
-      setLoading(false);
-      return;
-    }
-    formData.set("type", type[0].value);
+
+    formData.append("type", type[0].value);
     updateVoucher(formData);
   };
 
@@ -141,14 +159,18 @@ const EditCampaing: React.FC<Props> = (props) => {
     };
 
     axios
-      .post(baseUrl + `/api/admin/v1/vouchers/${data.id}`, formData, configs)
+      .post(baseUrl + `/vouchers/${data.id}`, formData, configs)
       .then((response) => {
-        if (response.status === 200 && response.data.error) {
-          const result = response.data.error;
+        if (response.status === 200 && !response.data.success) {
+          const result = response.data.data;
+
           const keys = Object.values(result);
           keys.map((i) => {
-            alert.error(i);
-            setLoading(false);
+            Array.isArray(i) &&
+              i.map((err) => {
+                alert.error(i);
+                setLoading(false);
+              });
           });
         } else {
           dispatch({
@@ -163,7 +185,7 @@ const EditCampaing: React.FC<Props> = (props) => {
   const handleUploader = (files) => {
     setImage(files[0]);
   };
-  const handleSort = ({ value }) => {
+  const handleSelectType = ({ value }) => {
     setType(value);
     if (value.length) {
     }
@@ -224,7 +246,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Voucher Name</FormLabel>
                   <Input
-                    inputRef={register}
+                    inputRef={register({ required: true })}
                     name="name"
                     value={defaultName}
                     onChange={(e) => setName(e.target.value)}
@@ -237,7 +259,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                     type="number"
                     inputRef={register({ required: true })}
                     name="discount"
-                    value={defaulDiscount}
+                    value={defaultDiscount}
                     onChange={(e) => setDiscount(e.target.value)}
                   />
                 </FormFields>
@@ -249,7 +271,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                     valueKey="value"
                     placeholder="User type"
                     value={type}
-                    onChange={handleSort}
+                    onChange={handleSelectType}
                     overrides={{
                       Placeholder: {
                         style: ({ $theme }) => {
@@ -338,7 +360,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                     <FormLabel>Exchange point</FormLabel>
                     <Input
                       type="number"
-                      inputRef={register}
+                      inputRef={register({ required: true })}
                       name="exchange_point"
                       value={exchange}
                       onChange={(e) => setExchange(e.target.value)}
@@ -349,9 +371,9 @@ const EditCampaing: React.FC<Props> = (props) => {
                   <FormLabel>Date Expired</FormLabel>
                   <Input
                     type="date"
-                    inputRef={register}
+                    inputRef={register({ required: true })}
                     name="expired"
-                    value={expired}
+                    value={expired.substr(0, 10)}
                     onChange={(e) => setExpired(e.target.value)}
                   />
                 </FormFields>

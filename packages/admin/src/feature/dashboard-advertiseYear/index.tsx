@@ -24,29 +24,31 @@ const AdvertiseYear = ({ ...props }) => {
   });
 
   const [yearOption, setYearOption] = useState([]);
-  const [year, setYear] = useState(2020);
+  const [year, setYear] = useState(new Date().getFullYear());
   const [advertiseTotal, setAdvertiseTotal] = useState([]);
 
   function handleYear({ value }) {
     setYearOption(value);
     if (value.length === 0) {
-      setYear(2020);
+      setYear(new Date().getFullYear());
     } else {
       setYear(value[0].value);
     }
   }
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       const data = await getAdvertiseStatisticsByYear(year);
-      setAdvertiseTotal(data);
+      if (isMounted) setAdvertiseTotal(data);
     };
     fetchData();
+    return () => (isMounted = false);
   }, [year]);
 
   const years = [];
 
-  for (let i = 2010; i <= 2021; i++) {
+  for (let i = 2020; i <= new Date().getFullYear(); i++) {
     years.push({ value: i, label: i.toString() });
   }
 

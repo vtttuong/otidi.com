@@ -8,8 +8,8 @@ import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
 import {Header, Heading, Wrapper} from "components/Wrapper.style";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import React, {useCallback, useEffect, useState} from "react";
+import {useDrawerDispatch} from "context/DrawerContext";
+import React, {useCallback, useState} from "react";
 import useCategories, {
   useCategoriesRoot,
   usePlanCategories,

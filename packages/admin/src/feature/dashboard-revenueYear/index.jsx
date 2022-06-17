@@ -38,16 +38,18 @@ const RevenueYear = ({ ...props }) => {
   }
 
   useEffect(() => {
+    let isMounted = true;               // note mutable flag
     const fetchData = async () => {
       const data = await getRevenueStatisticsByYear(year);
-      setRevenueTotal(data);
+      if (isMounted) setRevenueTotal(data);
     };
     fetchData();
+    return () => { isMounted = false }
   }, [year]);
 
   const years = [];
 
-  for (let i = 2010; i <= 2021; i++) {
+  for (let i = 2020; i <= new Date().getFullYear(); i++) {
     years.push({ value: i, label: i.toString() });
   }
 

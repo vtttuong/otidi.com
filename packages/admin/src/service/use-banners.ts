@@ -1,5 +1,5 @@
 import useSWR from "swr";
-const baseUrl = process.env.REACT_APP_LARAVEL_API_URL;
+const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 const token = localStorage.getItem("secondhand_token");
 
 const productFetcher = (url) =>
@@ -11,13 +11,14 @@ const productFetcher = (url) =>
     },
   }).then((res) => res.json());
 
-export default function useBanners(locale: string = "en") {
-  let url = `${baseUrl}/api/admin/v1/banners?locale=${locale}`;
+export default function useBanners() {
+  let url = `${baseUrl}/banners`;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const {data, mutate, error} = useSWR(url, productFetcher);
+
   return {
     error,
-    data: data,
+    data: data?.data,
     mutate,
   };
 }
