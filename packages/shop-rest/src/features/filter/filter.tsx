@@ -40,10 +40,15 @@ const customStyles = {
 const postType = [
   {
     key: "type",
+    value: "",
+    label: "Sắp xếp theo...",
+  },
+  {
+    key: "type",
     value: "created_at",
     label: <FormattedMessage id="lasted" />,
   },
-  { key: "type", value: "like", label: <FormattedMessage id="hotNews" /> },
+  { key: "type", value: "views", label: <FormattedMessage id="hotNews" /> },
 ];
 
 const Filter: React.FC<any> = () => {
@@ -180,6 +185,7 @@ const Filter: React.FC<any> = () => {
               styles={customStyles}
               options={postType}
               defaultValue={postType[0]}
+              placeholder="Sắp xếp theo"
               onChange={({ value }) => handleSortData(value)}
             />
           </Col>

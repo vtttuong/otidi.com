@@ -3,19 +3,25 @@ import { useRouter } from "next/router";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import { Button, Container, Divider, Heading, Wrapper } from "./form.style";
+import locationIcon from "../../assets/icons/icon/Location.svg";
+import cartIcon from "../../assets/icons/icon/Cart.svg";
+import clockIcon from "../../assets/icons/icon/Clock.svg";
+import newIcon from "../../assets/icons/icon/New.svg";
+import likeIcon from "../../assets/icons/icon/Like.svg";
+import saleIcon from "../../assets/icons/icon/Sale.svg";
 const lists = [
   {
     id: 1,
     title: <FormattedMessage id="lasted" />,
     value: "created_at",
-    source: "https://www.flaticon.com/svg/static/icons/svg/628/628586.svg",
+    source: newIcon,
     type: 1,
   },
   {
     id: 2,
     title: <FormattedMessage id="hotNews" />,
-    value: "like",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2995/2995973.svg",
+    value: "views",
+    source: likeIcon,
     type: 1,
   },
 ];
@@ -25,21 +31,21 @@ const listsRange = [
     id: 5,
     title: "< 3 Km",
     value: 3,
-    source: "https://www.flaticon.com/svg/static/icons/svg/927/927667.svg",
+    source: locationIcon,
     type: 3,
   },
   {
     id: 6,
     title: "< 5 Km",
     value: 5,
-    source: "https://www.flaticon.com/svg/static/icons/svg/927/927667.svg",
+    source: locationIcon,
     type: 3,
   },
   {
     id: 7,
     title: "< 10 Km",
     value: 10,
-    source: "https://www.flaticon.com/svg/static/icons/svg/927/927667.svg",
+    source: locationIcon,
     type: 3,
   },
 ];
@@ -48,25 +54,25 @@ const listsTime = [
   {
     id: 8,
     value: "3",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2088/2088617.svg",
+    source: clockIcon,
     type: 4,
   },
   {
     id: 9,
     value: "5",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2088/2088617.svg",
+    source: clockIcon,
     type: 4,
   },
   {
     id: 10,
     value: "7",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2088/2088617.svg",
+    source: clockIcon,
     type: 4,
   },
   {
     id: 11,
     value: "10",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2088/2088617.svg",
+    source: clockIcon,
     type: 4,
   },
 ];
@@ -76,14 +82,14 @@ const listsBuy = [
     id: 3,
     title: <FormattedMessage id="filterBuy" />,
     value: "buy",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2922/2922815.svg",
+    source: cartIcon,
     type: 2,
   },
   {
     id: 4,
     title: <FormattedMessage id="filterSell" />,
     value: "sell",
-    source: "https://www.flaticon.com/svg/static/icons/svg/2897/2897967.svg",
+    source: saleIcon,
     type: 2,
   },
 ];

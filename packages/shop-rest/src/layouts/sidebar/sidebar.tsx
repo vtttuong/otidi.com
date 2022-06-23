@@ -7,7 +7,7 @@ import {
 import { Scrollbar } from "components/scrollbar/scrollbar";
 import { TreeMenu } from "components/tree-menu/tree-menu";
 import { useAppState } from "contexts/app/app.provider";
-import useCategory from "data/use-category";
+import useBrands from "data/use-brand";
 import { useRouter } from "next/router";
 import React from "react";
 import Sticky from "react-stickynode";
@@ -34,7 +34,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
   type,
 }) => {
   const router = useRouter();
-  const { data, error } = useCategory({ type });
+  const { data, error } = useBrands();
 
   if (error) return <ErrorMessage message={error.message} />;
   const { pathname, query } = router;

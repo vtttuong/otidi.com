@@ -1,10 +1,11 @@
 import { Button } from "components/button/button";
 import NoResultFound from "components/no-result/no-result";
 import Placeholder from "components/placeholder/placeholder";
-import useProducts from "data/use-products";
+import usePosts, { useRecommendPosts } from "data/use-posts";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import post from "pages/post";
+import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Fade from "react-reveal/Fade";
 import FoodCard from "../../product-card/product-card-four/product-card-four";
@@ -17,8 +18,8 @@ import {
   ProductsRow,
 } from "./product-list.style";
 
-const ErrorMessage = dynamic(() =>
-  import("components/error-message/error-message")
+const ErrorMessage = dynamic(
+  () => import("components/error-message/error-message")
 );
 
 type ProductsProps = {
@@ -39,43 +40,24 @@ export const Products: React.FC<ProductsProps> = ({
   page,
 }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [pageNum, setPageNum] = useState(1);
 
-  const responseDataNormal = useProducts({
-    type,
-    text: router.query.text,
-    page: page,
-    category: router.query.category,
+  const {
+    posts,
+    error,
+    isLoadingMore,
+    size,
+    setSize,
+    isReachingEnd,
+    isLoadingInitialData,
+  } = usePosts({
+    page: pageNum,
     sort: router.query.sort,
-    post_type: router.query.postType,
-    radius: router.query.radius,
-    days_ago: router.query.daysAgo,
-    offset: 0,
-    limit: fetchLimit,
-    isPriority: 0,
   });
 
-  const responseDataPrioity = useProducts({
-    type,
-    text: router.query.text,
-    page: page,
-    category: router.query.category,
-    sort: router.query.sort,
-    post_type: router.query.postType,
-    radius: router.query.radius,
-    days_ago: router.query.daysAgo,
-    offset: 0,
-    limit: fetchLimit,
-    isPriority: 1,
-  });
+  if (error) return <ErrorMessage message={error.message} />;
 
-  let dataPriority = responseDataPrioity.data;
-  let dataNormal = responseDataNormal.data;
-
-  if (responseDataNormal.error)
-    return <ErrorMessage message={responseDataNormal.error.message} />;
-
-  if (!responseDataPrioity.data || !responseDataNormal.data) {
+  if (isLoadingInitialData) {
     return (
       <LoaderWrapper>
         <LoaderItem>
@@ -94,59 +76,57 @@ export const Products: React.FC<ProductsProps> = ({
     );
   }
 
-  if (
-    responseDataPrioity.data.length == 0 &&
-    responseDataNormal.data.length == 0
-  ) {
+  if (posts.length == 0) {
     return <NoResultFound />;
   }
-  const data = dataPriority.concat(dataNormal);
 
   const handleLoadMore = async () => {
-    setLoading(true);
-    // await fetchMore(Number(data.length), fetchLimit);
-    setLoading(false);
+    setSize((prevPage) => prevPage + 1);
   };
 
   return (
     <>
       <ProductsRow>
-        {data.map((item: any, index: number) => (
-          <ProductsCol key={index} className="food-col">
-            <ProductCardWrapper>
-              <Fade
-                duration={800}
-                delay={index * 10}
-                style={{ height: "100%" }}
-              >
-                <FoodCard
-                  name={item.title}
-                  image={item.main_img_url}
-                  address={item.address}
-                  createdAt={item.created_at}
-                  price={item.price}
-                  unit={item.unit}
-                  isFree={false}
-                  typeOfPost={item.type}
-                  data={item}
-                  prioriry={item.is_priority}
-                  onClick={() => {
-                    router.push("/[type]/[slug]", `/${item.category_type}/${item.slug}`);
-                    setTimeout(() => {
-                      window.scrollTo(0, 0);
-                    }, 500);
-                  }}
-                />
-              </Fade>
-            </ProductCardWrapper>
-          </ProductsCol>
-        ))}
+        {posts &&
+          posts.map((item: any, index: number) => (
+            <ProductsCol key={index} className="food-col">
+              <ProductCardWrapper>
+                <Fade
+                  duration={800}
+                  delay={index * 10}
+                  style={{ height: "100%" }}
+                >
+                  <FoodCard
+                    name={item.name}
+                    image={item.main_image.url}
+                    address={item.user.address}
+                    createdAt={item.created_at}
+                    price={item.price}
+                    unit={item.unit}
+                    isFree={false}
+                    typeOfPost={item.type}
+                    data={item}
+                    prioriry={item.is_priority}
+                    onClick={() => {
+                      router.push(
+                        "/[type]/[slug]",
+                        `/${item.category_type}/${item.slug}`
+                      );
+                      setTimeout(() => {
+                        window.scrollTo(0, 0);
+                      }, 500);
+                    }}
+                  />
+                </Fade>
+              </ProductCardWrapper>
+            </ProductsCol>
+          ))}
       </ProductsRow>
-      {loadMore && responseDataNormal.data?.hasMore && (
+      {!isReachingEnd && (
         <ButtonWrapper>
           <Button
             onClick={handleLoadMore}
-            loading={loading}
+            loading={isLoadingMore}
             variant="secondary"
             style={{
               fontSize: 14,

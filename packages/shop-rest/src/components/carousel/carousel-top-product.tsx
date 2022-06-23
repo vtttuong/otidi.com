@@ -7,17 +7,17 @@ import { ArrowPrev } from "assets/icons/ArrowPrev";
 import { useLocale } from "contexts/language/language.provider";
 import FoodCard from "../product-card/product-card-four/product-card-four-top";
 import { useRouter } from "next/router";
-import useProductsPriority from "data/use-products-priority";
 import NoResultFound from "components/no-result/no-result";
 import Placeholder from "components/placeholder/placeholder";
 import dynamic from "next/dynamic";
-const ErrorMessage = dynamic(() =>
-  import("components/error-message/error-message")
+const ErrorMessage = dynamic(
+  () => import("components/error-message/error-message")
 );
 import {
   LoaderItem,
   LoaderWrapper,
 } from "../product-grid/product-list/product-list.style";
+import { useRecommendPosts } from "data/use-posts";
 const ButtonPrev = styled("button")`
   height: 40px;
   width: 40px;
@@ -162,9 +162,7 @@ export default function CustomCarousel({
 }: Props) {
   const { query } = useRouter();
   const router = useRouter();
-  const { data, error } = useProductsPriority({
-    isPriority: 1,
-  });
+  const { data, error } = useRecommendPosts();
 
   if (error) return <ErrorMessage message={error.message} />;
   if (!data) {
@@ -203,33 +201,37 @@ export default function CustomCarousel({
         {...props}
         // use dir ltr when rtl true
       >
-        {data.map((item: any, index: number) => {
-          if (component) return component(item);
-          return (
-            <div style={{ padding: "0 15px", overflow: "hidden" }} key={index}>
-              <FoodCard
-                name={item.title}
-                image={item.image}
-                address={item.address}
-                createdAt={item.created_at}
-                price={item.price}
-                unit={item.unit}
-                isFree={false}
-                typeOfPost={item.type}
-                data={item}
-                prioriry={item.is_priority}
-                avatar={item.user.avatar_url}
-                user_name={item.user.name}
-                onClick={() => {
-                  router.push(
-                    "/[type]/[slug]",
-                    `/${item.category_type}/${item.slug}`
-                  );
-                }}
-              />
-            </div>
-          );
-        })}
+        {data &&
+          data.map((item: any, index: number) => {
+            if (component) return component(item);
+            return (
+              <div
+                style={{ padding: "0 15px", overflow: "hidden" }}
+                key={index}
+              >
+                <FoodCard
+                  name={item.name}
+                  image={item.main_image.url}
+                  address={item.user.address}
+                  createdAt={item.created_at}
+                  price={item.price}
+                  unit={item.unit}
+                  isFree={false}
+                  typeOfPost={item.type}
+                  data={item}
+                  prioriry={item.is_priority}
+                  avatar={item.user.avatar}
+                  user_name={item.user.name}
+                  onClick={() => {
+                    router.push(
+                      "/[type]/[slug]",
+                      `/${item.category_type}/${item.slug}`
+                    );
+                  }}
+                />
+              </div>
+            );
+          })}
       </Carousel>
     </div>
   );

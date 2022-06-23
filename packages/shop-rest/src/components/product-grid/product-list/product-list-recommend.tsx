@@ -1,6 +1,6 @@
 import NoResultFound from "components/no-result/no-result";
 import Placeholder from "components/placeholder/placeholder";
-import { useRecommendProducts } from "data/use-products";
+import { useRecommendPosts } from "data/use-posts";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
@@ -37,15 +37,8 @@ export const RecommendProducts: React.FC<ProductsProps> = ({
 }) => {
   const router = useRouter();
   const [data, setData] = useState<any>();
+  const recommends = useRecommendPosts();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const recommends = await useRecommendProducts(slug, token);
-      setData(recommends);
-    };
-
-    fetchData();
-  }, []);
   if (!data) {
     return (
       <LoaderWrapper>
@@ -72,36 +65,37 @@ export const RecommendProducts: React.FC<ProductsProps> = ({
   return (
     <>
       <ProductsRow>
-        {data.map((item: any, index: number) => (
-          <ProductsCol key={index} className="food-col">
-            <ProductCardWrapper>
-              <Fade
-                duration={800}
-                delay={index * 10}
-                style={{ height: "100%" }}
-              >
-                <FoodCard
-                  name={item.title}
-                  image={item.image}
-                  address={item.address}
-                  createdAt={item.created_at}
-                  price={item.price}
-                  unit={item.unit}
-                  isFree={false}
-                  typeOfPost={item.type}
-                  data={item}
-                  prioriry={item.is_priority}
-                  onClick={() => {
-                    router.push("/[type]/[slug]", `/${type}/${item.slug}`);
-                    setTimeout(() => {
-                      window.scrollTo(0, 0);
-                    }, 500);
-                  }}
-                />
-              </Fade>
-            </ProductCardWrapper>
-          </ProductsCol>
-        ))}
+        {data &&
+          data.map((item: any, index: number) => (
+            <ProductsCol key={index} className="food-col">
+              <ProductCardWrapper>
+                <Fade
+                  duration={800}
+                  delay={index * 10}
+                  style={{ height: "100%" }}
+                >
+                  <FoodCard
+                    name={item.title}
+                    image={item.image}
+                    address={item.address}
+                    createdAt={item.created_at}
+                    price={item.price}
+                    unit={item.unit}
+                    isFree={false}
+                    typeOfPost={item.type}
+                    data={item}
+                    prioriry={item.is_priority}
+                    onClick={() => {
+                      router.push("/[type]/[slug]", `/${type}/${item.slug}`);
+                      setTimeout(() => {
+                        window.scrollTo(0, 0);
+                      }, 500);
+                    }}
+                  />
+                </Fade>
+              </ProductCardWrapper>
+            </ProductsCol>
+          ))}
       </ProductsRow>
     </>
   );

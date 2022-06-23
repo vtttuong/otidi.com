@@ -18,12 +18,12 @@ import React from "react";
 // Static Data Import Here
 import { sitePages } from "site-settings/site-pages";
 import { useRefScroll } from "utils/use-ref-scroll";
-import useBanner from "data/use-banner";
-import { getCookie } from "utils/session";
+
+const URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
 
 const Sidebar = dynamic(() => import("layouts/sidebar/sidebar"));
-const Products = dynamic(() =>
-  import("components/product-grid/product-list/product-list")
+const Products = dynamic(
+  () => import("components/product-grid/product-list/product-list")
 );
 
 const CategoryPage: React.FC<any> = ({ banner, deviceType }) => {
@@ -33,6 +33,8 @@ const CategoryPage: React.FC<any> = ({ banner, deviceType }) => {
     percentOfContainer: 0,
     offsetPX: -110,
   });
+
+  console.log("BANNER", banner);
 
   React.useEffect(() => {
     if (query.text || query.category) {
@@ -61,7 +63,9 @@ const CategoryPage: React.FC<any> = ({ banner, deviceType }) => {
           <MobileBanner intlTitleId={page?.banner_title_id} type={PAGE_TYPE} />
           <Banner
             intlTitleId={banner ? banner.title : page?.banner_title_id}
-            intlDescriptionId={banner ? banner.sub_title : page?.banner_description_id}
+            intlDescriptionId={
+              banner ? banner.sub_title : page?.banner_description_id
+            }
             imageUrl={banner ? banner.url : page?.banner_image_url}
           />
           <OfferSection>
@@ -94,11 +98,10 @@ const CategoryPage: React.FC<any> = ({ banner, deviceType }) => {
 };
 
 export async function getServerSideProps(context) {
-  const locale = getCookie("locale", context);
+  // const locale = getCookie("locale", context);
+
   const type = context.query.type;
-  const url =
-    process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-    `/api/v1/banners/${type}?locale=${locale}`;
+  const url = `${URL}/banners`;
 
   const options = {
     method: "GET",
@@ -108,7 +111,20 @@ export async function getServerSideProps(context) {
   };
 
   const data = await fetch(url, options);
-  const banner = await data.json();
+
+  console.log(data);
+
+  const dataJson = await data.json();
+
+  const fake_banner = {
+    id: 1,
+    url:
+      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/6n9wbAu1hJE025xd.jpg",
+    created_at: "2022-04-11T08:14:46+00:00",
+    updated_at: "2022-04-11T08:14:46+00:00",
+  };
+  const banner = fake_banner;
+
   return {
     props: {
       banner: banner,

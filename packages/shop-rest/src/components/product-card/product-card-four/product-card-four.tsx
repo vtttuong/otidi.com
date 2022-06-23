@@ -74,7 +74,6 @@ const ProductCard: React.FC<CardProps> = ({
   isBook,
   ...props
 }) => {
-
   let formatTime = formatRelativeTime(createdAt);
   const router = useRouter();
   // const [package, setPackage] = React.useState([])
@@ -240,7 +239,7 @@ const ProductCard: React.FC<CardProps> = ({
         </ProductMeta>
         <BoxAvatar className={"all"}>
           <Image
-            url={data?.user?.avatar_img_url}
+            url={data?.user?.avatar}
             className="product-image top"
             style={{ position: "relative", objectFit: "cover" }}
             alt={name}
@@ -255,16 +254,14 @@ const ProductCard: React.FC<CardProps> = ({
           />
           <span style={{ marginTop: 5 }}>
             <Like />
-            <b style={{ position: "relative", top: -2.5 }}>
-              {data?.likes_count}
-            </b>
+            <b style={{ position: "relative", top: -2.5 }}>{data?.views}</b>
           </span>
           <span
             style={{ marginLeft: 20, position: "relative", top: -2.5 }}
             className="view"
           >
             <Eye />
-            <b style={{ position: "relative", top: -5 }}>{data?.view}</b>
+            <b style={{ position: "relative", top: -5 }}>{data?.views}</b>
           </span>
           {currentUser && !saveNews ? (
             <PopoverNotify
