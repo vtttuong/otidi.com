@@ -6,17 +6,17 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import Fade from "react-reveal/Fade";
-import FoodCard from "../../product-card/product-card-four/product-card-four";
+import FoodCard from "../../post-card/post-card-four/post-card-four";
 import {
   ButtonWrapper,
   LoaderItem,
   LoaderWrapper,
-  ProductCardWrapper,
-  ProductsCol,
-  ProductsRow,
-} from "./product-list.style";
+  PostCardWrapper,
+  PostsCol,
+  PostsRow,
+} from "./post-list.style";
 
-type ProductsProps = {
+type PostsProps = {
   deviceType?: {
     mobile: boolean;
     tablet: boolean;
@@ -29,7 +29,7 @@ type ProductsProps = {
   slug?: string;
   token?: string;
 };
-export const RecommendProducts: React.FC<ProductsProps> = ({
+export const RecommendPosts: React.FC<PostsProps> = ({
   loadMore = true,
   type,
   token,
@@ -64,11 +64,11 @@ export const RecommendProducts: React.FC<ProductsProps> = ({
 
   return (
     <>
-      <ProductsRow>
+      <PostsRow>
         {data &&
           data.map((item: any, index: number) => (
-            <ProductsCol key={index} className="food-col">
-              <ProductCardWrapper>
+            <PostsCol key={index} className="food-col">
+              <PostCardWrapper>
                 <Fade
                   duration={800}
                   delay={index * 10}
@@ -93,11 +93,11 @@ export const RecommendProducts: React.FC<ProductsProps> = ({
                     }}
                   />
                 </Fade>
-              </ProductCardWrapper>
-            </ProductsCol>
+              </PostCardWrapper>
+            </PostsCol>
           ))}
-      </ProductsRow>
+      </PostsRow>
     </>
   );
 };
-export default RecommendProducts;
+export default RecommendPosts;

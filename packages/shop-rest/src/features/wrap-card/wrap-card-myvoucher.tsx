@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { getAllVoucher, getMyVoucher } from "utils/api/voucher";
-import VoucherMy from "../../components/product-card/product-card-four/voucher-my";
+import VoucherMy from "../../components/post-card/post-card-four/voucher-my";
 import { ItemCard } from "../user-profile/user-profile.style";
 type Props = {
   deviceType?: {

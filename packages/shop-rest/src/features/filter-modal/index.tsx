@@ -114,13 +114,9 @@ const FilterModal: React.FC<filterProps> = ({
   async function filterCallback() {
     setLoading(true);
 
-    const { type } = query;
-    const category = query.category;
-
     let queryParams = {
-      category: category,
+      ...query,
       sort: sortBy,
-      postType: postType,
       daysAgo: daysAgo,
     };
 
@@ -136,45 +132,14 @@ const FilterModal: React.FC<filterProps> = ({
       newParams["latitude"] = latitude;
       newParams["longitude"] = longitude;
     }
-    if (query.text && type) {
-      newParams["text"] = query.text;
-      router.push(
-        {
-          pathname,
-          query: {
-            ...newParams,
-          },
-        },
-        {
-          pathname: `/${type}`,
-          query: {
-            ...newParams,
-          },
-        }
-      );
-    } else if (!query.text && type) {
-      router.push(
-        {
-          pathname,
-          query: {
-            ...newParams,
-          },
-        },
-        {
-          pathname: `/${type}`,
-          query: {
-            ...newParams,
-          },
-        }
-      );
-    } else {
-      router.push({
-        pathname,
-        query: {
-          ...newParams,
-        },
-      });
-    }
+
+    router.push({
+      pathname,
+      query: {
+        ...newParams,
+      },
+    });
+
     clModal();
   }
 

@@ -1,16 +1,16 @@
-import RecommendProducts from "components/product-grid/product-list/product-list-recommend";
+import RecommendPosts from "components/post-grid/post-list/post-list-recommend";
 import AuthorInfo from "features/author-infor/author-infor";
 import { useRouter } from "next/router";
 import React from "react";
 import { FormattedMessage } from "react-intl";
-import ProductDetailsLeft from "./product-details-left";
+import PostDetailsLeft from "./post-details-left";
 import {
   AuthorInfor,
-  ProductDetailsWrapper,
+  PostDetailsWrapper,
   RelatedItems,
-} from "./product-details-one.style";
+} from "./post-details-one.style";
 
-type ProductDetailsProps = {
+type PostDetailsProps = {
   slug: string;
   userId: number;
   token: string;
@@ -21,7 +21,7 @@ type ProductDetailsProps = {
   };
 };
 
-const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
+const PostDetails: React.FunctionComponent<PostDetailsProps> = ({
   slug,
   userId,
   token,
@@ -31,12 +31,12 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
   return (
     <>
-      <ProductDetailsWrapper className="product-card" dir="ltr">
-        <ProductDetailsLeft slug={slug} userId={userId} />
+      <PostDetailsWrapper className="post-card" dir="ltr">
+        <PostDetailsLeft slug={slug} userId={userId} />
         <AuthorInfor>
           <AuthorInfo />
         </AuthorInfor>
-      </ProductDetailsWrapper>
+      </PostDetailsWrapper>
 
       <RelatedItems>
         {token ? (
@@ -52,7 +52,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           </h2>
         )}
 
-        <RecommendProducts
+        <RecommendPosts
           token={token}
           slug={slug}
           type={router.query.type.toString()}
@@ -66,4 +66,4 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   );
 };
 
-export default ProductDetails;
+export default PostDetails;

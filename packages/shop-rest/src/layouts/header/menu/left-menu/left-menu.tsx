@@ -1,22 +1,24 @@
-import { AddProduct } from "assets/icons/AddProduct";
+import { AddPost } from "assets/icons/AddPost";
 import * as categoryMenuIcons from "assets/icons/category-menu-icons";
 import { MenuDown } from "assets/icons/MenuDown";
 import NavLink from "components/nav-link/nav-link";
 import Popover from "components/popover/popover";
 import Logo from "layouts/logo/logo";
 import Router, { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
-import { CATEGORY_MENU_ITEMS, POST_ITEM } from "site-settings/site-navigation";
+import { POST_ITEM } from "site-settings/site-navigation";
 import {
   Arrow,
   Icon,
-  IconWrapper,
+  LogoWrapper,
   LeftMenuBox,
   MainMenu,
   MenuItem,
   SelectedItem,
   TextColor,
+  SelectedItemName,
+  IconLogo,
 } from "./left-menu.style";
 import { getCookie } from "utils/session";
 
@@ -25,10 +27,10 @@ const CategoryIcon = ({ name }) => {
   return !!TagName ? <TagName /> : <p>Invalid icon {name}</p>;
 };
 
-const CategoryMenu = (props: any) => {
-  const handleOnClick = (item) => {
+const BrandMenu = (props: any) => {
+  const handleOnClick = (item: any) => {
     if (item.dynamic) {
-      Router.push("/[type]", `${item.href}`);
+      Router.push("/[type]", `${item.name}`);
       props.onClick(item);
       return;
     }
@@ -38,14 +40,19 @@ const CategoryMenu = (props: any) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {CATEGORY_MENU_ITEMS.map((item) => (
-        <MenuItem key={item.id} {...props} onClick={() => handleOnClick(item)}>
-          <IconWrapper>
-            <CategoryIcon name={item.icon} />
-          </IconWrapper>
-          <FormattedMessage id={item.id} defaultMessage={item.defaultMessage} />
-        </MenuItem>
-      ))}
+      {props.brands &&
+        props.brands.map((item) => (
+          <MenuItem
+            key={item.id}
+            {...props}
+            onClick={() => handleOnClick(item)}
+          >
+            <LogoWrapper>
+              <IconLogo src={item.logo} />
+            </LogoWrapper>
+            <FormattedMessage id={item.id} defaultMessage={item.name} />
+          </MenuItem>
+        ))}
     </div>
   );
 };
@@ -56,12 +63,7 @@ type Props = {
 
 export const LeftMenu: React.FC<Props> = ({ logo }) => {
   const router = useRouter();
-  const initialMenu = CATEGORY_MENU_ITEMS.find(
-    (item) => item.href === router.asPath
-  );
-  const [activeMenu, setActiveMenu] = React.useState(
-    initialMenu ?? CATEGORY_MENU_ITEMS[0]
-  );
+  // const [activeMenu, setActiveMenu] = React.useState(initialMenu ?? brands[0]);
 
   const checkAuth = () => {
     let token = getCookie("access_token");
@@ -81,36 +83,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
 
   return (
     <LeftMenuBox>
-      <Logo
-        imageUrl={logo}
-        alt={"Shop Logo"}
-        onClick={() => setActiveMenu(CATEGORY_MENU_ITEMS[0])}
-      />
-
-      <MainMenu>
-        <Popover
-          className="right"
-          handler={
-            <SelectedItem>
-              <span>
-                <Icon>
-                  <CategoryIcon name={activeMenu?.icon} />
-                </Icon>
-                <span>
-                  <FormattedMessage
-                    id={activeMenu?.id}
-                    defaultMessage={activeMenu?.defaultMessage}
-                  />
-                </span>
-              </span>
-              <Arrow>
-                <MenuDown />
-              </Arrow>
-            </SelectedItem>
-          }
-          content={<CategoryMenu onClick={setActiveMenu} />}
-        />
-      </MainMenu>
+      <Logo imageUrl={logo} alt={"Shop Logo"} />
       <TextColor onClick={() => checkAuth()}>
         <NavLink
           className="menu-item"
@@ -118,7 +91,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
           label={POST_ITEM.defaultMessage}
           intlId={POST_ITEM.id}
           iconClass="menu-icon"
-          icon={<AddProduct />}
+          icon={<AddPost />}
           number={""}
         />
       </TextColor>

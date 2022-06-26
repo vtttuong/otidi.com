@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { themeGet } from "@styled-system/theme-get";
 
-export const ProductsRow = styled.div`
+export const PostsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 25px;
@@ -48,14 +48,14 @@ export const LoaderItem = styled.div`
   margin-bottom: 30px;
 `;
 
-export const ProductCardWrapper = styled.div`
+export const PostCardWrapper = styled.div`
   height: 100%;
   > div {
     height: 100%;
   }
 `;
 
-export const ProductsCol = styled.div`
+export const PostsCol = styled.div`
   flex: 0 0 20%;
   max-width: 20%;
   padding-left: 15px;
@@ -109,7 +109,7 @@ export const ProductsCol = styled.div`
       margin-bottom: 15px;
       border: 0;
 
-      ${ProductCardWrapper} {
+      ${PostCardWrapper} {
         border: 1px solid #f1f1f1;
       }
     }

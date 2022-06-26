@@ -62,7 +62,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/2/2_N2nbGegJCmCQfmKK.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 3,
@@ -102,7 +102,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/3/4_q5rnGVCQyalV2Ivq.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 8,
@@ -143,7 +143,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/4/1_3NKFZgFcWVzLSfCI.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 2,
@@ -183,7 +183,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 4,
@@ -223,7 +223,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 9,
@@ -263,7 +263,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 5,
@@ -303,7 +303,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 6,
@@ -343,7 +343,7 @@ let fake_data = [
     },
     main_image: {
       url:
-        "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
     },
     advertise: {
       id: 7,
@@ -384,20 +384,24 @@ const postFetcherLoadmore = (url: string) =>
 interface Props {
   page?: number;
   count?: number;
-  sort?: any;
-  sortDir?: string;
-  brand?: string;
+  sort?: string | string[];
+  sortDir?: string | string[];
+  text?: string | string[];
+  dayAgo: string | string[];
+  latitue: number;
+  longitude: number;
+  radius: number;
 }
 // https://api.otodi.vn/api/index/v1/posts?count=10&page=1&order_by=id&dir=asc&q=ford
 export default function usePosts(variables: Props) {
-  let { page, count, sortDir, sort, brand } = variables ?? {};
+  let { page, count, sortDir, sort, text } = variables ?? {};
   count = count ? count : 5;
 
   let queryParams = {
     count: count,
     dir: sortDir ? sortDir : "asc",
     order_by: sort ? sort : "id",
-    brand: brand,
+    q: text,
   };
 
   let newParams = {};
@@ -479,7 +483,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/2/2_N2nbGegJCmCQfmKK.jpg",
+          "https://otody.s3.ap-southeast-1.amazonaws.com/posts/2/2_N2nbGegJCmCQfmKK.jpg",
       },
       advertise: {
         id: 3,
@@ -519,7 +523,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/3/4_q5rnGVCQyalV2Ivq.jpg",
+          "https://otody.s3.ap-southeast-1.amazonaws.com/posts/3/4_q5rnGVCQyalV2Ivq.jpg",
       },
       advertise: {
         id: 8,
@@ -560,7 +564,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/4/1_3NKFZgFcWVzLSfCI.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
       },
       advertise: {
         id: 2,
@@ -600,7 +604,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
       },
       advertise: {
         id: 4,
@@ -640,7 +644,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
       },
       advertise: {
         id: 9,
@@ -680,7 +684,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
       },
       advertise: {
         id: 5,
@@ -720,7 +724,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
       },
       advertise: {
         id: 6,
@@ -760,7 +764,7 @@ export function useRecommendPosts() {
       },
       main_image: {
         url:
-          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Grand_Central_Terminal_ceiling_view.jpg/1280px-Grand_Central_Terminal_ceiling_view.jpg",
       },
       advertise: {
         id: 7,

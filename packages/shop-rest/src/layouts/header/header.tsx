@@ -12,7 +12,6 @@ import HeaderWrapper, {
 import { openModal } from "@redq/reuse-modal";
 import LogoImage from "assets/images/logo.png";
 import { Saved } from "assets/icons/Saved";
-import { isCategoryPage } from "../is-home-page";
 import Search from "features/search/search";
 import { setCookie, getCookie, removeCookie } from "utils/session";
 import Pusher from "pusher-js";
@@ -82,7 +81,6 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
     }
   };
 
-  const { query } = useRouter();
   const handleLogout = () => {
     if (typeof window !== "undefined") {
       removeCookie("access_token");
@@ -120,12 +118,6 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
     // Router.push("/login");
   };
 
-  let showSearch = isCategoryPage(query.type);
-
-  if (query.slug) {
-    showSearch = false;
-  }
-
   const {
     ref,
     isComponentVisible,
@@ -148,15 +140,13 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
       <HeaderWrapper className={className} id="layout-header">
         <LeftMenu logo={LogoImage} />
         <BoxSave ref={ref}>
-          {showSearch && (
-            <Search
-              onGetText={onGetText}
-              minimal={true}
-              token={token}
-              className="headerSearch"
-              onClick={() => setIsComponentVisible(true)}
-            />
-          )}
+          <Search
+            onGetText={onGetText}
+            minimal={true}
+            token={token}
+            className="headerSearch"
+            onClick={() => setIsComponentVisible(true)}
+          />
           {isComponentVisible && (
             <ShowHistory
               texts={texts}

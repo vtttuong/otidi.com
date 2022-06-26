@@ -5,7 +5,7 @@ import { themeGet } from "@styled-system/theme-get";
 import { ArrowNext } from "assets/icons/ArrowNext";
 import { ArrowPrev } from "assets/icons/ArrowPrev";
 import { useLocale } from "contexts/language/language.provider";
-import FoodCard from "../product-card/product-card-four/product-card-four-top";
+import FoodCard from "../post-card/post-card-four/post-card-four-top";
 import { useRouter } from "next/router";
 import NoResultFound from "components/no-result/no-result";
 import Placeholder from "components/placeholder/placeholder";
@@ -16,7 +16,7 @@ const ErrorMessage = dynamic(
 import {
   LoaderItem,
   LoaderWrapper,
-} from "../product-grid/product-list/product-list.style";
+} from "../post-grid/post-list/post-list.style";
 import { useRecommendPosts } from "data/use-posts";
 const ButtonPrev = styled("button")`
   height: 40px;

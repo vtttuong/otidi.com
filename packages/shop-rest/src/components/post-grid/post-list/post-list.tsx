@@ -4,25 +4,24 @@ import Placeholder from "components/placeholder/placeholder";
 import usePosts, { useRecommendPosts } from "data/use-posts";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import post from "pages/post";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Fade from "react-reveal/Fade";
-import FoodCard from "../../product-card/product-card-four/product-card-four";
+import FoodCard from "../../post-card/post-card-four/post-card-four";
 import {
   ButtonWrapper,
   LoaderItem,
   LoaderWrapper,
-  ProductCardWrapper,
-  ProductsCol,
-  ProductsRow,
-} from "./product-list.style";
+  PostCardWrapper,
+  PostsCol,
+  PostsRow,
+} from "./post-list.style";
 
 const ErrorMessage = dynamic(
   () => import("components/error-message/error-message")
 );
 
-type ProductsProps = {
+type PostsProps = {
   deviceType?: {
     mobile: boolean;
     tablet: boolean;
@@ -33,12 +32,7 @@ type ProductsProps = {
   page?: number;
   type?: string;
 };
-export const Products: React.FC<ProductsProps> = ({
-  fetchLimit,
-  loadMore = true,
-  type,
-  page,
-}) => {
+export const Posts: React.FC<PostsProps> = () => {
   const router = useRouter();
   const [pageNum, setPageNum] = useState(1);
 
@@ -53,6 +47,11 @@ export const Products: React.FC<ProductsProps> = ({
   } = usePosts({
     page: pageNum,
     sort: router.query.sort,
+    text: router.query.text,
+    dayAgo: router.query.dayAgo,
+    latitue: +router.query.latitude,
+    longitude: +router.query.longitude,
+    radius: +router.query.radius,
   });
 
   if (error) return <ErrorMessage message={error.message} />;
@@ -84,13 +83,20 @@ export const Products: React.FC<ProductsProps> = ({
     setSize((prevPage) => prevPage + 1);
   };
 
+  const onClickOnCard = async (item) => {
+    router.push(`/posts/${item.slug}`);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 500);
+  };
+
   return (
     <>
-      <ProductsRow>
+      <PostsRow>
         {posts &&
           posts.map((item: any, index: number) => (
-            <ProductsCol key={index} className="food-col">
-              <ProductCardWrapper>
+            <PostsCol key={index} className="food-col">
+              <PostCardWrapper>
                 <Fade
                   duration={800}
                   delay={index * 10}
@@ -107,21 +113,13 @@ export const Products: React.FC<ProductsProps> = ({
                     typeOfPost={item.type}
                     data={item}
                     prioriry={item.is_priority}
-                    onClick={() => {
-                      router.push(
-                        "/[type]/[slug]",
-                        `/${item.category_type}/${item.slug}`
-                      );
-                      setTimeout(() => {
-                        window.scrollTo(0, 0);
-                      }, 500);
-                    }}
+                    onClick={() => onClickOnCard(item)}
                   />
                 </Fade>
-              </ProductCardWrapper>
-            </ProductsCol>
+              </PostCardWrapper>
+            </PostsCol>
           ))}
-      </ProductsRow>
+      </PostsRow>
       {!isReachingEnd && (
         <ButtonWrapper>
           <Button
@@ -140,4 +138,4 @@ export const Products: React.FC<ProductsProps> = ({
     </>
   );
 };
-export default Products;
+export default Posts;

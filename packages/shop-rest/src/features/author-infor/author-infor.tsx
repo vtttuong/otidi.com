@@ -19,7 +19,7 @@ import { FormattedMessage } from "react-intl";
 import StarRatings from "react-star-ratings";
 import { compose, withProps } from "recompose";
 import { createChat } from "utils/api/chat";
-import { getProductBySlug, onFollow, onUnFollow } from "utils/api/product";
+import { getPostBySlug, onFollow, onUnFollow } from "utils/api/post";
 import { getCookie } from "utils/session";
 import {
   ActionButton,
@@ -47,7 +47,7 @@ const AuthoInfor: React.FC<{}> = () => {
   const [followed, setFollowed] = useState(false);
   const [vefifyAccount, setVefifyAccount] = useState(false);
   const [bargainLoading, setBargainLoading] = useState(false);
-  const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+  const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
   const mapEnvironment = compose(
     withProps({
       googleMapURL,
@@ -144,17 +144,17 @@ const AuthoInfor: React.FC<{}> = () => {
       setVefifyAccount(false);
     }
   };
-  const getProduct = async () => {
+  const getPost = async () => {
     var token = getCookie("access_token");
     if (slug) {
       setTok(token);
-      let product = await getProductBySlug(token, slug);
-      setData(product);
-      verify(product);
+      let post = await getPostBySlug(token, slug);
+      setData(post);
+      verify(post);
     }
   };
   React.useEffect(() => {
-    getProduct();
+    getPost();
   }, [slug]);
 
   if (!data.id) {

@@ -24,14 +24,12 @@ type SidebarCategoryProps = {
     tablet: string;
     desktop: boolean;
   };
-  type: string;
   latitude?: number;
   longitude?: number;
 };
 
 const SidebarCategory: React.FC<SidebarCategoryProps> = ({
   deviceType: { mobile, tablet, desktop },
-  type,
 }) => {
   const router = useRouter();
   const { data, error } = useBrands();
@@ -41,26 +39,13 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
   const selectedQueries = query.category;
 
   const onCategoryClick = (slug: string) => {
-    const { type } = query;
-    if (type) {
-      router.push(
-        {
-          pathname,
-          query: { category: slug },
-        },
-        {
-          pathname: `/${type}`,
-          query: { category: slug },
-        }
-      );
-    } else {
-      router.push({
-        pathname,
-        query: { category: slug },
-      });
-    }
+    router.push({
+      pathname,
+      query: { ...query, text: slug },
+    });
   };
   const isSidebarSticky = useAppState("isSidebarSticky");
+  console.log(isSidebarSticky);
 
   if (!data) {
     if (mobile || tablet) {
@@ -81,7 +66,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
       </PopoverWrapper>
 
       <SidebarWrapper style={{ paddingTop: 45 }}>
-        <Sticky enabled={isSidebarSticky} top={110}>
+        <Sticky enabled={isSidebarSticky} top={150}>
           <Scrollbar className="sidebar-scrollbar">
             <TreeWrapper>
               <TreeMenu

@@ -1,4 +1,4 @@
-// product card for food
+// post card for food
 import React from "react";
 import Image from "components/image/image";
 import {
@@ -8,12 +8,12 @@ import {
   Duration,
   FoodCardWrapper,
   FoodImageWrapper,
-  ProductInfo,
-  ProductMeta,
+  PostInfo,
+  PostMeta,
   SellLabel,
   SellLabelTop,
   BoxAvatar,
-} from "../product-card.style";
+} from "../post-card.style";
 import { FormattedMessage } from "react-intl";
 import AddressIcon from "../../../assets/images/location.png";
 import { formatRelativeTime } from "utils/formatRelativeTime";
@@ -35,7 +35,7 @@ type CardProps = {
   onClick?: (e: any) => void;
 };
 
-const ProductCard: React.FC<CardProps> = ({
+const PostCard: React.FC<CardProps> = ({
   name,
   image,
   address,
@@ -57,7 +57,7 @@ const ProductCard: React.FC<CardProps> = ({
       <FoodImageWrapper className="top">
         <Image
           url={image}
-          className="product-image top"
+          className="post-image top"
           style={{ position: "relative" }}
           alt={name}
         />
@@ -71,18 +71,18 @@ const ProductCard: React.FC<CardProps> = ({
           </BuyLabel>
         )}
       </FoodImageWrapper>
-      <ProductInfo className="top">
+      <PostInfo className="top">
         <BoxAvatar>
           <Image
             url={avatar}
-            className="product-image top"
+            className="post-image top"
             style={{ position: "relative" }}
             alt={name}
           />
-          <h4 className="product-title">{user_name}</h4>
+          <h4 className="post-title">{user_name}</h4>
         </BoxAvatar>
         <h3
-          className="product-title"
+          className="post-title"
           style={{
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -95,7 +95,7 @@ const ProductCard: React.FC<CardProps> = ({
           <img src={AddressIcon} alt={"address"} />
           {address}
         </Category>
-        <ProductMeta style={{ marginTop: "auto" }}>
+        <PostMeta style={{ marginTop: "auto" }}>
           <DeliveryOpt>
             <NumberFormat
               value={price}
@@ -118,10 +118,10 @@ const ProductCard: React.FC<CardProps> = ({
               <FormattedMessage id="topPost" defaultMessage="Top post" />
             </SellLabelTop>
           ) : null}
-        </ProductMeta>
-      </ProductInfo>
+        </PostMeta>
+      </PostInfo>
     </FoodCardWrapper>
   );
 };
 
-export default ProductCard;
+export default PostCard;

@@ -1,17 +1,17 @@
 import { Modal } from "@redq/reuse-modal";
-import ProductSingleWrapper, {
-  ProductSingleContainer,
-} from "assets/styles/product-single.style";
+import PostSingleWrapper, {
+  PostSingleContainer,
+} from "assets/styles/post-single.style";
 import { SEO } from "components/seo";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
-import { viewProduct } from "utils/api/product";
+import { viewPost } from "utils/api/post";
 import { getCookie } from "utils/session";
 
-const ProductDetails = dynamic(() =>
-  import("components/product-details/product-details-one/product-details-one")
+const PostDetails = dynamic(
+  () => import("components/post-details/post-details-one/post-details-one")
 );
 
 type Props = {
@@ -26,12 +26,12 @@ type Props = {
   [key: string]: any;
 };
 
-const ProductPage: NextPage<Props> = ({ slug, userId, token, deviceType }) => {
+const PostPage: NextPage<Props> = ({ slug, userId, token, deviceType }) => {
   const router = useRouter();
 
   if (router.isFallback) return <p>Loading...</p>;
   const content = (
-    <ProductDetails
+    <PostDetails
       userId={userId}
       slug={slug}
       token={token}
@@ -39,7 +39,7 @@ const ProductPage: NextPage<Props> = ({ slug, userId, token, deviceType }) => {
     />
   );
   React.useEffect(() => {
-    viewProduct(slug);
+    viewPost(slug);
   }, [slug]);
 
   return (
@@ -50,9 +50,9 @@ const ProductPage: NextPage<Props> = ({ slug, userId, token, deviceType }) => {
       />
 
       <Modal>
-        <ProductSingleWrapper className="detail">
-          <ProductSingleContainer>{content}</ProductSingleContainer>
-        </ProductSingleWrapper>
+        <PostSingleWrapper className="detail">
+          <PostSingleContainer>{content}</PostSingleContainer>
+        </PostSingleWrapper>
       </Modal>
     </>
   );
@@ -71,4 +71,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default ProductPage;
+export default PostPage;

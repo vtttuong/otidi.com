@@ -1,30 +1,11 @@
 import React, { useCallback } from "react";
-import { FormattedMessage } from "react-intl";
-import {
-  Box,
-  Image,
-  Content,
-  Title,
-  Description,
-  SearchWrapper,
-} from "./banner.style";
+import { Box, Image, Content } from "./banner.style";
 
 import { Waypoint } from "react-waypoint";
 import { useAppDispatch } from "contexts/app/app.provider";
-import Search from "features/search/search";
-import { useRouter } from "next/router";
+import carImage from "assets/images/banner/car.jpg";
 
-interface Props {
-  imageUrl: string;
-  intlTitleId: string;
-  intlDescriptionId: string;
-}
-
-export const Banner: React.FC<Props> = ({
-  imageUrl,
-  intlTitleId,
-  intlDescriptionId,
-}) => {
+export const Banner = () => {
   const dispatch = useAppDispatch();
   const setSticky = useCallback(() => dispatch({ type: "SET_STICKY" }), [
     dispatch,
@@ -37,16 +18,18 @@ export const Banner: React.FC<Props> = ({
       setSticky();
     }
   };
-  const router = useRouter();
 
   return (
     <Box display={["none", "none", "flex"]}>
-      <Image backgroundImage={`url(${imageUrl})`} />
+      <Image backgroundImage={`url(${carImage})`} />
       <Content>
-        {router.query.type !== "vehicle" ? (
+        {/* <Title>{"ALLO"}</Title>
+        <Description>ALLLOO</Description> */}
+
+        {/* {router.query.type !== "vehicle" ? (
           <>
-            <Title>{intlTitleId}</Title>
-            <Description>{intlDescriptionId}</Description>
+            <Title>{"ALLO"}</Title>
+            <Description>ALLLOO</Description>
             <SearchWrapper>
               <Search
                 className="banner-search"
@@ -54,7 +37,7 @@ export const Banner: React.FC<Props> = ({
               />
             </SearchWrapper>
           </>
-        ) : null}
+        ) : null} */}
         <Waypoint
           onEnter={removeSticky}
           onLeave={setSticky}

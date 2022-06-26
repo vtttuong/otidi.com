@@ -38,8 +38,8 @@ var sortBy = (function () {
   };
 })();
 
-// import productFetcher from 'utils/api/product';
-const productFetcher = (url) => fetch(url).then((res) => res.json());
+// import postFetcher from 'utils/api/post';
+const postFetcher = (url) => fetch(url).then((res) => res.json());
 interface Props {
   type?: string;
   text?: any;
@@ -55,7 +55,7 @@ interface Props {
   limit?: number;
   isPriority?: number;
 }
-export default function useProducts(variables: Props) {
+export default function usePosts(variables: Props) {
   const {
     type,
     text,
@@ -101,7 +101,7 @@ export default function useProducts(variables: Props) {
   );
 
   let url = baseUrl + "/api/v1/posts?" + parsed;
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, postFetcher);
   const loading = !data && !error;
   // need to remove when you using real API integration
   // const [formattedData, setFormattedData] = useState(false);
@@ -114,28 +114,28 @@ export default function useProducts(variables: Props) {
     };
   }
 
-  // let products = data;
+  // let posts = data;
   // if (!text) {
-  //   products = data?.filter((current) => current.category_type === type);
+  //   posts = data?.filter((current) => current.category_type === type);
   // }
-  // console.log(products);
-  let products = data;
+  // console.log(posts);
+  let posts = data;
 
   if (sort === "like") {
-    products = sortBy(products, { prop: "likes_count", desc: true });
+    posts = sortBy(posts, { prop: "likes_count", desc: true });
   }
 
   return {
     loading,
     error,
-    data: products?.slice(offset, offset + limit),
+    data: posts?.slice(offset, offset + limit),
     // hasMore,
     mutate,
     // fetchMore,
   };
 }
 
-export async function useRecommendProducts(postSlug, token = null) {
+export async function useRecommendPosts(postSlug, token = null) {
   let url = "";
 
   const options = {

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { themeGet } from "@styled-system/theme-get";
 
-export const ProductDetailsWrapper = styled.div`
+export const PostDetailsWrapper = styled.div`
   background-color: ${themeGet("colors.white", "#ffffff")};
   position: relative;
   display: flex;
@@ -31,7 +31,7 @@ export const ProductDetailsWrapper = styled.div`
   }
 `;
 
-export const ProductPreview = styled.div`
+export const PostPreview = styled.div`
   width: 68%;
   padding: 20px;
   display: flex;
@@ -108,7 +108,7 @@ export const BackButton = styled.div`
   }
 `;
 
-export const ProductInfo = styled.div`
+export const PostInfo = styled.div`
   width: 100%;
   margin-top: 30px;
   //border-left: 1px solid ${themeGet("colors.gray.500", "#f1f1f1")};
@@ -184,7 +184,7 @@ export const DiscountPercent = styled.span`
   }
 `;
 
-export const ProductTitlePriceWrapper = styled.div`
+export const PostTitlePriceWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-start;
@@ -192,7 +192,7 @@ export const ProductTitlePriceWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-export const ProductTitle = styled.h1`
+export const PostTitle = styled.h1`
   font-family: ${themeGet("fonts.heading", "sans-serif")};
   font-size: 25px;
   font-weight: ${themeGet("fontWeights.semiBold", "600")};
@@ -206,7 +206,7 @@ export const ProductTitle = styled.h1`
   }
 `;
 
-export const ProductPriceWrapper = styled.div`
+export const PostPriceWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -218,7 +218,7 @@ export const ProductPriceWrapper = styled.div`
   }
 `;
 
-export const ProductPrice = styled.div`
+export const PostPrice = styled.div`
   font-family: ${themeGet("fonts.body", "sans-serif")};
   font-size: calc(${themeGet("fontSizes.base", "15")}px + 1px);
   font-weight: ${themeGet("fontWeights.bold", "700")};
@@ -248,7 +248,7 @@ export const SalePrice = styled.span`
   }
 `;
 
-export const ProductWeight = styled.div`
+export const PostWeight = styled.div`
   font-family: ${themeGet("fonts.body", "sans-serif")};
   font-size: ${themeGet("fontSizes.sm", "13")}px;
   font-weight: ${themeGet("fontWeights.regular", "400")};
@@ -256,7 +256,7 @@ export const ProductWeight = styled.div`
   color: ${themeGet("colors.text.regular", "#77798C")};
 `;
 
-export const ProductDescription = styled.div`
+export const PostDescription = styled.div`
   font-family: ${themeGet("fonts.body", "sans-serif")};
   font-size: ${themeGet("fontSizes.base", "15")}px;
   font-weight: ${themeGet("fontWeights.regular", "400")};
@@ -271,7 +271,7 @@ export const ProductDescription = styled.div`
   }
 `;
 
-export const ProductCartWrapper = styled.div`
+export const PostCartWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 60px;
@@ -377,7 +377,7 @@ export const AuthorInfor = styled.div`
   }
 `;
 
-export const ProductCartBtn = styled.div`
+export const PostCartBtn = styled.div`
   .cart-button {
     border-radius: 20px;
     padding-left: 20px;
@@ -407,7 +407,7 @@ export const ButtonText = styled.span`
   }
 `;
 
-export const ProductMeta = styled.div`
+export const PostMeta = styled.div`
   margin-top: 60px;
 
   @media (max-width: 767px) {

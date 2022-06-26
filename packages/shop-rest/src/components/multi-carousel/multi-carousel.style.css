@@ -5,7 +5,7 @@
 .carousel-with-custom-dots > ul {
   height: 400px;
 }
-.carousel-with-custom-dots > ul img.product-image {
+.carousel-with-custom-dots > ul img.post-image {
   height: 400px !important;
 }
 
@@ -19,7 +19,7 @@
   .carousel-with-custom-dots > ul {
     height: 300px;
   }
-  .carousel-with-custom-dots > ul img.product-image {
+  .carousel-with-custom-dots > ul img.post-image {
     height: 300px !important;
   }
 }

@@ -44,38 +44,38 @@ export const unitOptions = [
 ];
 
 export const postType = [
-  { 
-    index: 0, 
-    key: "type", 
-    value: "sell", 
-    label: <FormattedMessage id="sell" />
-  },
-  { 
-    index: 1, 
-    key: "type", 
-    value: "buy", 
-    label: <FormattedMessage id="buy" />
-  },
-];
-
-export const productStatus = [
   {
     index: 0,
-    key: "productStatus",
-    value: "new",
-    label: <FormattedMessage id="newStatus"/>
+    key: "type",
+    value: "sell",
+    label: <FormattedMessage id="sell" />,
   },
   {
     index: 1,
-    key: "productStatus",
+    key: "type",
+    value: "buy",
+    label: <FormattedMessage id="buy" />,
+  },
+];
+
+export const postStatus = [
+  {
+    index: 0,
+    key: "postStatus",
+    value: "new",
+    label: <FormattedMessage id="newStatus" />,
+  },
+  {
+    index: 1,
+    key: "postStatus",
     value: "old_not_repaired",
-    label: <FormattedMessage id="oldNotRepaired" />
+    label: <FormattedMessage id="oldNotRepaired" />,
   },
   {
     index: 2,
-    key: "productStatus",
+    key: "postStatus",
     value: "old_and_repaired",
-    label: <FormattedMessage id="oldRepaired" />
+    label: <FormattedMessage id="oldRepaired" />,
   },
 ];
 
@@ -290,7 +290,7 @@ const Step2 = (props) => {
           <NoteSmallText>
             <FormattedMessage
               id="noteLabelDescription"
-              defaultMessage="Introduce the product you need to sell/buy fully and clearly to attract more people (size, specifications, colors, etc)"
+              defaultMessage="Introduce the post you need to sell/buy fully and clearly to attract more people (size, specifications, colors, etc)"
               values={{ inside: 5, outside: 10 }}
             />
           </NoteSmallText>
@@ -320,19 +320,18 @@ const Step3 = (props) => {
         <Col xs={12} sm={12} md={12} lg={12}>
           <Uploader
             imagefiles={state.files}
-            onChange={(props.handleUploader)}
+            onChange={props.handleUploader}
             intlUploadText="rmUploadText"
           />
         </Col>
-        {
-          (state.files != "" && state.files.length >= 0 && state.files.length < 2 || props.errorImage != "") ? (
-            <Error>
-              <FormattedMessage id="errorImage" />
-            </Error>
-          ) : (
-              null
-            )
-        }
+        {(state.files != "" &&
+          state.files.length >= 0 &&
+          state.files.length < 2) ||
+        props.errorImage != "" ? (
+          <Error>
+            <FormattedMessage id="errorImage" />
+          </Error>
+        ) : null}
       </Row>
     </div>
   );
@@ -350,9 +349,7 @@ const Step4 = (props) => {
           <Label>
             <FormattedMessage id="location" />
           </Label>
-          <QuickForm
-            initialValues={[]}
-          />
+          <QuickForm initialValues={[]} />
         </Col>
       </Row>
     </div>
@@ -377,7 +374,7 @@ const Step5 = (props) => {
           <NoteSmallText>
             <FormattedMessage
               id="noteOptionalInfo"
-              defaultMessage="In order for others to see more complete information about the product, you can fill in some information below"
+              defaultMessage="In order for others to see more complete information about the post, you can fill in some information below"
               values={{ inside: 5, outside: 10 }}
             />
           </NoteSmallText>
@@ -438,7 +435,12 @@ const PostFormUpdate: React.FC<Props> = ({
       }
     }
     if (currentStep == 2) {
-      if (state.title && state.price && state.unit && state.description !== "") {
+      if (
+        state.title &&
+        state.price &&
+        state.unit &&
+        state.description !== ""
+      ) {
         let newStep = currentStep;
         newStep = newStep + 1;
         setCurrentStep(newStep);
@@ -454,7 +456,7 @@ const PostFormUpdate: React.FC<Props> = ({
         setCurrentStep(newStep);
         setErrorStep("");
       } else {
-        setErrorImage("error")
+        setErrorImage("error");
       }
     }
     if (currentStep == 4) {
@@ -544,7 +546,9 @@ const PostFormUpdate: React.FC<Props> = ({
     } else {
       formData.append("files[]", state.files);
     }
-    Object.keys(state.additionalInfo).forEach(key => formData.append(`additional_info[${key}]`, state.additionalInfo[key]));
+    Object.keys(state.additionalInfo).forEach((key) =>
+      formData.append(`additional_info[${key}]`, state.additionalInfo[key])
+    );
 
     const configs = {
       headers: {
@@ -555,7 +559,8 @@ const PostFormUpdate: React.FC<Props> = ({
 
     axios
       .post(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL + `/api/client/v1/posts/${state.postId}`,
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL +
+          `/api/client/v1/posts/${state.postId}`,
         formData,
         configs
       )
@@ -638,25 +643,19 @@ const PostFormUpdate: React.FC<Props> = ({
             categoryTypes={categoryTypes}
             fields={fields}
           />
-          <Step2
-            currentStep={currentStep}
-          />
+          <Step2 currentStep={currentStep} />
           <Step3
             currentStep={currentStep}
             handleUploader={handleUploader}
             errorImage={errorImage}
           />
-          <Step4
-            currentStep={currentStep}
-          />
+          <Step4 currentStep={currentStep} />
           <Step5
             currentStep={currentStep}
             loading={loading}
             handleSubmit={onSubmit}
             additionalFormByCat={
-              <FormAdditional
-                categorySlug={state.categorySlug}
-              />
+              <FormAdditional categorySlug={state.categorySlug} />
             }
           />
           {nextButton()}

@@ -6,7 +6,9 @@ const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 var sortBy = (function () {
   var toString = Object.prototype.toString,
     // default parser function
-    parse = function (x) { return x; },
+    parse = function (x) {
+      return x;
+    },
     // gets the item to be sorted
     getItem = function (x) {
       var isObject = x != null && typeof x === "object";
@@ -35,11 +37,10 @@ var sortBy = (function () {
       return cfg.desc * (a < b ? -1 : +(a > b));
     });
   };
+})();
 
-}());
-
-// import productFetcher from 'utils/api/product';
-const productFetcher = (url) => fetch(url).then((res) => res.json());
+// import postFetcher from 'utils/api/post';
+const postFetcher = (url) => fetch(url).then((res) => res.json());
 interface Props {
   type?: string;
   text?: any;
@@ -55,7 +56,7 @@ interface Props {
   limit?: number;
   isPriority?: number;
 }
-export default function useProductsPriority(variables: Props) {
+export default function usePostsPriority(variables: Props) {
   const {
     type,
     text,
@@ -75,8 +76,8 @@ export default function useProductsPriority(variables: Props) {
   let queryParams = {
     category_slug: category,
     category_type: type,
-    sort: (sort === 'created_at') ? sort : '',
-    dir: sort ? 'desc' : '',
+    sort: sort === "created_at" ? sort : "",
+    dir: sort ? "desc" : "",
     post_type: post_type,
     radius: radius,
     latitude: latitude,
@@ -85,7 +86,7 @@ export default function useProductsPriority(variables: Props) {
     q: text,
     page: page,
     limit: limit,
-    is_priority: isPriority
+    is_priority: isPriority,
   };
 
   let newParams = {};
@@ -104,7 +105,7 @@ export default function useProductsPriority(variables: Props) {
 
   let url = baseUrl + "/api/v1/posts?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, postFetcher);
 
   const loading = !data && !error;
 

@@ -5,10 +5,10 @@ import Router from "next/router";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 // import { useAlert } from "react-alert";
-import { BackButton, ProductPreview } from "./product-details-one.style";
+import { BackButton, PostPreview } from "./post-details-one.style";
 
-const ProductDetailsLeftDf: React.FunctionComponent<{}> = ({}) => {
-  const [product, setProduct] = React.useState<any>({
+const PostDetailsLeftDf: React.FunctionComponent<{}> = ({}) => {
+  const [post, setPost] = React.useState<any>({
     image: "unnamed.png",
     gallery: [
       { id: 238, url: "unnamed.png", position: 1 },
@@ -19,7 +19,7 @@ const ProductDetailsLeftDf: React.FunctionComponent<{}> = ({}) => {
 
   return (
     <>
-      <ProductPreview>
+      <PostPreview>
         <BackButton className="back">
           <Button
             type="button"
@@ -36,13 +36,10 @@ const ProductDetailsLeftDf: React.FunctionComponent<{}> = ({}) => {
           </Button>
         </BackButton>
 
-        <CarouselWithCustomDots
-          items={product.gallery}
-          deviceType={"desktop"}
-        />
-      </ProductPreview>
+        <CarouselWithCustomDots items={post.gallery} deviceType={"desktop"} />
+      </PostPreview>
     </>
   );
 };
 
-export default ProductDetailsLeftDf;
+export default PostDetailsLeftDf;

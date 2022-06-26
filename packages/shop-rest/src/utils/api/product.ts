@@ -2,12 +2,12 @@ import { getCookie } from "utils/session";
 
 const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 
-export async function getAllProducts() {
+export async function getAllPosts() {
   const posts = await fetch(`${baseUrl}/api/v1/posts`);
   return await posts.json();
 }
 
-export async function getProductBySlug(token, slug) {
+export async function getPostBySlug(token, slug) {
   if (token !== undefined) {
     const options = {
       method: "GET",
@@ -23,7 +23,6 @@ export async function getProductBySlug(token, slug) {
     const res = await fetch(`${baseUrl}/api/v1/posts/${slug}`);
     return res.json();
   }
-  
 }
 
 export async function getUserLike(id) {
@@ -35,7 +34,7 @@ export async function getUserSave(id) {
   return res.json();
 }
 
-export async function viewProduct(slug) {
+export async function viewPost(slug) {
   const options = {
     method: "POST",
   };

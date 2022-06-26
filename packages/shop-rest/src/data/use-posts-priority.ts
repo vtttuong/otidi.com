@@ -39,8 +39,8 @@ var sortBy = (function () {
   };
 })();
 
-// import productFetcher from 'utils/api/product';
-const productFetcher = (url) => fetch(url).then((res) => res.json());
+// import postFetcher from 'utils/api/post';
+const postFetcher = (url) => fetch(url).then((res) => res.json());
 interface Props {
   type?: string;
   text?: any;
@@ -56,7 +56,7 @@ interface Props {
   limit?: number;
   isPriority?: number;
 }
-export default function useProductsPriority(variables: Props) {
+export default function usePostsPriority(variables: Props) {
   const {
     type,
     text,
@@ -105,7 +105,7 @@ export default function useProductsPriority(variables: Props) {
 
   let url = baseUrl + "/api/v1/posts?" + parsed;
 
-  const { data, mutate, error } = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, postFetcher);
 
   const loading = !data && !error;
 

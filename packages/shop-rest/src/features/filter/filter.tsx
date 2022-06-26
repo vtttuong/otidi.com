@@ -7,11 +7,10 @@ import { FormattedMessage } from "react-intl";
 import Select from "react-select";
 import { usePosition } from "use-position";
 import Geocode from "react-geocode";
-// set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
-Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
-
 import { ButtonFilter, Col, Container, Row } from "./filter.style";
 import { Map } from "assets/icons/Map";
+// set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
 
 const customStyles = {
   control: () => ({
@@ -58,7 +57,6 @@ const Filter: React.FC<any> = () => {
   const [lat, setLat] = React.useState<number>();
   const [long, setLong] = React.useState<number>();
   const watch = true;
-  const { type } = query;
 
   const clMOdal = () => {
     closeModal();
@@ -86,13 +84,8 @@ const Filter: React.FC<any> = () => {
 
   const handleSortData = async (value) => {
     let queryParams = {
-      category: query.category,
+      ...query,
       sort: value,
-      postType: query.postType,
-      daysAgo: query.daysAgo,
-      radius: query.radius,
-      latitude: query.latitude,
-      longitude: query.longitude,
     };
     let newParams = {};
     Object.keys(queryParams).map((key) => {
@@ -100,45 +93,13 @@ const Filter: React.FC<any> = () => {
         newParams[key] = queryParams[key];
       }
     });
-    if (query.text && type) {
-      newParams["text"] = query.text;
-      router.push(
-        {
-          pathname,
-          query: {
-            ...newParams,
-          },
-        },
-        {
-          pathname: `/${type}`,
-          query: {
-            ...newParams,
-          },
-        }
-      );
-    } else if (!query.text && type) {
-      router.push(
-        {
-          pathname,
-          query: {
-            ...newParams,
-          },
-        },
-        {
-          pathname: `/${type}`,
-          query: {
-            ...newParams,
-          },
-        }
-      );
-    } else {
-      router.push({
-        pathname,
-        query: {
-          ...newParams,
-        },
-      });
-    }
+
+    router.push({
+      pathname,
+      query: {
+        ...newParams,
+      },
+    });
   };
   const { latitude, longitude } = usePosition(watch, {
     enableHighAccuracy: true,
@@ -184,7 +145,13 @@ const Filter: React.FC<any> = () => {
               classNamePrefix="filter"
               styles={customStyles}
               options={postType}
-              defaultValue={postType[0]}
+              value={
+                query.sort === "created_at"
+                  ? postType[1]
+                  : query.sort === "views"
+                  ? postType[2]
+                  : postType[0]
+              }
               placeholder="Sắp xếp theo"
               onChange={({ value }) => handleSortData(value)}
             />
