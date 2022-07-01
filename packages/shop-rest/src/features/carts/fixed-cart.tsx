@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Link from "next/link";
 import {
   CartPopupBody,
   PopupHeader,
@@ -10,21 +10,21 @@ import {
   CheckoutButton,
   Title,
   PriceBox,
-  NoProductMsg,
+  NoPostMsg,
   ItemWrapper,
   CouponBoxWrapper,
   CouponCode,
-} from './cart.style';
-import { CloseIcon } from 'assets/icons/CloseIcon';
-import { ShoppingBagLarge } from 'assets/icons/ShoppingBagLarge';
-import { CURRENCY } from 'utils/constant';
-import { FormattedMessage } from 'react-intl';
-import { useLocale } from 'contexts/language/language.provider';
+} from "./cart.style";
+import { CloseIcon } from "assets/icons/CloseIcon";
+import { ShoppingBagLarge } from "assets/icons/ShoppingBagLarge";
+import { CURRENCY } from "utils/constant";
+import { FormattedMessage } from "react-intl";
+import { useLocale } from "contexts/language/language.provider";
 
-import { Scrollbar } from 'components/scrollbar/scrollbar';
-import { useCart } from 'contexts/cart/use-cart';
-import { TextCartItem } from 'components/cart-item/text-cart-item';
-import Coupon from 'features/coupon/coupon';
+import { Scrollbar } from "components/scrollbar/scrollbar";
+import { useCart } from "contexts/cart/use-cart";
+import { TextCartItem } from "components/cart-item/text-cart-item";
+import Coupon from "features/coupon/coupon";
 
 type CartPropsType = {
   style?: any;
@@ -57,25 +57,25 @@ const FixedCart: React.FC<CartPropsType> = ({
     <CartPopupBody className={className} style={style}>
       <PopupHeader>
         <PopupItemCount>
-          <ShoppingBagLarge width='19px' height='24px' />
+          <ShoppingBagLarge width="19px" height="24px" />
           <span>
             {cartItemsCount}
             &nbsp;
             {cartItemsCount > 1 ? (
-              <FormattedMessage id='cartItems' defaultMessage='items' />
+              <FormattedMessage id="cartItems" defaultMessage="items" />
             ) : (
-              <FormattedMessage id='cartItem' defaultMessage='item' />
+              <FormattedMessage id="cartItem" defaultMessage="item" />
             )}
           </span>
         </PopupItemCount>
 
-        <CloseButton onClick={onCloseBtnClick} className='fixedCartClose'>
+        <CloseButton onClick={onCloseBtnClick} className="fixedCartClose">
           <CloseIcon />
         </CloseButton>
       </PopupHeader>
 
-      <Scrollbar className='cart-scrollbar'>
-        <ItemWrapper className='items-wrapper'>
+      <Scrollbar className="cart-scrollbar">
+        <ItemWrapper className="items-wrapper">
           {!!cartItemsCount ? (
             items.map((item) => (
               <TextCartItem
@@ -87,12 +87,12 @@ const FixedCart: React.FC<CartPropsType> = ({
               />
             ))
           ) : (
-            <NoProductMsg>
+            <NoPostMsg>
               <FormattedMessage
-                id='noProductFound'
-                defaultMessage='No products found'
+                id="noPostFound"
+                defaultMessage="No posts found"
               />
-            </NoProductMsg>
+            </NoPostMsg>
           )}
         </ItemWrapper>
       </Scrollbar>
@@ -104,8 +104,8 @@ const FixedCart: React.FC<CartPropsType> = ({
               {!hasCoupon ? (
                 <button onClick={() => setCoupon((prev) => !prev)}>
                   <FormattedMessage
-                    id='specialCode'
-                    defaultMessage='Have a special code?'
+                    id="specialCode"
+                    defaultMessage="Have a special code?"
                   />
                 </button>
               ) : (
@@ -117,8 +117,8 @@ const FixedCart: React.FC<CartPropsType> = ({
           ) : (
             <CouponCode>
               <FormattedMessage
-                id='couponApplied'
-                defaultMessage='Coupon Applied'
+                id="couponApplied"
+                defaultMessage="Coupon Applied"
               />
               <span>{coupon.code}</span>
             </CouponCode>
@@ -126,13 +126,13 @@ const FixedCart: React.FC<CartPropsType> = ({
         </PromoCode>
 
         {cartItemsCount !== 0 ? (
-          <Link href='/checkout'>
+          <Link href="/checkout">
             <CheckoutButton onClick={onCheckout}>
               <>
                 <Title>
                   <FormattedMessage
-                    id='nav.checkout'
-                    defaultMessage='Checkout'
+                    id="nav.checkout"
+                    defaultMessage="Checkout"
                   />
                 </Title>
                 <PriceBox>
@@ -146,7 +146,7 @@ const FixedCart: React.FC<CartPropsType> = ({
           <CheckoutButton>
             <>
               <Title>
-                <FormattedMessage id='nav.checkout' defaultMessage='Checkout' />
+                <FormattedMessage id="nav.checkout" defaultMessage="Checkout" />
               </Title>
               <PriceBox>
                 {CURRENCY}

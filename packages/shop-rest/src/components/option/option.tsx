@@ -34,8 +34,9 @@ const Spinner = styled.div`
   animation-timing-function: linear;
 `;
 const Icon = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 `;
 const InputRadio = styled.input`
   width: 15px;

@@ -304,7 +304,7 @@ const CheckoutButtonWrapper = styled.div`
 `;
 
 const Title = styled.p`
-cursor:pointer;
+  cursor: pointer;
   font-family: ${themeGet("fonts.body", "Lato")};
   font-size: 13px;
   font-weight: ${themeGet("fontWeights.bold", "700")};
@@ -343,7 +343,7 @@ const PriceBox = styled.span`
   }
 `;
 
-const NoProductMsg = styled.span`
+const NoPostMsg = styled.span`
   font-family: ${themeGet("fonts.body", "Lato")};
   font-size: ${themeGet("fontSizes.base", "15")}px;
   font-weight: ${themeGet("fontWeights.bold", "700")};
@@ -354,7 +354,7 @@ const NoProductMsg = styled.span`
   text-align: center;
 `;
 
-export const NoProductImg = styled.div`
+export const NoPostImg = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,7 +484,7 @@ export {
   CheckoutButton,
   CheckoutButtonWrapper,
   PriceBox,
-  NoProductMsg,
+  NoPostMsg,
   ItemWrapper,
   CouponBoxWrapper,
   CouponCode,

@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
-import Router from 'next/router';
-import Link from 'next/link';
-import { Button } from 'components/button/button';
-import { CURRENCY } from 'utils/constant';
-import { Scrollbar } from 'components/scrollbar/scrollbar';
+import React, { useContext, useState, useEffect } from "react";
+import Router from "next/router";
+import Link from "next/link";
+import { Button } from "components/button/button";
+import { CURRENCY } from "utils/constant";
+import { Scrollbar } from "components/scrollbar/scrollbar";
 import CheckoutWrapper, {
   CheckoutContainer,
   CheckoutInformation,
@@ -31,23 +31,23 @@ import CheckoutWrapper, {
   Text,
   Bold,
   Small,
-  NoProductMsg,
-  NoProductImg,
-} from './checkout-two.style';
+  NoPostMsg,
+  NoPostImg,
+} from "./checkout-two.style";
 
-import { NoCartBag } from 'assets/icons/NoCartBag';
+import { NoCartBag } from "assets/icons/NoCartBag";
 
-import Sticky from 'react-stickynode';
-import { ProfileContext } from 'contexts/profile/profile.context';
-import { FormattedMessage } from 'react-intl';
-import { useCart } from 'contexts/cart/use-cart';
-import { useLocale } from 'contexts/language/language.provider';
-import { useWindowSize } from 'utils/useWindowSize';
-import Coupon from 'features/coupon/coupon';
-import Schedules from 'features/schedule/schedule';
-import Contact from 'features/contact/contact';
-import Payment from 'features/payment/payment';
-import Address from 'features/address/address';
+import Sticky from "react-stickynode";
+import { ProfileContext } from "contexts/profile/profile.context";
+import { FormattedMessage } from "react-intl";
+import { useCart } from "contexts/cart/use-cart";
+import { useLocale } from "contexts/language/language.provider";
+import { useWindowSize } from "utils/useWindowSize";
+import Coupon from "features/coupon/coupon";
+import Schedules from "features/schedule/schedule";
+import Contact from "features/contact/contact";
+import Payment from "features/payment/payment";
+import Address from "features/address/address";
 
 // The type of props Checkout Form receives
 interface MyFormProps {
@@ -56,18 +56,18 @@ interface MyFormProps {
 }
 
 type CartItemProps = {
-  product: any;
+  post: any;
 };
 
-const OrderItem: React.FC<CartItemProps> = ({ product }) => {
-  const { id, quantity, title, name, unit, price, salePrice } = product;
+const OrderItem: React.FC<CartItemProps> = ({ post }) => {
+  const { id, quantity, title, name, unit, price, salePrice } = post;
   const displayPrice = salePrice ? salePrice : price;
   return (
     <Items key={id}>
       <Quantity>{quantity}</Quantity>
       <Multiplier>x</Multiplier>
       <ItemInfo>
-        {name ? name : title} {unit ? `| ${unit}` : ''}
+        {name ? name : title} {unit ? `| ${unit}` : ""}
       </ItemInfo>
       <Price>
         {CURRENCY}
@@ -102,7 +102,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     setLoading(true);
     if (isValid) {
       clearCart();
-      Router.push('/order-received');
+      Router.push("/order-received");
     }
     setLoading(false);
   };
@@ -139,9 +139,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 increment={true}
                 flexStart={true}
                 buttonProps={{
-                  variant: 'text',
-                  type: 'button',
-                  className: 'addButton',
+                  variant: "text",
+                  type: "button",
+                  className: "addButton",
                 }}
                 icon={true}
               />
@@ -160,9 +160,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 increment={true}
                 flexStart={true}
                 buttonProps={{
-                  variant: 'text',
-                  type: 'button',
-                  className: 'addButton',
+                  variant: "text",
+                  type: "button",
+                  className: "addButton",
                 }}
                 icon={true}
               />
@@ -170,7 +170,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             {/* PaymentOption */}
 
             <InformationBox
-              className='paymentBox'
+              className="paymentBox"
               style={{ paddingBottom: 30 }}
             >
               <Payment deviceType={deviceType} increment={true} />
@@ -179,7 +179,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
               {coupon ? (
                 <CouponBoxWrapper>
                   <CouponCode>
-                    <FormattedMessage id='couponApplied' />
+                    <FormattedMessage id="couponApplied" />
                     <span>{coupon.code}</span>
 
                     <RemoveCoupon
@@ -189,7 +189,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                         setHasCoupon(false);
                       }}
                     >
-                      <FormattedMessage id='removeCoupon' />
+                      <FormattedMessage id="removeCoupon" />
                     </RemoveCoupon>
                   </CouponCode>
                 </CouponBoxWrapper>
@@ -198,14 +198,14 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   {!hasCoupon ? (
                     <HaveCoupon onClick={() => setHasCoupon((prev) => !prev)}>
                       <FormattedMessage
-                        id='specialCode'
-                        defaultMessage='Have a special code?'
+                        id="specialCode"
+                        defaultMessage="Have a special code?"
                       />
                     </HaveCoupon>
                   ) : (
                     <>
                       <CouponInputBox>
-                        <Coupon errorMsgFixed={true} className='normalCoupon' />
+                        <Coupon errorMsgFixed={true} className="normalCoupon" />
                       </CouponInputBox>
                     </>
                   )}
@@ -214,14 +214,14 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
               <TermConditionText>
                 <FormattedMessage
-                  id='termAndConditionHelper'
-                  defaultMessage='By making this purchase you agree to our'
+                  id="termAndConditionHelper"
+                  defaultMessage="By making this purchase you agree to our"
                 />
-                <Link href='#'>
+                <Link href="#">
                   <TermConditionLink>
                     <FormattedMessage
-                      id='termAndCondition'
-                      defaultMessage='terms and conditions.'
+                      id="termAndCondition"
+                      defaultMessage="terms and conditions."
                     />
                   </TermConditionLink>
                 </Link>
@@ -230,16 +230,16 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
               {/* CheckoutSubmit */}
               <CheckoutSubmit>
                 <Button
-                  type='button'
+                  type="button"
                   onClick={handleSubmit}
                   disabled={!isValid}
-                  size='big'
+                  size="big"
                   loading={loading}
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 >
                   <FormattedMessage
-                    id='processCheckout'
-                    defaultMessage='Proceed to Checkout'
+                    id="processCheckout"
+                    defaultMessage="Proceed to Checkout"
                   />
                 </Button>
               </CheckoutSubmit>
@@ -255,29 +255,29 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
               <OrderInfo>
                 <Title>
                   <FormattedMessage
-                    id='cartTitle'
-                    defaultMessage='Your Order'
+                    id="cartTitle"
+                    defaultMessage="Your Order"
                   />
                 </Title>
 
-                <Scrollbar className='checkout-scrollbar'>
+                <Scrollbar className="checkout-scrollbar">
                   <ItemsWrapper>
                     {cartItemsCount > 0 ? (
                       items.map((item) => (
-                        <OrderItem key={`cartItem-${item.id}`} product={item} />
+                        <OrderItem key={`cartItem-${item.id}`} post={item} />
                       ))
                     ) : (
                       <>
-                        <NoProductImg>
+                        <NoPostImg>
                           <NoCartBag />
-                        </NoProductImg>
+                        </NoPostImg>
 
-                        <NoProductMsg>
+                        <NoPostMsg>
                           <FormattedMessage
-                            id='noProductFound'
-                            defaultMessage='No products found'
+                            id="noPostFound"
+                            defaultMessage="No posts found"
                           />
-                        </NoProductMsg>
+                        </NoPostMsg>
                       </>
                     )}
                   </ItemsWrapper>
@@ -287,8 +287,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   <TextWrapper>
                     <Text>
                       <FormattedMessage
-                        id='subTotal'
-                        defaultMessage='Subtotal'
+                        id="subTotal"
+                        defaultMessage="Subtotal"
                       />
                     </Text>
                     <Text>
@@ -300,8 +300,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   <TextWrapper>
                     <Text>
                       <FormattedMessage
-                        id='intlOrderDetailsDelivery'
-                        defaultMessage='Delivery Fee'
+                        id="intlOrderDetailsDelivery"
+                        defaultMessage="Delivery Fee"
                       />
                     </Text>
                     <Text>{CURRENCY}0.00</Text>
@@ -310,8 +310,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   <TextWrapper>
                     <Text>
                       <FormattedMessage
-                        id='discountText'
-                        defaultMessage='Discount'
+                        id="discountText"
+                        defaultMessage="Discount"
                       />
                     </Text>
                     <Text>
@@ -322,12 +322,12 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
                   <TextWrapper style={{ marginTop: 20 }}>
                     <Bold>
-                      <FormattedMessage id='totalText' defaultMessage='Total' />{' '}
+                      <FormattedMessage id="totalText" defaultMessage="Total" />{" "}
                       <Small>
                         (
                         <FormattedMessage
-                          id='vatText'
-                          defaultMessage='Incl. VAT'
+                          id="vatText"
+                          defaultMessage="Incl. VAT"
                         />
                         )
                       </Small>

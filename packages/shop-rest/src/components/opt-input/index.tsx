@@ -35,7 +35,7 @@ const OTP: React.FC<Props> = ({ token }) => {
         <SubHeading>
           <FormattedMessage
             id="verifyPhoneText"
-            defaultMessage="Update phone number to create product !"
+            defaultMessage="Update phone number to create post !"
           />
           <Countdown date={Date.now() + 60000} renderer={renderer} />
         </SubHeading>

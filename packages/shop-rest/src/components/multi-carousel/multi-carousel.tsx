@@ -62,7 +62,7 @@ const CarouselWithCustomDots = ({
         position: "relative",
         margin: "auto",
       }}
-      className="product-image"
+      className="post-image"
     />
   ));
   const images = items.map((item: any, index: number) => (

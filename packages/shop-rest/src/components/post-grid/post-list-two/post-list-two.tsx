@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import FoodCard from 'components/product-card/product-card-four/product-card-four';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import FoodCard from "components/post-card/post-card-four/post-card-four";
 import {
-  ProductsRow,
-  ProductsCol,
+  PostsRow,
+  PostsCol,
   ButtonWrapper,
   LoaderWrapper,
   LoaderItem,
-  ProductCardWrapper,
-} from '../product-list/product-list.style';
-import { Button } from 'components/button/button';
-import Placeholder from 'components/placeholder/placeholder';
-import Fade from 'react-reveal/Fade';
-import NoResultFound from 'components/no-result/no-result';
+  PostCardWrapper,
+} from "../post-list/post-list.style";
+import { Button } from "components/button/button";
+import Placeholder from "components/placeholder/placeholder";
+import Fade from "react-reveal/Fade";
+import NoResultFound from "components/no-result/no-result";
 
-import { customerDistance } from 'utils/customerDistance';
-import { formatTime } from 'utils/formatTime';
-import { FormattedMessage } from 'react-intl';
-import useVendors from 'data/use-vendors';
-import ErrorMessage from 'components/error-message/error-message';
+import { customerDistance } from "utils/customerDistance";
+import { formatTime } from "utils/formatTime";
+import { FormattedMessage } from "react-intl";
+import useVendors from "data/use-vendors";
+import ErrorMessage from "components/error-message/error-message";
 
-type ProductsProps = {
+type PostsProps = {
   deviceType?: {
     mobile: boolean;
     tablet: boolean;
@@ -30,7 +30,7 @@ type ProductsProps = {
   fetchLimit?: number;
   loadMore?: boolean;
 };
-export const Products: React.FC<ProductsProps> = ({
+export const Posts: React.FC<PostsProps> = ({
   deviceType,
   type,
   fetchLimit = 8,
@@ -74,14 +74,14 @@ export const Products: React.FC<ProductsProps> = ({
 
   return (
     <>
-      <ProductsRow>
+      <PostsRow>
         {data?.map((item: any, index: number) => (
-          <ProductsCol key={index} className="food-col">
-            <ProductCardWrapper>
+          <PostsCol key={index} className="food-col">
+            <PostCardWrapper>
               <Fade
                 duration={800}
                 delay={index * 10}
-                style={{ height: '100%' }}
+                style={{ height: "100%" }}
               >
                 <FoodCard
                   name={item.name}
@@ -94,16 +94,16 @@ export const Products: React.FC<ProductsProps> = ({
                   data={item}
                   onClick={() =>
                     router.push(
-                      '/restaurant/[slug]',
+                      "/restaurant/[slug]",
                       `/restaurant/${item.slug}`
                     )
                   }
                 />
               </Fade>
-            </ProductCardWrapper>
-          </ProductsCol>
+            </PostCardWrapper>
+          </PostsCol>
         ))}
-      </ProductsRow>
+      </PostsRow>
       {loadMore && data?.hasMore && (
         <ButtonWrapper>
           <Button
@@ -119,4 +119,4 @@ export const Products: React.FC<ProductsProps> = ({
     </>
   );
 };
-export default Products;
+export default Posts;

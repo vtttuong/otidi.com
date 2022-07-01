@@ -58,22 +58,22 @@ export const postType = [
   },
 ];
 
-export const productStatus = [
+export const postStatus = [
   {
     index: 0,
-    key: "productStatus",
+    key: "postStatus",
     value: "new",
     label: <FormattedMessage id="newStatus" />,
   },
   {
     index: 1,
-    key: "productStatus",
+    key: "postStatus",
     value: "old_not_repaired",
     label: <FormattedMessage id="oldNotRepaired" />,
   },
   {
     index: 2,
-    key: "productStatus",
+    key: "postStatus",
     value: "old_and_repaired",
     label: <FormattedMessage id="oldRepaired" />,
   },
@@ -290,7 +290,7 @@ const Step2 = (props) => {
           <NoteSmallText>
             <FormattedMessage
               id="noteLabelDescription"
-              defaultMessage="Introduce the product you need to sell/buy fully and clearly to attract more people (size, specifications, colors, etc)"
+              defaultMessage="Introduce the post you need to sell/buy fully and clearly to attract more people (size, specifications, colors, etc)"
               values={{ inside: 5, outside: 10 }}
             />
           </NoteSmallText>
@@ -374,7 +374,7 @@ const Step5 = (props) => {
           <NoteSmallText>
             <FormattedMessage
               id="noteOptionalInfo"
-              defaultMessage="In order for others to see more complete information about the product, you can fill in some information below"
+              defaultMessage="In order for others to see more complete information about the post, you can fill in some information below"
               values={{ inside: 5, outside: 10 }}
             />
           </NoteSmallText>

@@ -138,7 +138,7 @@ const Heading = styled.h2`
   display: inline-block;
 `;
 
-export const ProductsRow = styled.div`
+export const PostsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 30px;
@@ -151,7 +151,7 @@ export const ProductsRow = styled.div`
   }
 `;
 
-const ProductsCol = styled.div`
+const PostsCol = styled.div`
   flex: 0 0 20%;
   max-width: 20%;
   padding-left: 15px;
@@ -201,6 +201,6 @@ export {
   ContentSection,
   OfferSection,
   Heading,
-  ProductsCol,
+  PostsCol,
   BoxLeft,
 };

@@ -62,7 +62,7 @@ export const CheckoutHead = styled.div`
   }
 `;
 
-export const TotalProduct = styled.div`
+export const TotalPost = styled.div`
   flex-grow: 1;
   text-align: right;
   padding-right: 60px;

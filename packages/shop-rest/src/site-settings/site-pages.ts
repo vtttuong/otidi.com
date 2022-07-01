@@ -5,6 +5,7 @@ import fashionImage from "assets/images/banner/cloths.png";
 import sportRelaxImage from "assets/images/banner/books.png";
 import furnitureImage from "assets/images/banner/furniture.png";
 import officeImage from "assets/images/banner/medicine.png";
+import carImage from "assets/images/banner/car.jpg";
 
 export const sitePages = {
   vehicle: {
@@ -55,5 +56,12 @@ export const sitePages = {
     banner_title_id: "medicineTitle",
     banner_description_id: "medicineSubTitle",
     banner_image_url: officeImage,
+  },
+  posts: {
+    page_title: "Posts - SecondHandShop",
+    page_description: "All posts",
+    banner_title_id: "posts",
+    banner_description_id: "posts",
+    banner_image_url: carImage,
   },
 };

@@ -13,7 +13,7 @@ import ListSocial from "features/list-social/list-social";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import ProductDetailsLeftDf from "./product-details-left-df";
+import PostDetailsLeftDf from "./post-details-left-df";
 import { FormattedMessage } from "react-intl";
 import {
   FacebookIcon,
@@ -28,7 +28,7 @@ import {
   TwitterShareButton,
 } from "react-share";
 import {
-  getProductBySlug,
+  getPostBySlug,
   getUserLike,
   getUserSave,
   onLike,
@@ -36,7 +36,7 @@ import {
   onUnLike,
   onUnSave,
   report,
-} from "utils/api/product";
+} from "utils/api/post";
 import { CURRENCY } from "utils/constant";
 import { getCookie } from "utils/session";
 // import { useAlert } from "react-alert";
@@ -46,30 +46,30 @@ import {
   H2Text,
   MetaItem,
   MetaSingle,
-  ProductDescription,
-  ProductInfo,
-  ProductMeta,
-  ProductPreview,
-  ProductPrice,
-  ProductPriceWrapper,
-  ProductTitle,
-  ProductTitlePriceWrapper,
+  PostDescription,
+  PostInfo,
+  PostMeta,
+  PostPreview,
+  PostPrice,
+  PostPriceWrapper,
+  PostTitle,
+  PostTitlePriceWrapper,
   SalePrice,
   Span,
   SubDetail,
-} from "./product-details-one.style";
+} from "./post-details-one.style";
 
-type ProductDetailsProps = {
+type PostDetailsProps = {
   slug: string;
   userId: number;
 };
 
-const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
+const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   slug,
   userId,
 }) => {
   const { isRtl } = useLocale();
-  const [product, setProduct] = React.useState<any>({});
+  const [post, setPost] = React.useState<any>({});
   const [reportSuccess, setReportSuccess] = React.useState(false);
   const [liked, setLiked] = React.useState(false);
   const [dataLike, setDataLike] = React.useState([]);
@@ -81,7 +81,7 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
   const router = useRouter();
 
   useEffect(() => {
-    getProduct();
+    getPost();
     setLocationHref(window.location.href);
   }, [locationHref, slug]);
 
@@ -94,30 +94,30 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
     setDataSave(datas);
   };
 
-  const getProduct = async () => {
+  const getPost = async () => {
     const token = getCookie("access_token");
-    const product = await getProductBySlug(token, slug);
-    setProduct(product);
-    onCheckLike(product);
-    setLikeCount(product.likes_count);
-    onCheckSave(product);
-    setSaveCount(product.saves_count);
-    getUserLiked(product.id);
-    getUserSaved(product.id);
+    const post = await getPostBySlug(token, slug);
+    setPost(post);
+    onCheckLike(post);
+    setLikeCount(post.likes_count);
+    onCheckSave(post);
+    setSaveCount(post.saves_count);
+    getUserLiked(post.id);
+    getUserSaved(post.id);
   };
 
-  const onCheckLike = (product) => {
+  const onCheckLike = (post) => {
     setLiked(false);
-    product.likes?.map((like) => {
+    post.likes?.map((like) => {
       if (like.user_id == userId) {
         setLiked(true);
         return;
       }
     });
   };
-  const onCheckSave = (product) => {
+  const onCheckSave = (post) => {
     setSuccessSave(false);
-    product.saves?.map((save) => {
+    post.saves?.map((save) => {
       if (save.user_id == userId) {
         setSuccessSave(true);
         return;
@@ -127,7 +127,7 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
 
   const onReportClick = async (e: any, f: any) => {
     if (e && f.length != 0) {
-      const body = { error: e, content: f, post_id: product.id };
+      const body = { error: e, content: f, post_id: post.id };
       const resultReport = await report(JSON.stringify(body));
       if (resultReport) {
         closeModal();
@@ -167,14 +167,14 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
         if (successSave == false) {
           setSaveCount(saveCount + 1);
           setSuccessSave(true);
-          await onSave(token, product.id);
+          await onSave(token, post.id);
         } else {
           setSaveCount(saveCount - 1);
           setSuccessSave(false);
-          await onUnSave(token, product.id);
+          await onUnSave(token, post.id);
         }
       }
-      getUserSaved(product.id);
+      getUserSaved(post.id);
     } catch (e) {
       alert(e);
     }
@@ -189,13 +189,13 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
       if (liked == false) {
         setLiked(true);
         setLikeCount(likeCount + 1);
-        await onLike(token, product.id);
+        await onLike(token, post.id);
       } else {
         setLiked(false);
         setLikeCount(likeCount - 1);
-        await onUnLike(token, product.id);
+        await onUnLike(token, post.id);
       }
-      getUserLiked(product.id);
+      getUserLiked(post.id);
     }
   };
 
@@ -241,12 +241,12 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
   const onFollowOther = (id) => {
     alert(id);
   };
-  if (!product.id) {
-    return <ProductDetailsLeftDf />;
+  if (!post.id) {
+    return <PostDetailsLeftDf />;
   }
   return (
     <>
-      <ProductPreview>
+      <PostPreview>
         <BackButton className="back">
           <Button
             type="button"
@@ -263,12 +263,9 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
           </Button>
         </BackButton>
 
-        <CarouselWithCustomDots
-          items={product.gallery}
-          deviceType={"desktop"}
-        />
+        <CarouselWithCustomDots items={post.gallery} deviceType={"desktop"} />
 
-        <ProductInfo dir={isRtl ? "rtl" : "ltr"}>
+        <PostInfo dir={isRtl ? "rtl" : "ltr"}>
           <Detail className={"social"}>
             <ListSocial
               liked={liked}
@@ -293,25 +290,25 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
               </div>
             </BackButton>
           </Detail>
-          <ProductTitlePriceWrapper>
-            <ProductTitle>{product.title}</ProductTitle>
-            <ProductPriceWrapper>
-              {product.discountInPercent ? (
+          <PostTitlePriceWrapper>
+            <PostTitle>{post.title}</PostTitle>
+            <PostPriceWrapper>
+              {post.discountInPercent ? (
                 <SalePrice>
                   {CURRENCY}
-                  {parseInt(product.price).toLocaleString()}
+                  {parseInt(post.price).toLocaleString()}
                 </SalePrice>
               ) : null}
-            </ProductPriceWrapper>
-          </ProductTitlePriceWrapper>
-          <ProductPrice>
+            </PostPriceWrapper>
+          </PostTitlePriceWrapper>
+          <PostPrice>
             <div style={{ display: "block", marginBottom: 33 }}>
               <span style={{ fontSize: 20, fontWeight: 600 }}>
-                {product.salePrice
-                  ? parseInt(product.salePrice).toLocaleString()
-                  : parseInt(product.price).toLocaleString()}
+                {post.salePrice
+                  ? parseInt(post.salePrice).toLocaleString()
+                  : parseInt(post.price).toLocaleString()}
               </span>
-              <span style={{ marginLeft: 10 }}>{product.unit}</span>
+              <span style={{ marginLeft: 10 }}>{post.unit}</span>
               <BackButton className={"saveIcon"}>
                 <div
                   style={{
@@ -342,25 +339,22 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
                 </div>
               </BackButton>
             </div>
-          </ProductPrice>
+          </PostPrice>
 
           <Detail className={"detail"}>
             <H2Text>
-              <FormattedMessage
-                id="detailProduct"
-                defaultMessage="Detail product"
-              />
+              <FormattedMessage id="detailPost" defaultMessage="Detail post" />
             </H2Text>
 
-            {product.additional_info &&
-              Object.keys(product.additional_info).map(function (key) {
-                if (key === "productStatus") {
+            {post.additional_info &&
+              Object.keys(post.additional_info).map(function (key) {
+                if (key === "postStatus") {
                   return (
-                    <SubDetail key={product.additional_info[key]}>
+                    <SubDetail key={post.additional_info[key]}>
                       <Span className="title">
                         <FormattedMessage id={key} />
                       </Span>
-                      {product.additional_info[key] === "old" ? (
+                      {post.additional_info[key] === "old" ? (
                         <span style={{ opacity: 0.5 }}>
                           <FormattedMessage
                             id="usedStatus"
@@ -379,7 +373,7 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
                   );
                 }
 
-                if (product.additional_info[key] == null) {
+                if (post.additional_info[key] == null) {
                   return;
                 }
 
@@ -388,23 +382,23 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
                     <Span className="title">
                       <FormattedMessage id={key} />
                     </Span>
-                    <Span>{product.additional_info[key]}</Span>
+                    <Span>{post.additional_info[key]}</Span>
                   </SubDetail>
                 );
               })}
           </Detail>
 
-          <ProductDescription>
+          <PostDescription>
             <H2Text>
               <FormattedMessage
-                id="descriptionProduct"
+                id="descriptionPost"
                 defaultMessage="Description"
               />
             </H2Text>
             <p style={{ whiteSpace: "pre-line", margin: "10px 0" }}>
-              {product.description}
+              {post.description}
             </p>
-          </ProductDescription>
+          </PostDescription>
 
           <Detail className={"comment social-share"}>
             <H2Text>
@@ -436,11 +430,11 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
               <LinkedinIcon size={40} round={true} />
             </LinkedinShareButton>
           </Detail>
-          <ProductMeta>
+          <PostMeta>
             <MetaSingle>
-              {product?.categories?.map((item: any) => (
+              {post?.categories?.map((item: any) => (
                 <Link
-                  href={`/${product.type.toLowerCase()}?category=${item.slug}`}
+                  href={`/${post.type.toLowerCase()}?category=${item.slug}`}
                   key={`link-${item.id}`}
                 >
                   {
@@ -451,9 +445,9 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
                 </Link>
               ))}
             </MetaSingle>
-          </ProductMeta>
-        </ProductInfo>
-      </ProductPreview>
+          </PostMeta>
+        </PostInfo>
+      </PostPreview>
       {reportSuccess ? (
         <Notice status="success" content="Report success !" />
       ) : null}
@@ -461,4 +455,4 @@ const ProductDetailsLeft: React.FunctionComponent<ProductDetailsProps> = ({
   );
 };
 
-export default ProductDetailsLeft;
+export default PostDetailsLeft;

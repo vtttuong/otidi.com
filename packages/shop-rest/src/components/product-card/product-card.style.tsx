@@ -53,7 +53,7 @@ export const SellLabelTop = styled.span(
   })
 );
 
-export const ProductCardWrapper = styled.div(
+export const PostCardWrapper = styled.div(
   css({
     height: "100%",
     width: "100%",
@@ -141,7 +141,7 @@ export const BoxAvatar = styled.div`
     }
   }
 `;
-export const ProductImageWrapper = styled.div`
+export const PostImageWrapper = styled.div`
   height: 240px;
   padding: 5px;
   position: relative;
@@ -210,7 +210,7 @@ export const BuyLabel = styled.span`
   z-index: 2;
 `;
 
-export const ProductInfo = styled.div`
+export const PostInfo = styled.div`
   padding: 20px 15px;
   padding-bottom: 3px;
   display: flex;
@@ -228,10 +228,10 @@ export const ProductInfo = styled.div`
   @media (max-width: 426px) {
     padding: 10px;
   }
-  .current-user.product-title {
+  .current-user.post-title {
     width: 88%;
   }
-  .product-title {
+  .post-title {
     font-family: ${themeGet("fonts.body", "sans-serif")};
     font-size: ${themeGet("fontSizes.base", "15")}px;
     font-weight: ${themeGet("fontWeights.bold", "700")};
@@ -246,7 +246,7 @@ export const ProductInfo = styled.div`
       margin: 0 0 5px 0;
     }
   }
-  .product-weight {
+  .post-weight {
     font-family: ${themeGet("fonts.body", "sans-serif")};
     font-size: ${themeGet("fontSizes.sm", "13")}px;
     font-weight: ${themeGet("fontWeights.regular", "400")};
@@ -255,7 +255,7 @@ export const ProductInfo = styled.div`
       font-size: ${themeGet("fontSizes.xs", "12")}px;
     }
   }
-  .product-meta {
+  .post-meta {
     margin-top: 30px;
     display: flex;
     align-items: center;
@@ -265,12 +265,12 @@ export const ProductInfo = styled.div`
     @media (max-width: 767px) {
       min-height: 36px;
     }
-    .productPriceWrapper {
+    .postPriceWrapper {
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      .product-price {
+      .post-price {
         font-family: ${themeGet("fonts.body", "sans-serif")};
         font-size: ${themeGet("fontSizes.base", "15")}px;
         font-weight: ${themeGet("fontWeights.bold", "700")};
@@ -413,7 +413,7 @@ export const BookInfo = styled.div`
   }
 `;
 
-export const ProductName = styled.span`
+export const PostName = styled.span`
   font-family: ${themeGet("fonts.body", "sans-serif")};
   font-size: ${themeGet("fontSizes.base", "15")}px;
   font-weight: ${themeGet("fontWeights.bold", "700")};
@@ -670,7 +670,7 @@ export const FoodImageWrapper = styled.div`
   }
 `;
 
-export const ProductMeta = styled.div`
+export const PostMeta = styled.div`
   margin-top: 20px;
   display: flex;
   align-items: center;
