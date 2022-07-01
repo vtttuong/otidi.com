@@ -52,8 +52,8 @@ export const NOTIFY_ITEM = {
 };
 
 export const POST_ITEM = {
-  id: "nav.createproduct",
-  defaultMessage: "Create Product",
+  id: "nav.createpost",
+  defaultMessage: "Create Post",
   href: POST_PAGE,
   icon: "Post",
 };

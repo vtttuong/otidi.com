@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { themeGet } from "@styled-system/theme-get";
 
-const ProductSingleWrapper = styled.div`
+const PostSingleWrapper = styled.div`
   padding: 90px 0 60px 0;
   position: relative;
   background-color: ${themeGet("colors.gray.200", "#f7f7f7")};
@@ -17,7 +17,7 @@ const ProductSingleWrapper = styled.div`
   }
 `;
 
-export const ProductSingleContainer = styled.div`
+export const PostSingleContainer = styled.div`
   width: 100%;
   &.detail {
     animation: fadeIn ease 2s;
@@ -132,4 +132,4 @@ export const Loading = styled.div`
   color: #222222;
 `;
 
-export default ProductSingleWrapper;
+export default PostSingleWrapper;

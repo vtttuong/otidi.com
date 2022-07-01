@@ -1,39 +1,39 @@
-import React from 'react';
-import Router from 'next/router';
-import { closeModal } from '@redq/reuse-modal';
-import { Button } from 'components/button/button';
+import React from "react";
+import Router from "next/router";
+import { closeModal } from "@redq/reuse-modal";
+import { Button } from "components/button/button";
 import {
   QuickViewWrapper,
-  ProductDetailsWrapper,
-  ProductPreview,
+  PostDetailsWrapper,
+  PostPreview,
   DiscountPercent,
-  ProductInfoWrapper,
-  ProductInfo,
-  ProductTitlePriceWrapper,
-  ProductTitle,
-  ProductWeight,
-  ProductDescription,
+  PostInfoWrapper,
+  PostInfo,
+  PostTitlePriceWrapper,
+  PostTitle,
+  PostWeight,
+  PostDescription,
   ButtonText,
-  ProductMeta,
-  ProductCartWrapper,
-  ProductPriceWrapper,
-  ProductPrice,
+  PostMeta,
+  PostCartWrapper,
+  PostPriceWrapper,
+  PostPrice,
   SalePrice,
-  ProductCartBtn,
+  PostCartBtn,
   MetaSingle,
   MetaItem,
   ModalClose,
-} from './quick-view.style';
-import { CloseIcon } from 'assets/icons/CloseIcon';
-import { CartIcon } from 'assets/icons/CartIcon';
-import { CURRENCY } from 'utils/constant';
+} from "./quick-view.style";
+import { CloseIcon } from "assets/icons/CloseIcon";
+import { CartIcon } from "assets/icons/CartIcon";
+import { CURRENCY } from "utils/constant";
 
-import ReadMore from 'components/truncate/truncate';
-import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
-import { useLocale } from 'contexts/language/language.provider';
-import { useCart } from 'contexts/cart/use-cart';
-import { Counter } from 'components/counter/counter';
-import { FormattedMessage } from 'react-intl';
+import ReadMore from "components/truncate/truncate";
+import CarouselWithCustomDots from "components/multi-carousel/multi-carousel";
+import { useLocale } from "contexts/language/language.provider";
+import { useCart } from "contexts/cart/use-cart";
+import { Counter } from "components/counter/counter";
+import { FormattedMessage } from "react-intl";
 
 type QuickViewProps = {
   modalProps: any;
@@ -85,45 +85,45 @@ const QuickView: React.FunctionComponent<QuickViewProps> = ({
         <CloseIcon />
       </ModalClose>
       <QuickViewWrapper>
-        <ProductDetailsWrapper className="product-card" dir="ltr">
+        <PostDetailsWrapper className="post-card" dir="ltr">
           {!isRtl && (
-            <ProductPreview>
+            <PostPreview>
               <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
                 <>
                   <DiscountPercent>{discountInPercent}%</DiscountPercent>
                 </>
               )}
-            </ProductPreview>
+            </PostPreview>
           )}
-          <ProductInfoWrapper dir={isRtl ? 'rtl' : 'ltr'}>
-            <ProductInfo>
-              <ProductTitlePriceWrapper>
-                <ProductTitle>{title}</ProductTitle>
-                <ProductPriceWrapper>
+          <PostInfoWrapper dir={isRtl ? "rtl" : "ltr"}>
+            <PostInfo>
+              <PostTitlePriceWrapper>
+                <PostTitle>{title}</PostTitle>
+                <PostPriceWrapper>
                   {discountInPercent ? (
                     <SalePrice>
                       {CURRENCY}
                       {price}
                     </SalePrice>
                   ) : (
-                    ''
+                    ""
                   )}
 
-                  <ProductPrice>
+                  <PostPrice>
                     {CURRENCY}
                     {salePrice ? salePrice : price}
-                  </ProductPrice>
-                </ProductPriceWrapper>
-              </ProductTitlePriceWrapper>
+                  </PostPrice>
+                </PostPriceWrapper>
+              </PostTitlePriceWrapper>
 
-              <ProductWeight>{unit}</ProductWeight>
-              <ProductDescription>
+              <PostWeight>{unit}</PostWeight>
+              <PostDescription>
                 <ReadMore character={600}>{description}</ReadMore>
-              </ProductDescription>
+              </PostDescription>
 
-              <ProductCartWrapper>
-                <ProductCartBtn>
+              <PostCartWrapper>
+                <PostCartBtn>
                   {!isInCart(id) ? (
                     <Button
                       className="cart-button"
@@ -146,10 +146,10 @@ const QuickView: React.FunctionComponent<QuickViewProps> = ({
                       onIncrement={handleAddClick}
                     />
                   )}
-                </ProductCartBtn>
-              </ProductCartWrapper>
+                </PostCartBtn>
+              </PostCartWrapper>
 
-              <ProductMeta>
+              <PostMeta>
                 <MetaSingle>
                   {categories
                     ? categories.map((item: any) => (
@@ -160,23 +160,23 @@ const QuickView: React.FunctionComponent<QuickViewProps> = ({
                           {item.title}
                         </MetaItem>
                       ))
-                    : ''}
+                    : ""}
                 </MetaSingle>
-              </ProductMeta>
-            </ProductInfo>
-          </ProductInfoWrapper>
+              </PostMeta>
+            </PostInfo>
+          </PostInfoWrapper>
 
           {isRtl && (
-            <ProductPreview>
+            <PostPreview>
               <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
                 <>
                   <DiscountPercent>{discountInPercent}%</DiscountPercent>
                 </>
               )}
-            </ProductPreview>
+            </PostPreview>
           )}
-        </ProductDetailsWrapper>
+        </PostDetailsWrapper>
       </QuickViewWrapper>
     </>
   );

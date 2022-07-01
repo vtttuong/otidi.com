@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Img } from 'react-image';
-import { FormattedMessage } from 'react-intl';
+import React, { useEffect, useRef, useState } from "react";
+import { Img } from "react-image";
+import { FormattedMessage } from "react-intl";
 import {
-  CardContent, CardInfo,
-  CopyButton, GiftCardImageWrapper, GiftCardWrapper,
-  GiftCode
-} from './gift-card.style';
+  CardContent,
+  CardInfo,
+  CopyButton,
+  GiftCardImageWrapper,
+  GiftCardWrapper,
+  GiftCode,
+} from "./gift-card.style";
 
 type GiftCardProps = {
   image?: any;
@@ -41,7 +44,7 @@ const GiftCard: React.FC<GiftCardProps> = ({
   }, [copyText.copied]);
 
   return (
-    <GiftCardWrapper {...props} className="product-card">
+    <GiftCardWrapper {...props} className="post-card">
       <GiftCardImageWrapper>
         <Img src={image} className="gift-image" alt="gift image" />
       </GiftCardImageWrapper>

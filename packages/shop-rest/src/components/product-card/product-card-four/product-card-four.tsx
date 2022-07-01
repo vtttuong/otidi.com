@@ -1,4 +1,4 @@
-// product card for food
+// post card for food
 import { Edit } from "assets/icons/Edit";
 import { Eye } from "assets/icons/Eye";
 import { Like } from "assets/icons/Like";
@@ -22,11 +22,11 @@ import {
   Duration,
   FoodCardWrapper,
   FoodImageWrapper,
-  ProductInfo,
-  ProductMeta,
+  PostInfo,
+  PostMeta,
   SellLabel,
   SellLabelTop,
-} from "../product-card.style";
+} from "../post-card.style";
 
 type CardProps = {
   name?: string;
@@ -51,7 +51,7 @@ type CardProps = {
   onPush?: (e: any) => void;
 };
 
-const ProductCard: React.FC<CardProps> = ({
+const PostCard: React.FC<CardProps> = ({
   name,
   image,
   postId,
@@ -74,7 +74,6 @@ const ProductCard: React.FC<CardProps> = ({
   isBook,
   ...props
 }) => {
-
   let formatTime = formatRelativeTime(createdAt);
   const router = useRouter();
   // const [package, setPackage] = React.useState([])
@@ -159,7 +158,7 @@ const ProductCard: React.FC<CardProps> = ({
       <FoodImageWrapper onClick={onClick}>
         <Image
           url={image}
-          className="product-image"
+          className="post-image"
           style={{ position: "relative" }}
           alt={name}
         />
@@ -184,7 +183,7 @@ const ProductCard: React.FC<CardProps> = ({
           </SellLabelTop>
         ) : null}
       </FoodImageWrapper>
-      <ProductInfo
+      <PostInfo
         style={{
           display: "flex",
           flexDirection: "column",
@@ -195,8 +194,8 @@ const ProductCard: React.FC<CardProps> = ({
         <h3
           className={
             currentUser == true && !saveNews
-              ? "product-title current-user"
-              : "product-title"
+              ? "post-title current-user"
+              : "post-title"
           }
         >
           {name}
@@ -221,7 +220,7 @@ const ProductCard: React.FC<CardProps> = ({
           {address}
         </Category>
 
-        <ProductMeta onClick={onClick} style={{ marginTop: "auto" }}>
+        <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
             <NumberFormat
               value={price}
@@ -237,11 +236,11 @@ const ProductCard: React.FC<CardProps> = ({
             {formatTime.time}
             <FormattedMessage id={formatTime.unit} />
           </Duration>
-        </ProductMeta>
+        </PostMeta>
         <BoxAvatar className={"all"}>
           <Image
-            url={data?.user?.avatar_img_url}
-            className="product-image top"
+            url={data?.user?.avatar}
+            className="post-image top"
             style={{ position: "relative", objectFit: "cover" }}
             alt={name}
             onClick={() => {
@@ -255,16 +254,14 @@ const ProductCard: React.FC<CardProps> = ({
           />
           <span style={{ marginTop: 5 }}>
             <Like />
-            <b style={{ position: "relative", top: -2.5 }}>
-              {data?.likes_count}
-            </b>
+            <b style={{ position: "relative", top: -2.5 }}>{data?.views}</b>
           </span>
           <span
             style={{ marginLeft: 20, position: "relative", top: -2.5 }}
             className="view"
           >
             <Eye />
-            <b style={{ position: "relative", top: -5 }}>{data?.view}</b>
+            <b style={{ position: "relative", top: -5 }}>{data?.views}</b>
           </span>
           {currentUser && !saveNews ? (
             <PopoverNotify
@@ -288,9 +285,9 @@ const ProductCard: React.FC<CardProps> = ({
             }
           />
         ) : null}
-      </ProductInfo>
+      </PostInfo>
     </FoodCardWrapper>
   );
 };
 
-export default ProductCard;
+export default PostCard;

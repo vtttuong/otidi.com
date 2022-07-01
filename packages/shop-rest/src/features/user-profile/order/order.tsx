@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Scrollbar } from 'components/scrollbar/scrollbar';
+import React, { useState, useEffect } from "react";
+import { Scrollbar } from "components/scrollbar/scrollbar";
 import {
   DesktopView,
   MobileView,
@@ -15,23 +15,23 @@ import {
   ItemSize,
   ItemPrice,
   NoOrderFound,
-} from './order.style';
+} from "./order.style";
 
-import OrderDetails from './order-details/order-details';
-import OrderCard from './order-card/order-card';
-import OrderCardMobile from './order-card/order-card-mobile';
-import useComponentSize from 'utils/useComponentSize';
-import { FormattedMessage } from 'react-intl';
-import useOrders from 'data/use-orders';
-import ErrorMessage from 'components/error-message/error-message';
+import OrderDetails from "./order-details/order-details";
+import OrderCard from "./order-card/order-card";
+import OrderCardMobile from "./order-card/order-card-mobile";
+import useComponentSize from "utils/useComponentSize";
+import { FormattedMessage } from "react-intl";
+import useOrders from "data/use-orders";
+import ErrorMessage from "components/error-message/error-message";
 
-const progressData = ['Order Received', 'Order On The Way', 'Order Delivered'];
+const progressData = ["Order Received", "Order On The Way", "Order Delivered"];
 
 const orderTableColumns = [
   {
-    title: <FormattedMessage id='cartItems' defaultMessage='Items' />,
-    dataIndex: '',
-    key: 'items',
+    title: <FormattedMessage id="cartItems" defaultMessage="Items" />,
+    dataIndex: "",
+    key: "items",
     width: 250,
     ellipsis: true,
     render: (text, record) => {
@@ -52,18 +52,18 @@ const orderTableColumns = [
   },
   {
     title: (
-      <FormattedMessage id='intlTableColTitle2' defaultMessage='Quantity' />
+      <FormattedMessage id="intlTableColTitle2" defaultMessage="Quantity" />
     ),
-    dataIndex: 'quantity',
-    key: 'quantity',
-    align: 'center',
+    dataIndex: "quantity",
+    key: "quantity",
+    align: "center",
     width: 100,
   },
   {
-    title: <FormattedMessage id='intlTableColTitle3' defaultMessage='Price' />,
-    dataIndex: '',
-    key: 'price',
-    align: 'right',
+    title: <FormattedMessage id="intlTableColTitle3" defaultMessage="Price" />,
+    dataIndex: "",
+    key: "price",
+    align: "right",
     width: 100,
     render: (text, record) => {
       return <p>${record.total}</p>;
@@ -90,21 +90,21 @@ const OrdersContent: React.FC<{}> = () => {
     <OrderBox>
       <DesktopView>
         <OrderListWrapper style={{ height: size.height }}>
-          <Title style={{ padding: '0 20px' }}>
+          <Title style={{ padding: "0 20px" }}>
             <FormattedMessage
-              id='intlOrderPageTitle'
-              defaultMessage='My Order'
+              id="intlOrderPageTitle"
+              defaultMessage="My Order"
             />
           </Title>
 
-          <Scrollbar className='order-scrollbar'>
+          <Scrollbar className="order-scrollbar">
             <OrderList>
               {data.length !== 0 ? (
                 data.map((current: any) => (
                   <OrderCard
                     key={current.id}
                     orderId={current.id}
-                    className={current.id === selection?.id ? 'active' : ''}
+                    className={current.id === selection?.id ? "active" : ""}
                     status={progressData[current.status - 1]}
                     date={current.date}
                     deliveryTime={current.deliveryTime}
@@ -115,8 +115,8 @@ const OrdersContent: React.FC<{}> = () => {
               ) : (
                 <NoOrderFound>
                   <FormattedMessage
-                    id='intlNoOrderFound'
-                    defaultMessage='No order found'
+                    id="intlNoOrderFound"
+                    defaultMessage="No order found"
                   />
                 </NoOrderFound>
               )}
@@ -125,10 +125,10 @@ const OrdersContent: React.FC<{}> = () => {
         </OrderListWrapper>
 
         <OrderDetailsWrapper ref={targetRef}>
-          <Title style={{ padding: '0 20px' }}>
+          <Title style={{ padding: "0 20px" }}>
             <FormattedMessage
-              id='orderDetailsText'
-              defaultMessage='Order Details'
+              id="orderDetailsText"
+              defaultMessage="Order Details"
             />
           </Title>
           {selection && (
@@ -140,7 +140,7 @@ const OrdersContent: React.FC<{}> = () => {
               discount={selection.discount}
               deliveryFee={selection.deliveryFee}
               grandTotal={selection.amount}
-              tableData={selection.products}
+              tableData={selection.posts}
               columns={orderTableColumns}
             />
           )}

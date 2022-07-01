@@ -65,7 +65,7 @@ export default function SignInModal() {
         <SubHeading>
           <FormattedMessage
             id="updatePhoneText"
-            defaultMessage="Update phone number to create product !"
+            defaultMessage="Update phone number to create post !"
           />
         </SubHeading>
         <form onSubmit={phoneCallback}>

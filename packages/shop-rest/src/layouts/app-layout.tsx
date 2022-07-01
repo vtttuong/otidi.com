@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React from "react";
 import Sticky from "react-stickynode";
 import Header from "./header/header";
-import { isCategoryPage } from "./is-home-page";
 import { LayoutWrapper } from "./layout.style";
 const MobileHeader = dynamic(() => import("./header/mobile-header"), {
   ssr: false,
@@ -22,8 +21,9 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
 }) => {
   const isSticky = useAppState("isSticky");
   const { pathname, query } = useRouter();
-  const type = !query.slug && query.type ? query.type : null;
-  const isHomePage = isCategoryPage(type);
+
+  const isHomePage = pathname === "/";
+
   return (
     <LayoutWrapper className={`layoutWrapper ${className}`}>
       <Sticky enabled={isSticky} innerZ={1001}>
@@ -34,7 +34,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
         />
 
         <Header
-          className={`${isSticky && isHomePage ? "sticky" : "unSticky"} ${
+          className={`${isSticky && isHomePage ? "sticky" : "unsticky"} ${
             isHomePage ? "home" : ""
           }`}
           isHome={isHomePage}

@@ -13,7 +13,7 @@ import {
 } from "./product-card-five.style";
 import { useCart } from "contexts/cart/use-cart";
 
-type ProductCardProps = {
+type PostCardProps = {
   title: string;
   image: any;
   weight: string;
@@ -27,21 +27,21 @@ type ProductCardProps = {
   onChange?: (e: any) => void;
   increment?: (e: any) => void;
   decrement?: (e: any) => void;
-  cartProducts?: any;
+  cartPosts?: any;
   addToCart?: any;
   updateCart?: any;
   value?: any;
   deviceType?: any;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const PostCard: React.FC<PostCardProps> = ({
   title,
   image,
   weight,
   price,
   salePrice,
   discountInPercent,
-  cartProducts,
+  cartPosts,
   addToCart,
   updateCart,
   value,
@@ -71,7 +71,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <ImageWrapper className={isInCart(data?.id) && "overlay"}>
         <Image
           url={image}
-          className="product-image"
+          className="post-image"
           style={{ position: "relative" }}
           alt={title}
         />
@@ -101,4 +101,4 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-export default ProductCard;
+export default PostCard;

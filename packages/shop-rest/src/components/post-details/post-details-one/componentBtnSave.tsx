@@ -9,12 +9,12 @@ import { getCookie } from "utils/session";
 // import { useAlert } from "react-alert";
 import {
   BackButton,
-  ProductDetailsWrapper,
-  ProductPreview
-} from "./product-details-one.style";
+  PostDetailsWrapper,
+  PostPreview,
+} from "./post-details-one.style";
 
-type ProductDetailsProps = {
-  product: any;
+type PostDetailsProps = {
+  post: any;
   deviceType: {
     mobile: boolean;
     tablet: boolean;
@@ -22,8 +22,8 @@ type ProductDetailsProps = {
   };
 };
 
-const Save: React.FunctionComponent<ProductDetailsProps> = ({
-  product,
+const Save: React.FunctionComponent<PostDetailsProps> = ({
+  post,
   deviceType,
 }) => {
   const { isRtl } = useLocale();
@@ -56,7 +56,7 @@ const Save: React.FunctionComponent<ProductDetailsProps> = ({
         if (successSave == false) {
           const res = await fetch(
             process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-            `/api/client/v1/posts/${product.id}/save`,
+              `/api/client/v1/posts/${post.id}/save`,
             options
           );
           if (res.ok == false) {
@@ -68,7 +68,7 @@ const Save: React.FunctionComponent<ProductDetailsProps> = ({
         } else {
           const res = await fetch(
             process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-            `/api/client/v1/posts/${product.id}/unsave`,
+              `/api/client/v1/posts/${post.id}/unsave`,
             options
           );
           if (res.ok == false) {
@@ -84,12 +84,11 @@ const Save: React.FunctionComponent<ProductDetailsProps> = ({
     }
   };
 
-
   return (
     <>
-      <ProductDetailsWrapper className="product-card" dir="ltr">
+      <PostDetailsWrapper className="post-card" dir="ltr">
         {
-          <ProductPreview>
+          <PostPreview>
             <BackButton>
               <Button
                 type="button"
@@ -107,12 +106,12 @@ const Save: React.FunctionComponent<ProductDetailsProps> = ({
             </BackButton>
 
             <CarouselWithCustomDots
-              items={product.gallery}
+              items={post.gallery}
               deviceType={deviceType}
             />
-          </ProductPreview>
+          </PostPreview>
         }
-      </ProductDetailsWrapper>
+      </PostDetailsWrapper>
     </>
   );
 };

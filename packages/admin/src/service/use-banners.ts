@@ -14,10 +14,10 @@ const productFetcher = (url) =>
 export default function useBanners() {
   let url = `${baseUrl}/banners`;
 
-  const {data, mutate, error} = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, productFetcher);
 
   return {
-    error,
+    error, // data: data?.data,
     data: data?.data,
     mutate,
   };

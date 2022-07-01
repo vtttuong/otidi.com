@@ -1,5 +1,5 @@
-import styled, { keyframes } from 'styled-components';
-import { themeGet } from '@styled-system/theme-get';
+import styled, { keyframes } from "styled-components";
+import { themeGet } from "@styled-system/theme-get";
 const Fade = keyframes`
   from {
     opacity: 0;
@@ -27,7 +27,7 @@ export const PopoverWrapper = styled.div`
     border-radius: 0;
     box-shadow: none;
     padding: 25px 35px;
-    border-top: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
+    border-top: 1px solid ${themeGet("colors.gray.500", "#f1f1f1")};
 
     &::before {
       display: none;
@@ -48,16 +48,16 @@ export const RequestMedicine = styled.span`
   align-items: center;
   margin-bottom: 20px;
   padding-left: 50px;
-  background-color: ${themeGet('colors.primary.regular', '#009e7f')};
-  font-size: calc(${themeGet('fontSizes.base', '15px')} - 1px);
-  font-weight: ${themeGet('fontWeights.bold', '700')};
-  color: ${themeGet('colors.white', '#ffffff')};
+  background-color: ${themeGet("colors.primary.regular", "#009e7f")};
+  font-size: calc(${themeGet("fontSizes.base", "15px")} - 1px);
+  font-weight: ${themeGet("fontWeights.bold", "700")};
+  color: ${themeGet("colors.white", "#ffffff")};
   cursor: pointer;
 
   @media (max-width: 990px) {
     justify-content: center;
     padding: 0;
-    border-radius: ${themeGet('radii.base', '6px')};
+    border-radius: ${themeGet("radii.base", "6px")};
   }
 `;
 
@@ -93,9 +93,9 @@ export const TreeWrapper = styled.div`
 `;
 
 export const PopoverHandler = styled.div`
-  font-size: calc(${themeGet('fontSizes.base', '15px')} - 1px);
-  font-weight: ${themeGet('fontWeights.bold', '700')};
-  color: ${themeGet('colors.text.bold', '#0D1136')};
+  font-size: calc(${themeGet("fontSizes.base", "15px")} - 1px);
+  font-weight: ${themeGet("fontWeights.bold", "700")};
+  color: ${themeGet("colors.text.bold", "#0D1136")};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -110,7 +110,7 @@ export const PopoverHandler = styled.div`
       }
     }
     &:last-child {
-      color: ${themeGet('colors.text.regular', '#77798c')};
+      color: ${themeGet("colors.text.regular", "#77798c")};
     }
   }
 `;
@@ -121,6 +121,6 @@ export const Loading = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(${themeGet('fontSizes.base', '15px')} - 1px);
-  color: ${themeGet('colors.text.bold', '#0D1136')};
+  font-size: calc(${themeGet("fontSizes.base", "15px")} - 1px);
+  color: ${themeGet("colors.text.bold", "#0D1136")};
 `;

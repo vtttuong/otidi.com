@@ -1,39 +1,39 @@
-import React from 'react';
-import Router from 'next/router';
+import React from "react";
+import Router from "next/router";
 // import { closeModal } from '@redq/reuse-modal';
-import { Button } from 'components/button/button';
+import { Button } from "components/button/button";
 import {
   QuickViewWrapper,
-  ProductDetailsWrapper,
-  ProductPreview,
+  PostDetailsWrapper,
+  PostPreview,
   DiscountPercent,
-  ProductInfoWrapper,
-  ProductInfo,
-  ProductTitlePriceWrapper,
-  ProductTitle,
-  ProductWeight,
-  ProductDescription,
+  PostInfoWrapper,
+  PostInfo,
+  PostTitlePriceWrapper,
+  PostTitle,
+  PostWeight,
+  PostDescription,
   ButtonText,
-  ProductMeta,
-  ProductCartWrapper,
-  ProductPriceWrapper,
-  ProductPrice,
+  PostMeta,
+  PostCartWrapper,
+  PostPriceWrapper,
+  PostPrice,
   SalePrice,
-  ProductCartBtn,
+  PostCartBtn,
   MetaSingle,
   MetaItem,
   ModalClose,
-} from './quick-view.style';
-import { CloseIcon } from 'assets/icons/CloseIcon';
-import { CartIcon } from 'assets/icons/CartIcon';
-import { CURRENCY } from 'utils/constant';
+} from "./quick-view.style";
+import { CloseIcon } from "assets/icons/CloseIcon";
+import { CartIcon } from "assets/icons/CartIcon";
+import { CURRENCY } from "utils/constant";
 
-import ReadMore from 'components/truncate/truncate';
-import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
-import { useLocale } from 'contexts/language/language.provider';
-import { useCart } from 'contexts/cart/use-cart';
-import { Counter } from 'components/counter/counter';
-import { FormattedMessage } from 'react-intl';
+import ReadMore from "components/truncate/truncate";
+import CarouselWithCustomDots from "components/multi-carousel/multi-carousel";
+import { useLocale } from "contexts/language/language.provider";
+import { useCart } from "contexts/cart/use-cart";
+import { Counter } from "components/counter/counter";
+import { FormattedMessage } from "react-intl";
 
 type QuickViewProps = {
   modalProps: any;
@@ -86,28 +86,28 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
       {/* <ModalClose onClick={onModalClose}>
         <CloseIcon />
       </ModalClose> */}
-      <QuickViewWrapper className='quick-view-mobile-wrapper'>
-        <ProductDetailsWrapper className='product-card' dir='ltr'>
+      <QuickViewWrapper className="quick-view-mobile-wrapper">
+        <PostDetailsWrapper className="post-card" dir="ltr">
           {!isRtl && (
-            <ProductPreview>
+            <PostPreview>
               <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
                 <DiscountPercent>{discountInPercent}%</DiscountPercent>
               )}
-            </ProductPreview>
+            </PostPreview>
           )}
-          <ProductInfoWrapper dir={isRtl ? 'rtl' : 'ltr'}>
-            <ProductInfo>
-              <ProductTitlePriceWrapper>
-                <ProductTitle>{title}</ProductTitle>
-              </ProductTitlePriceWrapper>
+          <PostInfoWrapper dir={isRtl ? "rtl" : "ltr"}>
+            <PostInfo>
+              <PostTitlePriceWrapper>
+                <PostTitle>{title}</PostTitle>
+              </PostTitlePriceWrapper>
 
-              <ProductWeight>{unit}</ProductWeight>
-              <ProductDescription>
+              <PostWeight>{unit}</PostWeight>
+              <PostDescription>
                 <ReadMore character={600}>{description}</ReadMore>
-              </ProductDescription>
+              </PostDescription>
 
-              <ProductMeta>
+              <PostMeta>
                 <MetaSingle>
                   {categories
                     ? categories.map((item: any) => (
@@ -118,16 +118,16 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
                           {item.title}
                         </MetaItem>
                       ))
-                    : ''}
+                    : ""}
                 </MetaSingle>
-              </ProductMeta>
+              </PostMeta>
 
-              <ProductCartWrapper>
-                <ProductPriceWrapper>
-                  <ProductPrice>
+              <PostCartWrapper>
+                <PostPriceWrapper>
+                  <PostPrice>
                     {CURRENCY}
                     {salePrice ? salePrice : price}
-                  </ProductPrice>
+                  </PostPrice>
 
                   {discountInPercent ? (
                     <SalePrice>
@@ -135,21 +135,21 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
                       {price}
                     </SalePrice>
                   ) : null}
-                </ProductPriceWrapper>
+                </PostPriceWrapper>
 
-                <ProductCartBtn>
+                <PostCartBtn>
                   {!isInCart(id) ? (
                     <Button
-                      className='cart-button'
-                      variant='secondary'
+                      className="cart-button"
+                      variant="secondary"
                       borderRadius={100}
                       onClick={handleAddClick}
                     >
                       <CartIcon mr={2} />
                       <ButtonText>
                         <FormattedMessage
-                          id='addCartButton'
-                          defaultMessage='Cart'
+                          id="addCartButton"
+                          defaultMessage="Cart"
                         />
                       </ButtonText>
                     </Button>
@@ -160,20 +160,20 @@ const QuickViewMobile: React.FunctionComponent<QuickViewProps> = ({
                       onIncrement={handleAddClick}
                     />
                   )}
-                </ProductCartBtn>
-              </ProductCartWrapper>
-            </ProductInfo>
-          </ProductInfoWrapper>
+                </PostCartBtn>
+              </PostCartWrapper>
+            </PostInfo>
+          </PostInfoWrapper>
 
           {isRtl && (
-            <ProductPreview>
+            <PostPreview>
               <CarouselWithCustomDots items={gallery} deviceType={deviceType} />
               {!!discountInPercent && (
                 <DiscountPercent>{discountInPercent}%</DiscountPercent>
               )}
-            </ProductPreview>
+            </PostPreview>
           )}
-        </ProductDetailsWrapper>
+        </PostDetailsWrapper>
       </QuickViewWrapper>
     </>
   );
