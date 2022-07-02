@@ -62,6 +62,9 @@ export async function getServerSideProps(context) {
   const slug = context.params.slug;
   const userId = getCookie("userId", context);
   const token = getCookie("access_token", context);
+
+  console.log(slug, userId, token);
+
   return {
     props: {
       slug,

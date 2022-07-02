@@ -18,6 +18,8 @@ import { Check2Circle } from "../../../assets/icons/Check2Circle";
 import { DollarIcon } from "../../../assets/icons/DollarIcon";
 import { Envelope } from "../../../assets/icons/Envelope";
 import { Facebook } from "../../../assets/icons/Facebook";
+import { avtPlaceholder } from "../../../assets/images/avatar_placeholder.png";
+
 import {
   ButtonFollow,
   Col,
@@ -50,18 +52,17 @@ const ContenHeader: React.FC<Props> = ({
   token,
   onChangeFollow,
 }) => {
-
   const router = useRouter();
   const [following, setFollowing] = useState(false);
   const [vefifyAccount, setVefifyAccount] = useState(false);
   let time = moment(data.created_at, ["YYYY", moment.ISO_8601]);
   let createdAt = time.date() + "/" + time.month() + "/" + time.year();
   const mailTo = "mailto:" + data.email;
-  const skypeTo = "tel://" + data.skype;
+  // const skypeTo = "tel://" + data.skype;
   const facebookTo = data.facebook;
   const verifyEmail = data.email_verified_at ? true : false;
   const verifyPhone = data.phone_verified_at ? true : false;
-  const verifyId = data?.identify?.identified_at ? true : false;
+  const verifyId = data.identity_verified_at ? true : false;
 
   const onFollow = async () => {
     if (token == undefined) {
@@ -122,21 +123,31 @@ const ContenHeader: React.FC<Props> = ({
     <>
       <ContentHeaderWrapper>
         <Row className="header-profile">
-          <Col className="col" xs={12} sm={12} md={5} lg={4}>
+          <Col className="col" xs={12} sm={12} md={5} lg={5}>
             <div style={{ padding: "15px 0px 15px 15px" }}>
               <div style={{ display: "flex" }}>
-                <div>
+                <div
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                  }}
+                >
                   <img
+                    className="avatar-image"
                     style={{
-                      width: 70,
-                      height: 70,
+                      width: "70px",
+                      height: "70px",
                       objectFit: "cover",
                     }}
-                    src={data.avatar_img_url}
+                    src={
+                      data.avatar
+                        ? data.avatar
+                        : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                    }
                     alt="img"
                   />
                 </div>
-                <div style={{ marginLeft: 10 }}>
+                <div style={{ marginLeft: 10, flex: "1" }}>
                   <div
                     style={{
                       color: "#009E7F",
@@ -300,25 +311,6 @@ const ContenHeader: React.FC<Props> = ({
                       <Facebook />
                     </a>
 
-                    <a
-                      style={{
-                        cursor: "pointer",
-                        padding: "10px",
-
-                        color: "white",
-                        marginRight: "10px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        display: "flex",
-                        width: "30px",
-                        height: "30px",
-                        borderRadius: "5px",
-                      }}
-                      className={skypeTo?.length > 10 ? "active" : ""}
-                      href={skypeTo}
-                    >
-                      <SkypeIcon />
-                    </a>
                     {!profileOther ? (
                       <a
                         className="button-edit"
@@ -358,7 +350,7 @@ const ContenHeader: React.FC<Props> = ({
             </div>
           </Col>
 
-          <Col xs={12} sm={12} md={5} lg={5} className="col">
+          <Col xs={12} sm={12} md={5} lg={4} className="col">
             <div className="wrap-middle-header">
               <div className="wrap-item-header" style={{ cursor: "pointer" }}>
                 <div className="like-icon" style={{ color: "#00A2FF" }}>

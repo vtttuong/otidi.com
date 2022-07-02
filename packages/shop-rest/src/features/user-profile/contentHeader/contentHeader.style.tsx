@@ -67,6 +67,12 @@ const ContentHeaderWrapper = styled.div`
   @media only screen and (max-width: 650px) {
     width: 92%;
   }
+
+  & .avatar-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+  }
 `;
 
 const SettingsForm = styled.div`

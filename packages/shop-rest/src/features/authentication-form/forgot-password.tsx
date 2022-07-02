@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import {
   Wrapper,
   Container,
@@ -19,6 +19,7 @@ export default function ForgotPasswordModal() {
   const { authDispatch } = useContext<any>(AuthContext);
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
+  const ref = useRef(null);
   const intl = useIntl();
 
   const toggleSignInForm = () => {
@@ -28,10 +29,14 @@ export default function ForgotPasswordModal() {
   };
 
   const resetCallback = async (e) => {
-    if (typeof window !== "undefined") {
-      setLoading(true);
+    e.preventDefault();
 
-      e.preventDefault();
+    if (typeof window !== "undefined") {
+      if (!email || email.trim().length === 0) {
+        ref.current.focus();
+        return;
+      }
+      setLoading(true);
 
       const options = {
         method: "POST",
@@ -43,8 +48,7 @@ export default function ForgotPasswordModal() {
         }),
       };
       const res = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-          "/api/client/v1/reset-password",
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX + "/auth/reset-password",
         options
       );
       if (res.ok) {
@@ -85,6 +89,7 @@ export default function ForgotPasswordModal() {
         </SubHeading>
         <form onSubmit={resetCallback}>
           <Input
+            ref={ref}
             type="email"
             placeholder={intl.formatMessage({
               id: "emailAddressPlaceholder",

@@ -44,8 +44,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
       query: { ...query, text: slug },
     });
   };
-  const isSidebarSticky = useAppState("isSidebarSticky");
-  console.log(isSidebarSticky);
+  // const isSidebarSticky = useAppState("isSidebarSticky");
 
   if (!data) {
     if (mobile || tablet) {
@@ -54,7 +53,12 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
     return <SidebarLoader />;
   }
   return (
-    <CategoryWrapper>
+    <CategoryWrapper
+      style={{
+        position: "sticky",
+        top: "80px",
+      }}
+    >
       <PopoverWrapper>
         <CategoryWalker>
           <TreeMenu
@@ -65,18 +69,24 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
         </CategoryWalker>
       </PopoverWrapper>
 
-      <SidebarWrapper style={{ paddingTop: 45 }}>
-        <Sticky enabled={isSidebarSticky} top={150}>
-          <Scrollbar className="sidebar-scrollbar">
-            <TreeWrapper>
-              <TreeMenu
-                data={data}
-                onClick={onCategoryClick}
-                active={selectedQueries}
-              />
-            </TreeWrapper>
-          </Scrollbar>
-        </Sticky>
+      <SidebarWrapper
+        style={{
+          paddingTop: 45,
+          position: "sticky",
+          top: "0",
+        }}
+      >
+        {/* <Sticky enabled={isSidebarSticky} top={110}> */}
+        <Scrollbar className="sidebar-scrollbar">
+          <TreeWrapper>
+            <TreeMenu
+              data={data}
+              onClick={onCategoryClick}
+              active={selectedQueries}
+            />
+          </TreeWrapper>
+        </Scrollbar>
+        {/* </Sticky> */}
       </SidebarWrapper>
     </CategoryWrapper>
   );

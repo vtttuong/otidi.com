@@ -131,7 +131,7 @@ export const Posts: React.FC<PostsProps> = () => {
             }}
             border="1px solid #f1f1f1"
           >
-            <FormattedMessage id="loadMoreButton" defaultMessage="Load More" />
+            <FormattedMessage id="loadMoreBtn" defaultMessage="Load More" />
           </Button>
         </ButtonWrapper>
       )}

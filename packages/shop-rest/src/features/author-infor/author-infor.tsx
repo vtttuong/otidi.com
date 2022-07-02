@@ -23,13 +23,13 @@ import { getPostBySlug, onFollow, onUnFollow } from "utils/api/post";
 import { getCookie } from "utils/session";
 import {
   ActionButton,
-  Avata,
+  Avatar,
   CenterContainer,
   CenterContainerSub,
   ContainerImage,
   Dot,
   InfoBody,
-  MainAvata,
+  MainAvatar,
   Name,
   TextFormat,
   Title,
@@ -42,6 +42,8 @@ const AuthoInfor: React.FC<{}> = () => {
   let slug = query.slug;
   const defaultOptions = { scrollwheel: false };
   const [data, setData] = useState<any>({ user: { avatar_url: "user.png" } });
+  console.log("DATA USER: ", data);
+
   const [chatLoading, setChatLoading] = useState(false);
   const [tok, setTok] = useState("");
   const [followed, setFollowed] = useState(false);
@@ -146,6 +148,7 @@ const AuthoInfor: React.FC<{}> = () => {
   };
   const getPost = async () => {
     var token = getCookie("access_token");
+
     if (slug) {
       setTok(token);
       let post = await getPostBySlug(token, slug);
@@ -163,7 +166,7 @@ const AuthoInfor: React.FC<{}> = () => {
 
   return (
     <InfoBody className={"profile-post"}>
-      <MainAvata
+      <MainAvatar
         className={"border"}
         onClick={() => {
           let currentUserId = getCookie("userId");
@@ -174,7 +177,7 @@ const AuthoInfor: React.FC<{}> = () => {
           }
         }}
       >
-        <Avata
+        <Avatar
           src={data.user?.avatar_img_url}
           onClick={() => {
             let currentUserId = getCookie("userId");
@@ -185,7 +188,7 @@ const AuthoInfor: React.FC<{}> = () => {
             }
           }}
         />
-        <MainAvata className={"name"}>
+        <MainAvatar className={"name"}>
           <Name>
             {data.user?.name}
             {vefifyAccount ? (
@@ -219,10 +222,10 @@ const AuthoInfor: React.FC<{}> = () => {
               </>
             )}
           </Name>
-        </MainAvata>
-      </MainAvata>
-      <MainAvata className={"border"}>
-        <MainAvata className={"sub"}>
+        </MainAvatar>
+      </MainAvatar>
+      <MainAvatar className={"border"}>
+        <MainAvatar className={"sub"}>
           <ActionButton
             onClick={onFollows}
             className={followed ? "following" : "follow"}
@@ -234,8 +237,8 @@ const AuthoInfor: React.FC<{}> = () => {
               </Title>
             </>
           </ActionButton>
-        </MainAvata>
-        <MainAvata className={"sub subRate"}>
+        </MainAvatar>
+        <MainAvatar className={"sub subRate"}>
           <Name className={"subInfo rate"}>
             {"(" + parseFloat(data.user?.rating).toFixed(1) + ")"}
           </Name>
@@ -247,10 +250,10 @@ const AuthoInfor: React.FC<{}> = () => {
               starRatedColor={"#ffc107"}
             />
           </ContainerImage>
-        </MainAvata>
-      </MainAvata>
+        </MainAvatar>
+      </MainAvatar>
       <TopContainer></TopContainer>
-      <MainAvata className={"border"}>
+      <MainAvatar className={"border"}>
         <ActionButton className={"chat"}>
           <Button
             type="button"
@@ -263,8 +266,8 @@ const AuthoInfor: React.FC<{}> = () => {
             <FormattedMessage id="chat" defaultMessage="Message" />
           </Button>
         </ActionButton>
-      </MainAvata>
-      <MainAvata className={"border"}>
+      </MainAvatar>
+      <MainAvatar className={"border"}>
         <ActionButton className={"chat"}>
           <Money />
           <Button
@@ -278,7 +281,7 @@ const AuthoInfor: React.FC<{}> = () => {
             <FormattedMessage id="bargain" defaultMessage="Trả giá" />
           </Button>
         </ActionButton>
-      </MainAvata>
+      </MainAvatar>
       <CenterContainer>
         <Title className={"title"}>
           <FormattedMessage id="maps" defaultMessage="Maps" />

@@ -68,7 +68,6 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
   const checkAuth = () => {
     let token = getCookie("access_token");
     let isVerifyPhone = getCookie("phone_verified_at");
-    console.log(isVerifyPhone);
     if (!token) {
       Router.push("/login");
       return;

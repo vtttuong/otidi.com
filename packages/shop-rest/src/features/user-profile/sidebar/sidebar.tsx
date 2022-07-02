@@ -113,7 +113,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             <div>
               <FormattedMessage id="soldPosts" defaultMessage="Sold" />:{" "}
               <span style={{ color: "#009E7F" }}>
-                {dataPost.sold_post.length}
+                {dataPost.sold_posts.length}
               </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>

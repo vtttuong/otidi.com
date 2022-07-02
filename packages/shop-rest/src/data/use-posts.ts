@@ -3,7 +3,6 @@ import queryString from "query-string";
 import axios from "axios";
 const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-console.log(API_KEY);
 
 var sortBy = (function () {
   var toString = Object.prototype.toString,
@@ -425,8 +424,6 @@ export default function usePosts(variables: Props) {
     (index) => `${url}&page=${index + 1}&${parsed}`,
     postFetcherLoadmore
   );
-
-  console.log("DATA: ", data);
 
   let posts = data ? [].concat(...data) : [];
   const isLoadingInitialData = !data && !error;

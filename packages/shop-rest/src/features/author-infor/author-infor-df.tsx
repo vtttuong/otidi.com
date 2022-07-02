@@ -15,13 +15,13 @@ import StarRatings from "react-star-ratings";
 import { compose, withProps } from "recompose";
 import {
   ActionButton,
-  Avata,
+  Avatar,
   CenterContainer,
   CenterContainerSub,
   ContainerImage,
   Dot,
   InfoBody,
-  MainAvata,
+  MainAvatar,
   Name,
   TextFormat,
   Title,
@@ -31,7 +31,7 @@ import {
 const AuthoInforDf: React.FC<{}> = () => {
   const defaultOptions = { scrollwheel: false };
   const [data, setData] = useState<any>({ user: { avatar_url: "user.png" } });
-  const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+  const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
   const mapEnvironment = compose(
     withProps({
       googleMapURL,
@@ -57,9 +57,9 @@ const AuthoInforDf: React.FC<{}> = () => {
 
   return (
     <InfoBody className={"profile-post default"}>
-      <MainAvata className={"border"}>
-        <Avata src={data.user?.avatar_img_url} />
-        <MainAvata className={"name"}>
+      <MainAvatar className={"border"}>
+        <Avatar src={data.user?.avatar_img_url} />
+        <MainAvatar className={"name"}>
           <Name className="df">
             Nguyen Tran Anh Tu
             <NotVerified
@@ -82,10 +82,10 @@ const AuthoInforDf: React.FC<{}> = () => {
               khong hoat dong nua hay check
             </span>
           </Name>
-        </MainAvata>
-      </MainAvata>
-      <MainAvata className={"border"}>
-        <MainAvata className={"sub"}>
+        </MainAvatar>
+      </MainAvatar>
+      <MainAvatar className={"border"}>
+        <MainAvatar className={"sub"}>
           <ActionButton className={"follow"}>
             <Follow />
             <>
@@ -94,8 +94,8 @@ const AuthoInforDf: React.FC<{}> = () => {
               </Title>
             </>
           </ActionButton>
-        </MainAvata>
-        <MainAvata className={"sub subRate"}>
+        </MainAvatar>
+        <MainAvatar className={"sub subRate"}>
           <Name className={"subInfo rate"}>{"(...)"}</Name>
           <ContainerImage className={"star"}>
             <StarRatings
@@ -105,18 +105,18 @@ const AuthoInforDf: React.FC<{}> = () => {
               starRatedColor={"#ffc107"}
             />
           </ContainerImage>
-        </MainAvata>
-      </MainAvata>
+        </MainAvatar>
+      </MainAvatar>
       <TopContainer></TopContainer>
-      <MainAvata className={"border"}>
+      <MainAvatar className={"border"}>
         <ActionButton className={"chat"}>
           <Button type="button" size="medium" style={{ width: "100%" }}>
             <Chat />
             <FormattedMessage id="chat" defaultMessage="Message" />
           </Button>
         </ActionButton>
-      </MainAvata>
-      <MainAvata className={"border"}>
+      </MainAvatar>
+      <MainAvatar className={"border"}>
         <ActionButton className={"chat"}>
           <Money />
           <Button type="button" size="medium" style={{ width: "100%" }}>
@@ -124,7 +124,7 @@ const AuthoInforDf: React.FC<{}> = () => {
             <FormattedMessage id="bargain" defaultMessage="Trả giá" />
           </Button>
         </ActionButton>
-      </MainAvata>
+      </MainAvatar>
       <CenterContainer>
         <Title className={"title"}>
           <FormattedMessage id="maps" defaultMessage="Maps" />

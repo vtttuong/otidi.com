@@ -82,6 +82,14 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
   };
 
   const handleLogout = () => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }, 500);
+
     if (typeof window !== "undefined") {
       removeCookie("access_token");
       removeCookie("userId");
@@ -230,29 +238,12 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
       text: text,
     };
 
-    if (type) {
-      router.push(
-        {
-          pathname,
-          query: {
-            ...queryParams,
-          },
-        },
-        {
-          pathname: `/${type}`,
-          query: {
-            ...queryParams,
-          },
-        }
-      );
-    } else {
-      router.push({
-        pathname,
-        query: {
-          ...queryParams,
-        },
-      });
-    }
+    router.push({
+      pathname,
+      query: {
+        ...queryParams,
+      },
+    });
   };
 
   return (

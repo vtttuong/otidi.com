@@ -17,6 +17,7 @@ import {
   markAsRead,
   parseNotiData,
 } from "utils/api/profile";
+import { IoWarningOutline } from "react-icons/io5";
 import { formatRelativeTime } from "utils/formatRelativeTime";
 import { getCookie } from "utils/session";
 import LanguageSwitcher from "../language-switcher/language-switcher";
@@ -29,6 +30,7 @@ import {
   NotificationWrapper,
   OutOfData,
   RightMenuBox,
+  NoItem,
 } from "./right-menu.style";
 
 const AuthMenu = dynamic(() => import("../auth-menu"), { ssr: false });
@@ -120,6 +122,9 @@ export const RightMenu: React.FC<Props> = ({
       setToken(token);
       const fetchData = async () => {
         const data = await getNotifications(token, notiPage, limit);
+
+        console.log(data);
+
         if (data !== null) {
           const notiUnRead = data.filter((item) => item.readAt === null).length;
           dispatch({
@@ -138,6 +143,7 @@ export const RightMenu: React.FC<Props> = ({
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
     });
+
     let userId = getCookie("userId");
 
     const channelNoti = pusher.subscribe("privateChannel." + userId);
@@ -190,6 +196,7 @@ export const RightMenu: React.FC<Props> = ({
 
   const onMarkAllAsRead = async () => {
     const data = await markAsAllRead(token);
+
     if (data) {
       const fetchData = async () => {
         if (token !== undefined && token.length > 0) {
@@ -216,6 +223,8 @@ export const RightMenu: React.FC<Props> = ({
   };
 
   const onFeedMore = () => {
+    console.log("OUT: ", outOfData);
+
     if (outOfData) return;
     setLoading(true);
     setNotiPage(notiPage + 1);
@@ -242,6 +251,7 @@ export const RightMenu: React.FC<Props> = ({
       });
       const fetchData = async () => {
         const data = await getNotifications(token, notiPage, limit);
+
         if (data !== null) {
           const notiUnRead = data.filter((item) => item.readAt === null).length;
           dispatch({
@@ -260,9 +270,10 @@ export const RightMenu: React.FC<Props> = ({
   const content =
     state.dataNotify.length == 0 || !state.dataNotify ? (
       <>
-        <h3>
+        <NoItem>
+          <IoWarningOutline />
           <FormattedMessage id="noNotifications" />
-        </h3>
+        </NoItem>
       </>
     ) : (
       <>

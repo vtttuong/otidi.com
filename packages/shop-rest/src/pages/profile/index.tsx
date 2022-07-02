@@ -31,7 +31,13 @@ import Footer from "layouts/footer";
 import moment from "moment";
 import { NextPage } from "next";
 import React, { useState } from "react";
-import { getPackage, getProfile, pushPost } from "utils/api/profile";
+import {
+  getMyPosts,
+  getPackage,
+  getProfile,
+  pushPost,
+} from "utils/api/profile";
+import { getFollowers } from "utils/api/user";
 import { getCookie } from "utils/session";
 
 type Props = {
@@ -43,6 +49,12 @@ type Props = {
   datas: any;
   token: string;
   service?: any;
+};
+
+const post_status = {
+  WAITING: "waiting",
+  SOLD: "sold",
+  ACTIVE: "active",
 };
 
 const ProfilePage: NextPage<Props> = ({ datas, token }) => {
@@ -59,16 +71,20 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
   React.useEffect(() => {
     getP();
   }, []);
+
   data.posts.map((item) => {
-    if (!item.is_sold && !item.is_priority) posting.push(item);
+    if (item.status !== post_status.SOLD && !item.is_priority) {
+      posting.push(item);
+    }
   });
 
   const dataTab2 = [
     {
+      // number: posting.length,
+      number: data.active_posts.length,
       key: "postingPosts",
       title: "Đang đăng",
       icon: <CheckMark width="15px" height="15px" color="green" />,
-      number: posting.length,
     },
     {
       number: data.waiting_approve_posts.length,
@@ -77,7 +93,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       icon: <Hourglass color="#0000ff" width="15px" height="15px" />,
     },
     {
-      number: data.sold_post.length,
+      number: data.sold_posts.length,
       key: "soldPosts",
       title: "Đã bán",
       icon: <Sold />,
@@ -90,25 +106,25 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     },
 
     {
-      number: data.post_saves.length,
+      number: data.post_saves?.length,
       key: "savedNews",
       title: "Tin đã lưu",
       icon: <Bookmarks color="#00d9ff" />,
     },
     {
-      number: data.following.length,
+      number: data.following_count || 0,
       key: "following",
       title: "Dang theo doi",
       icon: <Following />,
     },
     {
-      number: data.followers.length,
+      number: data.followers_count,
       key: "follower",
       title: "nguoi theo doi",
       icon: <Person color="blue" />,
     },
     {
-      number: data.reviews.length,
+      number: data.reviews_count,
       key: "review",
       title: "review",
       icon: <Review />,
@@ -216,7 +232,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                   {activeTab === "postingPosts" ? (
                     <WrapCard
                       onDeletePost={onDeletePost}
-                      data={posting}
+                      data={data.active_posts}
                       currentUser={true}
                       onMarkedPost={onMarkedPost}
                       onPush={onPush}
@@ -293,6 +309,19 @@ export async function getServerSideProps(context) {
     context.res.end();
   }
   const data = await getProfile(token);
+  const posts = await getMyPosts(token);
+  const followers = await getFollowers(data.id);
+  data.posts = posts;
+  data.followers = followers;
+
+  data.waiting_approve_posts = posts.filter(
+    (post) => post.status === post_status.WAITING
+  );
+
+  data.sold_posts = posts.filter((post) => post.status === post_status.SOLD);
+  data.active_posts = posts.filter(
+    (post) => post.status === post_status.ACTIVE
+  );
 
   return {
     props: {
