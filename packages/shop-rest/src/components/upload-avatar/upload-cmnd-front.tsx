@@ -65,7 +65,6 @@ const UploadCMND: React.FC<{}> = () => {
 
   const renderProfileImage = () => {
     let avata = getCookie("userFrontId");
-    avata = process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/storage/" + avata;
     const profileImage = imageData.userProfileImage
       ? imageData.userProfileImage
       : avata;
@@ -82,7 +81,12 @@ const UploadCMND: React.FC<{}> = () => {
         <label
           className="label-upload-front"
           title="Select image"
-          style={{ padding: "0px", justifyContent: "center", display: "flex" }}
+          style={{
+            padding: "0px",
+            justifyContent: "center",
+            display: "flex",
+            cursor: "pointer",
+          }}
         >
           <input
             hidden

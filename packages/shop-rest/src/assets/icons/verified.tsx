@@ -8,7 +8,7 @@ export const Verified = (props) => {
       height="25"
       src={url}
       alt="Dollars money bag free icon"
-      title="Dollars money bag free icon"
+      title="Accout has been verified"
     />
   );
 };

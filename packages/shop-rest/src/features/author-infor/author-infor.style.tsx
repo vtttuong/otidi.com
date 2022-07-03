@@ -511,7 +511,7 @@ const CartSlidePopup = styled.div`
     }
   }
 `;
-const MainAvata = styled.div`
+const MainAvatar = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 20px;
@@ -580,7 +580,7 @@ const Dot = styled.div`
     background: green;
   }
 `;
-const Avata = styled.img`
+const Avatar = styled.img`
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -608,8 +608,8 @@ const TextFormat = styled.span`
 `;
 
 export {
-  MainAvata,
-  Avata,
+  MainAvatar,
+  Avatar,
   Name,
   Dot,
   ContainerImage,

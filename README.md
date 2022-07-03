@@ -76,3 +76,11 @@ password: min123456
    1. Thiếu API xóa Banner
 
 6. Paging: Không return tổng số page => Không paging được
+
+## <red>CLIET API PROBLEMS <red>
+
+1. Authentication
+   1.1 Thiếu Login by facebook, google api
+   1.2 Thiếu verify email
+
+2. Ko trả về list mà user đang follow

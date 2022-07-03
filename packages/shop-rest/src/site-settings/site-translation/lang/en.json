@@ -138,6 +138,7 @@
   "termsConditionText": "Terms & Condtion",
   "alreadyHaveAccount": "Already have an account?",
   "backToSign": "Back to",
+  "backHomeBtn": "Back to home",
   "loginBtnText": "Login",
   "forgotPassText": "Forgot Password",
   "sendResetPassText": "We'll send you a link to reset your password",
@@ -347,6 +348,7 @@
   "silver": "Silver",
   "gold": "Gold",
   "Update-Button": "Update",
+  "Cancel-Button": "Cancel",
   "Join": "Join",
   "sellPost": "Sell",
   "buyPost": "Buy",
@@ -363,6 +365,7 @@
   "femaleText": "Female",
   "birthdateField": "Birthdate",
   "updateButtonText": "Update",
+  "cancelButtonText": "Cancel",
   "notChange": "Can't change",
   "clear": "Clear",
   "verify": "Verify",
@@ -390,5 +393,9 @@
   "registerSubcriptionWithMomo": "Subscription MOMO",
   "phonePlaceholder": "Please enter your phone",
   "verified": "Verified",
-  "notVerified": "Click to verify"
+  "notVerified": "Click to verify",
+  "Bình thường": "Normal",
+  "Đồng": "Copper",
+  "Bạc": "Silver",
+  "Vàng": "Gold"
 }

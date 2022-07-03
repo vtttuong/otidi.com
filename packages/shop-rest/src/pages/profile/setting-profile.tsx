@@ -26,6 +26,8 @@ type Props = {
 const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
   const [dataUser, setDataUser] = useState(data);
   const [isAlert, setisAlert] = useState(false);
+  const [idError, setIdError] = useState(null);
+  const [infoError, setInfoError] = useState(null);
   const [isAlertId, setisAlertId] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [loadingId, setLoadingId] = useState(false);
@@ -34,58 +36,70 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
     setisAlert(false);
     setisAlertId(false);
   }, 3000);
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e, location) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
+    setIdError(null);
+    setInfoError(null);
 
     if (formDataObj.frontId && formDataObj.backId) {
       if (
-        formDataObj.frontId["name"] === "" ||
-        formDataObj.backId["name"] === ""
+        formDataObj.frontId["name"] !== "" ||
+        formDataObj.backId["name"] !== ""
       ) {
+        setLoadingId(true);
+        const newForm = new FormData();
+        newForm.set("image_front", formDataObj.frontId);
+        newForm.set("image_back", formDataObj.backId);
+        const configs = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": `multipart/form-data;`,
+          },
+        };
+        axios
+          .post(
+            process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT +
+              "/me/identity-card/verify",
+            newForm,
+            configs
+          )
+          .then((response) => {
+            setLoadingId(false);
+
+            console.log("RES", response);
+
+            if (response.data && response.data.success) {
+              setisAlertId(true);
+              setIdError(null);
+              setCookie("userFrontId", response.data.data?.img_front_url);
+              setCookie("userBackId", response.data.data?.img_back_url);
+              return;
+            } else if (response.data && !response.data.success) {
+              const error = response.data.data;
+              setIdError(
+                error.image_back || error.image_front
+                  ? "Please upload both of two sides of your identity"
+                  : null
+              );
+            }
+          });
         return;
       }
-      setLoadingId(true);
-      const newForm = new FormData();
-      newForm.set("left_side_image", formDataObj.frontId);
-      newForm.set("right_side_image", formDataObj.backId);
-      const configs = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-type": `multipart/form-data;`,
-        },
-      };
-      axios
-        .post(
-          process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/api/client/v1/identify",
-          newForm,
-          configs
-        )
-        .then((response) => {
-          setLoadingId(false);
-
-          if (response.status === 200 || response.status === 201) {
-            setisAlertId(true);
-            setCookie("userFrontId", response.data.left_side_url);
-            setCookie("userBackId", response.data.right_side_url);
-            return;
-          }
-        });
-      return;
     }
+
     setLoadingUpdate(true);
     const newForm = new FormData();
 
-    newForm.set("facebook", formDataObj.facebook);
-    newForm.set("skype", formDataObj.skype);
     newForm.set("name", formDataObj.name);
     newForm.set("phone_number", formDataObj.phone);
-    newForm.set("address", formDataObj.address);
-    newForm.set("birthday", formDataObj.birthday);
-    newForm.set("sex", formDataObj.sex);
-    newForm.set("website", formDataObj.website);
-    newForm.set("avatar_url", formDataObj.profileImg);
+    newForm.set("address", location?.address);
+    newForm.set("latitude", location?.latitude);
+    newForm.set("longitude", location?.longitude);
+    newForm.set("avatar", formDataObj.profileImg);
+
     const configs = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -95,21 +109,38 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
 
     axios
       .post(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/api/client/v1/me/profile",
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + "/me",
         newForm,
         configs
       )
       .then((response) => {
         setLoadingUpdate(false);
 
-        if (response.status === 200) {
+        if (response.data && response.data.success) {
           setisAlert(true);
-          setCookie("userAvatar", response.data.avatar_url);
-          setDataUser(response.data);
+          setInfoError(null);
+          setCookie("userAvatar", response.data.data[0]?.avatar);
+          setDataUser(response.data.data[0]);
           return;
+        } else if (response.data && !response.data.success) {
+          const error = response.data.data;
+
+          console.log(error);
+
+          setInfoError({
+            name: error.name
+              ? "User name must have length greater than 0!"
+              : null,
+            phone_number: error.phone_number ? "Invalid phone number!" : null,
+            address:
+              error.address || error.latitude || error.longitude
+                ? "Please enter address then select your location!"
+                : null,
+          });
         }
       });
   };
+
   return (
     <>
       <SEO title="Profile - 2HandApp" description="Profile Details" />
@@ -122,6 +153,7 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
                 data={dataUser}
                 deviceType={deviceType}
                 alert={isAlert}
+                error={infoError}
                 loadingUpdate={loadingUpdate}
                 loadingId={loadingId}
                 token={token}
@@ -131,6 +163,8 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
           {isAlertId ? (
             <Notice status="success" content="Updated identify !" />
           ) : null}
+
+          {idError ? <Notice status="error" content={idError} /> : null}
           <Footer />
         </PageWrapper>
       </ProfileProvider>
@@ -150,7 +184,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      data: data,
+      data: data || {},
       token: token,
     }, // will be passed to the page component as props
   };

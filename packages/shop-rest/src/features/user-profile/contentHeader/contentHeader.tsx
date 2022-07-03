@@ -9,6 +9,7 @@ import { SkypeIcon } from "assets/icons/skype-brands";
 import { UserAvatar } from "assets/icons/UserAvatar";
 import { Verified } from "assets/icons/verified";
 import moment from "moment";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -18,6 +19,7 @@ import { Check2Circle } from "../../../assets/icons/Check2Circle";
 import { DollarIcon } from "../../../assets/icons/DollarIcon";
 import { Envelope } from "../../../assets/icons/Envelope";
 import { Facebook } from "../../../assets/icons/Facebook";
+
 import {
   ButtonFollow,
   Col,
@@ -50,7 +52,6 @@ const ContenHeader: React.FC<Props> = ({
   token,
   onChangeFollow,
 }) => {
-
   const router = useRouter();
   const [following, setFollowing] = useState(false);
   const [vefifyAccount, setVefifyAccount] = useState(false);
@@ -61,7 +62,7 @@ const ContenHeader: React.FC<Props> = ({
   const facebookTo = data.facebook;
   const verifyEmail = data.email_verified_at ? true : false;
   const verifyPhone = data.phone_verified_at ? true : false;
-  const verifyId = data?.identify?.identified_at ? true : false;
+  const verifyId = data.identity_verified_at ? true : false;
 
   const onFollow = async () => {
     if (token == undefined) {
@@ -99,7 +100,7 @@ const ContenHeader: React.FC<Props> = ({
     if (
       data.email_verified_at &&
       data.phone_verified_at &&
-      data.identify?.identified_at
+      data.identity_verified_at
     ) {
       setVefifyAccount(true);
     } else {
@@ -122,21 +123,31 @@ const ContenHeader: React.FC<Props> = ({
     <>
       <ContentHeaderWrapper>
         <Row className="header-profile">
-          <Col className="col" xs={12} sm={12} md={5} lg={4}>
+          <Col className="col" xs={12} sm={6} md={6} lg={5}>
             <div style={{ padding: "15px 0px 15px 15px" }}>
               <div style={{ display: "flex" }}>
-                <div>
+                <div
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                  }}
+                >
                   <img
+                    className="avatar-image"
                     style={{
-                      width: 70,
-                      height: 70,
+                      width: "70px",
+                      height: "70px",
                       objectFit: "cover",
                     }}
-                    src={data.avatar_img_url}
+                    src={
+                      data.avatar
+                        ? data.avatar
+                        : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                    }
                     alt="img"
                   />
                 </div>
-                <div style={{ marginLeft: 10 }}>
+                <div style={{ marginLeft: 10, flex: "1" }}>
                   <div
                     style={{
                       color: "#009E7F",
@@ -300,65 +311,56 @@ const ContenHeader: React.FC<Props> = ({
                       <Facebook />
                     </a>
 
-                    <a
-                      style={{
-                        cursor: "pointer",
-                        padding: "10px",
-
-                        color: "white",
-                        marginRight: "10px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        display: "flex",
-                        width: "30px",
-                        height: "30px",
-                        borderRadius: "5px",
-                      }}
-                      className={skypeTo?.length > 10 ? "active" : ""}
-                      href={skypeTo}
-                    >
-                      <SkypeIcon />
-                    </a>
                     {!profileOther ? (
-                      <a
-                        className="button-edit"
-                        href="/profile/setting-profile"
-                        style={{
-                          cursor: "pointer",
-                          padding: "10px",
-                          backgroundColor: "#009E7F",
-                          color: "#fff",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          display: "flex",
-                          width: "95px",
-                          height: "30px",
-                          fontSize: 13,
-                          borderRadius: "5px",
-                        }}
-                      >
-                        <PencilIcon
-                          width="10px"
-                          height="10px"
-                          style={{ marginRight: 6 }}
-                        />
-                        <FormattedMessage
-                          id="Update-Button"
-                          defaultMessage="Update"
-                        />
-                      </a>
+                      <Link href="/profile/setting-profile">
+                        <div
+                          className="button-edit"
+                          style={{
+                            cursor: "pointer",
+                            padding: "10px",
+                            backgroundColor: "#009E7F",
+                            color: "#fff",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            display: "flex",
+                            width: "95px",
+                            height: "30px",
+                            fontSize: 13,
+                            borderRadius: "5px",
+                          }}
+                        >
+                          <PencilIcon
+                            width="10px"
+                            height="10px"
+                            style={{ marginRight: 6 }}
+                          />
+                          <FormattedMessage
+                            id="Update-Button"
+                            defaultMessage="Update"
+                          />
+                        </div>
+                      </Link>
                     ) : null}
                   </GroupButtons>
                 </div>
               </div>
-              <p style={{ color: "#6e6e6e", fontSize: 13, marginTop: 20 }}>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  color: "#6e6e6e",
+                  fontSize: 13,
+                  marginTop: 20,
+                }}
+              >
                 <CalendarCheck width="20px" height="20px" /> &nbsp;
                 <FormattedMessage id="Join" defaultMessage="Join" /> {createdAt}
               </p>
             </div>
           </Col>
 
-          <Col xs={12} sm={12} md={5} lg={5} className="col">
+          <Col xs={12} sm={6} md={6} lg={4} className="col">
             <div className="wrap-middle-header">
               <div className="wrap-item-header" style={{ cursor: "pointer" }}>
                 <div className="like-icon" style={{ color: "#00A2FF" }}>
@@ -413,7 +415,13 @@ const ContenHeader: React.FC<Props> = ({
 
           <Col xs={12} sm={5} md={5} lg={3} style={{ paddingBottom: "30px" }}>
             <div className="wrap-end-header">
-              <div className="type-account">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                className="type-account"
+              >
                 <div className="icon-check">
                   <Check2Circle />
                 </div>
@@ -428,6 +436,7 @@ const ContenHeader: React.FC<Props> = ({
                   </span>
                 </div>
               </div>
+
               {profileOther && profileOther == true ? (
                 <ButtonFollow
                   onClick={onFollow}

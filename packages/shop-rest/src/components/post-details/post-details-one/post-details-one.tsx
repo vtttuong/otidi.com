@@ -55,7 +55,6 @@ const PostDetails: React.FunctionComponent<PostDetailsProps> = ({
         <RecommendPosts
           token={token}
           slug={slug}
-          type={router.query.type.toString()}
           deviceType={deviceType}
           loadMore={false}
           fetchLimit={8}

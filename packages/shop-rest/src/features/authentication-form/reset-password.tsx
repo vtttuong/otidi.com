@@ -56,10 +56,11 @@ export default function ResetModal() {
         },
       };
       const response = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-          `/api/client/v1/find/${query.token}`,
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX +
+          `/auth/find/${query.token}`,
         configs
       );
+
       const resetPass = await response.json();
 
       const options = {
@@ -70,14 +71,15 @@ export default function ResetModal() {
         body: JSON.stringify({
           email: resetPass.email,
           password: password,
-          password_confirmation: confirmPass,
           token: resetPass.token,
         }),
       };
+
       const res = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/api/client/v1/reset",
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX + "/auth/reset",
         options
       );
+
       const data = await res.json();
 
       if (data && data.error) {

@@ -1,7 +1,8 @@
 import { Camera } from "assets/icons/camera";
 import { AvatarModal } from "components/avatar-modal/avatar-modal";
 import { ImageCrop } from "components/image-crop/image-crop";
-import React, { useState } from "react";
+import Image from "components/image/image";
+import React, { useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { getCookie } from "utils/session";
 import { MainDiv, ProfileImageDiv } from "./upload-avatar.style";
@@ -28,6 +29,7 @@ const UploadAvatar: React.FC<{}> = () => {
   let imageEditor = null;
   const [imageData, setImageData] = useState(initialState);
   const [showModal, setShowModal] = useState(false);
+  const ref = useRef(null);
 
   const setEditorRef = (editor) => {
     imageEditor = editor;
@@ -45,10 +47,13 @@ const UploadAvatar: React.FC<{}> = () => {
         userProfileImage: url,
       });
     }
+
     toggleModal();
   };
 
   const onImageFileChangeHandler = (e) => {
+    console.log("CHANGE");
+
     const file = e.target.files[0];
     const acceptedFileExtensions = ["png", "jpg", "jpeg", "gif"];
 
@@ -62,20 +67,18 @@ const UploadAvatar: React.FC<{}> = () => {
   };
 
   const renderProfileImage = () => {
-    let avata = getCookie("userAvatar");
-    avata = process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/storage/" + avata;
+    let avatar = getCookie("userAvatar");
     const profileImage = imageData.userProfileImage
       ? imageData.userProfileImage
-      : avata;
+      : avatar;
 
-    return <img className="profile-image" src={profileImage} alt="user-logo" />;
+    return <Image url={profileImage} alt="user-logo" />;
   };
 
   return (
     <ProfileImageDiv>
       <MainDiv>
         {renderProfileImage()}
-
         <br />
         <label
           className="label-upload"
@@ -88,6 +91,7 @@ const UploadAvatar: React.FC<{}> = () => {
             name="profileImg"
             accept="image/png, image/jpeg, image/jpg"
             onChange={onImageFileChangeHandler}
+            ref={ref}
           />
           <Camera width={25} height={25} style={{ marginRight: "10px" }} />{" "}
           <span>

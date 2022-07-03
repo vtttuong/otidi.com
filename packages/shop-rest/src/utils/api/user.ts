@@ -62,3 +62,16 @@ export async function editReview(token: string, id: number, object: any) {
   );
   return await data.json();
 }
+
+export async function getFollowers(userId: number) {
+  const options = {
+    method: "GET",
+  };
+
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX}/users/${userId}/followers`,
+    options
+  );
+  const dataJson = await data.json();
+  return dataJson.data || [];
+}

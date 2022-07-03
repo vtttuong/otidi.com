@@ -85,6 +85,7 @@ export const SidebarWrapper = styled.div`
 export const CategoryWrapper = styled.div`
   position: relative;
   width: 100%;
+  height: calc(100vh - 90px);
 `;
 
 export const TreeWrapper = styled.div`

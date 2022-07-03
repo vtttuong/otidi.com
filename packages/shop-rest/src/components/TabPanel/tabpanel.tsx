@@ -36,6 +36,9 @@ export class TabPanel extends React.Component<props, state> {
             key={item.key}
             style={{
               textAlign: "center",
+              cursor: "pointer",
+              transition: "all 0.2s",
+              height: "100%",
             }}
             role="presentation"
           >

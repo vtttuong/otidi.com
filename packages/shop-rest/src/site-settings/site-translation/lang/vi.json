@@ -138,6 +138,7 @@
   "termsConditionText": "Terms & Condtion",
   "alreadyHaveAccount": "Already have an account?",
   "backToSign": "Back to",
+  "backHomeBtn": "Trang chủ",
   "loginBtnText": "Login",
   "forgotPassText": "Forgot Password",
   "sendResetPassText": "We'll send you a link to reset your password",
@@ -346,6 +347,7 @@
   "silver": "Bạc",
   "gold": "Vàng",
   "Update-Button": "Cập nhật",
+  "Cancel-Button": "Thoát",
   "Join": "Tham gia",
   "followed": "Lượt theo dõi",
   "rate": "Đánh giá",
@@ -373,6 +375,7 @@
   "femaleText": "Nữ",
   "birthdateField": "Sinh nhật",
   "updateButtonText": "Cập nhật",
+  "cancelButtonText": "Thoát",
   "notChange": "Không thay đổi",
   "clear": "Đặt lại",
   "verify": "Xác nhận",
@@ -405,5 +408,9 @@
   "pushPost": "Đẩy tin",
   "chooseTime": "Chọn giờ đẩy",
   "verified": "Đã xác thực",
-  "notVerified": "Chưa xác thực"
+  "notVerified": "Chưa xác thực",
+  "Bình thường": "Bình thường",
+  "Đồng": "Đồng",
+  "Bạc": "Bạc",
+  "Vàng": "Vàng"
 }
