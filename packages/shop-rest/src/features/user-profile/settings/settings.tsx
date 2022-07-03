@@ -5,17 +5,21 @@ import Notice from "components/notice/notice";
 import UploadAvatar from "components/upload-avatar/upload-avatar";
 import UploadCMNDBack from "components/upload-avatar/upload-cmnd-back";
 import UploadCMNDFront from "components/upload-avatar/upload-cmnd-front";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import { updatePass } from "utils/api/profile";
+import { searchAddress } from "utils/location";
 import {
   ButtonCancle,
   Col,
   Row,
   SettingsForm,
   SettingsFormContent,
+  ListLocations,
+  LocationItem,
 } from "./settings.style";
 
 type SettingsContentProps = {
@@ -25,22 +29,25 @@ type SettingsContentProps = {
     desktop: boolean;
   };
   data?: any;
+  error?: any;
   token?: string;
   alert?: boolean;
   loadingUpdate?: boolean;
   loadingId?: boolean;
 
-  handleSubmit?: (e: any) => void;
+  handleSubmit?: (e: any, location: object) => void;
 };
 
 const SettingsContent: React.FC<SettingsContentProps> = ({
   data,
   handleSubmit,
   token,
+  error,
   alert,
   loadingUpdate,
   loadingId,
 }) => {
+  const [first, setFirst] = useState(true);
   const router = useRouter();
   const [changePass, setChangePass] = React.useState(false);
   const [verify, setVerify] = React.useState(false);
@@ -52,17 +59,37 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   const [errorContent, setErrorContent] = React.useState("");
   const [errorPass, setErrorPass] = React.useState(false);
   const [successPass, setSuccessPass] = React.useState(false);
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState({
+    address: data.address,
+    latitude: data.latitude,
+    longitude: data.longitude,
+  });
+  const [popupLocationActive, setPopupLocationActive] = useState(false);
+  const [textAddress, setTextAddress] = useState(data.address || "");
+
+  // useEffect(() => {
+  //   setSelectedLocation();
+  // }, [data.address]);
 
   const handleSubmitPassword = async () => {
     if (oldPass.length < 6 || pass.length < 6 || confirmPass.length < 6) {
       setErrorPass(true);
-      setErrorContent("Password must longer 6 character!");
+      setErrorContent("Password must longer 6 characters!");
     } else {
       setErrorPass(false);
-      const data = await updatePass(token, oldPass, pass);
+      const data = await updatePass(token, oldPass, pass, confirmPass);
+      console.log("DATA RESPONSE", data);
+
       if (data.error) {
         setErrorContent(
-          data.error.password ? data.error.password : data.error.new_password
+          "Update password failed. Try again"
+          // data.error.password ? data.error.password : data.error.new_password
+        );
+        setErrorPass(true);
+      } else if (!data.success) {
+        setErrorContent(
+          data.data.password ? data.data.password : data.data.new_password
         );
         setErrorPass(true);
       } else {
@@ -79,17 +106,39 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
     verifyAc();
   }, []);
   const verifyAc = () => {
-    if (data?.identify?.identified_at) {
+    if (data.identity_verified_at) {
       setVefifyAccount(true);
     } else {
       setVefifyAccount(false);
     }
   };
 
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (!first) {
+        setPopupLocationActive(true);
+        const data = await searchAddress(textAddress);
+        setSelectedLocation(null);
+        setLocations(data);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [textAddress]);
+
+  const onSelectLocation = (location) => {
+    setPopupLocationActive(false);
+    setTextAddress(location.address);
+    setSelectedLocation(location);
+  };
+
   return (
     <SettingsForm>
       <SettingsFormContent>
-        <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <Form
+          onSubmit={(e) => handleSubmit(e, selectedLocation)}
+          style={{ width: "100%" }}
+        >
           <div className="box">
             <div className="profile-left">
               <Row>
@@ -186,7 +235,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                             type="submit"
                             loading={loadingId}
                           >
-                            Upload
+                            <FormattedMessage
+                              id="updateButtonText"
+                              defaultMessage="Update"
+                            />
                           </Button>
                         </div>
                       </>
@@ -267,13 +319,13 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                         >
                           <FormattedMessage
                             id="updateButtonText"
-                            defaultMessage="Update "
+                            defaultMessage="Update"
                           />
                         </ButtonCancle>
                         <ButtonCancle onClick={() => setChangePass(false)}>
                           <FormattedMessage
-                            id="cancle"
-                            defaultMessage="Cancle "
+                            id="cancelButtonText"
+                            defaultMessage="Cancel"
                           />
                         </ButtonCancle>
                       </div>
@@ -284,95 +336,87 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
             </div>
             <div className="profile-right">
               <Row>
-                <Form.Group as={Col} md={6} xs={12}>
-                  <Col md={12}>
-                    <Form.Label style={{ display: "flex" }}>
+                <Col md={12} sm={6} xs={12}>
+                  <Form.Label style={{ display: "flex" }}>
+                    <FormattedMessage
+                      id="profileEmailField"
+                      defaultMessage="Email"
+                    />
+                    <span style={{ color: "red", marginLeft: 5 }}>
+                      ({" "}
                       <FormattedMessage
-                        id="profileEmailField"
-                        defaultMessage="Email"
-                      />
-                      <span style={{ color: "red", marginLeft: 5 }}>
-                        ({" "}
-                        <FormattedMessage
-                          id="notChange"
-                          defaultMessage="Can't change"
-                        />{" "}
-                        )
-                      </span>
-                      {data.email_verified_at ? (
+                        id="notChange"
+                        defaultMessage="Can't change"
+                      />{" "}
+                      )
+                    </span>
+                    {data.email_verified_at ? (
+                      <b style={{ color: "#2c96e9" }}>
+                        --- <FormattedMessage id="verified" />
+                      </b>
+                    ) : (
+                      <b
+                        onClick={() => router.push("/verify-mail")}
+                        style={{ color: "#f3c700", cursor: "pointer" }}
+                      >
+                        --- <FormattedMessage id="notVerified" />{" "}
+                      </b>
+                    )}
+                  </Form.Label>
+                  <Form.Control
+                    value={data.email}
+                    readOnly={true}
+                    placeholder="email"
+                    id="osdjfndjsksdm"
+                  />
+                </Col>
+                <Col md={12} xs={12}>
+                  <Form.Label style={{ display: "flex" }}>
+                    <FormattedMessage
+                      id="usernameField"
+                      defaultMessage="Username"
+                    />
+                  </Form.Label>
+                  <Form.Control
+                    defaultValue={data.name}
+                    placeholder="name"
+                    name="name"
+                    id="ysifhbdhgxgd"
+                  />
+                </Col>
+
+                <Col md={12} xs={12}>
+                  <Form.Label style={{ display: "flex" }}>
+                    <FormattedMessage
+                      id="contactNumberTitle"
+                      defaultMessage="Phone number"
+                    />
+                    {data.phone_verified_at ? (
+                      <span>
+                        {"---"}
                         <b style={{ color: "#2c96e9" }}>
-                          --- <FormattedMessage id="verified" />
+                          {" "}
+                          <FormattedMessage id="verified" />
                         </b>
-                      ) : (
-                        <b
-                          onClick={() => router.push("/verify-mail")}
-                          style={{ color: "#f3c700", cursor: "pointer" }}
-                        >
-                          --- <FormattedMessage id="notVerified" />{" "}
+                      </span>
+                    ) : (
+                      <span onClick={() => router.push("/update-phone")}>
+                        {"---"}
+                        <b style={{ color: "#f3c700", cursor: "pointer" }}>
+                          <FormattedMessage id="notVerified" />
                         </b>
-                      )}
-                    </Form.Label>
-                    <Form.Control
-                      value={data.email}
-                      onChange={() => {}}
-                      placeholder="email"
-                      id="osdjfndjsksdm"
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Col} md={6} xs={12}>
-                  <Col md={12}>
-                    <Form.Label style={{ display: "flex" }}>
-                      <FormattedMessage
-                        id="usernameField"
-                        defaultMessage="Username"
-                      />
-                    </Form.Label>
-                    <Form.Control
-                      defaultValue={data.name}
-                      placeholder="name"
-                      name="name"
-                      id="ysifhbdhgxgd"
-                    />
-                  </Col>
-                </Form.Group>
-              </Row>
+                      </span>
+                    )}
+                  </Form.Label>
+                  <Form.Control
+                    name="phone"
+                    defaultValue={data.phone_number || ""}
+                    placeholder="012122121"
+                    id="jhgdsdsbhv"
+                  />
+                </Col>
 
-              <Row>
-                <Form.Group as={Col} md={6} xs={12}>
-                  <Col md={12}>
-                    <Form.Label style={{ display: "flex" }}>
-                      <FormattedMessage
-                        id="contactNumberTitle"
-                        defaultMessage="Phone number"
-                      />
-                      {data.phone_verified_at ? (
-                        <span>
-                          {"---"}
-                          <b style={{ color: "#2c96e9" }}>
-                            {" "}
-                            <FormattedMessage id="verified" />
-                          </b>
-                        </span>
-                      ) : (
-                        <span onClick={() => router.push("/update-phone")}>
-                          {"---"}
-                          <b style={{ color: "#f3c700", cursor: "pointer" }}>
-                            <FormattedMessage id="notVerified" />
-                          </b>
-                        </span>
-                      )}
-                    </Form.Label>
-                    <Form.Control
-                      name="phone"
-                      defaultValue={data.phone_number}
-                      placeholder="012122121"
-                      id="jhgdsdsbhv"
-                    />
-                  </Col>
-                </Form.Group>
-
-                <Form.Group as={Col} md={6} xs={12}>
+                {/* <Form.Group as={Col} md={6} xs={12}>
                   <Col md={12}>
                     <Form.Label style={{ display: "flex" }}>
                       <FormattedMessage id="sexField" defaultMessage="Sex" />
@@ -409,9 +453,8 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                       />
                     </Form.Group>
                   </Col>
-                </Form.Group>
-              </Row>
-              <Row>
+                </Form.Group> */}
+                {/* 
                 <Form.Group as={Col} md={6} xs={12}>
                   <Col md={12}>
                     <Form.Label style={{ display: "flex" }}>
@@ -429,23 +472,37 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                       id="isdonndndjsf"
                     />
                   </Col>
-                </Form.Group>
-                <Form.Group as={Col} md={6} xs={12}>
-                  <Col md={12}>
-                    <Form.Label style={{ display: "flex" }}>
-                      <FormattedMessage id="address" defaultMessage="Address" />
-                    </Form.Label>
+                </Form.Group> */}
+                <Col md={12} xs={12}>
+                  <Form.Label style={{ display: "flex" }}>
+                    <FormattedMessage id="address" defaultMessage="Address" />
+                  </Form.Label>
 
-                    <Form.Control
-                      defaultValue={data.address}
-                      placeholder="Address"
-                      name="address"
-                      id="uaosfjcvcns"
-                    />
-                  </Col>
-                </Form.Group>
+                  <Form.Control
+                    placeholder="Address"
+                    name="address"
+                    value={textAddress}
+                    id="uaosfjcvcns"
+                    onChange={(e) => {
+                      setFirst(false);
+                      setTextAddress(e.target.value);
+                    }}
+                  />
+                  {popupLocationActive && (
+                    <ListLocations>
+                      {locations.map((lo) => (
+                        <LocationItem
+                          key={lo.id}
+                          onClick={() => onSelectLocation(lo)}
+                        >
+                          {lo.address}
+                        </LocationItem>
+                      ))}
+                    </ListLocations>
+                  )}
+                </Col>
               </Row>
-              <Row>
+              {/* <Row>
                 <Form.Group as={Col} md={6} xs={12}>
                   <Col md={12}>
                     <Form.Label style={{ display: "flex" }}>
@@ -472,20 +529,39 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                     />
                   </Col>
                 </Form.Group>
-              </Row>
+              </Row> */}
             </div>
           </div>
 
           <Row className="btn-submit-profile">
             <Col xs={3} sm={3} md={3} lg={3}></Col>
             <Col xs={9} sm={9} md={9} lg={9}>
-              <div style={{ display: "flex", justifyContent: "flex-start" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                }}
+              >
                 <Button variant="primary" type="submit" loading={loadingUpdate}>
                   <FormattedMessage
                     id="updateButtonText"
                     defaultMessage="Update Information"
                   />
                 </Button>
+
+                <Link href="/">
+                  <Button
+                    disabled={loadingUpdate}
+                    variant="cancel"
+                    type="button"
+                  >
+                    <FormattedMessage
+                      id="cancelButtonText"
+                      defaultMessage="Update Information"
+                    />
+                  </Button>
+                </Link>
               </div>
             </Col>
           </Row>
@@ -494,8 +570,18 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
         {successPass ? (
           <Notice status="success" content="Updated password !" />
         ) : null}
-        {alert ? (
-          <Notice status="success" content={"Update success !"} />
+        {alert ? <Notice status="success" content="Update success !" /> : null}
+
+        {error !== null ? (
+          <>
+            {error.address ? (
+              <Notice status="error" content={error.address} />
+            ) : null}
+            {error.phone_number ? (
+              <Notice status="error" content={error.phone_number} />
+            ) : null}
+            {error.name ? <Notice status="error" content={error.name} /> : null}
+          </>
         ) : null}
       </SettingsFormContent>
     </SettingsForm>

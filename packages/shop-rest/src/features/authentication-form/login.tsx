@@ -120,8 +120,6 @@ export default function SignInModal() {
   };
 
   async function loginCallback(e) {
-    console.log(email, password);
-
     if (typeof window !== "undefined") {
       setLoading(true);
 

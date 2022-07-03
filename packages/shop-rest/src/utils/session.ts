@@ -8,6 +8,10 @@ export const getCookieFromBrowser = (key: string): any => {
 };
 
 export const getCookieFromServer = (ctx: any, key = "id_token") => {
+  if (!ctx) {
+    return null;
+  }
+
   const cookie = nextCookie(ctx);
   const token = cookie && cookie[key] ? cookie[key] : false;
   if (!token) {

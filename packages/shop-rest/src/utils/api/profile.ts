@@ -51,7 +51,8 @@ export async function markAsAllRead(token: string) {
 export async function updatePass(
   token: string,
   oldPass: string,
-  newPass: string
+  newPass: string,
+  confirmPass: string
 ) {
   const options = {
     method: "POST",
@@ -59,14 +60,21 @@ export async function updatePass(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ password: oldPass, new_password: newPass }),
+    body: JSON.stringify({
+      password: oldPass,
+      new_password: newPass,
+      new_password_confirmation: confirmPass,
+    }),
   };
 
   const data = await fetch(`${baseUrl}/me/change-password`, options);
-  if (data.status == 200 && data.ok) {
-    return await data.json();
+  if (data.status === 200 || data.status === 201) {
+    const dataJson = await data.json();
+    return dataJson;
   } else {
-    return data;
+    return {
+      error: true,
+    };
   }
 }
 
@@ -106,8 +114,9 @@ export async function getPackage(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/packages`, options);
-  return await data.json();
+  const data = await fetch(`${baseUrl}/advertises/packages`, options);
+  const dataJson = await data.json();
+  return dataJson.data || [];
 }
 
 export async function pushPost(token: string, post_id, packages_id, schedule) {
@@ -137,8 +146,9 @@ export async function getSettingProfile(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/me/my-profile`, options);
-  return data.json();
+  const data = await fetch(`${baseUrl}/me`, options);
+  const dataJson = await data.json();
+  return dataJson.data;
 }
 
 export async function parseNotiData(data) {

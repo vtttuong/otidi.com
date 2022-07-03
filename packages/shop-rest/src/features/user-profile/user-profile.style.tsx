@@ -27,7 +27,7 @@ const PageWrapper = styled.div`
   }
   @media only screen and (min-width: 1281px) and (max-width: 1400px) {
     padding: 130px 100px 60px;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 `;
@@ -136,8 +136,8 @@ const TabContain = styled.div`
 const BodyContain = styled.div`
   display: flex;
   flex-direction: column;
-  width: 30%;
-  margin-right: 3%;
+  width: 32%;
+  margin-right: 2%;
 
   @media only screen and (max-width: 1199px) {
     width: 100%;

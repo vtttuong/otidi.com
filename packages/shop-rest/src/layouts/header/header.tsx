@@ -61,9 +61,9 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
       });
       pusher.subscribe("privateChannel." + data.id);
-      setAvatar(data.avatar_img_url);
+      setAvatar(data.avatar);
       setCookie("userId", data.id);
-      setCookie("userAvatar", data.avatar_img_url);
+      setCookie("userAvatar", data.avatar);
       setCookie("userName", data.name);
       setCookie("userEmail", data.email);
       setCookie("userPhone", data.phone_number);

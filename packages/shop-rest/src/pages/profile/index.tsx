@@ -30,7 +30,7 @@ import WrapCardSaved from "features/wrap-card/wrap-card-saved";
 import Footer from "layouts/footer";
 import moment from "moment";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   getMyPosts,
   getPackage,
@@ -64,9 +64,13 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
   const [errorMoneyPush, setErrorMoneyPush] = useState(false);
   const [arrayService, setArrayService] = useState([]);
   const posting = [];
+  const ref = useRef(null);
+
   const getP = async () => {
-    const service = await getPackage(token);
-    setArrayService(service);
+    const services = await getPackage(token);
+    console.log("SERVICES", services);
+
+    setArrayService(services);
   };
   React.useEffect(() => {
     getP();
@@ -143,6 +147,12 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     });
   };
   const onChangeFollow = (i: string) => {
+    const yOffset = -120;
+    const y =
+      ref.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+
     if (i == "following") setActiveTab("following");
     else setActiveTab("follower");
   };
@@ -218,7 +228,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                 {/* <Point deviceType={deviceType} /> */}
               </BodyContain>
 
-              <ContentContainer>
+              <ContentContainer ref={ref}>
                 <TabContain>
                   <TabPanel
                     active={activeTab}
