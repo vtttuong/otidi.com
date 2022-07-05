@@ -77,9 +77,7 @@ password: min123456
 
 6. Paging: Không return tổng số page => Không paging được
 
-## <red>CLIET API PROBLEMS <red>
-
-## <red>CLIET API PROBLEMS <red>
+## <red>CLIENT API PROBLEMS <red>
 
 1. Authentication
    1.1 Thiếu Login by facebook, google api
