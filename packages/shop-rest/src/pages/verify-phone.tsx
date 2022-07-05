@@ -62,6 +62,7 @@ export default function VerifyPhone(props) {
     </Modal>
   );
 }
+
 export async function getServerSideProps(context) {
   const token = getCookie("access_token", context);
 

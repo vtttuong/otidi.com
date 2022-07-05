@@ -5,24 +5,24 @@ import {
   BuyPost,
   Image,
   OrderID,
-  ProductAddress,
-  ProductAddressIcon,
-  ProductCardWrapper,
-  ProductImageWrapper,
-  ProductInfo,
-  ProductMeta,
-  ProductPrice,
-  ProductPriceWrapper,
-  ProductTitle,
-  ProductWeight,
+  PostAddress,
+  PostAddressIcon,
+  PostCardWrapper,
+  PostImageWrapper,
+  PostInfo,
+  PostMeta,
+  PostPrice,
+  PostPriceWrapper,
+  PostTitle,
+  PostWeight,
   SellPost,
-  ProductAvatar,
+  PostAvatar,
   ImageAvatar,
-} from "./ProductCard.style";
+} from "./PostCard.style";
 import LocationIcon from "assets/image/location.png";
 import { Avatar } from "baseui/avatar";
 
-type ProductCardProps = {
+type PostCardProps = {
   title: string;
   image: any;
   avatar: any;
@@ -36,7 +36,7 @@ type ProductCardProps = {
   data: any;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const PostCard: React.FC<PostCardProps> = ({
   title,
   image,
   avatar,
@@ -60,14 +60,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
     [dispatch, data]
   );
   return (
-    <ProductCardWrapper
+    <PostCardWrapper
       {...props}
       className="product-card"
       // onClick={openDrawer}
     >
-      <ProductImageWrapper>
+      <PostImageWrapper>
         <Image url={image} className="product-image" />
-        {typeOfPost === "sell" ? (
+        {/* {typeOfPost === "sell" ? (
           <>
             <SellPost className="sell">SELL</SellPost>
           </>
@@ -75,19 +75,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <>
             <BuyPost>Buy</BuyPost>
           </>
-        )}
-      </ProductImageWrapper>
-      <ProductInfo>
-        <ProductTitle>{title}</ProductTitle>
-        <ProductAddress>
-          <ProductAddressIcon>
+        )} */}
+      </PostImageWrapper>
+      <PostInfo>
+        <PostTitle>{title}</PostTitle>
+        <PostAddress>
+          <PostAddressIcon>
             <Image url={LocationIcon} />
-          </ProductAddressIcon>
+          </PostAddressIcon>
           <span className="address-admin">{data.address}</span>
-        </ProductAddress>
-        <ProductMeta>
-          <ProductPriceWrapper>
-            <ProductPrice>
+        </PostAddress>
+        <PostMeta>
+          <PostPriceWrapper>
+            <PostPrice>
               <NumberFormat
                 value={price}
                 displayType={"text"}
@@ -95,18 +95,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 // prefix={"$"}
                 // renderText={(value) => <div>{value}</div>}
               />
-              <ProductWeight>{weight}</ProductWeight>
-            </ProductPrice>
-          </ProductPriceWrapper>
+              <PostWeight>{weight}</PostWeight>
+            </PostPrice>
+          </PostPriceWrapper>
 
           <OrderID>{orderId}</OrderID>
-          <ProductAvatar>
+          <PostAvatar>
             <Avatar name="N O" size="scale1200" src={avatar} />
-          </ProductAvatar>
-        </ProductMeta>
-      </ProductInfo>
-    </ProductCardWrapper>
+          </PostAvatar>
+        </PostMeta>
+      </PostInfo>
+    </PostCardWrapper>
   );
 };
 
-export default ProductCard;
+export default PostCard;

@@ -2,7 +2,7 @@ import { styled } from "baseui";
 import stylede from "styled-components";
 import Images from "../Image/Image";
 
-export const ProductCardWrapper = styled("div", ({ $theme }) => ({
+export const PostCardWrapper = styled("div", ({ $theme }) => ({
   height: "100%",
   width: "100%",
   backgroundColor: "#ffffff",
@@ -11,7 +11,7 @@ export const ProductCardWrapper = styled("div", ({ $theme }) => ({
   cursor: "pointer",
 }));
 
-export const ProductImageWrapper = stylede.div`
+export const PostImageWrapper = stylede.div`
   height: 240px;
   padding: 10px;
   position: relative;
@@ -168,7 +168,7 @@ export const BuyPost = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const ProductInfo = styled("div", ({ $theme }) => ({
+export const PostInfo = styled("div", ({ $theme }) => ({
   padding: "20px 25px 30px",
 
   "@media only screen and (max-width: 767px)": {
@@ -177,7 +177,7 @@ export const ProductInfo = styled("div", ({ $theme }) => ({
   },
 }));
 
-export const ProductTitle = stylede.div`
+export const PostTitle = stylede.div`
   font-size: 16px;
   color: black;
   margin: 0 0 7px 0;
@@ -194,7 +194,7 @@ export const ProductTitle = stylede.div`
   };
 `;
 
-export const ProductWeight = styled("span", ({ $theme }) => ({
+export const PostWeight = styled("span", ({ $theme }) => ({
   ...$theme.typography.font14,
   color: $theme.colors.textNormal,
 
@@ -202,7 +202,7 @@ export const ProductWeight = styled("span", ({ $theme }) => ({
     ...$theme.typography.font12,
   },
 }));
-export const ProductAddress = stylede.div`
+export const PostAddress = stylede.div`
   img {
     width: 20px
   };
@@ -215,7 +215,7 @@ export const ProductAddress = stylede.div`
   };
   @media only screen and (max-width: 767px) {},
 `;
-export const ProductAddressIcon = styled("div", () => ({
+export const PostAddressIcon = styled("div", () => ({
   width: "20px",
   display: "inline-block",
   marginRight: "10px",
@@ -225,7 +225,7 @@ export const ProductAddressIcon = styled("div", () => ({
   },
   "@media only screen and (max-width: 767px)": {},
 }));
-export const ProductAvatar = styled("div", () => ({
+export const PostAvatar = styled("div", () => ({
   width: "50px",
   height: "50px",
   borderRadius: "50%",
@@ -234,7 +234,7 @@ export const ProductAvatar = styled("div", () => ({
   "@media only screen and (max-width: 767px)": {},
 }));
 
-export const ProductMeta = styled("div", ({ $theme }) => ({
+export const PostMeta = styled("div", ({ $theme }) => ({
   marginTop: "15px",
   display: "flex",
   alignItems: "center",
@@ -254,13 +254,13 @@ export const OrderID = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const ProductPriceWrapper = styled("div", ({ $theme }) => ({
+export const PostPriceWrapper = styled("div", ({ $theme }) => ({
   display: "flex",
   alignItems: "center",
   position: "relative",
 }));
 
-export const ProductPrice = styled("span", ({ $theme }) => ({
+export const PostPrice = styled("span", ({ $theme }) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.primary,
 

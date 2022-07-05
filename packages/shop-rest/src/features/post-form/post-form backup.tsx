@@ -36,12 +36,174 @@ import { PostFormContext } from "contexts/post-form/post-form.context";
 import { LongArrowLeft } from "assets/icons/LongArrowLeft";
 import NumberFormat from "react-number-format";
 import { getCookie } from "utils/session";
-import { unitOptions } from "./options";
-import ErrorModel from "features/on-error/error";
+import SelectModel from "../select-category/select-model";
+
+export const unitOptions = [
+  { index: 0, key: "unit", value: "VND", label: "VND" },
+  { index: 1, key: "unit", value: "USD", label: "USD" },
+];
+
+export const postType = [
+  {
+    index: 0,
+    key: "type",
+    value: "sell",
+    label: <FormattedMessage id="sell" />,
+  },
+  {
+    index: 1,
+    key: "type",
+    value: "buy",
+    label: <FormattedMessage id="buy" />,
+  },
+];
+
+export const postStatus = [
+  {
+    index: 0,
+    key: "postStatus",
+    value: "new",
+    label: <FormattedMessage id="newStatus" />,
+  },
+  {
+    index: 1,
+    key: "postStatus",
+    value: "old_not_repaired",
+    label: <FormattedMessage id="oldNotRepaired" />,
+  },
+  {
+    index: 2,
+    key: "postStatus",
+    value: "old_and_repaired",
+    label: <FormattedMessage id="oldRepaired" />,
+  },
+];
 
 const TextArea = dynamic(() => import("../../components/text-area/text-area"), {
   ssr: false,
 });
+
+// const Step1 = (props) => {
+//   if (props.currentStep !== 1) {
+//     return <div></div>;
+//   }
+
+//   const { state, dispatch } = useContext(PostFormContext);
+//   const [first, setFirst] = useState(true);
+
+//   useEffect(() => {
+//     if (!first) {
+//       dispatch({
+//         type: "HANDLE_ON_SELECT_CHANGE",
+//         payload: { value: null, field: "modelName" },
+//       });
+
+//       dispatch({
+//         type: "HANDLE_ON_SELECT_CHANGE",
+//         payload: { value: 0, field: "modelId" },
+//       });
+//     }
+//     setFirst(false);
+//   }, [state.brandId]);
+
+//   console.log(state);
+
+//   return (
+//     <div>
+//       <Row>
+//         <Col xs={12} sm={12} md={12} lg={12}>
+//           <Heading>
+//             <FormattedMessage
+//               id="selectBrand"
+//               defaultMessage="Choose a posting category"
+//             />
+//           </Heading>
+//         </Col>
+//       </Row>
+
+//       <Row>
+//         <Col xs={12} sm={4} md={4} lg={4}>
+//           <Label>
+//             <FormattedMessage id="brand" defaultMessage="Select Brand" />
+//             <Require>*</Require>
+//           </Label>
+//           <SelectBrand
+//             options={props.brands.map((b) => ({
+//               key: b.id,
+//               value: b.id,
+//               label: b.name,
+//             }))}
+//           />
+//         </Col>
+
+//         <Col xs={12} sm={8} md={8} lg={8}>
+//           <Label>
+//             <FormattedMessage id="model" defaultMessage="Select Model" />
+//             <Require>*</Require>
+//           </Label>
+
+//           <ButtonCategory
+//             className={"button-select-category"}
+//             onClick={() => {
+//               if (state.brandId !== undefined) {
+//                 openModal({
+//                   show: true,
+//                   overlayClassName: "quick-view-overlay",
+//                   closeOnClickOutside: true,
+//                   component: SelectModel,
+//                   closeComponent: "",
+//                   config: {
+//                     enableResizing: false,
+//                     disableDragging: true,
+//                     className: "quick-view-modal",
+//                     width: "320px",
+//                     height: "auto",
+//                   },
+//                   componentProps: { brands: props.brands },
+//                 });
+//               }
+//             }}
+//           >
+//             {state.modelName ? state.modelName : <SelectCat />}
+//             {!state.modelName || state.modelName === "" ? (
+//               <Error>
+//                 <FormattedMessage id={"errorModel"} />
+//               </Error>
+//             ) : null}
+//           </ButtonCategory>
+//         </Col>
+//       </Row>
+
+//       {/* <Row>
+//         <Col xs={12} sm={12} md={12} lg={12}>
+//           <Heading>
+//             <FormattedMessage id="postType" defaultMessage="Type of post" />
+//           </Heading>
+//           <div style={{ minWidth: "100%" }}>
+//             <Select
+//               instanceId="type-of-post"
+//               classNamePrefix="filter"
+//               styles={CustomStyles}
+//               options={postType}
+//               defaultValue={postType[0]}
+//               value={postType[state.indexOptionType]}
+//               onChange={(data) => {
+//                 dispatch({
+//                   type: "HANDLE_ON_SELECT_CHANGE",
+//                   payload: { value: data.value, field: "type" },
+//                 });
+//                 dispatch({
+//                   type: "HANDLE_ON_SELECT_CHANGE",
+//                   payload: { value: data.index, field: "indexOptionType" },
+//                 });
+//               }}
+//             />
+//           </div>
+//         </Col>
+//       </Row> */}
+//     </div>
+//   );
+// };
 
 const Step1 = (props) => {
   const { state, dispatch } = useContext(PostFormContext);
@@ -121,7 +283,6 @@ const Step1 = (props) => {
           </Label>
           <div style={{ minWidth: "100%" }}>
             <Select
-              isDisabled={true}
               instanceId="input-unit"
               classNamePrefix="filter"
               styles={CustomStyles}
@@ -147,7 +308,6 @@ const Step1 = (props) => {
         <Col xs={12} sm={12} md={12} lg={12}>
           <Label>
             <FormattedMessage id="description" />
-            <Require>*</Require>
           </Label>
           <NoteSmallText>
             <FormattedMessage
@@ -191,7 +351,7 @@ const Step2 = (props) => {
         </Col>
         {(state.files !== "" &&
           state.files.length >= 0 &&
-          state.files.length <= 3) ||
+          state.files.length <= 2) ||
         props.errorImage !== "" ? (
           <Error>
             <FormattedMessage id="errorImage" />
@@ -202,31 +362,29 @@ const Step2 = (props) => {
   );
 };
 
-const Step3 = (props) => {
-  const { state, dispatch } = useContext(PostFormContext);
-  const [errorSubmit, setErrorSubmit] = useState("");
+// const Step4 = (props) => {
+//   if (props.currentStep !== 4) {
+//     return null;
+//   }
 
+//   return (
+//     <div>
+//       <Row>
+//         <Col xs={12} sm={12} md={12} lg={12}>
+//           <Label>
+//             <FormattedMessage id="location" />
+//           </Label>
+//           <QuickForm initialValues={[]} />
+//         </Col>
+//       </Row>
+//     </div>
+//   );
+// };
+
+const Step3 = (props) => {
   if (props.currentStep !== 3) {
     return null;
   }
-
-  const onclickSubmit = () => {
-    if (
-      !state.modelId ||
-      state.modelId === "" ||
-      !state.additionalInfo.origin ||
-      state.additionalInfo.origin === "" ||
-      !state.additionalInfo.kilometers ||
-      parseInt(state.additionalInfo.kilometers) <= 0
-    ) {
-      setErrorSubmit("Error");
-    } else {
-      setErrorSubmit("");
-      console.log("OKE");
-
-      props.handleSubmit();
-    }
-  };
 
   return (
     <div>
@@ -251,17 +409,12 @@ const Step3 = (props) => {
       <Row>{props.additionalForm}</Row>
 
       <SubmitBtnWrapper>
-        {errorSubmit !== "" ? (
-          <Error className="errorStep1">
-            <FormattedMessage id="ErrorStep" />
-          </Error>
-        ) : null}
         <Button
           type="button"
-          onClick={onclickSubmit}
+          onClick={props.handleSubmit}
           size="big"
           loading={props.loading}
-          style={{ width: "100%", marginTop: "20px" }}
+          style={{ width: "100%" }}
         >
           <FormattedMessage
             id="submitRequest"
@@ -280,9 +433,15 @@ type Props = {
     desktop: boolean;
   };
   title?: string;
+  categoryTypes: any;
   brands: any;
 };
-const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
+const PostForm: React.FC<Props> = ({
+  deviceType,
+  title,
+  categoryTypes,
+  brands,
+}) => {
   const { state, dispatch } = useContext(PostFormContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [errorStep, setErrorStep] = useState("");
@@ -290,6 +449,16 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
   const [loading, setLoading] = useState(false);
 
   const _next = () => {
+    // if (currentStep == 1) {
+    //   if (state.brandId && state.modelName && state.modelId) {
+    //     let newStep = currentStep;
+    //     newStep = newStep + 1;
+    //     setCurrentStep(newStep);
+    //     setErrorStep("");
+    //   } else {
+    //     setErrorStep("error");
+    //   }
+    // }
     if (currentStep === 1) {
       if (
         state.title &&
@@ -306,7 +475,7 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
       }
     }
     if (currentStep === 2) {
-      if (state.files !== "" && state.files.length > 3) {
+      if (state.files != "" && state.files.length >= 2) {
         let newStep = currentStep;
         newStep = newStep + 1;
         setCurrentStep(newStep);
@@ -315,6 +484,16 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
         setErrorImage("error");
       }
     }
+    // if (currentStep == 4) {
+    //   if (state.address != "") {
+    //     let newStep = currentStep;
+    //     newStep = newStep + 1;
+    //     setCurrentStep(newStep);
+    //     setErrorStep("");
+    //   } else {
+    //     setErrorStep("error");
+    //   }
+    // }
   };
 
   const _prev = () => {
@@ -348,23 +527,22 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
   };
 
   const nextButton = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       return (
         <SubmitBtnWrapper>
+          <Button
+            type="button"
+            size="big"
+            onClick={_next}
+            style={{ width: "100%" }}
+          >
+            <FormattedMessage id="nextBtn" defaultMessage="Next" />
+          </Button>
           {errorStep ? (
             <Error className="errorStep1">
               <FormattedMessage id="ErrorStep" />
             </Error>
           ) : null}
-
-          <Button
-            type="button"
-            size="big"
-            onClick={_next}
-            style={{ width: "100%", marginTop: "20px" }}
-          >
-            <FormattedMessage id="nextBtn" defaultMessage="Next" />
-          </Button>
         </SubmitBtnWrapper>
       );
     }
@@ -375,25 +553,28 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
     setLoading(true);
 
     const token = getCookie("access_token");
+    var formData = new FormData();
 
-    var formdata = new FormData();
-    formdata.append("title", state.title);
-    formdata.append("description", state.description);
-    formdata.append("brand_id", state.brandId);
-    formdata.append("brand_model_id", state.modelId);
-    formdata.append("price", state.price);
+    formData.set("title", state.title);
+    formData.set("description", state.description);
+    formData.set("price", state.price);
+    formData.set("unit", state.unit);
+    formData.set("category_id", state.categoryId);
+    formData.set("address", state.address);
+    formData.set("type", state.type);
+    formData.set("latitude", state.latitude);
+    formData.set("longitude", state.longitude);
 
-    Object.keys(state.additionalInfo).forEach((key) => {
-      formdata.append(`detail[${key}]`, state.additionalInfo[key]);
-    });
-
-    state.files.forEach((file, index) => {
-      formdata.append(`images[${index}][file]`, file);
-      formdata.append(`images[${index}][is_main]`, index === 0 ? "1" : "0");
-      formdata.append(`images[${index}][position]`, index);
-    });
-
-    formdata.set(`detail[origin]`, "inland");
+    if (Object.keys(state.files).length > 1) {
+      state.files.forEach((file) => {
+        formData.append("files[]", file);
+      });
+    } else {
+      formData.append("files[]", state.files);
+    }
+    Object.keys(state.additionalInfo).forEach((key) =>
+      formData.append(`additional_info[${key}]`, state.additionalInfo[key])
+    );
 
     const configs = {
       headers: {
@@ -404,21 +585,16 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
 
     axios
       .post(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + `/posts`,
-        formdata,
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL + `/api/client/v1/posts`,
+        formData,
         configs
       )
       .then((response) => {
-        console.log(response);
-
-        if (
-          (response.status === 200 || response.status === 201) &&
-          response.data.success
-        ) {
+        if (response.status === 201) {
           openModal({
             show: true,
             overlayClassName: "quick-view-overlay",
-            closeOnClickOutside: true,
+            closeOnClickOutside: false,
             component: SuccessModel,
             closeComponent: "",
             config: {
@@ -434,8 +610,8 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
           openModal({
             show: true,
             overlayClassName: "quick-view-overlay",
-            closeOnClickOutside: true,
-            component: ErrorModel,
+            closeOnClickOutside: false,
+            component: SuccessModel,
             closeComponent: "",
             config: {
               enableResizing: false,
@@ -450,12 +626,11 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
         setLoading(false);
       })
       .catch((error) => {
-        setLoading(false);
         openModal({
           show: true,
           overlayClassName: "quick-view-overlay",
-          closeOnClickOutside: true,
-          component: ErrorModel,
+          closeOnClickOutside: false,
+          component: SuccessModel,
           closeComponent: "",
           config: {
             enableResizing: false,
@@ -487,6 +662,11 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
             </FormTitle>
           </FormTitleWrapper>
 
+          {/* <Step1
+            currentStep={currentStep}
+            brands={brands}
+            categoryTypes={categoryTypes}
+          /> */}
           <Step1 currentStep={currentStep} />
 
           <Step2
@@ -494,6 +674,7 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
             handleUploader={handleUploader}
             errorImage={errorImage}
           />
+          {/* <Step4 currentStep={currentStep} /> */}
           <Step3
             currentStep={currentStep}
             loading={loading}

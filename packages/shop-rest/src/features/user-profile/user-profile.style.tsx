@@ -8,12 +8,17 @@ const PageWrapper = styled.div`
   flex-wrap: wrap;
   background-color: ${themeGet("colors.white", "#ffffff")};
   padding: 140px 250px 40px;
+
   &.voucher {
     align-items: center;
     justify-content: center;
     flex-direction: column !important;
     @media only screen and (max-width: 426px) {
     }
+  }
+
+  @media only screen and (max-width: 1800px) {
+    padding: 140px 150px 40px;
   }
 
   @media only screen and (max-width: 990px) {
@@ -27,7 +32,6 @@ const PageWrapper = styled.div`
   }
   @media only screen and (min-width: 1281px) and (max-width: 1400px) {
     padding: 130px 100px 60px;
-    max-width: 1200px;
     margin: 0 auto;
   }
 `;

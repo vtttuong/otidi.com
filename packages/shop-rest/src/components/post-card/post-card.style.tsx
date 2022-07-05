@@ -101,6 +101,7 @@ export const DotDelete = styled.span`
   }
 `;
 export const BoxAvatar = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -128,18 +129,21 @@ export const BoxAvatar = styled.div`
     span {
       font-size: 12px;
       margin-left: 15px;
-      margin-top: 4px;
+      display: inline-flex;
+      align-items: end;
     }
     span.view img {
       width: 18px;
       height: 18px;
-      margin-top: 3px;
     }
     span > img {
       width: 15px;
       height: 15px;
       border-radius: 0;
       margin-right: 5px;
+    }
+    span > p {
+      font-weight: bold;
     }
   }
 `;
@@ -238,7 +242,7 @@ export const PostInfo = styled.div`
     font-size: ${themeGet("fontSizes.base", "15")}px;
     font-weight: ${themeGet("fontWeights.bold", "700")};
     color: ${themeGet("colors.text.bold", "#0D1136")};
-    margin: 0 0 7px 0;
+    margin: 0 0 20px 0;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -690,6 +694,12 @@ export const PostMeta = styled.div`
       align-items: start;
       gap: 10px;
     }
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 8px;
   }
 `;
 

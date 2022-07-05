@@ -443,8 +443,9 @@ export async function sendOtp(object: any, token: string) {
     body: JSON.stringify(object),
   };
 
-  const url = baseUrl + "/verify/capture";
+  const url = baseUrl + "/me/phone-number/confirm-otp";
   const data = await fetch(url, options);
+  console.log("Response from otp", data);
 
-  return data.json();
+  return await data.json();
 }

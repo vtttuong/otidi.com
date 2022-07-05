@@ -41,6 +41,7 @@ type CardProps = {
   postId?: number;
   prioriry?: boolean;
   isBook?: boolean;
+  isDeleted?: boolean;
   isMarked?: boolean;
   saveNews?: boolean;
   currentUser?: boolean;
@@ -72,6 +73,7 @@ const PostCard: React.FC<CardProps> = ({
   onClick,
   onClickEdit,
   isBook,
+  isDeleted,
   ...props
 }) => {
   let formatTime = formatRelativeTime(createdAt);
@@ -80,12 +82,12 @@ const PostCard: React.FC<CardProps> = ({
   const handler = <span>...</span>;
   const content = (
     <div className="action">
-      {data && data.status == "approving" ? null : (
+      {data && data.status == "waiting" ? null : (
         <p
           style={{
             fontWeight: 600,
           }}
-          onClick={onMark}
+          // onClick={onMark}
         >
           Mark bought
         </p>
@@ -215,10 +217,10 @@ const PostCard: React.FC<CardProps> = ({
             <Edit />
           </span>
         ) : null}
-        <Category style={{ marginBottom: 20, display: "inline-block" }}>
+        {/* <Category style={{ marginBottom: 20, display: "inline-block" }}>
           <img src={AddressIcon} alt={"address"} />
           {address}
-        </Category>
+        </Category> */}
 
         <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
@@ -226,7 +228,7 @@ const PostCard: React.FC<CardProps> = ({
               value={price}
               displayType={"text"}
               thousandSeparator={true}
-              prefix={"$"}
+              suffix={" đ"}
               renderText={(value) => <div>{value}</div>}
             />
             <span>{unit}</span>
@@ -252,16 +254,16 @@ const PostCard: React.FC<CardProps> = ({
               }
             }}
           />
-          <span style={{ marginTop: 5 }}>
+          <span>
             <Like />
-            <b style={{ position: "relative", top: -2.5 }}>{data?.views}</b>
+            <p style={{ position: "relative" }}>{data?.views}</p>
           </span>
           <span
-            style={{ marginLeft: 20, position: "relative", top: -2.5 }}
+            style={{ marginLeft: 20, position: "relative" }}
             className="view"
           >
             <Eye />
-            <b style={{ position: "relative", top: -5 }}>{data?.views}</b>
+            <p style={{ position: "relative" }}>{data?.views}</p>
           </span>
           {currentUser && !saveNews ? (
             <PopoverNotify
@@ -271,7 +273,7 @@ const PostCard: React.FC<CardProps> = ({
             />
           ) : null}
         </BoxAvatar>
-        {isBook ? (
+        {isDeleted ? (
           <Notice status={"success"} content={"Delete success!"} />
         ) : null}
         {isMarked ? (
