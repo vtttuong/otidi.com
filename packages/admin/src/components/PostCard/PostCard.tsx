@@ -15,12 +15,15 @@ import {
   PostPriceWrapper,
   PostTitle,
   PostWeight,
-  SellPost,
   PostAvatar,
   ImageAvatar,
+  WaitingTag,
+  ActiveTag,
+  SoldTag,
 } from "./PostCard.style";
 import LocationIcon from "assets/image/location.png";
 import { Avatar } from "baseui/avatar";
+import { CURRENCY } from "settings/constants";
 
 type PostCardProps = {
   title: string;
@@ -33,7 +36,8 @@ type PostCardProps = {
   salePrice?: number;
   orderId?: number;
   typeOfPost?: string;
-  data: any;
+  postId: any;
+  status: string;
 };
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -45,46 +49,48 @@ const PostCard: React.FC<PostCardProps> = ({
   salePrice,
   typeOfPost,
   currency,
-  data,
+  postId,
   orderId,
+  status,
   ...props
 }) => {
   const dispatch = useDrawerDispatch();
-  const openDrawer = React.useCallback(
-    () =>
-      dispatch({
-        type: "OPEN_DRAWER",
-        drawerComponent: "PRODUCT_UPDATE_FORM",
-        data: data,
-      }),
-    [dispatch, data]
-  );
+  const openDrawer = React.useCallback(() => {
+    dispatch({
+      type: "OPEN_DRAWER",
+      drawerComponent: "POST_UPDATE_FORM",
+      data: postId,
+    });
+  }, [dispatch, postId]);
+
   return (
-    <PostCardWrapper
-      {...props}
-      className="product-card"
-      // onClick={openDrawer}
-    >
+    <PostCardWrapper {...props} className="product-card" onClick={openDrawer}>
       <PostImageWrapper>
         <Image url={image} className="product-image" />
-        {/* {typeOfPost === "sell" ? (
+        {status === "waiting" && (
           <>
-            <SellPost className="sell">SELL</SellPost>
+            <WaitingTag className="waiting">Waiting</WaitingTag>
           </>
-        ) : (
+        )}
+        {status === "active" && (
           <>
-            <BuyPost>Buy</BuyPost>
+            <ActiveTag className="active">Active</ActiveTag>
           </>
-        )} */}
+        )}
+        {status === "sold" && (
+          <>
+            <SoldTag className="sold">Sold</SoldTag>
+          </>
+        )}
       </PostImageWrapper>
       <PostInfo>
         <PostTitle>{title}</PostTitle>
-        <PostAddress>
+        {/* <PostAddress>
           <PostAddressIcon>
             <Image url={LocationIcon} />
           </PostAddressIcon>
           <span className="address-admin">{data.address}</span>
-        </PostAddress>
+        </PostAddress> */}
         <PostMeta>
           <PostPriceWrapper>
             <PostPrice>
@@ -92,7 +98,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 value={price}
                 displayType={"text"}
                 thousandSeparator={true}
-                // prefix={"$"}
+                suffix={` ${CURRENCY}`}
                 // renderText={(value) => <div>{value}</div>}
               />
               <PostWeight>{weight}</PostWeight>

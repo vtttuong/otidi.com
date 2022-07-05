@@ -94,7 +94,79 @@ export const DiscountPercent = styled("span", ({ $theme }) => ({
   },
 }));
 
-export const SellPost = styled("span", ({ $theme }) => ({
+export const WaitingTag = styled("span", ({ $theme }) => ({
+  ...$theme.typography.fontBold12,
+  color: "#ffffff",
+  lineHeight: "2",
+  backgroundColor: $theme.colors.yellow400,
+  paddingLeft: "20px",
+  paddingRight: "15px",
+  display: "inline-block",
+  position: "absolute",
+  bottom: "10px",
+  right: "0",
+
+  ":before": {
+    content: '""',
+    position: "absolute",
+    left: "-8px",
+    top: "0",
+    width: "0",
+    height: "0",
+    borderStyle: "solid",
+    borderWidth: "0 8px 12px 0",
+    borderColor: `transparent ${$theme.colors.yellow400} transparent transparent`,
+  },
+
+  ":after": {
+    content: '""',
+    position: "absolute",
+    left: "-8px",
+    bottom: " 0",
+    width: " 0",
+    height: "0",
+    borderStyle: "solid",
+    borderWidth: "0 0 12px 8px",
+    borderColor: `transparent transparent ${$theme.colors.yellow400} transparent`,
+  },
+}));
+export const ActiveTag = styled("span", ({ $theme }) => ({
+  ...$theme.typography.fontBold12,
+  color: "#ffffff",
+  lineHeight: "2",
+  backgroundColor: $theme.colors.green400,
+  paddingLeft: "20px",
+  paddingRight: "15px",
+  display: "inline-block",
+  position: "absolute",
+  bottom: "10px",
+  right: "0",
+
+  ":before": {
+    content: '""',
+    position: "absolute",
+    left: "-8px",
+    top: "0",
+    width: "0",
+    height: "0",
+    borderStyle: "solid",
+    borderWidth: "0 8px 12px 0",
+    borderColor: `transparent ${$theme.colors.green400} transparent transparent`,
+  },
+
+  ":after": {
+    content: '""',
+    position: "absolute",
+    left: "-8px",
+    bottom: " 0",
+    width: " 0",
+    height: "0",
+    borderStyle: "solid",
+    borderWidth: "0 0 12px 8px",
+    borderColor: `transparent transparent ${$theme.colors.green400} transparent`,
+  },
+}));
+export const SoldTag = styled("span", ({ $theme }) => ({
   ...$theme.typography.fontBold12,
   color: "#ffffff",
   lineHeight: "2",

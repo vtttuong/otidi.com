@@ -120,3 +120,15 @@ export default function useProducts(variables: Props) {
     // fetchMore,
   };
 }
+
+export const usePost = (postId: number) => {
+  const url = `${baseUrl}/posts/${postId}`;
+  const { data, error } = useSWR(url, productFetcher);
+  const loading = !data && !error;
+
+  return {
+    postLoading: loading,
+    error,
+    post: data?.data,
+  };
+};

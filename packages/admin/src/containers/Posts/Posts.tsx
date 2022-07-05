@@ -390,7 +390,8 @@ export default function Posts() {
                         price={item.price}
                         salePrice={0}
                         typeOfPost={item.type}
-                        data={item.created_at}
+                        postId={25}
+                        status={item.status}
                       />
                     </Fade>
                   </Col>
