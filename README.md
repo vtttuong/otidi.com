@@ -79,8 +79,13 @@ password: min123456
 
 ## <red>CLIET API PROBLEMS <red>
 
+## <red>CLIET API PROBLEMS <red>
+
 1. Authentication
    1.1 Thiếu Login by facebook, google api
    1.2 Thiếu verify email
 
 2. Ko trả về list mà user đang follow
+3. Thiếu Verify email, send OTP
+4. Thiếu API mark as sold, đánh dấu đã bán
+5. Không có API trả về 1 post của mình, dù nó là waiting cũng cần trả về để update post
