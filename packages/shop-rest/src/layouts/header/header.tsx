@@ -19,6 +19,7 @@ import { ProfileProvider } from "contexts/profile/profile.provider";
 import { FormattedMessage } from "react-intl";
 import { getMyprofile, getMyText } from "utils/api/profile";
 import AuthenticationForm from "features/authentication-form";
+import ProgressBox from "components/progress-routing/progress-bar";
 
 type Props = {
   className?: string;
