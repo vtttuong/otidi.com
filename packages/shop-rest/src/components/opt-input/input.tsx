@@ -22,11 +22,10 @@ const OTPInput: React.FC<Props> = ({ token }) => {
     setLoadingSubmit(true);
     if (values.length === 6) {
       const object = {
-        phone_number: getCookie("verify-phone"),
         verify_code: values,
       };
       const data = await sendOtp(object, token);
-      if (!data.error) {
+      if (data.success) {
         setSuccess(true);
         setLoadingSubmit(false);
         setCookie("phone_verified_at", new Date());
@@ -35,10 +34,8 @@ const OTPInput: React.FC<Props> = ({ token }) => {
           return;
         }, 1000);
       } else {
-        if (data.error.phone_number) {
-          setErrorC(data.error.phone_number[0]);
-          setError(true);
-        }
+        setErrorC("Invalid OTP");
+        setError(true);
         setLoadingSubmit(false);
         setTimeout(() => {
           setError(false);

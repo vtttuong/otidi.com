@@ -38,8 +38,7 @@ export default function SignInModal() {
         }),
       };
       const res = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-          "/api/client/v1/verify/request",
+        `${process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT}/me/phone-number/send-otp`,
         options
       );
       const data = await res.json();

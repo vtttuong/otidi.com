@@ -56,7 +56,7 @@ password: min123456
 
 ```
 
-## <red>API PROBLEMS <red>
+## <red>ADMIN API PROBLEMS <red>
 
 1. Users
    1. Return nhầm name thành email, name return null.
@@ -77,6 +77,8 @@ password: min123456
 
 6. Paging: Không return tổng số page => Không paging được
 
+7. Get all posts error
+
 ## <red>CLIET API PROBLEMS <red>
 
 1. Authentication
@@ -84,3 +86,6 @@ password: min123456
    1.2 Thiếu verify email
 
 2. Ko trả về list mà user đang follow
+3. Thiếu Verify email, send OTP
+4. Thiếu API mark as sold, đánh dấu đã bán
+5. Không có API trả về 1 post của mình, dù nó là waiting cũng cần trả về để update post

@@ -21,6 +21,7 @@ import {
   IconLogo,
 } from "./left-menu.style";
 import { getCookie } from "utils/session";
+import { AuthContext } from "contexts/auth/auth.context";
 
 const CategoryIcon = ({ name }) => {
   const TagName = categoryMenuIcons[name];
@@ -63,13 +64,21 @@ type Props = {
 
 export const LeftMenu: React.FC<Props> = ({ logo }) => {
   const router = useRouter();
+  const {
+    authState: { isAuthenticated },
+    authDispatch,
+  } = React.useContext<any>(AuthContext);
+
   // const [activeMenu, setActiveMenu] = React.useState(initialMenu ?? brands[0]);
 
   const checkAuth = () => {
     let token = getCookie("access_token");
     let isVerifyPhone = getCookie("phone_verified_at");
     if (!token) {
-      Router.push("/login");
+      authDispatch({
+        type: "SIGNIN",
+      });
+      // Router.push("/login");
       return;
     }
     if (token && isVerifyPhone?.length < 8) {
@@ -86,7 +95,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
       <TextColor onClick={() => checkAuth()}>
         <NavLink
           className="menu-item"
-          href={"/loading"}
+          href={POST_ITEM.href}
           label={POST_ITEM.defaultMessage}
           intlId={POST_ITEM.id}
           iconClass="menu-icon"
