@@ -235,6 +235,7 @@
   "noteLabelDescription": "Giới thiệu về sản phẩm bạn cần bán/cần mua đầy đủ và rõ ràng để thu hút nhiều người hơn (Kích cỡ, chi tiết kĩ thuật, màu sắc,...)",
   "selectBrand": "Chọn thông tin hãng xe và mẫu xe",
   "postFormTitle": "Đăng tin ngay !!!",
+  "postFormUpdateTitle": "Chỉnh sửa bài đăng",
   "typeOfCategory": "Loại danh mục",
   "categoryOption": "Chọn danh mục",
   "inputCategory": "Loại danh mục",
@@ -427,5 +428,10 @@
   "automaticOption": "Số tự động",
   "manualOption": "Số tay",
   "hybridGearOption": "Số hỗn hợp",
-  "posts": "Bài đăng"
+  "posts": "Bài đăng",
+  "addressError": "Vui lòng nhập, sau đó chọn địa chỉ",
+  "updateSuccess": "Cập nhật thành công!",
+  "registerSuccess": "Đăng ký thành công!",
+  "backLoginBtn": "Đăng nhập",
+  "updateFailed": "Cập nhật thất bại"
 }

@@ -39,6 +39,7 @@ export default function SignOutModal() {
   const [errorPassServe, setErrorPassServe] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+
   const toggleSignInForm = () => {
     authDispatch({
       type: "SIGNIN",
@@ -65,6 +66,7 @@ export default function SignOutModal() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
         },
         body: JSON.stringify({
           name: userName,
@@ -75,39 +77,45 @@ export default function SignOutModal() {
         }),
       };
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX}/auth/register`,
-        options
-      );
-      const data = await res.json();
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX}/auth/register`,
+          options
+        );
+        const data = await res.json();
+        console.log(data);
 
-      if (data && data.error) {
+        if (data.success) {
+          setLoading(false);
+          openModal({
+            show: true,
+            overlayClassName: "quick-view-overlay",
+            closeOnClickOutside: false,
+            component: SuccessModel,
+            closeComponent: "",
+            config: {
+              enableResizing: false,
+              disableDragging: true,
+              className: "quick-view-modal",
+              width: "500px",
+              height: "auto",
+            },
+            componentProps: {
+              textId: "registerSuccess",
+              href: "/login",
+              btnId: "backLoginBtn",
+            },
+          });
+          // setCookie("email", data);
+          authDispatch({ type: "SIGNIN" });
+          router.push("/login");
+        } else {
+          setLoading(false);
+          setErrorEmailServe(data.data.email ? data.data.email[0] : "");
+          setErrorPassServe(data.data.password ? data.data.password[0] : "");
+        }
+      } catch (err) {
         setLoading(false);
-        setErrorEmailServe(data.error.email[0] ? data.error.email[0] : "");
-        setErrorPassServe(data.error.password ? data.error.password[0] : "");
-        authDispatch({ type: "SIGNUP_FAILED" });
-      }
-
-      if (res.ok) {
-        setLoading(false);
-        openModal({
-          show: true,
-          overlayClassName: "quick-view-overlay",
-          closeOnClickOutside: false,
-          component: SuccessModel,
-          closeComponent: "",
-          config: {
-            enableResizing: false,
-            disableDragging: true,
-            className: "quick-view-modal",
-            width: "500px",
-            height: "auto",
-          },
-          componentProps: { textId: "registerSuccess" },
-        });
-        // setCookie("email", data);
-        authDispatch({ type: "SIGNUP_SUCCESS" });
-        router.push("/verify-mail");
       }
     }
   }
@@ -145,7 +153,9 @@ export default function SignOutModal() {
             defaultMessage: "Contact No.",
           })}
           value={numberPhone}
-          onChange={(e) => setNumberPhone(e.target.value)}
+          onChange={(e) => {
+            setNumberPhone(e.target.value);
+          }}
           required
           height="48px"
           backgroundColor="#F7F7F7"
@@ -159,7 +169,10 @@ export default function SignOutModal() {
             defaultMessage: "Email Address",
           })}
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setErrorEmailServe("");
+            setEmail(e.target.value);
+          }}
           required
           height="48px"
           backgroundColor="#F7F7F7"
@@ -172,7 +185,10 @@ export default function SignOutModal() {
             defaultMessage: "Password (min 6 characters)",
           })}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setErrorPassServe("");
+            setPassword(e.target.value);
+          }}
           required
           height="48px"
           backgroundColor="#F7F7F7"
@@ -186,7 +202,10 @@ export default function SignOutModal() {
             defaultMessage: "Confirm Password",
           })}
           value={confirmPass}
-          onChange={(e) => setConfirmPass(e.target.value)}
+          onChange={(e) => {
+            setErrorPass("");
+            setConfirmPass(e.target.value);
+          }}
           required
           height="48px"
           backgroundColor="#F7F7F7"

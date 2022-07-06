@@ -444,8 +444,10 @@ export async function sendOtp(object: any, token: string) {
   };
 
   const url = baseUrl + "/me/phone-number/confirm-otp";
-  const data = await fetch(url, options);
-  console.log("Response from otp", data);
-
-  return await data.json();
+  try {
+    const data = await fetch(url, options);
+    return await data.json();
+  } catch (err) {
+    return null;
+  }
 }

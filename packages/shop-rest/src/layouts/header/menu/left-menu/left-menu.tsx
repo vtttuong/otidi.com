@@ -22,6 +22,7 @@ import {
 } from "./left-menu.style";
 import { getCookie } from "utils/session";
 import { AuthContext } from "contexts/auth/auth.context";
+import CreatePostButton from "components/create-post-button/nav-link";
 
 const CategoryIcon = ({ name }) => {
   const TagName = categoryMenuIcons[name];
@@ -78,7 +79,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
       authDispatch({
         type: "SIGNIN",
       });
-      // Router.push("/login");
+      Router.push("/login");
       return;
     }
     if (token && isVerifyPhone?.length < 8) {
@@ -93,9 +94,8 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
     <LeftMenuBox>
       <Logo imageUrl={logo} alt={"Shop Logo"} />
       <TextColor onClick={() => checkAuth()}>
-        <NavLink
+        <CreatePostButton
           className="menu-item"
-          href={POST_ITEM.href}
           label={POST_ITEM.defaultMessage}
           intlId={POST_ITEM.id}
           iconClass="menu-icon"

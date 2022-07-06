@@ -11,6 +11,7 @@ import {
 import Footer from "layouts/footer";
 import { NextPage } from "next";
 import { useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { getSettingProfile } from "utils/api/profile";
 import { getCookie, setCookie } from "utils/session";
 type Props = {
@@ -88,6 +89,7 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
           });
         return;
       }
+      return;
     }
 
     setLoadingUpdate(true);
@@ -133,9 +135,14 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
               : null,
             phone_number: error.phone_number ? "Invalid phone number!" : null,
             address:
-              error.address || error.latitude || error.longitude
-                ? "Please enter address then select your location!"
-                : null,
+              error.address || error.latitude || error.longitude ? (
+                <FormattedMessage
+                  id="addressError"
+                  defaultMessage={
+                    "Please enter address then select your location!!!"
+                  }
+                />
+              ) : null,
           });
         }
       });
@@ -161,7 +168,15 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
             </ContentContainer>
           </ContainBody>
           {isAlertId ? (
-            <Notice status="success" content="Updated identify !" />
+            <Notice
+              status="success"
+              content={
+                <FormattedMessage
+                  id="updateSuccess"
+                  defaultMessage="Updated Identity"
+                />
+              }
+            />
           ) : null}
 
           {idError ? <Notice status="error" content={idError} /> : null}

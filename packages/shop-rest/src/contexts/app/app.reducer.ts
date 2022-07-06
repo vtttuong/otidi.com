@@ -20,7 +20,6 @@ type StateType = typeof initialState;
 export function appReducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
     case "SET_IS_ROUTING":
-      console.log("IN REDUCER");
       return {
         ...state,
         isRouting: action.payload,
@@ -32,7 +31,6 @@ export function appReducer(state: StateType, action: ActionType): StateType {
         searchTerm: action.payload,
       };
     case "SET_STICKY":
-      console.log("IN REDUCER_STICKY");
       return {
         ...state,
         isSticky: true,

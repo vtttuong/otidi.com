@@ -66,7 +66,7 @@ const Uploader: React.FC<Props> = ({
     state.files &&
     state.files !== "" &&
     state.files.map((file) => {
-      const objectURL = URL.createObjectURL(file);
+      const objectURL = file.url ? file.url : URL.createObjectURL(file);
       listObjectURL.push(objectURL);
       const newFile = {
         ...file,
@@ -77,7 +77,7 @@ const Uploader: React.FC<Props> = ({
           <ThumbInner>
             <Img
               style={{ objectFit: "cover" }}
-              src={newFile.url ? newFile.url_img : newFile.preview}
+              src={newFile.url ? newFile.url : newFile.preview}
               alt={newFile.url}
             />
           </ThumbInner>

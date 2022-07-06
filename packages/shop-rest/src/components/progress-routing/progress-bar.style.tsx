@@ -11,12 +11,12 @@ const ProgressBarWrapper = styled.div<any>`
   align-items: flex-start;
   z-index: 9999999;
   opacity: ${({ isFinished }) => (isFinished ? "0" : "1")};
-  transition: all 0.2s;
+  transition: all 0.1s;
 `;
 
 const ProgressBar = styled.div`
   width: 100%;
-  height: 5px;
+  height: 4px;
   background-color: ${themeGet("colors.gray.700", "#E6E6E6")};
   // border-radius: 9px;
   position: relative;

@@ -14,7 +14,7 @@ export default function SignInModal() {
   const [responseMessage, setResponseMessage] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
   let token = getCookie("access_token");
 
   async function sendVerifyMail() {
@@ -27,10 +27,12 @@ export default function SignInModal() {
       },
     };
 
-    const url = `${baseUrl}/me/verify-mail/send`;
+    const url = `${baseUrl}/me/verify-email/send`;
     const res = await fetch(url, options);
 
-    setResponseMessage(true);
+    if (res.ok || res.status === 200) {
+      setResponseMessage(true);
+    }
 
     setLoading(false);
   }
