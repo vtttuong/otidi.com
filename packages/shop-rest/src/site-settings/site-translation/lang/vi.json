@@ -60,7 +60,7 @@
   "discountText": "Discount",
   "vatText": "Incl. VAT",
 
-  "searchPlaceholder": "Sản phẩm",
+  "searchPlaceholder": "Tìm kiếm bài đăng",
   "searchButtonText": "Tìm kiếm",
   "mobileSignInButtonText": "Đăng nhập",
   "cartItems": "Items",
@@ -433,5 +433,9 @@
   "updateSuccess": "Cập nhật thành công!",
   "registerSuccess": "Đăng ký thành công!",
   "backLoginBtn": "Đăng nhập",
-  "updateFailed": "Cập nhật thất bại"
+  "updateFailed": "Cập nhật thất bại",
+  "orderBy": "Sắp xếp theo",
+  "noData": "Không có dữ liệu",
+  "overSaveKeywords": "Lưu tối đa 5 từ khóa!",
+  "saveSuccess": "Lưu thành công!"
 }

@@ -6,7 +6,7 @@ export const NoResultWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 50px 20px;
+  padding: 0 20px;
 
   h3 {
     font-size: ${themeGet("fontSizes.xl", "24")}px;
@@ -24,7 +24,6 @@ export const NoResultWrapper = styled.div`
 `;
 
 export const ImageWrapper = styled.div`
-  margin-top: 40px;
   width: 100%;
   max-width: 600px;
   display: flex;

@@ -35,7 +35,7 @@ type PostsProps = {
 export const Posts: React.FC<PostsProps> = () => {
   const router = useRouter();
   const [pageNum, setPageNum] = useState(1);
-
+  const SIZE = 8;
   const {
     posts,
     error,
@@ -46,13 +46,12 @@ export const Posts: React.FC<PostsProps> = () => {
     isLoadingInitialData,
   } = usePosts({
     page: pageNum,
+    count: SIZE,
     sort: router.query.sort,
     text: router.query.text,
-    dayAgo: router.query.dayAgo,
-    latitue: +router.query.latitude,
-    longitude: +router.query.longitude,
-    radius: +router.query.radius,
   });
+
+  console.log("🚀 ~ file: post-list.tsx ~ line 53 ~ posts", posts);
 
   if (error) return <ErrorMessage message={error.message} />;
 

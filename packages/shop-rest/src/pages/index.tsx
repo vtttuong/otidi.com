@@ -25,7 +25,7 @@ const URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
 const Sidebar = dynamic(() => import("layouts/sidebar/sidebar"));
 const Posts = dynamic(() => import("components/post-grid/post-list/post-list"));
 
-const CategoryPage: React.FC<any> = ({ banner, deviceType }) => {
+const HomePage: React.FC<any> = ({ banner, deviceType }) => {
   const { query } = useRouter();
   const { elRef: targetRef, scroll } = useRefScroll({
     percentOfElement: 0,
@@ -34,19 +34,10 @@ const CategoryPage: React.FC<any> = ({ banner, deviceType }) => {
   });
 
   React.useEffect(() => {
-    if (query.text || query.category) {
+    if (query.text) {
       scroll();
     }
-  }, [
-    query.text,
-    query.category,
-    query.sort,
-    query.postType,
-    query.range,
-    query.latitude,
-    query.longitute,
-    query.daysAgo,
-  ]);
+  }, [query.text, query.sort]);
 
   const page = sitePages.posts;
   if (!page) return null;
@@ -116,4 +107,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default CategoryPage;
+export default HomePage;

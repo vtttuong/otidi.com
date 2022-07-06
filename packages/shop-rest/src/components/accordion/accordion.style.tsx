@@ -2,14 +2,13 @@ import styled from "styled-components";
 import { themeGet } from "@styled-system/theme-get";
 
 export const SpanHistory = styled.p`
-  padding: 20px 0;
   font-weight: 600;
   position: relative;
   display: flex;
+  height: auto;
 
   flex-direction: column;
   background: #fff;
-  margin-bottom: 10px;
   // @media (min-width: 990px) {
   //   display: none;
   // }
@@ -24,6 +23,12 @@ export const SpanHistory = styled.p`
 `;
 export const BoxHistory = styled.div`
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 10px;
+
   > div {
     position: absolute !important;
     right: 13px;
@@ -37,17 +42,22 @@ export const BoxHistory = styled.div`
 `;
 
 export const SpanTitleHistory = styled.p`
-  padding: 20px;
+  margin: 40px 0;
   font-weight: 600;
   font-size: 20px;
   position: relative;
-  background: #fff;
   margin-bottom: 10px;
   color: #009e7f;
   span {
     position: absolute;
     right: 20px;
     cursor: pointer;
+  }
+`;
+export const SpanRemove = styled.div`
+  cursor: pointer;
+  &:hover {
+    color: red;
   }
 `;
 

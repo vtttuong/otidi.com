@@ -423,5 +423,9 @@
   "updateSuccess": "Update successfully!",
   "updateFailed": "Update failed!",
   "registerSuccess": "Register successfully",
-  "backLoginBtn": "Return to login"
+  "backLoginBtn": "Return to login",
+  "orderBy": "Order by",
+  "noData": "No data",
+  "overSaveKeywords": "Save maximum 5 keywords!",
+  "saveSuccess": "Save successfully!"
 }

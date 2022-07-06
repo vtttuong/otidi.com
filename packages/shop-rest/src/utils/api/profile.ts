@@ -426,11 +426,15 @@ export async function getMyText(token: string) {
   };
 
   const url = baseUrl + "/keywords";
-  const data = await fetch(url, options);
+  try {
+    const data = await fetch(url, options);
 
-  const dataJson = await data.json();
+    const dataJson = await data.json();
 
-  return dataJson?.data || [];
+    return dataJson?.data || [];
+  } catch (err) {
+    return [];
+  }
 }
 
 export async function sendOtp(object: any, token: string) {
