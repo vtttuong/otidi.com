@@ -37,13 +37,35 @@ const customStyles = {
   // }),
 };
 
-const postTypes = [
+const orderByOptions = [
   {
-    key: "type",
+    key: "sort",
     value: "created_at",
     label: <FormattedMessage id="lasted" />,
   },
-  { key: "type", value: "views", label: <FormattedMessage id="hotNews" /> },
+  {
+    key: "sort",
+    value: "views",
+    label: <FormattedMessage id="hotNews" />,
+  },
+  {
+    key: "sort",
+    value: "price",
+    label: <FormattedMessage id="price" />,
+  },
+];
+
+const dirOptions = [
+  {
+    key: "dir",
+    value: "asc",
+    label: <FormattedMessage id="asc" defaultMessage="Ascending" />,
+  },
+  {
+    key: "dir",
+    value: "desc",
+    label: <FormattedMessage id="desc" defaultMessage="Descending" />,
+  },
 ];
 
 const Filter: React.FC<any> = () => {
@@ -78,10 +100,12 @@ const Filter: React.FC<any> = () => {
     // localStorage.setItem("isShowModal", "true");
   };
 
-  const handleSortData = async (e) => {
+  const handleSortData = async (e, field) => {
+    console.log(e);
+
     let queryParams = {
       ...query,
-      sort: e ? e.value : "",
+      [field]: e ? e.value : "",
     };
 
     let newParams = {};
@@ -98,21 +122,21 @@ const Filter: React.FC<any> = () => {
       },
     });
   };
-  const { latitude, longitude } = usePosition(watch, {
-    enableHighAccuracy: true,
-  });
-  if (latitude && longitude) {
-    Geocode.fromLatLng(latitude, longitude).then(
-      (response) => {
-        setLat(latitude);
-        setLong(longitude);
-        setAddress(response.results[0].formatted_address);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  // const { latitude, longitude } = usePosition(watch, {
+  //   enableHighAccuracy: true,
+  // });
+  // if (latitude && longitude) {
+  //   Geocode.fromLatLng(latitude, longitude).then(
+  //     (response) => {
+  //       setLat(latitude);
+  //       setLong(longitude);
+  //       setAddress(response.results[0].formatted_address);
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     }
+  //   );
+  // }
   return (
     <form style={{ position: "relative", zIndex: 100 }}>
       <Container>
@@ -141,20 +165,35 @@ const Filter: React.FC<any> = () => {
             <Select
               classNamePrefix="filter"
               styles={customStyles}
-              options={postTypes}
+              options={orderByOptions}
               isClearable={true}
               isSearchable={true}
               placeholder={
                 <FormattedMessage id="orderBy" defaultMessage={"Order by..."} />
               }
               value={
-                query.sort === "created_at"
-                  ? postTypes[0]
-                  : query.sort === "views"
-                  ? postTypes[1]
-                  : null
+                orderByOptions.filter(
+                  (option) => option.value === query.sort
+                )[0]
               }
-              onChange={(e) => handleSortData(e)}
+              onChange={(e) => handleSortData(e, "sort")}
+            />
+          </Col>
+
+          <Col xs={6} sm={3} md={3} lg={3}>
+            <Select
+              classNamePrefix="filter"
+              styles={customStyles}
+              options={dirOptions}
+              isClearable={true}
+              isSearchable={true}
+              placeholder={
+                <FormattedMessage id="dir" defaultMessage={"Order"} />
+              }
+              value={
+                dirOptions.filter((option) => option.value === query.dir)[0]
+              }
+              onChange={(e) => handleSortData(e, "dir")}
             />
           </Col>
         </Row>

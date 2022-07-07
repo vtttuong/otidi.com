@@ -74,6 +74,8 @@ const ActionButton = styled.div`
   box-shadow: ${themeGet("shadows.base", "0 3px 6px rgba(0, 0, 0, 0.16)")};
   border: 0;
   display: flex;
+  justify-content: center;
+  align-items: center;
   background: #009e7f;
   border-radius: 5px;
 
@@ -90,6 +92,7 @@ const ActionButton = styled.div`
     filter: brightness(0) invert(1);
   }
   &.chat {
+    padding: 0;
     width: 100%;
     margin-left: 0;
     background: #009e7f;
@@ -513,8 +516,10 @@ const CartSlidePopup = styled.div`
 `;
 const MainAvatar = styled.div`
   display: flex;
+  align-items: center;
+  padding: 10px 0;
   flex-direction: row;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 0 !important;
   &.border {
     border-bottom: 1px solid #f7f7f7 !important;
@@ -523,13 +528,23 @@ const MainAvatar = styled.div`
     flex-direction: column;
   }
   &.sub {
-    width: 50%;
+    flex: 1;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+
+    @media (min-width: 769px) and (max-width: 1000px) {
+      width: 100%;
+    }
   }
   &.subRate {
     flex-direction: column;
+  }
+
+  &.follow {
+    @media (min-width: 769px) and (max-width: 1000px) {
+      flex-direction: column;
+    }
   }
 `;
 const Name = styled.h5`

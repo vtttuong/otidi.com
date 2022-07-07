@@ -93,3 +93,4 @@ password: min123456
 4. Thiếu API mark as sold, đánh dấu đã bán
 5. Không có API trả về 1 post của mình, dù nó là waiting cũng cần trả về để update post
 6. get all posts thiếu trả về like_counts
+7. Thiếu API get user likes cho 1 post

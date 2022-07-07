@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { themeGet } from "@styled-system/theme-get";
 import { Button } from "components/button/button";
+import { Warning } from "assets/icons/Warning";
 export { Button };
 
 export const IconWrapper = styled.div`
@@ -53,6 +54,9 @@ export const Input = styled.input`
 
 export const Wrapper = styled.div`
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: ${themeGet("colors.white", "#ffffff")};
 `;
 export const Choose = styled.div`
@@ -115,7 +119,13 @@ export const Container = styled.div`
     }
   }
   .report {
-    margin: 0;
+    margin-top: 20px;
+
+    & label {
+      display: block;
+      text-align: start !important;
+      width: 100%;
+    }
     > div {
       padding: 0;
       textarea {

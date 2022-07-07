@@ -17,7 +17,7 @@ import {
   LoaderItem,
   LoaderWrapper,
 } from "../post-grid/post-list/post-list.style";
-import { useRecommendPosts } from "data/use-posts";
+import { useRecommendPosts, useTopPosts } from "data/use-posts";
 const ButtonPrev = styled("button")`
   height: 40px;
   width: 40px;
@@ -162,7 +162,7 @@ export default function CustomCarousel({
 }: Props) {
   const { query } = useRouter();
   const router = useRouter();
-  const { data, error } = useRecommendPosts();
+  const { data, error } = useTopPosts();
 
   if (error) return <ErrorMessage message={error.message} />;
   if (!data) {

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Fade from "react-reveal/Fade";
-import FoodCard from "../../post-card/post-card-four/post-card-four";
+import PostCard from "../../post-card/post-card-four/post-card-four";
 import {
   ButtonWrapper,
   LoaderItem,
@@ -48,10 +48,9 @@ export const Posts: React.FC<PostsProps> = () => {
     page: pageNum,
     count: SIZE,
     sort: router.query.sort,
+    dir: router.query.dir,
     text: router.query.text,
   });
-
-  console.log("🚀 ~ file: post-list.tsx ~ line 53 ~ posts", posts);
 
   if (error) return <ErrorMessage message={error.message} />;
 
@@ -83,10 +82,7 @@ export const Posts: React.FC<PostsProps> = () => {
   };
 
   const onClickOnCard = async (item) => {
-    router.push(`/posts/${item.slug}`);
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 500);
+    router.push(`/posts/${item.id}`);
   };
 
   return (
@@ -101,7 +97,7 @@ export const Posts: React.FC<PostsProps> = () => {
                   delay={index * 10}
                   style={{ height: "100%" }}
                 >
-                  <FoodCard
+                  <PostCard
                     name={item.name}
                     image={item.main_image.url}
                     address={item.user.address}

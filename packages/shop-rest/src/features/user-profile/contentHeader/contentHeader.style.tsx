@@ -5,12 +5,17 @@ import { Row as Rows, Col as Cols } from "react-styled-flexboxgrid";
 const ButtonFollow = styled.div`
   background-color: #009e7f;
   margin-right: 5px;
+  height: 40px;
   padding: 7px;
   margin-top: 10px;
   text-align: center;
   color: white;
   border-radius: 3px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &.following {
     background: #ffc107;
   }

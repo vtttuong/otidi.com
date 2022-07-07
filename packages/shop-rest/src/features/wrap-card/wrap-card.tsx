@@ -85,7 +85,7 @@ const WrapCard: React.FC<Props> = ({
         width: "500px",
         height: "auto",
       },
-      componentProps: { titleId: "Post  is waiting approve! Try again." },
+      componentProps: { titleId: "waitingWarning" },
     });
   };
   return (
@@ -109,13 +109,11 @@ const WrapCard: React.FC<Props> = ({
               saveNews={saveNews}
               postId={d.id}
               onClick={() => {
-                d.status == "approving"
+                d.status == "waiting"
                   ? openWarning()
                   : router.push(
-                      "/[type]/[id]",
-                      `/${saveNews ? d.post.category_type : d.category_type}/${
-                        saveNews ? d.post.slug : d.slug
-                      }`
+                      "/posts/[id]",
+                      `/posts/${saveNews ? d.post.id : d.id}`
                     );
               }}
               onClickEdit={() => {
@@ -157,7 +155,10 @@ const WrapCard: React.FC<Props> = ({
                 isDeleted={isDeletedSuccess}
                 isMarked={isMarkedSuccess}
                 onClick={() => {
-                  router.push("/[type]/[id]", `/${d.category_type}/${d.id}`);
+                  router.push(
+                    "/posts/[id]",
+                    `/posts/${saveNews ? d.post.id : d.id}`
+                  );
                 }}
                 onClickEdit={() => {
                   router.push("/post/edit/[id]", `/post/edit/${d.id}`);
