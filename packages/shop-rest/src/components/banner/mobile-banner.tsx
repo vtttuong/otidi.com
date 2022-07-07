@@ -21,6 +21,10 @@ import { useAppDispatch } from "contexts/app/app.provider";
 import Search from "features/search/search";
 import { Clock } from "assets/icons/Clock";
 import { Saved } from "assets/icons/Saved";
+import { getMyText } from "utils/api/profile";
+import { AuthContext } from "contexts/auth/auth.context";
+import { getCookie } from "utils/session";
+import ShowHistory from "components/show-history-keywords/showhistory";
 const CategoryIconNav = dynamic(() => import("components/type-nav/type-nav"));
 const SpringModal = dynamic(
   () => import("components/spring-modal/spring-modal")
@@ -32,11 +36,21 @@ interface Props {
 
 export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
   const [isOpen, setOpen] = useState(false);
+  const [token, setToken] = useState("");
+  const [text, setText] = useState("");
   const [isShowHistory, setIsShowHistory] = React.useState(false);
+  const [update, setUpdate] = React.useState(false);
+  const [texts, setTexts] = React.useState([]);
+
   const dispatch = useAppDispatch();
+  const {
+    authState: { isAuthenticated },
+  } = React.useContext<any>(AuthContext);
+
   const setSticky = useCallback(() => dispatch({ type: "SET_STICKY" }), [
     dispatch,
   ]);
+
   const removeSticky = useCallback(() => dispatch({ type: "REMOVE_STICKY" }), [
     dispatch,
   ]);
@@ -50,6 +64,25 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
     isComponentVisible,
     setIsComponentVisible,
   } = useComponentVisible(false);
+
+  useEffect(() => {
+    // Always do navigations after the first render
+    getSearchText();
+  }, [isAuthenticated, update]);
+
+  const getSearchText = async () => {
+    const token = getCookie("access_token");
+
+    if (token != null) {
+      const text = await getMyText(token);
+      console.log(
+        "🚀 ~ file: header.tsx ~ line 82 ~ getSearchText ~ text",
+        text
+      );
+      setTexts(text);
+    }
+  };
+
   return (
     <Box display={["flex", "flex", "none"]}>
       <Content>
@@ -67,17 +100,24 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
             onClick={() => setOpen(true)}
             style={{ textTransform: "capitalize" }}
           >
-            {type}
+            "OKEE"
           </Button> */}
         </ContentRow>
 
-        <SearchWrapper>
+        <SearchWrapper ref={ref}>
           <Search
             minimal={true}
             className="headerSearch"
             onClick={() => setIsComponentVisible(true)}
           />
-          {isComponentVisible && <ShowHistory intlTitleId={intlTitleId} />}
+          {isComponentVisible && (
+            <ShowHistory
+              texts={texts}
+              closeSearch={() => setOpen(false)}
+              isAuthenticated={isAuthenticated}
+              getSearchText={getSearchText}
+            />
+          )}
         </SearchWrapper>
         <Waypoint
           onEnter={removeSticky}
@@ -85,9 +125,9 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
           onPositionChange={onWaypointPositionChange}
         />
       </Content>
-      <SpringModal isOpen={isOpen} onRequestClose={() => setOpen(false)}>
+      {/* <SpringModal isOpen={isOpen} onRequestClose={() => setOpen(false)}>
         <CategoryIconNav />
-      </SpringModal>
+      </SpringModal> */}
     </Box>
   );
 };
@@ -103,7 +143,9 @@ function useComponentVisible(initialIsVisible) {
   };
 
   const handleClickOutside = (event) => {
-    setIsComponentVisible(false);
+    if (ref.current && !ref.current.contains(event.target)) {
+      setIsComponentVisible(false);
+    }
   };
 
   useEffect(() => {
@@ -117,58 +159,3 @@ function useComponentVisible(initialIsVisible) {
 
   return { ref, isComponentVisible, setIsComponentVisible };
 }
-
-const ShowHistory: React.FC<Props> = () => {
-  let itemSaved = [
-    { title: "Maý giặt", id: 1 },
-    { title: "Ô tô mitsubishi", id: 2 },
-    { title: "Cây gậy tình yêu", id: 3 },
-    { title: "Hotel", id: 4 },
-    { title: "Iphone 15", id: 5 },
-  ];
-  return (
-    <>
-      <BoxSave className={"save"}>
-        <SearchSave className={"first"}>
-          <BoxSave className={"title saved"}>
-            <Saved />
-            {"Tin Da luu !"}
-            <BtnRemove
-              onClick={() => {
-                /*todo*/
-              }}
-            >
-              {"Remove"}
-            </BtnRemove>
-          </BoxSave>
-          {itemSaved &&
-            itemSaved.map((item) => {
-              return (
-                <SearchSaveItem key={item.id}>{item.title}</SearchSaveItem>
-              );
-            })}
-        </SearchSave>
-
-        <SearchSave>
-          <BoxSave className={"title"}>
-            <Clock />
-            {"Tim kiem gan day !"}
-            <BtnRemove
-              onClick={() => {
-                /*todo*/
-              }}
-            >
-              {"Remove"}
-            </BtnRemove>
-          </BoxSave>
-          {itemSaved &&
-            itemSaved.map((item) => {
-              return (
-                <SearchSaveItem key={item.id}>{item.title}</SearchSaveItem>
-              );
-            })}
-        </SearchSave>
-      </BoxSave>
-    </>
-  );
-};

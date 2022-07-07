@@ -72,6 +72,10 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
   const { pathname, query } = router;
   const onSearch = (e) => {
     e.preventDefault();
+
+    if (!searchTerm || searchTerm.trim().length === 0) {
+      return;
+    }
     const { type, ...rest } = query;
     router.push({
       pathname,
