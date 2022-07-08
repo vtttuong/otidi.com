@@ -4,13 +4,13 @@ const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
 
 const NotificationType = {
   PostApproveSuccess: "post_approve_success",
-  NewUserFollow: "new_user_follow",
-  NewUserReview: "new_user_review",
+  NewUserFollow: "user_follow",
+  NewUserReview: "user_review",
   RecommendPost: "recommend_post",
   PushPostSuccess: "push_advertise_post_success",
   UserLevelUp: "user_level_up",
   NewVoucher: "new_voucher",
-  ConfirmationIdentity: "confirm_user_identify",
+  ConfirmationIdentity: "verify_user_identity_success",
 };
 
 export function uniqueBy(arr, prop) {
@@ -31,8 +31,23 @@ export async function markAsRead(token: string, id: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/notifications/${id}/read`, options);
-  return await data.json();
+  try {
+    const data = await fetch(`${baseUrl}/notifications/${id}/read`, options);
+    const json = await data.json();
+
+    if (json.success) {
+      return {
+        result: true,
+      };
+    }
+    return {
+      result: false,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
 }
 
 export async function markAsAllRead(token: string) {
@@ -44,8 +59,23 @@ export async function markAsAllRead(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/notifications/read-all`, options);
-  return await data.json();
+  try {
+    const data = await fetch(`${baseUrl}/notifications/read-all`, options);
+    const json = await data.json();
+
+    if (json.success) {
+      return {
+        result: true,
+      };
+    }
+    return {
+      result: false,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
 }
 
 export async function updatePass(
@@ -165,7 +195,7 @@ export async function parseNotiData(data) {
       };
       type = "postApprovedSucess";
       messageId = "postSuccessMess";
-      pathName = `/posts/${data.post_slug}`;
+      pathName = `/posts/${data.post_id}`;
       break;
     case NotificationType.NewUserFollow:
       values = {
@@ -190,7 +220,7 @@ export async function parseNotiData(data) {
       };
       type = "recommendPostTit";
       messageId = "newPost";
-      pathName = `/posts/${data.post_slug}`;
+      pathName = `/posts/${data.post_id}`;
       break;
     case NotificationType.PushPostSuccess:
       values = {
@@ -198,7 +228,7 @@ export async function parseNotiData(data) {
       };
       type = "pushPostSuccessTit";
       messageId = "pushPostSuccessMess";
-      pathName = `/posts/${data.post_slug}`;
+      pathName = `/posts/${data.post_id}`;
       break;
     case NotificationType.UserLevelUp:
       values = {
@@ -264,7 +294,9 @@ export async function getNotifications(
 ) {
   let queryParams = {
     page: page,
-    limit: limit,
+    count: limit,
+    order_by: "created_at",
+    dir: "desc",
   };
 
   const parsed = queryString.stringify(
@@ -282,105 +314,32 @@ export async function getNotifications(
     },
   };
 
-  const url = baseUrl + "/notifications?" + parsed;
-  const data = await fetch(url, options);
-  let notifications = [];
+  try {
+    const url = baseUrl + "/notifications?" + parsed;
+    const data = await fetch(url, options);
+    let notifications = [];
+    let responseJson = await data.json();
 
-  if (!data.ok) {
-    return null;
+    if (!responseJson.success) {
+      return notifications;
+    }
+
+    let notiList = responseJson.data;
+
+    await notiList.map(async function (noti) {
+      const notification = await handleMapperNotification(noti);
+      notifications.push(notification);
+    });
+
+    console.log(
+      "🚀 ~ file: profile.ts ~ line 302 ~ notifications",
+      notifications
+    );
+
+    return notifications;
+  } catch (err) {
+    return [];
   }
-
-  let responseJson = await data.json();
-
-  // let notiList = responseJson.data;
-
-  //FAKE NOTIFICATIONS
-  let notiList = [
-    {
-      id: "14fa4b0f-f4fd-48b2-826c-dd1253aed7db",
-      type: "App\\Notifications\\PushAdvertisePostSuccess",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"push_advertise_post_success","post_id":4,"post_slug":"ahihi","post_name":"Mazda CX-2 - Ahihi","created_at":"2022-04-25T11:52:13.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-25T03:42:10.000000Z",
-      updated_at: "2022-04-25T03:42:10.000000Z",
-    },
-    {
-      id: "18035dcc-879f-47c9-a947-1c8f322bec7f",
-      type: "App\\Notifications\\PostApproved",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"post_approve_success","post_id":1,"post_slug":"can-ban-xe-gap","title":"C\\u1ea7n b\\u00e1n xe g\\u1ea5p","created_at":"2022-04-12T06:57:10.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-11T23:57:11.000000Z",
-      updated_at: "2022-04-11T23:58:42.000000Z",
-    },
-    {
-      id: "3d759e5a-eaa6-4ef8-be9c-533f4a85ee19",
-      type: "App\\Notifications\\RecommendPost",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"recommend_post","keyword":{"id":1,"user_id":1,"keyword":"mazda","is_notify":1,"created_at":"2022-04-19T02:44:13+00:00","updated_at":"2022-04-19T02:44:13+00:00","user":{"id":1,"name":"Minh hihi","email":"miinhnguyen98@gmail.com","email_verified_at":null,"avatar":"https:\\/\\/otody.s3.ap-southeast-1.amazonaws.com\\/users\\/1\\/uVV8tReBaPFPuNQ1.jpg","deleted_at":null,"created_at":"2022-04-12T13:45:55.000000Z","updated_at":"2022-04-12T07:01:38.000000Z","facebook_token":null,"google_token":null,"address":null,"rating":0,"balance":0}},"post_id":1,"post_name":"Mazda CX-2 - C\\u1ea7n b\\u00e1n xe g\\u1ea5p","post_slug":"can-ban-xe-gap","created_at":"2022-04-12T06:52:02.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-20T01:00:06.000000Z",
-      updated_at: "2022-04-20T01:00:06.000000Z",
-    },
-    {
-      id: "5fc78d84-e333-4a5b-babb-593e9ab781c4",
-      type: "App\\Notifications\\PushAdvertisePostSuccess",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"push_advertise_post_success","post_id":1,"post_slug":"can-ban-xe-gap","post_name":"Mazda CX-2 - C\\u1ea7n b\\u00e1n xe g\\u1ea5p","created_at":"2022-04-11T23:52:02.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-25T04:39:06.000000Z",
-      updated_at: "2022-04-25T04:39:06.000000Z",
-    },
-    {
-      id: "a26f5f45-b913-41be-8acc-9f802ca6dcc5",
-      type: "App\\Notifications\\RecommendPost",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"recommend_post","keyword":{"id":1,"user_id":1,"keyword":"mazda","is_notify":1,"created_at":"2022-04-19T02:44:13+00:00","updated_at":"2022-04-19T02:44:13+00:00","user":{"id":1,"name":"Minh hihi","email":"miinhnguyen98@gmail.com","email_verified_at":null,"avatar":"https:\\/\\/otody.s3.ap-southeast-1.amazonaws.com\\/users\\/1\\/uVV8tReBaPFPuNQ1.jpg","deleted_at":null,"created_at":"2022-04-12T13:45:55.000000Z","updated_at":"2022-04-12T07:01:38.000000Z","facebook_token":null,"google_token":null,"address":null,"rating":0,"balance":0}},"post_id":1,"post_name":"Mazda CX-2 - C\\u1ea7n b\\u00e1n xe g\\u1ea5p","post_slug":"can-ban-xe-gap","created_at":"2022-04-12T06:52:02.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-19T21:10:03.000000Z",
-      updated_at: "2022-04-19T21:10:03.000000Z",
-    },
-    {
-      id: "dfb97d1e-3f8a-4659-b64d-f7122155ae04",
-      type: "App\\Notifications\\PostApproved",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"post_approve_success","post_id":4,"post_slug":"ahihi","title":"Ahihi","created_at":"2022-04-25T17:13:51.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-25T03:13:53.000000Z",
-      updated_at: "2022-04-25T03:13:53.000000Z",
-    },
-    {
-      id: "f593454d-800a-4923-9b53-d56c3b213269",
-      type: "App\\Notifications\\RecommendPost",
-      notifiable_type: "App\\Models\\User",
-      notifiable_id: 1,
-      data:
-        '{"type":"recommend_post","keyword":{"id":1,"user_id":1,"keyword":"mazda","is_notify":1,"created_at":"2022-04-19T02:44:13+00:00","updated_at":"2022-04-19T02:44:13+00:00","user":{"id":1,"name":"Minh hihi","email":"miinhnguyen98@gmail.com","email_verified_at":null,"avatar":"https:\\/\\/otody.s3.ap-southeast-1.amazonaws.com\\/users\\/1\\/uVV8tReBaPFPuNQ1.jpg","deleted_at":null,"created_at":"2022-04-12T13:45:55.000000Z","updated_at":"2022-04-12T07:01:38.000000Z","facebook_token":null,"google_token":null,"address":null,"rating":0,"balance":0}},"post_id":1,"post_name":"Mazda CX-2 - C\\u1ea7n b\\u00e1n xe g\\u1ea5p","post_slug":"can-ban-xe-gap","created_at":"2022-04-12T06:52:02.000000Z"}',
-      read_at: null,
-      created_at: "2022-04-19T21:09:06.000000Z",
-      updated_at: "2022-04-19T21:09:06.000000Z",
-    },
-  ];
-
-  await notiList.map(async function (noti) {
-    const notification = await handleMapperNotification(noti);
-    notifications.push(notification);
-  });
-
-  return notifications;
 }
 export async function getMyprofile(token: string) {
   const options = {

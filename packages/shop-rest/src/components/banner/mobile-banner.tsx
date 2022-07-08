@@ -75,10 +75,6 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
 
     if (token != null) {
       const text = await getMyText(token);
-      console.log(
-        "🚀 ~ file: header.tsx ~ line 82 ~ getSearchText ~ text",
-        text
-      );
       setTexts(text);
     }
   };

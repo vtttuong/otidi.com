@@ -99,57 +99,55 @@ const ManagePostReview: React.FC<ManagePostProps> = ({
     <Box>
       {data.length != 0 && data
         ? data.map((d) => (
-            <>
-              <div key={d.id} className="parent-node">
-                <div className="td-img">
-                  <Image
-                    url={d.reviewer.avatar}
-                    className="avatar-in-table"
-                    style={{ position: "relative", marginRight: "10px" }}
-                    alt={d.star}
-                  />
+            <div key={d.id} className="parent-node">
+              <div className="td-img">
+                <Image
+                  url={d.reviewer.avatar}
+                  className="avatar-in-table"
+                  style={{ position: "relative", marginRight: "10px" }}
+                  alt={d.star}
+                />
 
-                  <div
-                    className="td-profile"
-                    onClick={() => {
-                      router.push(
-                        Number(getCookie("userId")) != d.reviewer_id
-                          ? `/profile/${d.reviewer_id}`
-                          : "/profile"
-                      );
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <span>{d.reviewer.name}</span>
-                    <p>{moment(d.created_at).format("LLL")}</p>
-                  </div>
+                <div
+                  className="td-profile"
+                  onClick={() => {
+                    router.push(
+                      Number(getCookie("userId")) != d.reviewer_id
+                        ? `/profile/${d.reviewer_id}`
+                        : "/profile"
+                    );
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <span>{d.reviewer.name}</span>
+                  <p>{moment(d.created_at).format("LLL")}</p>
                 </div>
-                <div className="td">
-                  <StarRatings
-                    rating={d.star}
-                    starDimension="20px"
-                    starSpacing="5px"
-                    starRatedColor={"#ffc107"}
-                  />
-                  <p>{d.content}</p>
-                </div>
-
-                <div className="td" style={{ maxWidth: 500 }}>
-                  {d.description}
-                </div>
-                {/* check me to edit */}
-                {Number(getCookie("userId")) == d.reviewer.id ? (
-                  <div className="td" style={{ maxWidth: 100 }}>
-                    <span
-                      style={{ cursor: "pointer" }}
-                      onClick={() => removeMyReview(d.id)}
-                    >
-                      {removingLoading ? <Spinner /> : <Remove />}
-                    </span>
-                  </div>
-                ) : null}
               </div>
-            </>
+              <div className="td">
+                <StarRatings
+                  rating={d.star}
+                  starDimension="20px"
+                  starSpacing="5px"
+                  starRatedColor={"#ffc107"}
+                />
+                <p>{d.content}</p>
+              </div>
+
+              <div className="td" style={{ maxWidth: 500 }}>
+                {d.description}
+              </div>
+              {/* check me to edit */}
+              {Number(getCookie("userId")) == d.reviewer.id ? (
+                <div className="td" style={{ maxWidth: 100 }}>
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => removeMyReview(d.id)}
+                  >
+                    {removingLoading ? <Spinner /> : <Remove />}
+                  </span>
+                </div>
+              ) : null}
+            </div>
           ))
         : null}
 
