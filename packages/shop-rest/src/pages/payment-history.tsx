@@ -14,8 +14,14 @@ import {
 import Footer from "layouts/footer";
 import { NextPage } from "next";
 import Router from "next/router";
-import { getProfile } from "utils/api/profile";
+import { getMyPosts, getProfile } from "utils/api/profile";
+import { getFollowers, getReviews } from "utils/api/user";
 import { getCookie } from "utils/session";
+const post_status = {
+  WAITING: "waiting",
+  SOLD: "sold",
+  ACTIVE: "active",
+};
 
 type Props = {
   deviceType?: {
@@ -56,16 +62,23 @@ export async function getServerSideProps(context) {
   const token = getCookie("access_token", context);
 
   if (token === null) {
-    if (context.req) {
-      // If `ctx.req` is available it means we are on the server.
-      context.res.writeHead(302, { Location: "/login" });
-      context.res.end();
-    } else {
-      // This should only happen on client.
-      Router.push("/login");
-    }
+    // If `ctx.req` is available it means we are on the server.
+    context.res.writeHead(302, { Location: "/login" });
+    context.res.end();
   }
   const data = await getProfile(token);
+  const posts = await getMyPosts(token);
+
+  data.posts = posts;
+
+  data.waiting_approve_posts = posts.filter(
+    (post) => post.status === post_status.WAITING
+  );
+
+  data.sold_posts = posts.filter((post) => post.status === post_status.SOLD);
+  data.active_posts = posts.filter(
+    (post) => post.status === post_status.ACTIVE
+  );
 
   return {
     props: {

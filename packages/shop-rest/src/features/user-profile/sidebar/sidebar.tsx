@@ -32,7 +32,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
   const [show, setShow] = useState(false);
   const [pushN, setPush] = useState([]);
   React.useEffect(() => {
-    dataPost.posts.map((d) => (d.is_priority == true ? pushN.push(d) : null));
+    dataPost.posts.map((d) => (d.advertise == true ? pushN.push(d) : null));
     setPush(pushN);
   }, [dataPost]);
 
@@ -69,7 +69,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 top: -5,
               }}
             >
-              {"$"} {balance}
+              {balance}
             </div>
           </div>
         </div>
@@ -90,7 +90,9 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             </div>
             <div>
               <FormattedMessage id="push" defaultMessage="Push" />:{" "}
-              <span style={{ color: "#009E7F" }}>{pushN.length}</span>{" "}
+              <span style={{ color: "#009E7F" }}>
+                {dataPost.pushing_posts?.length}
+              </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
           </div>

@@ -38,12 +38,12 @@ const WrapCard: React.FC<Props> = ({
   const [isMarkedSuccess, setIsMarkedSuccess] = React.useState(false);
   const [isDeletedSuccess, setIsDeletedSuccess] = React.useState(false);
   if (pushNews) {
-    data.map((d) => (d.is_priority == true ? pushN.push(d) : null));
+    data.map((d) => (d.advertise ? pushN.push(d) : null));
   }
 
   React.useEffect(() => {
     if (pushNews) {
-      data.map((d) => (d.is_priority == true ? pushN.push(d) : null));
+      data.map((d) => (d.advertise == true ? pushN.push(d) : null));
       setPush(pushN);
     }
   }, [data]);
@@ -102,7 +102,7 @@ const WrapCard: React.FC<Props> = ({
               address={saveNews ? d.post?.address : d.address}
               price={saveNews ? d.post?.price : d.price}
               unit={saveNews ? d.post?.unit : d.unit}
-              prioriry={saveNews ? d.post?.is_priority : d.is_priority}
+              prioriry={saveNews ? d.post?.advertise : d.advertise}
               createdAt={saveNews ? d.post?.created_at : d.created_at}
               data={saveNews ? d.post : d}
               currentUser={currentUser}
@@ -141,8 +141,8 @@ const WrapCard: React.FC<Props> = ({
               className={profileOther == true ? "other" : ""}
             >
               <PostCard
-                name={d.title}
-                image={d.image}
+                name={d.name}
+                image={d.main_image.url}
                 address={d.address}
                 price={d.price}
                 unit={d.unit}

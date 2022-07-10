@@ -30,7 +30,7 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
   }, []);
   return (
     <Box>
-      <Table responsive="sm">
+      <Table style={{ minWidth: "500px" }} responsive="sm">
         <thead>
           <tr>
             <th>
@@ -47,10 +47,11 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
 
             <th>Subcription Type </th>
             <th>Post </th>
+            <th>Status </th>
           </tr>
         </thead>
         <tbody>
-          {datas.length != 0
+          {datas && datas.length != 0
             ? datas.map((d) => {
                 return (
                   <tr key={d.id}>
@@ -88,14 +89,14 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
                               ? null
                               : () =>
                                   router.push(
-                                    "/[type]/[slug]",
-                                    `/${d.post.type}/${d.post.slug}`
+                                    "/posts/[id]",
+                                    `/posts/${d.post.id}`
                                   )
                           }
                         >
                           <Image
                             style={{ width: 50, height: 50 }}
-                            url={d.post.main_img_url}
+                            url={d.post.main_image.url}
                           />
                           <span
                             style={{
@@ -112,13 +113,9 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
                             ) : null}
                           </span>
                         </div>
-                      ) : (
-                        <Image
-                          style={{ width: 50, height: 50 }}
-                          url="https://static.mservice.io/img/logo-momo.png"
-                        />
-                      )}
+                      ) : null}
                     </td>
+                    <td>{d.extra.status}</td>
                   </tr>
                 );
               })

@@ -170,16 +170,15 @@ export async function getServerSideProps(context) {
   const currentId = getCookie("userId", context);
   const token = getCookie("access_token", context);
   const data = await getUserById(context.params.id);
-  const posts = await getPostsForUser(context.params.id);
-  const followers = await getFollowers(context.params.id);
-  const reviews = await getReviews(context.params.id);
-  data.posts = posts;
-  data.followers = followers;
-  data.reviews = reviews;
-  console.log(
-    "🚀 ~ file: [id].tsx ~ line 148 ~ getServerSideProps ~ posts",
-    followers
-  );
+
+  if (data) {
+    const posts = await getPostsForUser(context.params.id);
+    const followers = await getFollowers(context.params.id);
+    const reviews = await getReviews(context.params.id);
+    data.posts = posts;
+    data.followers = followers;
+    data.reviews = reviews;
+  }
 
   // const users = await getUsers();
 

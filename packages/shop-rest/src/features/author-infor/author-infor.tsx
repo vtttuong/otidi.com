@@ -106,10 +106,6 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
     const checkFollowed = async () => {
       const token = getCookie("access_token");
       const currentId = getCookie("userId");
-      console.log(
-        "🚀 ~ file: author-infor.tsx ~ line 98 ~ checkFollowed ~ currentId",
-        currentId
-      );
 
       if (!token) {
         return;
@@ -130,12 +126,17 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
       router.push("/login");
     } else {
       setChatLoading(true);
-      const response = await createChat(token, data.id);
-      if (response.status == 201 || response.status == 200) {
-        const uuid: any = await response.json();
+      const { result, chanelData } = await createChat(token, query.id);
+      console.log(
+        "🚀 ~ file: author-infor.tsx ~ line 130 ~ onChat ~ data",
+        data
+      );
+
+      if (result) {
+        const id: number = chanelData.id;
         router.push({
           pathname: "/message",
-          query: { uuid: uuid.uuid },
+          query: { id: id },
         });
       }
     }

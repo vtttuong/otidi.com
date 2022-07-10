@@ -492,8 +492,9 @@ export const UserAvatar = styled.div`
   margin-right: 15px;
   img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: cover;
   }
 `;
 
@@ -528,6 +529,7 @@ export const DrawerMenuItem = styled.div`
     .logoutBtn {
       display: block;
       padding: 5px 45px;
+      font-weight: 600;
       font-size: calc(${themeGet("fontSizes.base", "15px")} - 1px);
       font-weight: ${themeGet("fontWeights.regular", "400")};
       color: ${themeGet("colors.text.bold", "#0D1136")};

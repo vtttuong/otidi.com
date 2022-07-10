@@ -131,8 +131,13 @@ export async function getHistoryPay(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/payment/history`, options);
-  return data.json();
+  try {
+    const data = await fetch(`${baseUrl}/payment/history`, options);
+    const json = await data.json();
+    return json.success ? json.data : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getPackage(token: string) {
@@ -158,13 +163,22 @@ export async function pushPost(token: string, post_id, packages_id, schedule) {
     },
     body: JSON.stringify({
       post_id: post_id,
-      packages_id: packages_id,
-      schedule: schedule,
+      advertise_package_id: packages_id,
+      start_time: schedule,
     }),
   };
 
-  await fetch(`${baseUrl}/posts/push`, options);
-  return;
+  try {
+    const res = await fetch(`${baseUrl}/advertises`, options);
+    const json = await res.json();
+    console.log("🚀 ~ file: profile.ts ~ line 174 ~ pushPost ~ json", json);
+    return {
+      result: json.success ? true : false,
+      advertise: json.success ? json.data : null,
+    };
+  } catch (err) {
+    return { result: false };
+  }
 }
 
 export async function getSettingProfile(token: string) {

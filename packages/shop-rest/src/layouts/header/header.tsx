@@ -64,6 +64,8 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
       });
       pusher.subscribe("privateChannel." + data.id);
 
+      console.log("🚀 ~ file: header.tsx ~ line 65 ~ getData ~ pusher", pusher);
+
       setAvatar(data.avatar);
       setCookie("userId", data.id);
       setCookie("userAvatar", data.avatar);

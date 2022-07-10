@@ -9,6 +9,7 @@ import PaymentOptions from "features/payment-option/payment-option";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import { CURRENCY } from "utils/constant";
 import { numberWithCommas } from "utils/formatNumber";
 import {
   DeliverySchedule,
@@ -62,19 +63,23 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
       }),
     };
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-        "/api/client/v1/payment/momo/auth",
-      options
-    );
-    const data = await res.json();
+    try {
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + "/payment/momo/auth",
+        options
+      );
 
-    if (data && data.error) {
-    }
+      const data = await res.json();
+      setLoading(false);
+      console.log(
+        "🚀 ~ file: checkout-one.tsx ~ line 68 ~ handleSubmit ~ res",
+        data
+      );
 
-    if (data) {
-      router.push(data.payUrl);
-    }
+      if (data.success) {
+        router.push(data.data.payUrl);
+      }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -116,7 +121,9 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
             <OrderLabel>
               <FormattedMessage id="amount" />
             </OrderLabel>
-            <OrderAmount>${numberWithCommas(state.amount)}</OrderAmount>
+            <OrderAmount>
+              {`${numberWithCommas(state.amount)} ${CURRENCY}`}
+            </OrderAmount>
           </OrderSummaryItem>
 
           <OrderSummaryItem
@@ -130,7 +137,7 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
               <CouponDisplay
                 code={coupon.code}
                 sign="-"
-                currency="$"
+                currency={CURRENCY}
                 price={calculateDiscount()}
                 onClick={(e) => {
                   e.preventDefault();
@@ -175,13 +182,13 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 alt=""
                 style={{ marginRight: 10 }}
               />
-              {numberWithCommas(state.amount / 1000)}
+              <span> {numberWithCommas(state.amount / 1000)}</span>
             </OrderAmount>
           </OrderSummaryItem>
 
           <OrderSummaryItem style={{ marginTop: 30 }}>
             <OrderLabel>
-              <FormattedMessage id="discount"/>
+              <FormattedMessage id="discount" />
             </OrderLabel>
             <OrderAmount>{state.discount || 0} %</OrderAmount>
           </OrderSummaryItem>
@@ -199,11 +206,18 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   alt=""
                   style={{ marginRight: 10 }}
                 />
-                {state.discount ? numberWithCommas(state.amount / 1000 + (state.amount / 1000) * (state.discount / 100)) : numberWithCommas(state.amount / 1000)}
+                <span>
+                  {" "}
+                  {state.discount
+                    ? numberWithCommas(
+                        state.amount / 1000 +
+                          (state.amount / 1000) * (state.discount / 100)
+                      )
+                    : numberWithCommas(state.amount / 1000)}
+                </span>
               </OrderAmount>
             </OrderSummaryItem>
           </div>
-
         </OrderSummary>
 
         {/* <PaymentOption>

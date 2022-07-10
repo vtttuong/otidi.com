@@ -44,6 +44,7 @@ type Props = {
   onFollow?: any;
   token?: string;
   userId?: number;
+  scrollTo?: () => void;
   onChangeFollow?: (type: string) => void;
 };
 
@@ -54,6 +55,7 @@ const ContenHeader: React.FC<Props> = ({
   userId,
   token,
   onFollow,
+  scrollTo,
   onChangeFollow,
 }) => {
   const router = useRouter();
@@ -456,24 +458,27 @@ const ContenHeader: React.FC<Props> = ({
               ) : (
                 <>
                   <div className="wrap-action">
+                    <Link href="/payment-request">
+                      <div
+                        className="action-item"
+                        style={{
+                          backgroundColor: "#FF851B",
+                          marginRight: 5,
+                          height: 40,
+                          borderRadius: 7,
+                          padding: "10px 20px",
+                          width: 210,
+                        }}
+                      >
+                        <UserAvatar width="15px" height="15px" />
+                        <FormattedMessage
+                          id="upgradeAccount"
+                          defaultMessage="Upgrade account"
+                        />
+                      </div>
+                    </Link>
                     <div
-                      className="action-item"
-                      style={{
-                        backgroundColor: "#FF851B",
-                        marginRight: 5,
-                        height: 40,
-                        borderRadius: 7,
-                        padding: "10px 20px",
-                        width: 210,
-                      }}
-                    >
-                      <UserAvatar width="15px" height="15px" />
-                      <FormattedMessage
-                        id="upgradeAccount"
-                        defaultMessage="Upgrade account"
-                      />
-                    </div>
-                    <div
+                      onClick={scrollTo}
                       className="action-item"
                       style={{
                         backgroundColor: "#45C9F5",
@@ -495,22 +500,24 @@ const ContenHeader: React.FC<Props> = ({
                         defaultMessage="Storage management"
                       />
                     </div>
-                    <div
-                      className="action-item"
-                      style={{
-                        width: 210,
-                        backgroundColor: "#0073B7",
-                        height: 40,
-                        borderRadius: 7,
-                        padding: "10px 20px",
-                      }}
-                    >
-                      <DollarIcon />
-                      <FormattedMessage
-                        id="purchaseOfService"
-                        defaultMessage="Purchase of service"
-                      />
-                    </div>
+                    <Link href="/payment-history">
+                      <div
+                        className="action-item"
+                        style={{
+                          width: 210,
+                          backgroundColor: "#0073B7",
+                          height: 40,
+                          borderRadius: 7,
+                          padding: "10px 20px",
+                        }}
+                      >
+                        <DollarIcon />
+                        <FormattedMessage
+                          id="purchaseOfService"
+                          defaultMessage="Purchase of service"
+                        />
+                      </div>
+                    </Link>
                   </div>
                 </>
               )}

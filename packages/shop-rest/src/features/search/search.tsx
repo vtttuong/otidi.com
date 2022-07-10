@@ -43,18 +43,9 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
   };
 
   const onSaveText = async (e) => {
-    console.log(
-      "🚀 ~ file: search.tsx ~ line 49 ~ onSaveText ~ isBooked",
-      isBooked
-    );
-
     if (!isBooked) {
       setErSave("");
       const result = await saveTextSearch(props.token, valueSaved);
-      console.log(
-        "🚀 ~ file: search.tsx ~ line 48 ~ onSaveText ~ result",
-        result
-      );
 
       onGetText(valueSaved);
 
@@ -99,7 +90,6 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
           id: "searchPlaceholder",
           defaultMessage: "Your posts",
         })}
-        categoryType={query.type || "restaurant"}
         buttonText={intl.formatMessage({
           id: "searchButtonText",
           defaultMessage: "Search",

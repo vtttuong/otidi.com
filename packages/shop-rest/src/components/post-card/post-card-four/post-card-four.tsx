@@ -92,7 +92,7 @@ const PostCard: React.FC<CardProps> = ({
           Mark bought
         </p>
       )}
-      {data && data.status == "active" && !data.is_priority ? (
+      {data && data.status == "active" && !data.advertise ? (
         <p
           style={{
             fontWeight: 600,
@@ -130,8 +130,8 @@ const PostCard: React.FC<CardProps> = ({
   var a: number;
   var b: number;
   var c: number;
-  if (data && data.post_pushes) {
-    const scheduleTime = data.post_pushes[0]?.schedule;
+  if (data && data.advertise) {
+    const scheduleTime = data.advertise.end_time;
     const mNow = new Date().getMinutes();
     const hNow = new Date().getHours();
     let mSchedule = moment(scheduleTime, "HH:mm:ss").minutes();
@@ -164,14 +164,11 @@ const PostCard: React.FC<CardProps> = ({
           style={{ position: "relative" }}
           alt={name}
         />
-        {data &&
-        data.post_pushes?.length !== 0 &&
-        data.is_priority === false &&
-        currentUser ? (
+        {data && data.advertise && currentUser ? (
           <Countdown date={Date.now() + c} renderer={renderer} />
         ) : null}
 
-        {prioriry == true ? (
+        {prioriry ? (
           <SellLabelTop className="main-content">
             <FormattedMessage id="topPost" defaultMessage="Top post" />
           </SellLabelTop>

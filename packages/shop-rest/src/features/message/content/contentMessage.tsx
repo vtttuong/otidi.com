@@ -6,6 +6,7 @@ import { TelephoneFill } from "assets/icons/TelephoneFill";
 import { ThreeDotsVertical } from "assets/icons/ThreeDotsVertical";
 import { Avatar } from "components/avatar/avatar";
 import { MessageText } from "components/message-text/message-text";
+import Spinner from "components/spinner";
 import { ChatContext } from "contexts/chat/chat.context";
 import { useRouter } from "next/router";
 import Pusher from "pusher-js";
@@ -19,9 +20,13 @@ import React, {
 import { FormattedMessage } from "react-intl";
 import Loader from "react-loader-spinner";
 import { getMessages, sendMessage, readMessage } from "utils/api/chat";
+import { getPost } from "utils/api/post";
+import { getUserById } from "utils/api/user";
+import { CURRENCY } from "utils/constant";
 import { numberWithCommas } from "utils/formatNumber";
 import { formatRelativeTime } from "utils/formatRelativeTime";
 import { formatCreatedAtTime } from "utils/formatTime";
+import ChatRole from "../chat-role";
 
 type ContentMessageProp = {
   currentUserId?: number;
@@ -36,27 +41,55 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
   const { state, dispatch } = useContext(ChatContext);
   const router = useRouter();
   const scrollRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [valueInput, setValueInput] = useState("");
   const [valueImg, setValueImg] = useState("");
+  const [chat, setChat] = useState(
+    chats.find((chat) => chat.id == state.chatId)
+  );
+  const [client, setClient] = useState(
+    chat.role == ChatRole.BUYER ? chat.seller : chat.buyer
+  );
 
-  const chat = chats.find((chat) => chat.id == state.chatId);
-  const client = chat.sender_id != currentUserId ? chat.sender : chat.receiver;
+  console.log(state.messages);
 
   for (let i = 0; i < state.messages?.length; i++) {
-    if (state.messages[i]?.user_id != state.messages[i + 1]?.user_id)
-      state.messages[i].isAvata = true;
-    else state.messages[i].isAvata = false;
+    if (state.messages[i]?.sender_id != state.messages[i + 1]?.sender_id)
+      state.messages[i].isAvatar = true;
+    else state.messages[i].isAvatar = false;
   }
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      const currentChat = chats.find((chat) => chat.id == state.chatId);
+      console.log(
+        "🚀 ~ file: contentMessage.tsx ~ line 68 ~ fetchData ~ currentChat",
+        currentChat
+      );
+
+      const clientInfo = await getUserById(
+        currentChat.role == ChatRole.SELLER
+          ? currentChat.buyer_id
+          : currentChat.sender_id
+      );
+
+      setClient(clientInfo);
+      const post = await getPost(currentChat.post.id);
+
+      setChat({ ...currentChat, post: post });
+
       const data = await getMessages(token, state.chatId);
-      dispatch({
-        type: "SET_DATA_MESSAGE",
-        payload: { value: data, field: "messages" },
-      });
+      if (data) {
+        dispatch({
+          type: "SET_DATA_MESSAGE",
+          payload: { value: data, field: "messages" },
+        });
+      }
+
+      setLoading(false);
     };
 
     fetchData();
@@ -67,10 +100,12 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       const fetchData = async () => {
         const data = await getMessages(token, state.chatId);
 
-        dispatch({
-          type: "SET_DATA_MESSAGE",
-          payload: { value: data, field: "messages" },
-        });
+        if (data) {
+          dispatch({
+            type: "SET_DATA_MESSAGE",
+            payload: { value: data, field: "messages" },
+          });
+        }
       };
       fetchData();
     }
@@ -82,10 +117,10 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
 
     channel.bind("NewMessage", async function (data) {
       let message = {
-        chat_id: state.chatId,
-        content: data.content,
-        isAvata: true,
-        user_id: data.user.id,
+        chanel_id: state.chatId,
+        message: data.message,
+        isAvatar: true,
+        sender_id: data.user.id,
         id: data.id,
       };
 
@@ -105,7 +140,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
   const myFunction = (val) => {
     setShowDropdown(val);
   };
-  
+
   const onMouseDown = () => {
     if (showDropdown) {
       setShowDropdown(false);
@@ -113,7 +148,20 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
   };
 
   const onMouse = async () => {
-    const res = await readMessage(token, state.chatId);
+    //mark as read all un read message, which is not my
+    state.messages.forEach(async (message) => {
+      if (!message.read_at && message.sender_id != currentUserId) {
+        console.log("READ MESSAGE", message.id, message.message);
+
+        const { result } = await readMessage(token, message.id);
+        if (result) {
+          dispatch({
+            type: "READ_MESSAGE",
+            payload: { value: message.id, field: "messages" },
+          });
+        }
+      }
+    });
   };
 
   const onClickSuggest = (val: string) => {
@@ -133,22 +181,24 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
 
   const onSendMessage = async (content: string) => {
     let message = {
-      chat_id: state.chatId,
-      content: JSON.stringify({ content: content }),
-      isAvata: false,
-      user_id: currentUserId,
+      chanel_id: state.chatId,
+      message: content,
+      isAvatar: false,
+      sender_id: currentUserId,
       id: Math.random()
         .toString(36)
         .replace(/[^a-z]+/g, "")
-        .substr(0, 10),
+        .substring(0, 10),
       refEndMessage: true,
     };
-    dispatch({
-      type: "SET_DATA_BROADCAST",
-      payload: { value: message, field: "messages" },
-    });
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    const data = await sendMessage(token, content, state.chatId);
+    const { result, data } = await sendMessage(token, content, state.chatId);
+    if (result) {
+      dispatch({
+        type: "SET_DATA_BROADCAST",
+        payload: { value: message, field: "messages" },
+      });
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   if (state.messages === undefined) {
@@ -176,18 +226,18 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       return state.messages.map((message, index) => (
         <MessageText
           position="top"
-          isRight={message.user_id == currentUserId ? true : false}
-          data={JSON.parse(message.content).content}
+          isRight={message.sender_id == currentUserId ? true : false}
+          data={message}
           endMessage={false}
           key={message.id}
-          user_id={message.user_id}
+          user_id={message.sender_id}
           src={
-            message.isAvata == true && message.user_id != currentUserId
-              ? client.avatar_img_url
+            message.isAvatar && message.sender_id != currentUserId
+              ? client.avatar
               : ""
           }
           clickAvatar={() =>
-            router.push("/profile/[id]", `/profile/${message.user_id}`)
+            router.push("/profile/[id]", `/profile/${message.sender_id}`)
           }
           refEndMessage={
             message.refEndMessage
@@ -201,60 +251,66 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
     }
   };
 
-  if (client.last_seen_at) {
-    var relativeTime = formatRelativeTime(client.last_seen_at);
+  if (chat.last_message.created_at) {
+    var relativeTime = formatRelativeTime(chat.last_message.created_at);
     console.log(relativeTime);
   }
 
   return (
     <>
       <div onMouseDown={onMouseDown} className="wrap-contentmessage container">
-        <div className="header-content">
-          <div style={{ display: "flex" }}>
-            <div className="header-avatar">
-              <Avatar
-                width={30}
-                height={30}
-                radius="25px"
-                src={client?.avatar_img_url}
-                type={"user"}
-                clientId={client.id}
-              />
-            </div>
-            <div className="header-infor">
-              <div className="name">{client?.name}</div>
-              <div style={{ color: "#9e9e9e", display: "flex" }}>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  {client.last_seen_at ? (
-                    <CircleFill width={8} color="#9e9e9e" />
-                  ) : (
-                    <CircleFill width={8} color="#008000" />
-                  )}
-                </div>
-                &nbsp;
-                {client.last_seen_at ? (
-                  <div>
-                    Online {relativeTime["time"]}
-                    <FormattedMessage id={relativeTime["unit"]} />
-                  </div>
-                ) : (
-                  <div>Online</div>
-                )}
-              </div>
-            </div>
+        {loading ? (
+          <div className="loading">
+            <Spinner style={{}} />
           </div>
-          <div className="header-action">
-            <div className="call">
-              <a
-                href={`tel:${client?.phone_number}`}
-                style={{ color: "#009e7f" }}
-              >
-                <TelephoneFill width={18} />
-                &nbsp; &nbsp;
-                <FormattedMessage id="call" defaultMessage="Call" />
-              </a>
-            </div>
-            <div className="dropdown">
+        ) : (
+          <>
+            <div className="header-content">
+              <div style={{ display: "flex" }}>
+                <div className="header-avatar">
+                  <Avatar
+                    width={30}
+                    height={30}
+                    radius="25px"
+                    src={client?.avatar}
+                    type={"user"}
+                    clientId={client.id}
+                  />
+                </div>
+                <div className="header-infor">
+                  <div className="name">{client?.name}</div>
+                  <div style={{ color: "#9e9e9e", display: "flex" }}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      {chat.last_message.created_at ? (
+                        <CircleFill width={8} color="#9e9e9e" />
+                      ) : (
+                        <CircleFill width={8} color="#008000" />
+                      )}
+                    </div>
+                    &nbsp;
+                    {chat.last_message.created_at ? (
+                      <div>
+                        Online {relativeTime["time"]}
+                        <FormattedMessage id={relativeTime["unit"]} />
+                      </div>
+                    ) : (
+                      <div>Online</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="header-action">
+                <div className="call">
+                  <a
+                    href={`tel:${client?.phone_number}`}
+                    style={{ color: "#009e7f" }}
+                  >
+                    <TelephoneFill width={18} />
+                    &nbsp; &nbsp;
+                    <FormattedMessage id="call" defaultMessage="Call" />
+                  </a>
+                </div>
+                {/* <div className="dropdown">
               <span
                 onClick={() => myFunction(!showDropdown)}
                 style={{ padding: 5, cursor: "pointer" }}
@@ -298,114 +354,124 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
                   </span>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-
-        <div className="header-receive">
-          <div style={{ display: "flex" }}>
-            <div className="header-avatar ">
-              <Avatar
-                radius="5px"
-                src={chat.post.main_img_url}
-                type={"post"}
-                post={chat.post}
-              />
-            </div>
-            <div className="header-infor">
-              <div className="name">{chat.post.title}</div>
-              <div className="money">
-                {numberWithCommas(chat.post.price)}
-                {"   "}
-                {chat.post.unit}
+            </div> */}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div id="style-1" className="content" onMouseEnter={onMouse}>
-          <div className="time-space">
-            {formatCreatedAtTime(chat.created_at)}
-          </div>
-          {messagesHandle()}
-        </div>
-
-        <div className="footer-chat">
-          <div id="style-1" className="wrap-suggest">
-            <span
-              className="text-suggest"
-              onClick={() => onClickSuggest("Cảm ơn bạn")}
-            >
-              Cảm ơn bạn
-            </span>
-            <span
-              className="text-suggest"
-              onClick={() => onClickSuggest("Tôi sẽ suy nghĩ thêm")}
-            >
-              Tôi sẽ suy nghĩ thêm
-            </span>
-            <span
-              className="text-suggest"
-              onClick={() => onClickSuggest("Hẹn gặp lại bạn")}
-            >
-              Hẹn gặp lại bạn
-            </span>
-            <span
-              className="text-suggest"
-              onClick={() => onClickSuggest("Tôi đồng ý")}
-            >
-              Tôi đồng ý
-            </span>
-            <span
-              className="text-suggest"
-              onClick={() => onClickSuggest("Mình xin địa chỉ")}
-            >
-              Mình xin địa chỉ
-            </span>
-          </div>
-
-          <div className="wrap-enter-chat">
-            <div>
-              <span onClick={onUpImage} className="icon">
-                <Camera width={16} />
-              </span>
+            <div className="header-receive">
+              <div style={{ display: "flex" }}>
+                <div className="header-avatar ">
+                  <Avatar
+                    radius="5px"
+                    src={
+                      chat.post.images
+                        ? chat.post.images[0].url
+                        : chat.post.main_image_url
+                    }
+                    type={"post"}
+                    post={chat.post}
+                  />
+                </div>
+                <div className="header-infor">
+                  <div className="name">{chat.post.name}</div>
+                  <div className="money">
+                    {numberWithCommas(chat.post.price)}
+                    {"   "}
+                    {CURRENCY}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <span onClick={onUpImage} className="icon">
-                <FileEarmarkfill width={16} />
-              </span>
+
+            <div id="style-1" className="content" onMouseEnter={onMouse}>
+              <div className="time-space">
+                {formatCreatedAtTime(
+                  state.messages && state.messages.length > 0
+                    ? state.messages[0]?.created_at
+                    : new Date()
+                )}
+              </div>
+              {messagesHandle()}
             </div>
-            <div className="wrap-input-chat">
-              <div>
-                <input
-                  type="file"
-                  id="imgupload"
-                  onChange={(e) => setValueImg(e.target.value)}
-                  value={valueImg}
-                  style={{ display: "none" }}
-                />
-                <input
-                  onChange={(e) => setValueInput(e.target.value)}
-                  value={valueInput}
-                  type="text"
-                  id="input-text"
-                  placeholder="Viết tin nhắn..."
-                  className="input-chat"
-                  onKeyDown={(e) => handleKeyDown(e)}
-                ></input>
+
+            <div className="footer-chat">
+              <div id="style-1" className="wrap-suggest">
                 <span
-                  onClick={() => {
-                    onSendMessage(valueInput);
-                    setValueInput("");
-                  }}
-                  className="btn-send"
+                  className="text-suggest"
+                  onClick={() => onClickSuggest("Cảm ơn bạn")}
                 >
-                  <CursorFill width={20} />
+                  Cảm ơn bạn
+                </span>
+                <span
+                  className="text-suggest"
+                  onClick={() => onClickSuggest("Tôi sẽ suy nghĩ thêm")}
+                >
+                  Tôi sẽ suy nghĩ thêm
+                </span>
+                <span
+                  className="text-suggest"
+                  onClick={() => onClickSuggest("Hẹn gặp lại bạn")}
+                >
+                  Hẹn gặp lại bạn
+                </span>
+                <span
+                  className="text-suggest"
+                  onClick={() => onClickSuggest("Tôi đồng ý")}
+                >
+                  Tôi đồng ý
+                </span>
+                <span
+                  className="text-suggest"
+                  onClick={() => onClickSuggest("Mình xin địa chỉ")}
+                >
+                  Mình xin địa chỉ
                 </span>
               </div>
+
+              <div className="wrap-enter-chat">
+                <div>
+                  <span onClick={onUpImage} className="icon">
+                    <Camera width={16} />
+                  </span>
+                </div>
+                <div>
+                  <span onClick={onUpImage} className="icon">
+                    <FileEarmarkfill width={16} />
+                  </span>
+                </div>
+                <div className="wrap-input-chat">
+                  <div>
+                    <input
+                      type="file"
+                      id="imgupload"
+                      onChange={(e) => setValueImg(e.target.value)}
+                      value={valueImg}
+                      style={{ display: "none" }}
+                    />
+                    <input
+                      onChange={(e) => setValueInput(e.target.value)}
+                      value={valueInput}
+                      type="text"
+                      id="input-text"
+                      placeholder="Viết tin nhắn..."
+                      className="input-chat"
+                      onKeyDown={(e) => handleKeyDown(e)}
+                    ></input>
+                    <div
+                      onClick={() => {
+                        onSendMessage(valueInput);
+                        setValueInput("");
+                      }}
+                      className="btn-send"
+                    >
+                      <CursorFill width={20} />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </>
   );

@@ -19,27 +19,26 @@ type Props = {
   chats: any;
   token: string;
   userId?: number;
-  chatUuid?: string;
+  chatId?: number;
   initialChatId?: number;
 };
 const ProfilePage: NextPage<Props> = ({
   chats,
   token,
   userId,
-  chatUuid,
+  chatId,
   initialChatId,
 }) => {
   const router = useRouter();
 
   let initialData = {
-    chatId: initialChatId,
-    chatUuid: chatUuid,
+    chatId: chatId,
     messageUnRead: 0,
     messages: [],
   };
 
   const contentMessageHandle = () => {
-    if (chatUuid == null && router.query.uuid == undefined) {
+    if (chatId == null && router.query.id == undefined) {
       return (
         <div className="wrap-contentmessage container wrap-image-empty">
           <img
@@ -61,11 +60,7 @@ const ProfilePage: NextPage<Props> = ({
       <SEO title="Message - SecondHandApp" description="Conversation" />
       <ChatProvider initData={initialData}>
         <PageWrapper className={"message-chat"}>
-          <Conversation
-            chatUuid={chatUuid}
-            currentUserId={userId}
-            chats={chats}
-          />
+          <Conversation chatId={chatId} currentUserId={userId} chats={chats} />
 
           {contentMessageHandle()}
         </PageWrapper>
@@ -87,20 +82,118 @@ export async function getServerSideProps(context) {
     }
   }
 
-  const chatUuid = context.query.uuid ? context.query.uuid : null;
-  let initialChatId = null;
-  const chats = await getChats(token);
-  if (chatUuid != null) {
-    initialChatId = chats.find((chat) => chat.uuid == chatUuid).id;
-  }
+  const chatId = context.query.id ? context.query.id : null;
+  const response = await getChats(token);
+  // const chats = response.result;
+  const chats = [
+    {
+      id: 1,
+      seller_id: 2,
+      buyer_id: 9,
+      seller: {
+        name: "Lê Ngọc Sơn",
+        avatar:
+          "https://i.pinimg.com/564x/4b/71/f8/4b71f8137985eaa992d17a315997791e.jpg",
+      },
+      buyer: {
+        name: "Nguyễn Thị Hồng",
+        avatar:
+          "https://i.pinimg.com/736x/23/6f/07/236f07c0557948b53270e6b0558dc159.jpg",
+      },
+      last_message: {
+        id: 1,
+        created_at: "2022-04-27T06:19:39.000000Z",
+      },
+      post: {
+        id: 24,
+        main_image_url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+      },
+      role: "seller",
+    },
+    {
+      id: 2,
+      seller_id: 2,
+      buyer_id: 1,
+      seller: {
+        name: "Lê Ngọc Sơn",
+        avatar:
+          "https://i.pinimg.com/564x/4b/71/f8/4b71f8137985eaa992d17a315997791e.jpg",
+      },
+      buyer: {
+        name: "Nguyễn Văn Minh",
+        avatar:
+          "https://i.pinimg.com/736x/23/6f/07/236f07c0557948b53270e6b0558dc159.jpg",
+      },
+      last_message: {
+        id: 1,
+        created_at: "2022-04-27T06:19:39.000000Z",
+      },
+      post: {
+        id: 24,
+        main_image_url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+      },
+      role: "seller",
+    },
+    {
+      id: 3,
+      seller_id: 9,
+      buyer_id: 2,
+      seller: {
+        name: "Pham Truong Nam",
+        avatar:
+          "https://i.pinimg.com/564x/4b/71/f8/4b71f8137985eaa992d17a315997791e.jpg",
+      },
+      buyer: {
+        name: "Lê Ngọc Sơn",
+        avatar:
+          "https://i.pinimg.com/736x/23/6f/07/236f07c0557948b53270e6b0558dc159.jpg",
+      },
+      last_message: {
+        id: 1,
+        created_at: "2022-04-27T06:19:39.000000Z",
+      },
+      post: {
+        id: 24,
+        main_image_url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+      },
+      role: "buyer",
+    },
+    {
+      id: 4,
+      seller_id: 2,
+      buyer_id: 8,
+      seller: {
+        name: "Lê Ngọc Sơn",
+        avatar:
+          "https://i.pinimg.com/564x/4b/71/f8/4b71f8137985eaa992d17a315997791e.jpg",
+      },
+      buyer: {
+        name: "Midu",
+        avatar:
+          "https://i.pinimg.com/736x/23/6f/07/236f07c0557948b53270e6b0558dc159.jpg",
+      },
+      last_message: {
+        id: 1,
+        created_at: "2022-04-27T06:19:39.000000Z",
+      },
+      post: {
+        id: 24,
+        main_image_url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+      },
+      role: "seller",
+    },
+  ];
 
   return {
     props: {
       chats: chats,
       token: token,
       userId: userId,
-      chatUuid: chatUuid,
-      initialChatId: initialChatId,
+      chatId: chatId,
     }, // will be passed to the page component as props
   };
 }
