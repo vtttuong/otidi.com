@@ -12,6 +12,8 @@ interface Props {
 
 const BalanceOption = ({ increment = false }: Props) => {
   const { state, dispatch } = useContext(ProfileContext);
+  console.log(state.balances, state.amount);
+
   return (
     <>
       <CardHeader increment={increment}>
@@ -25,7 +27,7 @@ const BalanceOption = ({ increment = false }: Props) => {
             key={item.id}
             value={item.value}
             name="schedule"
-            checked={item.type === "primary"}
+            checked={item.value == state.amount}
             withActionButtons={false}
             onChange={() => {
               dispatch({

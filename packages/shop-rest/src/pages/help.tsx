@@ -1,33 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Modal } from '@redq/reuse-modal';
-import { SEO } from 'components/seo';
-import Footer from 'layouts/footer';
-import Accordion from 'components/accordion/accordion';
-
-const accordionData = [
-  {
-    id: 1,
-    intlTitleId: 'faqNo1Title',
-    intlDetailsId: 'faqNo1Desc',
-    values: { number1: 7, number2: 2 },
-  },
-  {
-    id: 2,
-    intlTitleId: 'faqNo2Title',
-    intlDetailsId: 'faqNo2Desc',
-  },
-  {
-    id: 3,
-    intlTitleId: 'faqNo3Title',
-    intlDetailsId: 'faqNo3Desc',
-  },
-  {
-    id: 4,
-    intlTitleId: 'faqNo4Title',
-    intlDetailsId: 'faqNo4Desc',
-  },
-];
+import React from "react";
+import styled from "styled-components";
+import { Modal } from "@redq/reuse-modal";
+import { SEO } from "components/seo";
+import Footer from "layouts/footer";
+import Accordion from "components/accordion/accordion";
+import { getFaqs } from "utils/api/faqs";
 
 const Heading = styled.h3`
   font-size: 21px;
@@ -69,19 +46,37 @@ export const HelpPageContainer = styled.div`
     padding: 30px;
   }
 `;
-
-export default function () {
+type FaqsProps = {
+  faqs: any;
+};
+const Faqs: React.FC<FaqsProps> = ({ faqs }) => {
+  console.log("🚀 ~ file: help.tsx ~ line 53 ~ faqs", faqs);
   return (
     <Modal>
       <SEO title="F.A.Q - SecondHandApp" description="F.A.Q Details" />
       <HelpPageWrapper>
         <HelpPageContainer>
           <Heading>F.A.Q</Heading>
-          <Accordion items={accordionData} />
+          <Accordion items={faqs} />
         </HelpPageContainer>
 
         <Footer />
       </HelpPageWrapper>
     </Modal>
   );
+};
+
+export async function getServerSideProps(context) {
+  const faqs = await getFaqs();
+  console.log(
+    "🚀 ~ file: help.tsx ~ line 95 ~ getServerSideProps ~ faqs",
+    faqs
+  );
+  return {
+    props: {
+      faqs: faqs,
+    },
+  };
 }
+
+export default Faqs;

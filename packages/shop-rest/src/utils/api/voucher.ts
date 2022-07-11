@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
 
 export async function getAllVoucher(token: string) {
   const options = {
@@ -9,8 +9,13 @@ export async function getAllVoucher(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/api/client/v1/vouchers`, options);
-  return data.json();
+  try {
+    const data = await fetch(`${baseUrl}/vouchers`, options);
+    const dataJson = await data.json();
+    return dataJson.success ? dataJson.data : [];
+  } catch (error) {
+    return [];
+  }
 }
 
 export async function getMyVoucher(token: string) {
@@ -22,8 +27,13 @@ export async function getMyVoucher(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/api/client/v1/vouchers/me`, options);
-  return data.json();
+  try {
+    const data = await fetch(`${baseUrl}/vouchers/me`, options);
+    const dataJson = await data.json();
+    return dataJson.success ? dataJson.data : [];
+  } catch (error) {
+    return [];
+  }
 }
 
 export async function verifyVoucher(token: string, code: string) {
@@ -35,10 +45,7 @@ export async function verifyVoucher(token: string, code: string) {
     },
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/client/v1/vouchers/check/${code}`,
-    options
-  );
+  const data = await fetch(`${baseUrl}/vouchers/check/${code}`, options);
   return data;
 }
 
@@ -51,10 +58,7 @@ export async function exchange(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/client/v1/vouchers/${id}/exchange`,
-    options
-  );
+  const data = await fetch(`${baseUrl}/vouchers/${id}/exchange`, options);
   return data;
 }
 
@@ -67,6 +71,6 @@ export async function getProfile(token: string) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/api/client/v1/me/profile`, options);
+  const data = await fetch(`${baseUrl}/me/profile`, options);
   return await data.json();
 }

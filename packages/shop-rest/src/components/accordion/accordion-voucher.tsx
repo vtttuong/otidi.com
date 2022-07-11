@@ -1,4 +1,6 @@
+import { CoinIcon } from "assets/icons/CoinIcon";
 import Image from "components/image/image";
+import Spinner from "components/spinner";
 import { useRouter } from "next/router";
 import Collapse, { Panel } from "rc-collapse";
 import React from "react";
@@ -56,10 +58,11 @@ const Accordion: React.FC<AccordionProps> = ({
   items = [],
   token,
 }) => {
-  const [datas, setDatas] = React.useState([]);
+  const [datas, setDatas] = React.useState(null);
   const router = useRouter();
   const getAllTasks = async () => {
-    setDatas(await getTasks(token, "vi"));
+    const tasks = await getTasks(token);
+    setDatas(tasks);
   };
   React.useEffect(() => {
     getAllTasks();
@@ -72,7 +75,8 @@ const Accordion: React.FC<AccordionProps> = ({
         defaultActiveKey="active"
         expandIcon={expandIcon}
       >
-        {datas.length !== 0 &&
+        {datas ? (
+          datas.length !== 0 &&
           datas.map((item) => {
             return (
               <Panel
@@ -86,53 +90,64 @@ const Accordion: React.FC<AccordionProps> = ({
                     }}
                   >
                     <div className="get-poin-box">
-                      <Image
-                        url={
-                          "https://www.flaticon.com/svg/static/icons/svg/550/550638.svg"
-                        }
-                        alt="coin"
-                      />
-                      <h4>{item.translate[0].name}</h4>
+                      <CoinIcon width="17px" height="17px" />
+                      <h4 style={{ marginLeft: "10px" }}>
+                        <FormattedMessage id={item.type} />
+                      </h4>
                     </div>
-                    <p style={{ position: "relative" }}>
-                      <span style={{ color: "#009e7f", display: "block" }}>
-                        {" + "}
-                        {item.exchange_point}
-                      </span>
-                      <span
-                        style={{
-                          position: "absolute",
-                          color: "#fff",
-                          display: "block",
-                          minWidth: 80,
-                          fontSize: 13,
-                          background: "#009e7f",
-                          borderRadius: 5,
-                          textAlign: "center",
-                          top: 30,
-                          left: -5,
-                          padding: 2,
-                        }}
-                        onClick={() => router.push(item.redirect_link)}
-                      >
-                        Khám phá
-                      </span>
-                    </p>
                   </div>
                 }
                 headerClass="accordion-title"
                 key={item.id}
               >
-                <p key={item.id}>{item.translate[0].description}</p>
+                <p key={item.id}>{item.description}</p>
                 <b>{"Áp dụng " + item.max_number_excute + " lần / "}</b>
                 <b>
                   <FormattedMessage id={item.per_unit} />
                 </b>
-                <br />
-                <b>Đã sử dụng {item.using_count} lần</b>
+                {/* <br /> */}
+                <p style={{ position: "relative" }}>
+                  <span style={{ color: "#009e7f", display: "block" }}>
+                    {" + "}
+                    {item.reward_point}
+                  </span>
+                  <span
+                    style={{
+                      // position: "absolute",
+                      color: "#fff",
+                      display: "block",
+                      minWidth: 80,
+                      fontSize: 13,
+                      background: "#009e7f",
+                      borderRadius: 5,
+                      textAlign: "center",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                      // top: 30,
+                      // left: -5,
+                      padding: 2,
+                    }}
+                    onClick={() => router.push(item.redirect_link)}
+                  >
+                    Khám phá
+                  </span>
+                </p>
               </Panel>
             );
-          })}
+          })
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "20vh",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spinner />
+          </div>
+        )}
       </Collapse>
     </AccordionWrapper>
   );

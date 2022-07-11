@@ -526,6 +526,7 @@ const MainAvatar = styled.div`
   }
   &.name {
     flex-direction: column;
+    width: auto;
   }
   &.sub {
     flex: 1;

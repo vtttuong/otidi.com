@@ -46,6 +46,7 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [isValid, setIsValid] = useState(false);
   const { address, contact, card, schedules } = state;
   const router = useRouter();
+  console.log("🚀 ~ file: checkout-one.tsx ~ line 45 ~ state", state);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -71,10 +72,6 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
       const data = await res.json();
       setLoading(false);
-      console.log(
-        "🚀 ~ file: checkout-one.tsx ~ line 68 ~ handleSubmit ~ res",
-        data
-      );
 
       if (data.success) {
         router.push(data.data.payUrl);
