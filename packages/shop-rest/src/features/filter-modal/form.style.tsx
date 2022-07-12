@@ -94,6 +94,7 @@ export const Container = styled.div`
   }
   .option-push {
     display: flex;
+    gap: 5px;
   }
   .title-like {
     margin-top: -10px;

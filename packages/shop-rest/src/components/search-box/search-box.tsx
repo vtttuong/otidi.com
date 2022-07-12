@@ -26,7 +26,6 @@ export const SearchBox: React.FC<Props> = ({
   value,
   name,
   minimal,
-  categoryType,
   buttonText,
   className,
   showButtonText = true,
@@ -62,7 +61,6 @@ export const SearchBox: React.FC<Props> = ({
         </>
       ) : (
         <>
-          <StyledCategoryName>{categoryType}</StyledCategoryName>
           <StyledInput
             type="search"
             autoComplete="off"

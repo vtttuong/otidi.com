@@ -61,11 +61,6 @@ export const RightMenu: React.FC<Props> = ({
   const [dataMessageBroadCast, setDataMessageBroadCast] = React.useState(false);
   const limit = 5;
 
-  console.log(
-    "🚀 ~ file: right-menu.tsx ~ line 90 ~ useEffect ~ dataNotify",
-    state.dataNotify
-  );
-
   const getDataNoti = async () => {
     let token = getCookie("access_token");
     if (token !== undefined && token.length > 0) {
@@ -89,9 +84,7 @@ export const RightMenu: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    console.log("🚀 ~ file: right-menu.tsx ~ line 95 ~ notiPage", notiPage);
     getDataNoti();
-    console.log(state.dataNotify);
   }, [notiPage]);
 
   useEffect(() => {
@@ -121,8 +114,6 @@ export const RightMenu: React.FC<Props> = ({
   }, [dataMessageBroadCast]);
 
   useEffect(() => {
-    console.log("🚀 ~ file: right-menu.tsx ~ line 59 ~ notiPage", notiPage);
-
     getDataNoti();
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
@@ -190,8 +181,6 @@ export const RightMenu: React.FC<Props> = ({
   );
 
   const onMarkAllAsRead = async () => {
-    console.log(state.dataNotify);
-
     const { result } = await markAsAllRead(token);
 
     if (result) {
@@ -203,8 +192,6 @@ export const RightMenu: React.FC<Props> = ({
   };
 
   const onFeedMore = () => {
-    console.log("OUT: ", outOfData);
-
     if (outOfData) return;
 
     setNotiPage(notiPage + 1);
@@ -220,8 +207,6 @@ export const RightMenu: React.FC<Props> = ({
   };
 
   const onMarkAsRead = async (id) => {
-    console.log(state.dataNotify);
-
     let token = getCookie("access_token");
     const { result } = await markAsRead(token, id);
 

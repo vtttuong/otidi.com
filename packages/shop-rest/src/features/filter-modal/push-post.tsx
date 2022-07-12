@@ -17,17 +17,18 @@ type ManagePostProps = {
   service?: any;
   id?: any;
   onPush?: (e: any, f: any, x: any) => void;
+  loading?: boolean;
 };
 const Push: React.FC<ManagePostProps> = ({
   deviceType,
   onPush,
   service,
   id,
-  error,
+  loading,
 }) => {
-  const [loading, setLoading] = React.useState(false);
   const [choose, setChoose] = React.useState("");
   const [datetime, setDatetime] = React.useState("");
+  const [error, setError] = React.useState(false);
 
   function changeChoose(list) {
     let foundIndex = [];
@@ -54,18 +55,6 @@ const Push: React.FC<ManagePostProps> = ({
         <form style={{ marginBottom: 30 }}>
           <div className="option-push">
             {service.map(function (list) {
-              if (list.id == 1) {
-                list.source =
-                  "https://www.flaticon.com/svg/static/icons/svg/3238/3238699.svg";
-              }
-              if (list.id == 2) {
-                list.source =
-                  "https://www.flaticon.com/svg/static/icons/svg/3445/3445707.svg";
-              }
-              if (list.id == 3) {
-                list.source =
-                  "https://www.flaticon.com/svg/static/icons/svg/3579/3579763.svg";
-              }
               return (
                 <Option
                   key={list.id}
@@ -74,7 +63,7 @@ const Push: React.FC<ManagePostProps> = ({
                   checked={choose == list.id}
                   price={list.price + " coin"}
                   source={list.source}
-                  active={choose == list.value}
+                  active={choose == list.id}
                 />
               );
             })}
@@ -89,6 +78,9 @@ const Push: React.FC<ManagePostProps> = ({
                   display: "flex",
                   justifyContent: "space-between",
                   padding: "10px 12px",
+                  alignItems: "center",
+                  gap: "10px",
+                  height: "60px",
                 }}
               >
                 <span
@@ -112,11 +104,13 @@ const Push: React.FC<ManagePostProps> = ({
                     border: "1px solid #009e7f",
                     padding: "3px 5px",
                     borderRadius: "5px",
+                    height: "100%",
                   }}
                   name="time"
                   type="datetime-local"
                   onChange={handleChange}
                   value={(datetime || "").toString().substring(0, 16)}
+                  // min="2022-7-08T22:22:55"
                 />
               </div>
               {error ? (
@@ -134,7 +128,19 @@ const Push: React.FC<ManagePostProps> = ({
           type="submit"
           style={{ width: "100%" }}
           loading={loading}
-          onClick={() => onPush(id, choose, datetime)}
+          onClick={() => {
+            //validate
+            if (
+              !choose ||
+              choose.length === 0 ||
+              !datetime ||
+              datetime.length == 0
+            ) {
+              setError(true);
+              return;
+            }
+            onPush(id, choose, datetime);
+          }}
         >
           <FormattedMessage id="applyFilter" />
         </Button>

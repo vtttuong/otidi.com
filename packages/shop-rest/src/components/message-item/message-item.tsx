@@ -10,9 +10,9 @@ interface props {
   active?: boolean;
   onChange: (val: number) => void;
   onClick?: (val: number) => void;
-  selected: string;
-  uuid: string;
-  lastSeenAt?: any;
+  selected: number;
+  id: number;
+  lastMessageAt?: any;
   user: any;
   post: any;
   createdAt: string;
@@ -22,23 +22,23 @@ export class MessageItem extends React.Component<props> {
   constructor(props: props) {
     super(props);
   }
-  on = (uuid) => {
-    this.props.onChange(uuid);
-    this.props.onClick(uuid);
+  on = (id) => {
+    this.props.onChange(id);
+    this.props.onClick(id);
   };
 
   render() {
-    const { lastSeenAt, selected, uuid, user, post, createdAt } = this.props;
-    const relativeTime = formatRelativeTime(createdAt);
+    const { lastMessageAt, selected, id, user, post, createdAt } = this.props;
+    const relativeTime = formatRelativeTime(lastMessageAt);
 
     return (
       <div
-        onClick={() => this.on(uuid)}
-        className={`wrap-item ${selected === uuid ? "selected-item" : ""}`}
+        onClick={() => this.on(id)}
+        className={`wrap-item ${selected === id ? "selected-item" : ""}`}
       >
         <div className="left">
           <div className="avatar-left">
-            <Avatar radius="25px" src={user.avatar_img_url} />
+            <Avatar radius="25px" src={user.avatar} />
 
             <div
               style={{
@@ -48,7 +48,7 @@ export class MessageItem extends React.Component<props> {
                 display: "flex",
               }}
             >
-              {lastSeenAt ? null : (
+              {lastMessageAt ? null : (
                 <CircleFill
                   style={{ fontSize: 14, color: "#008000" }}
                   width={14}
@@ -58,26 +58,18 @@ export class MessageItem extends React.Component<props> {
           </div>
           <div className="wrap-middle-item">
             <div className="name">
-              <p>{user.name} </p>
-              <span
-                style={{
-                  fontWeight: 400,
-                  fontSize: 13,
-                  position: "absolute",
-                  right: 15,
-                  top: 1,
-                }}
-              >
+              <p className="username">{user.name} </p>
+              <p className="time">
                 {relativeTime.time}
                 <FormattedMessage id={relativeTime.unit} />
-              </span>
+              </p>
             </div>
-            <div className="title text-ellipsis">{post.title}</div>
+            {/* <div className="title text-ellipsis">{post.name}</div> */}
           </div>
         </div>
 
         <div className="avatar-right">
-          <Avatar radius="5px" src={post.main_img_url} />
+          <Avatar radius="5px" src={post.main_image_url} />
         </div>
       </div>
     );

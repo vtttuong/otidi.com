@@ -62,13 +62,13 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
   const [successPush, setSuccessPush] = useState(false);
   const [data, setData] = useState(datas);
   const [errorMoneyPush, setErrorMoneyPush] = useState(false);
+  const [errorTime, setErrorTime] = useState(false);
   const [arrayService, setArrayService] = useState([]);
-  const posting = [];
+  const [loading, setLoading] = useState(false);
   const ref = useRef(null);
 
   const getP = async () => {
     const services = await getPackage(token);
-    console.log("SERVICES", services);
 
     setArrayService(services);
   };
@@ -76,11 +76,28 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     getP();
   }, []);
 
-  data.posts.map((item) => {
-    if (item.status !== post_status.SOLD && !item.is_priority) {
-      posting.push(item);
-    }
-  });
+  React.useEffect(() => {
+    console.log(
+      "🚀 ~ file: index.tsx ~ line 84 ~ React.useEffect ~ data",
+      data
+    );
+    data.waiting_approve_posts = data.posts.filter(
+      (post) => post.status === post_status.WAITING
+    );
+
+    data.sold_posts = data.posts.filter(
+      (post) => post.status === post_status.SOLD
+    );
+    data.active_posts = data.posts.filter(
+      (post) => post.status === post_status.ACTIVE
+    );
+    data.pushing_posts = data.posts.filter((post) => post.advertise !== null);
+    // data.posts.map((item) => {
+    //   if (item.status !== post_status.SOLD && !item.advertise) {
+    //     posting.push(item);
+    //   }
+    // });
+  }, [data]);
 
   const dataTab2 = [
     {
@@ -103,7 +120,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       icon: <Sold />,
     },
     {
-      number: data.posts.length - posting.length,
+      number: data.pushing_posts.length,
       key: "pushPosts",
       title: "Đang đẩy",
       icon: <Push />,
@@ -173,45 +190,56 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
         width: "500px",
         height: "auto",
       },
-      componentProps: { onPush: onPushClick, service: arrayService, id: id },
+      componentProps: {
+        onPush: onPushClick,
+        service: arrayService,
+        id: id,
+      },
     });
   };
-  const onPushClick = async (id, value, time) => {
-    let serviceMoney = 0;
-    arrayService.map((i) => {
-      if (i.id == value) {
-        serviceMoney = i.price;
-        return;
-      }
-    });
+  const onPushClick = async (id, packageId, time) => {
+    let serviceMoney =
+      arrayService.filter((service) => service.id == packageId)[0]?.price || 0;
+
     if (data.balance < serviceMoney) {
       closeModal();
       setErrorMoneyPush(true);
+
       return;
     }
 
-    const formatTime = moment(time).format("HH:mm");
-    await pushPost(token, id, value, String(formatTime));
-    data.posts.map((item) => {
-      if (item.id == id) {
-        item.post_pushes.push({
-          id: id,
-          schedule: String(formatTime),
-        });
-        return;
-      }
-    });
-    data.balance = data.balance - serviceMoney;
-    setData(data);
-    closeModal();
-    setSuccessPush(true);
-    setTimeout(() => {
-      setSuccessPush(false);
-    }, 3000);
+    const formatTime = moment(time).format("YYYY-MM-DD HH:mm");
+    setLoading(true);
+    const { result, advertise } = await pushPost(
+      token,
+      id,
+      packageId,
+      String(formatTime)
+    );
+    setLoading(false);
+
+    if (result) {
+      data.posts.forEach((item) => {
+        if (item.id == id) {
+          item.advertise = advertise;
+          return;
+        }
+      });
+
+      data.balance = data.balance - serviceMoney;
+
+      setData({ ...data });
+
+      setSuccessPush(true);
+      closeModal();
+    } else {
+      setErrorTime(true);
+    }
   };
-  setTimeout(() => {
-    setErrorMoneyPush(false);
-  }, 3000);
+
+  // setTimeout(() => {
+  //   setErrorMoneyPush(false);
+  // }, 3000);
 
   return (
     <>
@@ -219,7 +247,11 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       <ProfileProvider>
         <Modal>
           <PageWrapper>
-            <ContenHeader data={data} onChangeFollow={onChangeFollow} />
+            <ContenHeader
+              data={data}
+              onChangeFollow={onChangeFollow}
+              scrollTo={scrollToManageTable}
+            />
 
             <ContainBody>
               <BodyContain>
@@ -262,14 +294,14 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                   ) : null}
                   {activeTab === "soldPosts" ? (
                     <WrapCard
-                      data={data.sold_post}
+                      data={data.sold_posts}
                       currentUser={true}
                       onDeletePost={onDeletePost}
                     />
                   ) : null}
                   {activeTab === "pushPosts" ? (
                     <WrapCard
-                      data={data.posts}
+                      data={data.pushing_posts}
                       pushNews={true}
                       currentUser={true}
                       onDeletePost={onDeletePost}
@@ -306,6 +338,14 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                 content={"Vui lòng nạp đủ tiền để  sử dụng dịch vụ!"}
               />
             ) : null}
+            {errorTime ? (
+              <Notice
+                status={"errror"}
+                content={
+                  "Vui lòng chọn thời gian bắt đầu từ thời điểm hiện tại"
+                }
+              />
+            ) : null}
             <Footer />
           </PageWrapper>
         </Modal>
@@ -323,21 +363,26 @@ export async function getServerSideProps(context) {
     context.res.end();
   }
   const data = await getProfile(token);
-  const posts = await getMyPosts(token);
-  const followers = await getFollowers(data.id);
-  const reviews = await getReviews(data.id);
-  data.posts = posts;
-  data.followers = followers;
-  data.reviews = reviews;
+  if (data) {
+    const posts = await getMyPosts(token);
+    const followers = await getFollowers(data.id);
+    const reviews = await getReviews(data.id);
+    data.posts = posts;
+    data.followers = followers;
+    data.reviews = reviews;
 
-  data.waiting_approve_posts = posts.filter(
-    (post) => post.status === post_status.WAITING
-  );
+    data.waiting_approve_posts = data.posts.filter(
+      (post) => post.status === post_status.WAITING
+    );
 
-  data.sold_posts = posts.filter((post) => post.status === post_status.SOLD);
-  data.active_posts = posts.filter(
-    (post) => post.status === post_status.ACTIVE
-  );
+    data.sold_posts = data.posts.filter(
+      (post) => post.status === post_status.SOLD
+    );
+    data.active_posts = data.posts.filter(
+      (post) => post.status === post_status.ACTIVE
+    );
+    data.pushing_posts = data.posts.filter((post) => post.advertise != null);
+  }
 
   return {
     props: {

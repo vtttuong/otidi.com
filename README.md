@@ -83,7 +83,7 @@ password: min123456
 
    ErrorException: Attempt to read property &quot;url&quot; on null in file /var/www/app/Http/Resources/Post/ListPostResource.php on line 34
 
-## <red>CLIET API PROBLEMS <red>
+## <red>CLIENT API PROBLEMS <red>
 
 1. Authentication
    1.1 Thiếu Login by facebook, google api
@@ -97,4 +97,16 @@ password: min123456
 6. get all posts thiếu trả về like_counts
 
 7. Thiếu API get user likes cho 1 post
+
+8. https://api.otodi.vn/api/client/v1/channels => bug =>
+   ErrorException: Attempt to read property &quot;id&quot; on null in file /var/www/app/Http/Resources/Channel/ListChannelResource.php on line 30
+
+9. Thanh toán ko thành công những vẫn cộng tiền vào ballance
+10. Update đưa về trạng thái đã bán => sai
+
+11. Lỗi pusher server => ko nhận và nhắn tin realtime được
+12. Get all channels {{host}}/api/{{type}}/v1/channels => lỗi
+    ErrorException: Attempt to read property &quot;id&quot; on null in file /var/www/app/Http/Resources/Channel/ListChannelResource.php on line 30
+
+13. Đối với 1 bài post, khi tạo 1 chat vs author về bài post này, thì sau này nếu ấn tạo chat vs cũng author này và cũng vs post này thì ko nên tạo chat mới mà trả về chat id đã tạo
 
