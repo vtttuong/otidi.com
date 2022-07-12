@@ -13,9 +13,7 @@ import {
 } from "features/user-profile/user-profile.style";
 import Footer from "layouts/footer";
 import { NextPage } from "next";
-import Router from "next/router";
 import { getMyPosts, getProfile } from "utils/api/profile";
-import { getFollowers, getReviews } from "utils/api/user";
 import { getCookie } from "utils/session";
 const post_status = {
   WAITING: "waiting",

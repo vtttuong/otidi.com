@@ -1,3 +1,4 @@
+import Spinner from "components/spinner";
 import { useRouter } from "next/router";
 import React from "react";
 import { getAllVoucher, getMyVoucher } from "utils/api/voucher";
@@ -16,9 +17,12 @@ type Props = {
 
 const WrapMy: React.FC<Props> = ({ data, token, onExchange }) => {
   const router = useRouter();
-  const [datas, setDatas] = React.useState([]);
+  const [datas, setDatas] = React.useState(null);
   const getMyVouchers = async () => {
-    setDatas(await getMyVoucher(token));
+    const data = await getMyVoucher(token);
+    if (data) {
+      setDatas(data);
+    }
   };
   React.useEffect(() => {
     getMyVouchers();
@@ -26,20 +30,34 @@ const WrapMy: React.FC<Props> = ({ data, token, onExchange }) => {
 
   return (
     <div>
-      {datas && datas.length != 0 ? (
-        datas.map((d) => (
-          <ItemCard key={d.id} className={"voucher"}>
-            <VoucherMy
-              data={d}
-              onClick={() => {
-                router.push("/[type]/[slug]", `/${1}/${2}`);
-              }}
-              onExchange={onExchange}
-            />
-          </ItemCard>
-        ))
+      {datas ? (
+        datas.length != 0 ? (
+          datas.map((d) => (
+            <ItemCard key={d.id} className={"voucher"}>
+              <VoucherMy
+                data={d}
+                onClick={() => {
+                  router.push("/[type]/[slug]", `/${1}/${2}`);
+                }}
+                onExchange={onExchange}
+              />
+            </ItemCard>
+          ))
+        ) : (
+          <p>No data</p>
+        )
       ) : (
-        <p>No data</p>
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "20vh",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner />
+        </div>
       )}
     </div>
   );

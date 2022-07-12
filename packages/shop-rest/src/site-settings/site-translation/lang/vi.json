@@ -462,5 +462,14 @@
   "draftPosts": "Nháp",
   "addReviewOneTimeError": "Bạn đã từng đánh giá người dùng này!",
   "invalidPhone": "Số điện thoại không hợp lệ",
-  "fetchMore": "Tải thêm"
+  "fetchMore": "Tải thêm",
+  "welcome_new_user": "Lần đầu tiên đăng nhập vào hệ thông",
+  "create_new_post": "Tạo bài đăng mới",
+  "sold_post": "Bán thành công",
+  "verify_my_email": "Xác thực email",
+  "verify_my_phone": "Xác thực số điện thoại",
+  "follow_new_user": "Theo dõi người dùng",
+  "share_to_social": "Chia sẻ lên mạng xã hội",
+  "receive_review_users": "Tiếp nhận đánh giá",
+  "push_post": "Đẩy bài"
 }

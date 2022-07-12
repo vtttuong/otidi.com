@@ -261,7 +261,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       <div onMouseDown={onMouseDown} className="wrap-contentmessage container">
         {loading ? (
           <div className="loading">
-            <Spinner style={{}} />
+            <Spinner />
           </div>
         ) : (
           <>

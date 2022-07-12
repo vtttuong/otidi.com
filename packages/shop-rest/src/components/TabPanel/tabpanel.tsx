@@ -62,9 +62,6 @@ export class TabPanel extends React.Component<props, state> {
             >
               {item.icon ? item.icon : null}{" "}
               <FormattedMessage id={item.key} defaultMessage="All" />
-              <span>
-                {"  "}({item.number})
-              </span>
             </div>
           </li>
         ))}

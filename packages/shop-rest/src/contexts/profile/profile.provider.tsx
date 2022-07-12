@@ -194,6 +194,7 @@ function reducer(state: any, action: Action): any {
       return { ...state, [action.payload.field]: action.payload.value };
     case "SET_DISCOUNT_PAYMENT_INFO":
       return { ...state, [action.payload.field]: action.payload.value };
+
     case "SET_PRIMARY_PAYMENT":
       return {
         ...state,

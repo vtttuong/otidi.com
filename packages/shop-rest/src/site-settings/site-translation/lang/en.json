@@ -452,5 +452,14 @@
   "savedPosts": "Saved Posts",
   "draftPosts": "Drafts",
   "addReviewOneTimeError": "You had reviewed this user before",
-  "invalidPhone": "Invalid phone number"
+  "invalidPhone": "Invalid phone number",
+  "welcome_new_user": "First time login into the system",
+  "create_new_post": "Create new post",
+  "sold_post": "Sold post",
+  "verify_my_email": "Verify my email",
+  "verify_my_phone": "Verify my phone",
+  "follow_new_user": "Follow a new user",
+  "share_to_social": "Share to social media",
+  "receive_review_users": "Receive review",
+  "push_post": "Push post"
 }

@@ -43,13 +43,13 @@ const VoucherCard: React.FC<CardProps> = ({
           style={{ position: "relative" }}
         />
         <span className={data.type == "personal" ? "label-persion" : "label"}>
-          {data.type == "personal"
+          {/* {data.type == "personal"
             ? data.levels.map((i) => (
                 <span className="persion">
                   <FormattedMessage id={i.name} />
                 </span>
               ))
-            : "+" + data.discount + " %"}
+            : "+" + data.value + " %"} */}
         </span>
       </FoodImageWrapper>
       {/* Sử dụng:  */}
@@ -60,7 +60,7 @@ const VoucherCard: React.FC<CardProps> = ({
           {<br />}
           <span className="time">
             {"Hết hạn: "}
-            {data.expired}
+            {data.end_at}
           </span>
           <br />
           <span className="using">
@@ -78,17 +78,17 @@ const VoucherCard: React.FC<CardProps> = ({
           {data.type == "personal" ? (
             <>
               {"+ "}
-              {data.discount}
+              {data.value}
               {" % "}
             </>
           ) : (
             <div>
               <span>
                 {" "}
-                Đổi {data.exchange_point}{" "}
+                Đổi {data.reward_point}{" "}
                 <FormattedMessage id="score" defaultMessage="Score" />
               </span>
-              {data.user_voucher.length == 0 ? (
+              {data.total == 0 ? (
                 <span
                   className="doingay"
                   onClick={() => {

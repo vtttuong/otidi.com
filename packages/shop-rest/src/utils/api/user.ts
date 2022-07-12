@@ -100,6 +100,7 @@ export async function getFollowers(id: number) {
   try {
     const res = await fetch(`${baseUrlIndex}/users/${id}/followers`, options);
     const json = await res.json();
+    console.log("🚀 ~ file: user.ts ~ line 103 ~ getFollowers ~ json", json);
 
     return json.success ? json.data : null;
   } catch {

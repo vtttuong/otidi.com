@@ -33,18 +33,18 @@ const VoucherCard: React.FC<CardProps> = ({
   }, 2000);
   console.log(data, 888);
   var used = false;
-  if (data.used_at || data.voucher?.deleted_at) {
+  if (data.used_at || data?.deleted_at) {
     used = true;
   }
   return (
     <>
-      {data.voucher ? (
+      {data ? (
         <FoodCardWrapper
           className={used ? "food-cart deactive" : "ood-cart active"}
         >
           <FoodImageWrapper>
             <Image
-              url={baseUrl + data.voucher?.image}
+              url={baseUrl + data?.image}
               className="post-image"
               style={{ position: "relative" }}
             />
@@ -55,12 +55,12 @@ const VoucherCard: React.FC<CardProps> = ({
             style={{ marginTop: 30, marginBottom: 5 }}
           >
             <DeliveryOpt>
-              <span className="name">{data.voucher.name}</span>
+              <span className="name">{data.name}</span>
 
               {<br />}
               <span className="time">
                 {"Hết hạn: "}
-                {data.voucher.expired}
+                {data.end_at}
               </span>
               {data.used_at ? (
                 <span style={{ color: "#da3b26" }}>
@@ -77,17 +77,17 @@ const VoucherCard: React.FC<CardProps> = ({
                 }
                 alt="coin"
               />
-              {data.voucher.type == "personal" ? (
+              {data.type == "personal" ? (
                 <>
                   {"+ "}
-                  {data.voucher.discount}
+                  {data.value}
                   {" % "}
                 </>
               ) : (
                 <div>
                   <span>
                     {" "}
-                    Đổi {data.voucher.exchange_point}{" "}
+                    Đổi {data.reward_point}{" "}
                     <FormattedMessage id="score" defaultMessage="Score" />
                   </span>
                 </div>

@@ -129,9 +129,23 @@ export async function verifyId(id: number) {
 }
 
 export async function getUserById(id) {
-  const res = await fetch(`${baseUrl}/api/v1/users/${id}/profile`);
-  return res;
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const res = await fetch(`${baseUrl}/users/${id}`, options);
+    const json = await res.json();
+    return json.success ? json.data : null;
+  } catch (err) {
+    return null;
+  }
 }
+
 export async function createChat(postId: number) {
   const options = {
     method: "POST",

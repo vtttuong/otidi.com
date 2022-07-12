@@ -60,12 +60,16 @@ password: min123456
 
 1. Users
    1. Return nhầm name thành email, name return null.
-   2. Block nhưng xóa luôn user
-   3. Thiếu API unblock user
+   2. Thiếu API unblock user
+   3. /api/v1/users/2  
+      Khi user đã bị block thì không lấy được info của User đó
 2. Brands
    1. Thiếu API xóa brand
+   2. Không update được logo
 3. Voucher:
-   1. Trong API index, không return image và used fields
+   1. Trong API index
+      {{host}}/api/{{type}}/v1/vouchers?page=1&count=10&order_by=id&dir=desc
+      , không return image và used fields
 4. Tasks
 
    1. Trong API index, không return name field (null)
@@ -109,4 +113,14 @@ password: min123456
     ErrorException: Attempt to read property &quot;id&quot; on null in file /var/www/app/Http/Resources/Channel/ListChannelResource.php on line 30
 
 13. Đối với 1 bài post, khi tạo 1 chat vs author về bài post này, thì sau này nếu ấn tạo chat vs cũng author này và cũng vs post này thì ko nên tạo chat mới mà trả về chat id đã tạo
+
+14. VOUCHERS:
+    /api/client/v1/vouchers
+    không trả về levels đối với loại voucher persional,
+    không trả về số lượng đã sử dụng
+
+15. /api/index/v1/users/2/followers
+   Khi đã block 1 user thì call api mọi thứ mà có user đó đều bị lỗi
+   khi gọi 1 trip của người đó, hoặc gọi profile của 1 người khác mà user này follow hoặc review
+   ErrorException: Attempt to read property &quot;id&quot; on null in file /var/www/app/Http/Resources/UserFollow/ListUserFollowResource.php on line 24
 
