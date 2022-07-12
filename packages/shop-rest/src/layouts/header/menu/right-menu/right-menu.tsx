@@ -32,6 +32,7 @@ import {
   RightMenuBox,
   NoItem,
 } from "./right-menu.style";
+import { AuthContext } from "contexts/auth/auth.context";
 
 const AuthMenu = dynamic(() => import("../auth-menu"), { ssr: false });
 
@@ -60,28 +61,37 @@ export const RightMenu: React.FC<Props> = ({
   const [dataMessageBroadCast, setDataMessageBroadCast] = React.useState(false);
   const limit = 5;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (token !== undefined && token.length > 0) {
-        const notiList = await getNotifications(token, notiPage, limit);
+  console.log(
+    "🚀 ~ file: right-menu.tsx ~ line 90 ~ useEffect ~ dataNotify",
+    state.dataNotify
+  );
 
-        if (notiList === null) {
-          return;
-        }
-        if (notiList.length === 0) {
+  const getDataNoti = async () => {
+    let token = getCookie("access_token");
+    if (token !== undefined && token.length > 0) {
+      setToken(token);
+      const fetchData = async () => {
+        setLoading(true);
+        const data = await getNotifications(token, notiPage, limit);
+        if (!data || data.length === 0) {
           setOutOfData(true);
         }
-
-        dispatch({
-          type: "SET_NOTI_DATA",
-          payload: { value: notiList, field: "dataNotify" },
-        });
+        if (data !== null) {
+          dispatch({
+            type: "SET_NOTI_DATA",
+            payload: { value: data, field: "dataNotify" },
+          });
+        }
         setLoading(false);
-      }
-      return;
-    };
+      };
+      fetchData();
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    console.log("🚀 ~ file: right-menu.tsx ~ line 95 ~ notiPage", notiPage);
+    getDataNoti();
+    console.log(state.dataNotify);
   }, [notiPage]);
 
   useEffect(() => {
@@ -91,12 +101,6 @@ export const RightMenu: React.FC<Props> = ({
     ) {
       return;
     }
-    let notiUnRead = state.notiUnRead;
-
-    dispatch({
-      type: "SET_NOTI_UNREAD_COUNT",
-      payload: { value: notiUnRead + 1, field: "notiUnRead" },
-    });
 
     dispatch({
       type: "SET_NOTI_DATA_BROADCAST",
@@ -117,27 +121,9 @@ export const RightMenu: React.FC<Props> = ({
   }, [dataMessageBroadCast]);
 
   useEffect(() => {
-    let token = getCookie("access_token");
-    if (token !== undefined && token.length > 0) {
-      setToken(token);
-      const fetchData = async () => {
-        const data = await getNotifications(token, notiPage, limit);
+    console.log("🚀 ~ file: right-menu.tsx ~ line 59 ~ notiPage", notiPage);
 
-        if (data !== null) {
-          const notiUnRead = data.filter((item) => item.readAt === null).length;
-          dispatch({
-            type: "SET_NOTI_UNREAD_COUNT",
-            payload: { value: notiUnRead, field: "notiUnRead" },
-          });
-          dispatch({
-            type: "SET_NOTI_DATA",
-            payload: { value: data, field: "dataNotify" },
-          });
-        }
-      };
-      fetchData();
-    }
-
+    getDataNoti();
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
     });
@@ -174,13 +160,18 @@ export const RightMenu: React.FC<Props> = ({
     });
 
     if (isAuthenticated == false) {
+      setNotiPage(1);
+      setOutOfData(false);
+
+      //reset notify data;
+      dispatch({
+        type: "RESET_NOTI_DATA",
+        payload: { field: "dataNotify" },
+      });
+
       dispatch({
         type: "SET_MESSAGE_UNREAD_COUNT",
         payload: { value: 0, field: "messageUnread" },
-      });
-      dispatch({
-        type: "SET_NOTI_UNREAD_COUNT",
-        payload: { value: 0, field: "notiUnRead" },
       });
     }
   }, [isAuthenticated]);
@@ -188,35 +179,26 @@ export const RightMenu: React.FC<Props> = ({
   const handler = (
     <NavLinkDiv className="menu-item">
       <Notify />
-      {state.notiUnRead > 0 ? <span>{state.notiUnRead}</span> : null}
+      {state.dataNotify &&
+      state.dataNotify.filter((item) => item.readAt === null).length > 0 ? (
+        <span>
+          {" "}
+          {state.dataNotify.filter((item) => item.readAt === null).length}{" "}
+        </span>
+      ) : null}
     </NavLinkDiv>
   );
 
   const onMarkAllAsRead = async () => {
-    const data = await markAsAllRead(token);
+    console.log(state.dataNotify);
 
-    if (data) {
-      const fetchData = async () => {
-        if (token !== undefined && token.length > 0) {
-          const notiList = await getNotifications(token, notiPage, limit);
+    const { result } = await markAsAllRead(token);
 
-          if (notiList === null) {
-            return;
-          }
-          if (notiList.length === 0) {
-            setOutOfData(true);
-          }
-
-          dispatch({
-            type: "SET_NOTI_DATA",
-            payload: { value: notiList, field: "dataNotify" },
-          });
-          setLoading(false);
-        }
-        return;
-      };
-
-      fetchData();
+    if (result) {
+      dispatch({
+        type: "MARK_AS_READ_ALL_NOTI",
+        payload: { field: "dataNotify" },
+      });
     }
   };
 
@@ -224,7 +206,7 @@ export const RightMenu: React.FC<Props> = ({
     console.log("OUT: ", outOfData);
 
     if (outOfData) return;
-    setLoading(true);
+
     setNotiPage(notiPage + 1);
   };
 
@@ -238,33 +220,19 @@ export const RightMenu: React.FC<Props> = ({
   };
 
   const onMarkAsRead = async (id) => {
+    console.log(state.dataNotify);
+
     let token = getCookie("access_token");
-    const res = await markAsRead(token, id);
+    const { result } = await markAsRead(token, id);
 
-    if (res == true) {
-      const notiUnRead = state.notiUnRead;
+    if (result) {
       dispatch({
-        type: "SET_NOTI_UNREAD_COUNT",
-        payload: { value: notiUnRead - 1, field: "notiUnRead" },
+        type: "MARK_AS_READ_NOTI",
+        payload: { field: "dataNotify", id: id },
       });
-      const fetchData = async () => {
-        const data = await getNotifications(token, notiPage, limit);
-
-        if (data !== null) {
-          const notiUnRead = data.filter((item) => item.readAt === null).length;
-          dispatch({
-            type: "SET_NOTI_UNREAD_COUNT",
-            payload: { value: notiUnRead, field: "notiUnRead" },
-          });
-          dispatch({
-            type: "SET_NOTI_DATA",
-            payload: { value: data, field: "dataNotify" },
-          });
-        }
-      };
-      fetchData();
     }
   };
+
   const content =
     state.dataNotify.length == 0 || !state.dataNotify ? (
       <>
@@ -322,9 +290,7 @@ export const RightMenu: React.FC<Props> = ({
           </ScrollableFeed>
         </NotificationWrapper>
         {outOfData ? (
-          <OutOfData>
-            <FormattedMessage id="outOfNoti" />
-          </OutOfData>
+          <></>
         ) : (
           <Button
             variant="primary"

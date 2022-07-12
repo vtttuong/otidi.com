@@ -20,6 +20,7 @@ import { getBrands } from "utils/api/brand";
 import { getMyPosts } from "utils/api/profile";
 import NoResultFound from "components/no-result/no-result";
 import srcToFile from "utils/url-to-file";
+import NotFound from "components/notfound";
 
 type Props = {
   deviceType: {
@@ -36,7 +37,7 @@ const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
 
   console.log(post);
   if (!post) {
-    return <NoResultFound />;
+    return <NotFound />;
   }
 
   post.files = [];

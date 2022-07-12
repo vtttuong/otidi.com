@@ -309,7 +309,7 @@
   "confirmIdentityNotFull": "Chúc mừng bạn đã xác thực thông tin thành công, hãy tiếp tục xác thực email & số điện thoại để nhận được tick xanh uy tín nhé !",
   "notification": "Thông báo",
   "markAllAsRead": "Đánh dấu tất cả là đã đọc",
-  "feedMore": "Feed more",
+  "feedMore": "Tải thêm",
   "location": "Địa chỉ",
   "shipping": "Giao hàng",
   "materialOfClothes": "Chất liệu",
@@ -459,5 +459,6 @@
   "savedPosts": "Đã lưu",
   "draftPosts": "Nháp",
   "addReviewOneTimeError": "Bạn đã từng đánh giá người dùng này!",
-  "invalidPhone": "Số điện thoại không hợp lệ"
+  "invalidPhone": "Số điện thoại không hợp lệ",
+  "fetchMore": "Tải thêm"
 }

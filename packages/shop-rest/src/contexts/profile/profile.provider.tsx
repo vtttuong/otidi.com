@@ -22,7 +22,11 @@ type Action =
   | { type: "SET_PAYMENT_INFO"; payload: any }
   | { type: "SET_DISCOUNT_PAYMENT_INFO"; payload: any }
   | { type: "SET_PRIMARY_PAYMENT"; payload: any }
-  | { type: "SET_PRIMARY_BALANCE"; payload: any };
+  | { type: "SET_PRIMARY_BALANCE"; payload: any }
+  | { type: "RESET_NOTI_DATA"; payload: any }
+  | { type: "MARK_AS_READ_NOTI"; payload: any }
+  | { type: "MARK_AS_READ_ALL_NOTI"; payload: any };
+
 function reducer(state: any, action: Action): any {
   switch (action.type) {
     case "HANDLE_ON_INPUT_CHANGE":
@@ -150,6 +154,37 @@ function reducer(state: any, action: Action): any {
           ).values(),
         ],
       };
+
+    case "MARK_AS_READ_NOTI":
+      return {
+        ...state,
+        [action.payload.field]: [
+          ...state.dataNotify.map((item) =>
+            item.id == action.payload.id
+              ? {
+                  ...item,
+                  readAt: new Date().toISOString(),
+                }
+              : { ...item }
+          ),
+        ],
+      };
+
+    case "MARK_AS_READ_ALL_NOTI":
+      return {
+        ...state,
+        [action.payload.field]: [
+          ...state.dataNotify.map((item) => ({
+            ...item,
+            readAt: new Date().toISOString(),
+          })),
+        ],
+      };
+    case "RESET_NOTI_DATA":
+      return {
+        ...state,
+        [action.payload.field]: [],
+      };
     case "SET_NOTI_DATA_BROADCAST":
       return {
         ...state,
@@ -158,7 +193,7 @@ function reducer(state: any, action: Action): any {
     case "SET_PAYMENT_INFO":
       return { ...state, [action.payload.field]: action.payload.value };
     case "SET_DISCOUNT_PAYMENT_INFO":
-      return { ...state, [action.payload.field]: action.payload.value };  
+      return { ...state, [action.payload.field]: action.payload.value };
     case "SET_PRIMARY_PAYMENT":
       return {
         ...state,
@@ -185,6 +220,7 @@ function reducer(state: any, action: Action): any {
             : { ...item, type: "secondary" }
         ),
       };
+
     default:
       return state;
   }
