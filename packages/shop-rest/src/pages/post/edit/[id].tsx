@@ -5,9 +5,10 @@ import { observer } from "mobx-react";
 import { NextPage } from "next";
 import React from "react";
 import { getCookie } from "utils/session";
-import { getPostBySlug } from "utils/api/post";
+import { getPost, getPostBySlug } from "utils/api/post";
 import { getFields, findIndex } from "utils/api/category";
 import { useRouter } from "next/router";
+import { v4 as uuid } from "uuid";
 
 import {
   postStatus,
@@ -17,6 +18,8 @@ import Router from "next/router";
 import PostFormUpdate from "features/post-form/post-form-update";
 import { getBrands } from "utils/api/brand";
 import { getMyPosts } from "utils/api/profile";
+import NoResultFound from "components/no-result/no-result";
+import srcToFile from "utils/url-to-file";
 
 type Props = {
   deviceType: {
@@ -24,37 +27,56 @@ type Props = {
     tablet: boolean;
     desktop: boolean;
   };
-  posts: any[];
-  postId: number;
+  post: any;
   brands: any;
 };
 
-const EditPost: NextPage<Props> = ({ brands, posts, postId, deviceType }) => {
-  console.log("POST", posts);
+const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
+  const router = useRouter();
 
-  const updatedPost = posts.filter((p) => p.id == postId)[0];
+  console.log(post);
+  if (!post) {
+    return <NoResultFound />;
+  }
 
-  console.log(updatedPost, postId);
+  post.files = [];
+  post.images[0].url =
+    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  post.images[1].url =
+    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  post.images[2].url =
+    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  post.images[3].url =
+    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+
+  post.images.forEach(async (image) => {
+    const file = await srcToFile(image.url, "image-" + uuid());
+    if (file) {
+      post.files.push(file);
+    }
+    console.log(post.files);
+  });
 
   let initData = {
-    title: updatedPost.title,
-    description: updatedPost.description,
+    id: post.id,
+    title: post.title,
+    description: post.description,
     indexOptionType: 0,
-    price: updatedPost.price,
-    unit: updatedPost.unit || "VND",
+    price: post.price,
+    unit: post.unit || "VND",
     indexOptionUnit: 0,
-    brandId: brands[0].id,
+    brandId: post.brand_id,
     modelName: "",
-    modelId: "",
+    modelId: post.brand_model_id,
     indexBrand: 0,
-    files: "",
+    files: post.files,
     additionalInfo: {
-      fuel: updatedPost.detail.fuel,
-      gear: updatedPost.detail.gear,
-      status: updatedPost.detail.status,
-      kilometers: updatedPost.detail.kilometers || 0,
-      origin: updatedPost.detail.origin,
-      released_year: updatedPost.detail.released_year,
+      fuel: post.detail.fuel,
+      gear: post.detail.gear,
+      status: post.detail.status,
+      kilometers: post.detail.kilometers || 0,
+      origin: post.detail.origin,
+      released_year: post.detail.released_year,
     },
   };
 
@@ -68,7 +90,7 @@ const EditPost: NextPage<Props> = ({ brands, posts, postId, deviceType }) => {
       <PostFormProvider initData={initData}>
         <Modal>
           <PostFormUpdate
-            title={"postFormTitle"}
+            title={"postFormUpdateTitle"}
             deviceType={deviceType}
             brands={brands}
           />
@@ -87,55 +109,16 @@ export async function getServerSideProps(context) {
     context.res.writeHead(302, { Location: "/login" });
     context.res.end();
   }
+
   const brands = await getBrands();
-  const posts = await getMyPosts(token);
+  const post = await getPost(postId);
 
   return {
     props: {
-      posts: posts,
-      postId: postId,
+      post: post,
       brands: brands,
     },
   };
 }
 
 export default observer(EditPost);
-
-// export async function getServerSideProps(context) {
-//   const token = getCookie("access_token", context);
-
-//   const fields = await getFields(locale);
-//   let categoryTypes = [];
-//   if (typeof fields !== "undefined") {
-//     fields.map((type) => {
-//       let obj = {
-//         key: "fieldId",
-//         value: type.id,
-//         label: type.translates[0].title,
-//         type: type.value,
-//       };
-//       categoryTypes.push(obj);
-//     });
-//   }
-
-//   const indexCategory = await findIndex(categoryTypes, data.category_type);
-//   const indexOptionStatus = await postStatus.findIndex(
-//     (item) => item.value == data.additional_info?.postStatus
-//   );
-//   const indexOptionUnit = await unitOptions.findIndex(
-//     (item) => item.value == data.unit
-//   );
-
-//   return {
-//     props: {
-//       data: data,
-//       categoryTypes: categoryTypes,
-//       fields: fields,
-//       indexCategory: indexCategory,
-//       indexOptionStatus: indexOptionStatus == -1 ? 0 : indexOptionStatus,
-//       indexOptionUnit: indexOptionUnit,
-//     },
-//   };
-// }
-
-// export default observer(EditPost);

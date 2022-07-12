@@ -38,6 +38,7 @@ import NumberFormat from "react-number-format";
 import { getCookie } from "utils/session";
 import { unitOptions } from "./options";
 import ErrorModel from "features/on-error/error";
+import { useRouter } from "next/router";
 
 const TextArea = dynamic(() => import("../../components/text-area/text-area"), {
   ssr: false,
@@ -288,6 +289,7 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
   const [errorStep, setErrorStep] = useState("");
   const [errorImage, setErrorImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const _next = () => {
     if (currentStep === 1) {
@@ -418,7 +420,7 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
           openModal({
             show: true,
             overlayClassName: "quick-view-overlay",
-            closeOnClickOutside: true,
+            closeOnClickOutside: false,
             component: SuccessModel,
             closeComponent: "",
             config: {
@@ -430,6 +432,10 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
             },
             componentProps: { textId: "createPostSuccess" },
           });
+
+          setTimeout(() => {
+            router.push("/");
+          }, 2000);
         } else {
           openModal({
             show: true,

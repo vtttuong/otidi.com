@@ -68,11 +68,13 @@ const Post: NextPage<Props> = ({ brands, deviceType }) => {
 
 export async function getServerSideProps(context) {
   const token = getCookie("access_token", context);
-  const auth = getCookie("phone_verified_at", context);
-  if (!token || !auth) {
+  const verified_phone = getCookie("phone_verified_at", context);
+
+  if (!token) {
     context.res.writeHead(302, { Location: "/login" });
     context.res.end();
   }
+
   const brands = await getBrands();
 
   return {

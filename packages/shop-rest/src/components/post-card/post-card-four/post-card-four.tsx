@@ -170,15 +170,7 @@ const PostCard: React.FC<CardProps> = ({
         currentUser ? (
           <Countdown date={Date.now() + c} renderer={renderer} />
         ) : null}
-        {/* {typeOfPost == "sell" ? (
-          <SellLabel>
-            <FormattedMessage id="sellPost" defaultMessage="Sell" />
-          </SellLabel>
-        ) : (
-          <BuyLabel>
-            <FormattedMessage id="buyPost" defaultMessage="Sell" />
-          </BuyLabel>
-        )} */}
+
         {prioriry == true ? (
           <SellLabelTop className="main-content">
             <FormattedMessage id="topPost" defaultMessage="Top post" />
@@ -217,10 +209,6 @@ const PostCard: React.FC<CardProps> = ({
             <Edit />
           </span>
         ) : null}
-        {/* <Category style={{ marginBottom: 20, display: "inline-block" }}>
-          <img src={AddressIcon} alt={"address"} />
-          {address}
-        </Category> */}
 
         <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
@@ -256,7 +244,7 @@ const PostCard: React.FC<CardProps> = ({
           />
           <span>
             <Like />
-            <p style={{ position: "relative" }}>{data?.views}</p>
+            <p style={{ position: "relative" }}>{data?.likes_count}</p>
           </span>
           <span
             style={{ marginLeft: 20, position: "relative" }}

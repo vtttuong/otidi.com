@@ -165,6 +165,7 @@ const Step1 = (props) => {
 
 const Step2 = (props) => {
   const { state, dispatch } = useContext(PostFormContext);
+
   if (props.currentStep !== 2) {
     return <div></div>;
   }
@@ -404,7 +405,7 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
 
     axios
       .put(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + `/posts`,
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + `/posts/${state.id}`,
         formdata,
         configs
       )
@@ -428,7 +429,7 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
               width: "500px",
               height: "auto",
             },
-            componentProps: { textId: "createPostSuccess" },
+            componentProps: { textId: "updateSuccess" },
           });
         } else {
           openModal({

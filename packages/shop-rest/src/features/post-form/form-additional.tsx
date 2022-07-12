@@ -28,6 +28,9 @@ import {
 const CarAdditionalInfo = ({ brands }) => {
   const { state, dispatch } = useContext(PostFormContext);
   const [first, setFirst] = useState(true);
+  const [models, setModels] = useState(
+    brands?.filter((item) => item.id === state.brandId)[0]?.brand_models
+  );
 
   console.log("STATE", state);
 
@@ -42,6 +45,10 @@ const CarAdditionalInfo = ({ brands }) => {
         type: "HANDLE_ON_SELECT_CHANGE",
         payload: { value: 0, field: "modelId" },
       });
+
+      setModels(
+        brands?.filter((item) => item.id === state.brandId)[0]?.brand_models
+      );
     }
     setFirst(false);
   }, [state.brandId]);
@@ -101,8 +108,12 @@ const CarAdditionalInfo = ({ brands }) => {
               }
             }}
           >
-            {state.modelName ? state.modelName : <SelectCat />}
-            {!state.modelName || state.modelName === "" ? (
+            {state.modelId ? (
+              models.filter((m) => m.id == state.modelId)[0].name
+            ) : (
+              <SelectCat />
+            )}
+            {!state.modelId || state.modelId === "" || state.modelId === 0 ? (
               <Error>
                 <FormattedMessage id={"errorModel"} />
               </Error>

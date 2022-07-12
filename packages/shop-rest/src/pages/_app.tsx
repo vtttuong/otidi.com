@@ -1,6 +1,10 @@
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "site-settings/site-theme/default";
-import { AppProvider } from "contexts/app/app.provider";
+import {
+  AppProvider,
+  useAppDispatch,
+  useAppState,
+} from "contexts/app/app.provider";
 import { AuthProvider } from "contexts/auth/auth.provider";
 import { LanguageProvider } from "contexts/language/language.provider";
 import { CartProvider } from "contexts/cart/use-cart";
@@ -31,6 +35,8 @@ import { messages } from "site-settings/site-translation/messages";
 import "typeface-lato";
 import "components/layout.css";
 import "typeface-poppins";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 // need to provide types
 export default function ExtendedApp({ Component, pageProps }) {

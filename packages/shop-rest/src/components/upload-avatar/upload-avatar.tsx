@@ -2,7 +2,7 @@ import { Camera } from "assets/icons/camera";
 import { AvatarModal } from "components/avatar-modal/avatar-modal";
 import { ImageCrop } from "components/image-crop/image-crop";
 import Image from "components/image/image";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { getCookie } from "utils/session";
 import { MainDiv, ProfileImageDiv } from "./upload-avatar.style";
@@ -29,7 +29,7 @@ const UploadAvatar: React.FC<{}> = () => {
   let imageEditor = null;
   const [imageData, setImageData] = useState(initialState);
   const [showModal, setShowModal] = useState(false);
-  const ref = useRef(null);
+  const [avatarValue, setAvatarValue] = useState(null);
 
   const setEditorRef = (editor) => {
     imageEditor = editor;
@@ -41,7 +41,9 @@ const UploadAvatar: React.FC<{}> = () => {
 
   const onImageCrop = () => {
     if (imageEditor !== null) {
-      const url = imageEditor.getImageScaledToCanvas().toDataURL();
+      const img = imageEditor.getImageScaledToCanvas();
+      const url = img.toDataURL();
+
       setImageData({
         ...imageData,
         userProfileImage: url,
@@ -52,8 +54,6 @@ const UploadAvatar: React.FC<{}> = () => {
   };
 
   const onImageFileChangeHandler = (e) => {
-    console.log("CHANGE");
-
     const file = e.target.files[0];
     const acceptedFileExtensions = ["png", "jpg", "jpeg", "gif"];
 
@@ -72,7 +72,7 @@ const UploadAvatar: React.FC<{}> = () => {
       ? imageData.userProfileImage
       : avatar;
 
-    return <Image url={profileImage} alt="user-logo" />;
+    return <img src={profileImage} alt="user-logo" />;
   };
 
   return (
@@ -91,7 +91,6 @@ const UploadAvatar: React.FC<{}> = () => {
             name="profileImg"
             accept="image/png, image/jpeg, image/jpg"
             onChange={onImageFileChangeHandler}
-            ref={ref}
           />
           <Camera width={25} height={25} style={{ marginRight: "10px" }} />{" "}
           <span>

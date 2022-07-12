@@ -18,11 +18,12 @@ export class TabPanel extends React.Component<props, state> {
   constructor(props: props) {
     super(props);
   }
-  on = (e) => {
-    this.props.onChange(e.target.id);
+  on = (key) => {
+    this.props.onChange(key);
   };
   render() {
     const { data, active } = this.props;
+
     return (
       <ul
         // onClick={this.on}
@@ -34,6 +35,7 @@ export class TabPanel extends React.Component<props, state> {
         {data.map((item) => (
           <li
             key={item.key}
+            id={item.key.toString()}
             style={{
               textAlign: "center",
               cursor: "pointer",
@@ -41,6 +43,7 @@ export class TabPanel extends React.Component<props, state> {
               height: "100%",
             }}
             role="presentation"
+            onClick={() => this.on(item.key.toString())}
           >
             <div
               className={
@@ -48,8 +51,6 @@ export class TabPanel extends React.Component<props, state> {
                   ? "tabpanel-item-active"
                   : "tabpanel-item"
               }
-              id={item.key.toString()}
-              onClick={this.on}
               data-toggle="tab"
               ref="#home"
               role="tab"

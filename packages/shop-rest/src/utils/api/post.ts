@@ -2,6 +2,7 @@ import { getCookie } from "utils/session";
 
 const baseUrlIndex = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
 const baseUrlClient = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 export async function getAllPosts() {
   const posts = await fetch(`${baseUrlIndex}/posts`);
@@ -24,6 +25,22 @@ export async function getPostBySlug(token, slug) {
     const res = await fetch(`${baseUrlIndex}/posts/${slug}`);
     return res.json();
   }
+}
+
+export async function getPost(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  const res = await fetch(`${baseUrlIndex}/posts/${id}`, options);
+
+  if (res.status === 200) {
+    const resJson = await res.json();
+    return resJson.success ? resJson.data : null;
+  }
+  return null;
 }
 
 export async function getUserLike(id) {

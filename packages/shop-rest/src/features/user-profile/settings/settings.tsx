@@ -56,6 +56,8 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   const [pass, setPass] = React.useState("");
   const [oldPass, setOldPass] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
+  const [loadingPass, setLoadingPass] = React.useState(false);
+
   const [errorContent, setErrorContent] = React.useState("");
   const [errorPass, setErrorPass] = React.useState(false);
   const [successPass, setSuccessPass] = React.useState(false);
@@ -69,7 +71,11 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   const [textAddress, setTextAddress] = useState(data.address || "");
 
   // useEffect(() => {
-  //   setSelectedLocation();
+  //   setSelectedLocation({
+  //     address: data.address,
+  //   latitude: data.latitude,
+  //   longitude: data.longitude,
+  //   });
   // }, [data.address]);
 
   const handleSubmitPassword = async () => {
@@ -77,6 +83,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
       setErrorPass(true);
       setErrorContent("Password must longer 6 characters!");
     } else {
+      setLoadingPass(true);
       setErrorPass(false);
       const data = await updatePass(token, oldPass, pass, confirmPass);
       console.log("DATA RESPONSE", data);
@@ -96,6 +103,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
         setSuccessPass(true);
         setChangePass(false);
       }
+      setLoadingPass(false);
     }
     setTimeout(() => {
       setErrorPass(false);
@@ -114,9 +122,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   };
 
   useEffect(() => {
-    setSelectedLocation(null);
     const timer = setTimeout(async () => {
       if (!first) {
+        setSelectedLocation(null);
         setPopupLocationActive(true);
         const data = await searchAddress(textAddress);
         setLocations(data);
@@ -240,12 +248,26 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                               defaultMessage="Update"
                             />
                           </Button>
+
+                          <Button
+                            variant="cancel"
+                            type="button"
+                            onClick={() => setVerify(false)}
+                            style={{ marginLeft: "10px" }}
+                          >
+                            <FormattedMessage
+                              id="cancelButtonText"
+                              defaultMessage="Cancel"
+                            />
+                          </Button>
                         </div>
                       </>
                     ) : null}
                   </Col>
                   <Col md={12}>
-                    <Form.Label style={{ display: "flex" }}>
+                    <Form.Label
+                      style={{ display: "flex", margin: "30px 0 10px 0" }}
+                    >
                       <FormattedMessage
                         id="passwordPlaceholder"
                         defaultMessage="Password"
@@ -306,28 +328,31 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                       <div
                         style={{
                           display: "flex",
-                          justifyContent: "flex-start",
+                          justifyContent: "center",
+                          marginTop: "20px",
                         }}
                       >
-                        <ButtonCancle
+                        <Button
+                          type="button"
                           onClick={() => handleSubmitPassword()}
-                          style={{
-                            marginRight: "20px",
-                            background: "#009e7f",
-                            padding: "13px",
-                          }}
+                          loading={loadingPass}
                         >
                           <FormattedMessage
                             id="updateButtonText"
                             defaultMessage="Update"
                           />
-                        </ButtonCancle>
-                        <ButtonCancle onClick={() => setChangePass(false)}>
+                        </Button>
+                        <Button
+                          variant="cancel"
+                          type="button"
+                          onClick={() => setChangePass(false)}
+                          style={{ marginLeft: "10px" }}
+                        >
                           <FormattedMessage
                             id="cancelButtonText"
                             defaultMessage="Cancel"
                           />
-                        </ButtonCancle>
+                        </Button>
                       </div>
                     </Form>
                   </Col>
@@ -568,9 +593,27 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
         </Form>
         {errorPass ? <Notice status="error" content={errorContent} /> : null}
         {successPass ? (
-          <Notice status="success" content="Updated password !" />
+          <Notice
+            status="success"
+            content={
+              <FormattedMessage
+                id="updateSuccess"
+                defaultMessage="Updated Identity"
+              />
+            }
+          />
         ) : null}
-        {alert ? <Notice status="success" content="Update success !" /> : null}
+        {alert ? (
+          <Notice
+            status="success"
+            content={
+              <FormattedMessage
+                id="updateSuccess"
+                defaultMessage="Updated Identity"
+              />
+            }
+          />
+        ) : null}
 
         {error !== null ? (
           <>

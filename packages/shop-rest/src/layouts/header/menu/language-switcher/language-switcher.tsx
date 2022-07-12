@@ -35,17 +35,9 @@ const LanguageSwitcher: React.FC<Props> = ({ isHomePage }) => {
   const { query } = useRouter();
   const { locale, changeLanguage } = useLocale();
   const selectedLanguage = LANGUAGE_MENU.find((x) => x.id === locale);
+
   const languageChangeHandler = (e) => {
     changeLanguage(e.target.value);
-    console.log(router.pathname);
-    if (isHomePage) {
-      router.push(`/${query.type}`);
-      return;
-    }
-    if (router.pathname == "/post" || router.pathname.includes("/post/edit")) {
-      router.push(router.pathname);
-      return;
-    }
   };
   return (
     <Box>

@@ -27,7 +27,7 @@ const Notice: React.FC<NoticeProps> = ({ status, content }) => {
   // setShow(true);
   setTimeout(function () {
     setShow(false);
-  }, 3000);
+  }, 100000);
 
   return (
     <>

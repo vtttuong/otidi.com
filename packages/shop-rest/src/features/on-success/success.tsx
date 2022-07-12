@@ -8,9 +8,10 @@ import { closeModal } from "@redq/reuse-modal";
 type SuccessProps = {
   textId: string;
   href: string;
+  btnId?: string;
 };
 
-const SuccessModel: React.FC<SuccessProps> = ({ textId, href }) => {
+const SuccessModel: React.FC<SuccessProps> = ({ textId, href, btnId }) => {
   return (
     <>
       <ContainerCategory>
@@ -23,7 +24,7 @@ const SuccessModel: React.FC<SuccessProps> = ({ textId, href }) => {
         </ContainerCategory>
         <Link href={href ? href : "/"}>
           <span onClick={closeModal} className="homebtn">
-            <FormattedMessage id="backHomeBtn" />
+            <FormattedMessage id={btnId ? btnId : "backHomeBtn"} />
           </span>
         </Link>
       </ContainerCategory>

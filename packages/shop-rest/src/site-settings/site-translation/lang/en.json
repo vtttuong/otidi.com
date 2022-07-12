@@ -233,6 +233,8 @@
   "noteLabelDescription": "Introduce the post you need to sell/buy fully and clearly to attract more people (size, specifications, colors, etc)",
   "selectBrand": "Choose a brand and model",
   "postFormTitle": "Post news now !!!",
+  "postFormUpdateTitle": "Update post!!!",
+
   "typeOfCategory": "Type of category",
   "categoryOption": "Select category",
   "inputCategory": "Category",
@@ -377,7 +379,7 @@
   "notChange": "Can't change",
   "clear": "Clear",
   "verify": "Verify",
-  "updatePhoneText": "Update phone number to create post !",
+  "updatePhoneText": "Verify your phone number to get better experience!",
   "verifyPhoneText": "Please enter verify OTP code !",
   "allVoucher": "All Voucher",
   "myVoucher": "My Voucher",
@@ -416,5 +418,10 @@
   "automaticOption": "Automatic",
   "manualOption": "Manual",
   "hybridGearOption": "Hybrid",
-  "posts": "Posts"
+  "posts": "Posts",
+  "addressError": "Please enter address then select your location!",
+  "updateSuccess": "Update successfully!",
+  "updateFailed": "Update failed!",
+  "registerSuccess": "Register successfully",
+  "backLoginBtn": "Return to login"
 }

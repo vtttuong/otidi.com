@@ -133,17 +133,23 @@ export const BoxAvatar = styled.div`
       align-items: end;
     }
     span.view img {
+      position: relative;
       width: 18px;
-      height: 18px;
+      height: auto;
+      top: 2px;
     }
     span > img {
       width: 15px;
       height: 15px;
       border-radius: 0;
       margin-right: 5px;
+      line-height: 1;
+      margin-top: auto;
     }
+
     span > p {
       font-weight: bold;
+      line-height: 1;
     }
   }
 `;
