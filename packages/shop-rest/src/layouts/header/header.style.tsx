@@ -40,7 +40,7 @@ export const SearchWrapper = styled.div`
 
 const HeaderWrapper = styled.header`
   /* padding: 30px 60px; */
-  padding: 20px 50px;
+  padding: 20px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -61,6 +61,9 @@ const HeaderWrapper = styled.header`
   @media (min-width: 1600px) {
     padding: 25px 40px;
   }
+  @media (min-width: 1200px) {
+    padding: 25px;
+  }
 
   @media (max-width: 990px) {
     display: none;
@@ -70,8 +73,6 @@ const HeaderWrapper = styled.header`
     margin: 0;
 
     @media only screen and (min-width: 991px) and (max-width: 1200px) {
-      margin: 0 15px;
-
       input {
         width: 80%;
       }

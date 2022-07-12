@@ -33,12 +33,21 @@ export const MainMenu = styled.div`
   align-items: center;
 `;
 
-export const IconWrapper = styled.span`
+export const LogoWrapper = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 24px;
+  height: 24px;
   margin-right: 15px;
+  border-radius: 50%;
+  overflow: hidden;
+`;
+
+export const IconLogo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 export const MenuItem = styled.button`
@@ -100,8 +109,9 @@ export const SelectedItem = styled.button`
   padding-right: 15px;
   border-radius: ${themeGet("radii.base", "6px")};
   outline: 0;
-  min-width: 150px;
+  // min-width: 150px;
   cursor: pointer;
+  transition: all 0.2s;
 
   svg {
     height: 19px;
@@ -131,4 +141,18 @@ export const Icon = styled.div`
 export const Arrow = styled.span`
   width: 12px;
   margin-left: 16px;
+`;
+
+export const SelectedItemName = styled.span`
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
+  margin-left: 10px;
+  transition: all 0.2s;
+
+  @media (max-width: 1200px) {
+    display: none !important;
+  }
 `;

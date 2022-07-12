@@ -1,6 +1,6 @@
 import React from "react";
 
-export const AddProduct = ({
+export const AddPost = ({
   color = "currentColor",
   width = "20px",
   height = "20px",

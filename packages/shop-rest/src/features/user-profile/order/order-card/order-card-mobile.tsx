@@ -1,7 +1,7 @@
-import React from 'react';
-import Table from 'rc-table';
-import Collapse, { Panel } from 'rc-collapse';
-import Progress from 'components/progress-box/progress-box';
+import React from "react";
+import Table from "rc-table";
+import Collapse, { Panel } from "rc-collapse";
+import Progress from "components/progress-box/progress-box";
 
 import {
   OrderListHeader,
@@ -20,9 +20,9 @@ import {
   ProgressWrapper,
   OrderTable,
   OrderTableMobile,
-} from './order-card.style';
+} from "./order-card.style";
 
-import { CURRENCY } from 'utils/constant';
+import { CURRENCY } from "utils/constant";
 
 type MobileOrderCardProps = {
   orderId?: any;
@@ -140,7 +140,7 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
               <OrderTableMobile>
                 <Table
                   columns={columns}
-                  data={order.products}
+                  data={order.posts}
                   rowKey={(record) => record.id}
                   components={components}
                   scroll={{ x: 450 }}

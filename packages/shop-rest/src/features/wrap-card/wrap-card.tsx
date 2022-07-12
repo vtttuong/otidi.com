@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import React from "react";
-import ProductCard from "../../components/product-card/product-card-four/product-card-four";
+import PostCard from "../../components/post-card/post-card-four/post-card-four";
 import { ItemCard } from "../user-profile/user-profile.style";
 import { openModal, closeModal } from "@redq/reuse-modal";
 import ReportModal from "features/filter-modal/warningModal";
-import { deletePost, markPost } from "utils/api/product";
+import { deletePost, markPost } from "utils/api/post";
 type Props = {
   deviceType?: {
     mobile: boolean;
@@ -91,7 +91,7 @@ const WrapCard: React.FC<Props> = ({
             key={saveNews ? d.post : d.id}
             className={profileOther == true ? "other" : ""}
           >
-            <ProductCard
+            <PostCard
               name={saveNews ? d.post?.title : d.title}
               image={saveNews ? d.post?.main_img_url : d.main_img_url}
               address={saveNews ? d.post?.address : d.address}
@@ -137,7 +137,7 @@ const WrapCard: React.FC<Props> = ({
               key={d.id}
               className={profileOther == true ? "other" : ""}
             >
-              <ProductCard
+              <PostCard
                 name={d.title}
                 image={d.image}
                 address={d.address}

@@ -1,4 +1,4 @@
-export type Product = {
+export type Post = {
   id: string;
   name: string;
   slug: string;

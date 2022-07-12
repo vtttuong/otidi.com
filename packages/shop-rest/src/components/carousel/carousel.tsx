@@ -170,29 +170,33 @@ export default function CustomCarousel({
         {...props}
         // use dir ltr when rtl true
       >
-        {data.map((item: any, index: number) => {
-          if (component) return component(item);
-          return (
-            <div style={{ padding: "0 15px", overflow: "hidden" }} key={index}>
-              <a
-                href={item.link}
-                style={{ display: "flex", cursor: "pointer" }}
+        {data &&
+          data.map((item: any, index: number) => {
+            if (component) return component(item);
+            return (
+              <div
+                style={{ padding: "0 15px", overflow: "hidden" }}
+                key={index}
               >
-                <img
-                  key={item.id}
-                  src={item.imgSrc}
-                  alt={item.alt}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "block",
-                    position: "relative",
-                  }}
-                />
-              </a>
-            </div>
-          );
-        })}
+                <a
+                  href={item.link}
+                  style={{ display: "flex", cursor: "pointer" }}
+                >
+                  <img
+                    key={item.id}
+                    src={item.imgSrc}
+                    alt={item.alt}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "block",
+                      position: "relative",
+                    }}
+                  />
+                </a>
+              </div>
+            );
+          })}
       </Carousel>
     </div>
   );

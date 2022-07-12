@@ -1,18 +1,14 @@
-import React from 'react';
-import Router from 'next/router';
-import { LogoBox, LogoImage } from './logo.style';
+import React from "react";
+import Router from "next/router";
+import { LogoBox, LogoImage } from "./logo.style";
 type LogoProps = {
   imageUrl: string;
   alt: string;
-  onClick?: () => void;
 };
 
-const Logo: React.FC<LogoProps> = ({ imageUrl, alt, onClick }) => {
+const Logo: React.FC<LogoProps> = ({ imageUrl, alt }) => {
   function onLogoClick() {
-    Router.push('/');
-    if (onClick) {
-      onClick();
-    }
+    Router.push("/");
   }
   return (
     <LogoBox onClick={onLogoClick}>

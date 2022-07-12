@@ -65,6 +65,8 @@ export const SearchSaveItem = styled.li`
   color: #989898;
   padding: 7px 7px 7px 30px;
   font-size: 15px;
+  cursor: pointer;
+
   &:hover {
     background: #e0e0e0;
     border-radius: 5px;
@@ -75,6 +77,13 @@ export const BtnRemove = styled.button`
   border: 0;
   background: transparent;
   top: 7px;
+  align-self: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const Box = styled.div<any>(

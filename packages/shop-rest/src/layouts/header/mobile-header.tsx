@@ -22,7 +22,7 @@ import LanguageSwitcher from "./menu/language-switcher/language-switcher";
 import { isCategoryPage } from "../is-home-page";
 import useDimensions from "utils/useComponentSize";
 import NavLink from "components/nav-link/nav-link";
-import { AddProduct } from "assets/icons/AddProduct";
+import { AddPost } from "assets/icons/AddPost";
 import { POST_ITEM } from "site-settings/site-navigation";
 import { getCookie } from "utils/session";
 type MobileHeaderProps = {
@@ -97,7 +97,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
               label={POST_ITEM.defaultMessage}
               intlId={POST_ITEM.id}
               iconClass="menu-icon"
-              icon={<AddProduct />}
+              icon={<AddPost />}
               number={""}
             />
           </TextColor>

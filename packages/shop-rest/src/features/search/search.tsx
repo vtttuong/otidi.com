@@ -56,28 +56,17 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
   const onSearch = (e) => {
     e.preventDefault();
     const { type, ...rest } = query;
-    if (type) {
-      router.push(
-        {
-          pathname,
-          query: { ...rest, text: searchTerm },
-        },
-        {
-          pathname: `/${type}`,
-          query: { ...rest, text: searchTerm },
-        }
-      );
-    } else {
-      router.push({
-        pathname,
-        query: { ...rest, text: searchTerm },
-      });
-    }
+    router.push({
+      pathname,
+      query: { ...rest, text: searchTerm },
+    });
+
     dispatch({ type: "SET_SEARCH_TERM", payload: "" });
     if (onSubmit) {
       onSubmit();
     }
   };
+
   return (
     <Container>
       <SearchBox
@@ -87,7 +76,7 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
         name="search"
         placeholder={intl.formatMessage({
           id: "searchPlaceholder",
-          defaultMessage: "Your products",
+          defaultMessage: "Your posts",
         })}
         categoryType={query.type || "restaurant"}
         buttonText={intl.formatMessage({

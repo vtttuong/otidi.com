@@ -6,9 +6,9 @@ import { observer } from "mobx-react";
 import { NextPage } from "next";
 import React from "react";
 import { getCookie } from "utils/session";
-import { getProductBySlug } from "utils/api/product";
+import { getPostBySlug } from "utils/api/post";
 import { getFields, findIndex } from "utils/api/category";
-import { productStatus, unitOptions } from "features/post-form/post-form-update";
+import { postStatus, unitOptions } from "features/post-form/post-form-update";
 import Router from "next/router";
 
 type Props = {
@@ -34,13 +34,12 @@ const EditPost: NextPage<Props> = ({
   indexOptionUnit,
   deviceType,
 }) => {
-
   let initDataUpdate = {
     postId: data.id,
     title: data.title,
     description: data.description,
     type: data.type,
-    indexOptionType: data.type == 'buy' ? 1 : 0,
+    indexOptionType: data.type == "buy" ? 1 : 0,
     price: data.price,
     unit: data.unit,
     indexOptionUnit: indexOptionUnit,
@@ -59,7 +58,11 @@ const EditPost: NextPage<Props> = ({
 
   return (
     <>
-      <SEO post={true} title="Post - SecondHandShop" description="Update Post" />
+      <SEO
+        post={true}
+        title="Post - SecondHandShop"
+        description="Update Post"
+      />
       <PostFormProvider initData={initDataUpdate}>
         <Modal>
           <PostFormUpdate
@@ -87,7 +90,7 @@ export async function getServerSideProps(context) {
     }
   }
 
-  const data = await getProductBySlug(token, context.params.slug);
+  const data = await getPostBySlug(token, context.params.slug);
 
   const fields = await getFields(locale);
   let categoryTypes = [];
@@ -104,8 +107,12 @@ export async function getServerSideProps(context) {
   }
 
   const indexCategory = await findIndex(categoryTypes, data.category_type);
-  const indexOptionStatus = await productStatus.findIndex(item => item.value == data.additional_info?.productStatus);
-  const indexOptionUnit = await unitOptions.findIndex(item => item.value == data.unit)
+  const indexOptionStatus = await postStatus.findIndex(
+    (item) => item.value == data.additional_info?.postStatus
+  );
+  const indexOptionUnit = await unitOptions.findIndex(
+    (item) => item.value == data.unit
+  );
 
   return {
     props: {
@@ -113,8 +120,8 @@ export async function getServerSideProps(context) {
       categoryTypes: categoryTypes,
       fields: fields,
       indexCategory: indexCategory,
-      indexOptionStatus: (indexOptionStatus == -1) ? 0 : indexOptionStatus,
-      indexOptionUnit: indexOptionUnit
+      indexOptionStatus: indexOptionStatus == -1 ? 0 : indexOptionStatus,
+      indexOptionUnit: indexOptionUnit,
     },
   };
 }

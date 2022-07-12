@@ -22,16 +22,15 @@ import Search from "features/search/search";
 import { Clock } from "assets/icons/Clock";
 import { Saved } from "assets/icons/Saved";
 const CategoryIconNav = dynamic(() => import("components/type-nav/type-nav"));
-const SpringModal = dynamic(() =>
-  import("components/spring-modal/spring-modal")
+const SpringModal = dynamic(
+  () => import("components/spring-modal/spring-modal")
 );
 
 interface Props {
   intlTitleId: string;
-  type?: string;
 }
 
-export const MobileBanner: React.FC<Props> = ({ type, intlTitleId }) => {
+export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
   const [isOpen, setOpen] = useState(false);
   const [isShowHistory, setIsShowHistory] = React.useState(false);
   const dispatch = useAppDispatch();
@@ -63,13 +62,13 @@ export const MobileBanner: React.FC<Props> = ({ type, intlTitleId }) => {
             />
           </Description>
 
-          <Button
+          {/* <Button
             variant="text"
             onClick={() => setOpen(true)}
             style={{ textTransform: "capitalize" }}
           >
             {type}
-          </Button>
+          </Button> */}
         </ContentRow>
 
         <SearchWrapper>
@@ -78,9 +77,7 @@ export const MobileBanner: React.FC<Props> = ({ type, intlTitleId }) => {
             className="headerSearch"
             onClick={() => setIsComponentVisible(true)}
           />
-          {isComponentVisible && (
-            <ShowHistory type={type} intlTitleId={intlTitleId} />
-          )}
+          {isComponentVisible && <ShowHistory intlTitleId={intlTitleId} />}
         </SearchWrapper>
         <Waypoint
           onEnter={removeSticky}

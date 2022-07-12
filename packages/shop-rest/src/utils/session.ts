@@ -1,13 +1,13 @@
-import cookie from 'js-cookie';
-import nextCookie from 'next-cookies';
+import cookie from "js-cookie";
+import nextCookie from "next-cookies";
 // import { isBrowser } from './isBrowser';
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== "undefined";
 
 export const getCookieFromBrowser = (key: string): any => {
   return cookie.get(key);
 };
 
-export const getCookieFromServer = (ctx: any, key = 'id_token') => {
+export const getCookieFromServer = (ctx: any, key = "id_token") => {
   const cookie = nextCookie(ctx);
   const token = cookie && cookie[key] ? cookie[key] : false;
   if (!token) {
