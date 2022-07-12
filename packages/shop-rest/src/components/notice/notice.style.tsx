@@ -4,7 +4,7 @@ import NavLink from "components/nav-link/nav-link";
 
 const NoticeWrapper = styled.div`
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 999;
 
   .btn-remove {
     position: absolute;

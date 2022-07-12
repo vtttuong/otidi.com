@@ -1,10 +1,10 @@
-import NoResultFound from "components/no-result/no-result";
+import NotFound from "components/notfound";
 import React from "react";
 
 const PageNotFound = () => {
   return (
     <div>
-      <NoResultFound />
+      <NotFound />
     </div>
   );
 };

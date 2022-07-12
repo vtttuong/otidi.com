@@ -6,7 +6,7 @@ export const NoResultWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 20px;
+  padding: 20px 0;
 
   h3 {
     font-size: ${themeGet("fontSizes.xl", "24")}px;

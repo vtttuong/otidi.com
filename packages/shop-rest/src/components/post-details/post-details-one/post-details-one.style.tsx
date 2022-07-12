@@ -277,19 +277,18 @@ export const PostCartWrapper = styled.div`
   margin-top: 60px;
   @media (max-width: 767px) {
     margin-top: 40px;
+  }
 `;
-export const H2Text = styled.h2`
+export const H4Text = styled.h4`
   text-transform: capitalize;
   background: #009e7f;
-  padding: 7px;
+  padding: 10px 7px;
   color: #fff;
-  font-size: 19px;
+  font-size: 18px;
   border-radius: 5px;
-  @media (max-width: 769px) {
-    font-size: 20px;
-  }
-  @media (max-width: 425px) {
-    font-size: 18px;
+
+  @media (max-width: 767px) {
+    font-size: 16px;
   }
 `;
 export const A = styled.a`
@@ -342,7 +341,7 @@ export const Detail = styled.div`
   }
   flex-direction: column;
   &.comment {
-    margin-top: 20px;
+    margin: 20px 0;
   }
   &.social {
     width: 100%;
@@ -473,10 +472,6 @@ export const RelatedItems = styled.div`
     padding-right: 15px;
     margin-bottom: 30px;
 
-    @media (max-width: 1500px) {
-      flex: 0 0 20%;
-      max-width: 20%;
-    }
     @media (max-width: 1400px) {
       flex: 0 0 25%;
       max-width: 25%;

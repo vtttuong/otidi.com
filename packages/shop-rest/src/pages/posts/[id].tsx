@@ -2,12 +2,13 @@ import { Modal } from "@redq/reuse-modal";
 import PostSingleWrapper, {
   PostSingleContainer,
 } from "assets/styles/post-single.style";
+import NotFound from "components/notfound";
 import { SEO } from "components/seo";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React from "react";
-import { viewPost } from "utils/api/post";
+import React, { useEffect } from "react";
+import { getPost, viewPost } from "utils/api/post";
 import { getCookie } from "utils/session";
 
 const PostDetails = dynamic(
@@ -20,33 +21,47 @@ type Props = {
     tablet: boolean;
     desktop: boolean;
   };
-  slug: string;
+  post: any;
   userId?: number;
   token?: string;
   [key: string]: any;
 };
 
-const PostPage: NextPage<Props> = ({ slug, userId, token, deviceType }) => {
+const PostPage: NextPage<Props> = ({ post, userId, token, deviceType }) => {
+  if (!post) {
+    return <NotFound />;
+  }
+
   const router = useRouter();
 
   if (router.isFallback) return <p>Loading...</p>;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const content = (
     <PostDetails
       userId={userId}
-      slug={slug}
+      data={post}
+      user={post.user}
       token={token}
       deviceType={deviceType}
     />
   );
-  React.useEffect(() => {
-    viewPost(slug);
-  }, [slug]);
+  // React.useEffect(() => {
+  //   viewPost(id);
+  // }, [id]);
 
   return (
     <>
       <SEO
-        title={`${slug || "Do cu"} - SecondHandShop`}
-        description={`${slug || "do cu"} Details`}
+        title={`${post.slug || "Do cu"} - SecondHandShop`}
+        description={`${post.slug || "do cu"} Details`}
       />
 
       <Modal>
@@ -59,15 +74,15 @@ const PostPage: NextPage<Props> = ({ slug, userId, token, deviceType }) => {
 };
 
 export async function getServerSideProps(context) {
-  const slug = context.params.slug;
+  const id = context.params.id;
   const userId = getCookie("userId", context);
   const token = getCookie("access_token", context);
-
-  console.log(slug, userId, token);
+  const post = await getPost(id);
+  console.log(post);
 
   return {
     props: {
-      slug,
+      post: post,
       userId,
       token,
     },

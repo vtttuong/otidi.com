@@ -38,11 +38,6 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
   const selectedQueries = query.text;
   const dispatch = useAppDispatch();
 
-  console.log(
-    "🚀 ~ file: sidebar.tsx ~ line 40 ~ selectedQueries",
-    selectedQueries
-  );
-
   const onCategoryClick = (slug: string) => {
     dispatch({ type: "SET_SEARCH_TERM", payload: "" });
     router.push({

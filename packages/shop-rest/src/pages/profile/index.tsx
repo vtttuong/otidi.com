@@ -37,7 +37,7 @@ import {
   getProfile,
   pushPost,
 } from "utils/api/profile";
-import { getFollowers } from "utils/api/user";
+import { getFollowers, getReviews } from "utils/api/user";
 import { getCookie } from "utils/session";
 
 type Props = {
@@ -146,13 +146,16 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       }
     });
   };
-  const onChangeFollow = (i: string) => {
-    const yOffset = -120;
+
+  const scrollToManageTable = () => {
+    const yOffset = -110;
     const y =
       ref.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
     window.scrollTo({ top: y, behavior: "smooth" });
-
+  };
+  const onChangeFollow = (i: string) => {
+    scrollToManageTable();
     if (i == "following") setActiveTab("following");
     else setActiveTab("follower");
   };
@@ -224,6 +227,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                   balance={data.balance}
                   dataPost={data}
                   setActiveTab={setActiveTab}
+                  setActive={scrollToManageTable}
                 />
                 {/* <Point deviceType={deviceType} /> */}
               </BodyContain>
@@ -287,7 +291,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                     <ManagePost data={data.followers} />
                   ) : null}
                   {activeTab === "review" ? (
-                    <ManagePostReview userId={data.id} />
+                    <ManagePostReview data={data.reviews} userId={data.id} />
                   ) : null}
                 </ContentBox>
               </ContentContainer>
@@ -321,8 +325,10 @@ export async function getServerSideProps(context) {
   const data = await getProfile(token);
   const posts = await getMyPosts(token);
   const followers = await getFollowers(data.id);
+  const reviews = await getReviews(data.id);
   data.posts = posts;
   data.followers = followers;
+  data.reviews = reviews;
 
   data.waiting_approve_posts = posts.filter(
     (post) => post.status === post_status.WAITING

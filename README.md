@@ -96,3 +96,5 @@ password: min123456
 
 6. get all posts thiếu trả về like_counts
 
+7. Thiếu API get user likes cho 1 post
+

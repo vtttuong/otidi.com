@@ -78,6 +78,7 @@ const ContentBox = styled.div`
 const ItemCard = styled.div`
   width: 33%;
   padding: 10px;
+
   &.voucher {
     width: 100%;
     border-bottom: 1px solid #009e7f;
@@ -87,10 +88,17 @@ const ItemCard = styled.div`
   }
   &.other {
     width: 25%;
+
+    @media only screen and (max-width: 1440px) {
+      width: 33%;
+    }
+    @media only screen and (max-width: 990px) {
+      width: 50%;
+    }
   }
   @media only screen and (max-width: 990px) {
     width: 50%;
-    padding: 10px;
+    padding: 5px;
   }
 `;
 

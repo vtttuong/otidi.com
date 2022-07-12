@@ -70,10 +70,7 @@ export async function onSave(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrlClient + `/api/client/v1/posts/${id}/save`,
-    options
-  );
+  const data = await fetch(baseUrlClient + `/posts/${id}/save`, options);
   return data;
 }
 
@@ -86,11 +83,19 @@ export async function onLike(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrlClient + `/api/client/v1/posts/${id}/like`,
-    options
-  );
-  return data;
+  try {
+    const res = await fetch(baseUrlClient + `/posts/${id}/like`, options);
+    const json = await res.json();
+    return {
+      result: json.success ? true : false,
+      error: json.result,
+    };
+  } catch (err) {
+    return {
+      result: false,
+      error: err.message || "Failed to create review",
+    };
+  }
 }
 
 export async function onFollow(token: string, id: number) {
@@ -102,10 +107,7 @@ export async function onFollow(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrlClient + `/api/client/v1/users/${id}/follow`,
-    options
-  );
+  const data = await fetch(baseUrlClient + `/users/${id}/follow`, options);
   return data;
 }
 
@@ -118,10 +120,7 @@ export async function onUnFollow(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrlClient + `/api/client/v1/users/${id}/unfollow`,
-    options
-  );
+  const data = await fetch(baseUrlClient + `/users/${id}/unfollow`, options);
   return data;
 }
 
@@ -134,11 +133,19 @@ export async function onUnLike(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrlClient + `/api/client/v1/posts/${id}/unlike`,
-    options
-  );
-  return data;
+  try {
+    const res = await fetch(baseUrlClient + `/posts/${id}/unlike`, options);
+    const json = await res.json();
+    return {
+      result: json.success ? true : false,
+      error: json.result,
+    };
+  } catch (err) {
+    return {
+      result: false,
+      error: err.message || "Failed to create review",
+    };
+  }
 }
 
 export async function onUnSave(token: string, id: number) {
@@ -150,26 +157,36 @@ export async function onUnSave(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrlClient + `/api/client/v1/posts/${id}/unsave`,
-    options
-  );
+  const data = await fetch(baseUrlClient + `/posts/${id}/unsave`, options);
   return data;
 }
 
-export async function report(model: any) {
-  const token = getCookie("access_token");
+export async function report(id: number, model: any) {
+  var formdata = new FormData();
+  formdata.append("type", model.type);
+  formdata.append("phone_number", model.phone_number);
+
   const options = {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      "X-API-KEY": API_KEY,
     },
-    body: model,
+    body: formdata,
   };
 
-  const data = await fetch(baseUrlIndex + `/posts/report`, options);
-  return data;
+  try {
+    const res = await fetch(baseUrlIndex + `/posts/${id}/report`, options);
+    const json = await res.json();
+    return {
+      result: json.success ? true : false,
+      error: json.result,
+    };
+  } catch (err) {
+    return {
+      result: false,
+      error: err.message || "Failed to create review",
+    };
+  }
 }
 
 export async function deletePost(id: number) {

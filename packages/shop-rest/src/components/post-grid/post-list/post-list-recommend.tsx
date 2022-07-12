@@ -28,18 +28,23 @@ type PostsProps = {
   type?: string;
   slug?: string;
   token?: string;
+  postId: number;
 };
 export const RecommendPosts: React.FC<PostsProps> = ({
   loadMore = true,
+  postId,
   type,
   token,
   slug,
 }) => {
   const router = useRouter();
-  const [data, setData] = useState<any>();
-  const recommends = useRecommendPosts();
+  const { loading, data } = useRecommendPosts(postId);
+  console.log(
+    "🚀 ~ file: post-list-recommend.tsx ~ line 43 ~ recommends",
+    data
+  );
 
-  if (!data) {
+  if (loading) {
     return (
       <LoaderWrapper>
         <LoaderItem>
@@ -58,7 +63,7 @@ export const RecommendPosts: React.FC<PostsProps> = ({
     );
   }
 
-  if (data.length === 0) {
+  if (data.data.length === 0) {
     return <NoResultFound />;
   }
 
@@ -66,7 +71,7 @@ export const RecommendPosts: React.FC<PostsProps> = ({
     <>
       <PostsRow>
         {data &&
-          data.map((item: any, index: number) => (
+          data.data.map((item: any, index: number) => (
             <PostsCol key={index} className="food-col">
               <PostCardWrapper>
                 <Fade
@@ -76,7 +81,7 @@ export const RecommendPosts: React.FC<PostsProps> = ({
                 >
                   <FoodCard
                     name={item.title}
-                    image={item.image}
+                    image={item.main_image?.url}
                     address={item.address}
                     createdAt={item.created_at}
                     price={item.price}
@@ -86,7 +91,7 @@ export const RecommendPosts: React.FC<PostsProps> = ({
                     data={item}
                     prioriry={item.is_priority}
                     onClick={() => {
-                      router.push("/[type]/[slug]", `/${type}/${item.slug}`);
+                      router.push(`/posts/${item.id}`);
                       setTimeout(() => {
                         window.scrollTo(0, 0);
                       }, 500);

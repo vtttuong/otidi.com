@@ -61,17 +61,17 @@ interface Props {
   page?: number;
   count?: number;
   sort?: string | string[];
-  sortDir?: string | string[];
+  dir?: string | string[];
   text?: string | string[];
 }
 // https://api.otodi.vn/api/index/v1/posts?count=10&page=1&order_by=id&dir=asc&q=ford
 export default function usePosts(variables: Props) {
-  let { page, count, sortDir, sort, text } = variables ?? {};
+  let { page, count, dir, sort, text } = variables ?? {};
   count = count ? count : COUNT_PER_PAGE;
 
   let queryParams = {
     count: count,
-    dir: sortDir ? sortDir : "asc",
+    dir: dir ? dir : "asc",
     order_by: sort ? sort : "id",
     q: text,
   };
@@ -86,8 +86,8 @@ export default function usePosts(variables: Props) {
   const parsed = queryString.stringify(
     {
       ...newParams,
-    },
-    { sort: false }
+    }
+    // { sort: false }
   );
 
   let url = baseUrl + "/posts?";
@@ -108,9 +108,9 @@ export default function usePosts(variables: Props) {
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.length < count);
 
-  if (sort === "views") {
-    posts = sortBy(posts, { prop: "views", desc: true });
-  }
+  // if (sort === "views") {
+  //   posts = sortBy(posts, { prop: "views", desc: true });
+  // }
 
   return {
     posts,
@@ -123,7 +123,32 @@ export default function usePosts(variables: Props) {
   };
 }
 
-export function useRecommendPosts() {
+export function useRecommendPosts(id: number) {
+  let url = "";
+
+  url = `${baseUrl}/posts/${id}/recommends`;
+
+  const { data, mutate, error } = useSWR(url, postFetcher);
+
+  const loading = !data && !error;
+  // need to remove when you using real API integration
+  // const [formattedData, setFormattedData] = useState(false);
+  console.log(
+    "🚀 ~ file: use-posts.ts ~ line 145 ~ useRecommendPosts ~ data",
+    data
+  );
+
+  return {
+    loading,
+    error,
+    data: data,
+    // hasMore,
+    mutate,
+    // fetchMore,
+  };
+}
+
+export function useTopPosts() {
   let url = "";
 
   url = `${baseUrl}/posts/3/recommends`;

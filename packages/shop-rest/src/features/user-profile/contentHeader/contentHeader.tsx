@@ -8,12 +8,15 @@ import { PhoneIcon } from "assets/icons/Phone";
 import { SkypeIcon } from "assets/icons/skype-brands";
 import { UserAvatar } from "assets/icons/UserAvatar";
 import { Verified } from "assets/icons/verified";
+import Spinner from "components/spinner";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import StarRatings from "react-star-ratings";
+import { onFollow } from "utils/api/post";
+import { follow, unfollow } from "utils/api/user";
 import { CalendarCheck } from "../../../assets/icons/CalendarCheck";
 import { Check2Circle } from "../../../assets/icons/Check2Circle";
 import { DollarIcon } from "../../../assets/icons/DollarIcon";
@@ -50,6 +53,7 @@ const ContenHeader: React.FC<Props> = ({
   onRate,
   userId,
   token,
+  onFollow,
   onChangeFollow,
 }) => {
   const router = useRouter();
@@ -63,37 +67,28 @@ const ContenHeader: React.FC<Props> = ({
   const verifyEmail = data.email_verified_at ? true : false;
   const verifyPhone = data.phone_verified_at ? true : false;
   const verifyId = data.identity_verified_at ? true : false;
+  const [loading, setLoading] = useState(false);
 
-  const onFollow = async () => {
+  const onFollowClick = async () => {
     if (token == undefined) {
       router.push("/login");
       return;
     } else {
-      const options = {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-      };
+      setLoading(true);
       if (following == false) {
-        setFollowing(true);
-
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-            `/api/client/v1/users/${data.id}/follow`,
-          options
-        );
+        const { result } = await follow(token, data.id);
+        if (result) {
+          setFollowing(true);
+          onFollow();
+        }
       } else {
-        setFollowing(false);
-
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-            `/api/client/v1/users/${data.id}/unfollow`,
-          options
-        );
+        const { result } = await unfollow(token, data.id);
+        if (result) {
+          setFollowing(false);
+          onFollow();
+        }
       }
+      setLoading(false);
     }
   };
   const verify = () => {
@@ -439,18 +434,23 @@ const ContenHeader: React.FC<Props> = ({
 
               {profileOther && profileOther == true ? (
                 <ButtonFollow
-                  onClick={onFollow}
+                  onClick={onFollowClick}
                   className={following ? "following" : "follow"}
                 >
-                  <Follow />
-
-                  {following ? (
-                    <FormattedMessage
-                      id="following"
-                      defaultMessage="Folowing"
-                    />
+                  {loading ? (
+                    <Spinner />
                   ) : (
-                    <FormattedMessage id="follow" defaultMessage="Folow" />
+                    <>
+                      <Follow />
+                      {following ? (
+                        <FormattedMessage
+                          id="following"
+                          defaultMessage="Folowing"
+                        />
+                      ) : (
+                        <FormattedMessage id="follow" defaultMessage="Folow" />
+                      )}
+                    </>
                   )}
                 </ButtonFollow>
               ) : (
