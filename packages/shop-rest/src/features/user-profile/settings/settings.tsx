@@ -114,11 +114,11 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   };
 
   useEffect(() => {
+    setSelectedLocation(null);
     const timer = setTimeout(async () => {
       if (!first) {
         setPopupLocationActive(true);
         const data = await searchAddress(textAddress);
-        setSelectedLocation(null);
         setLocations(data);
       }
     }, 500);

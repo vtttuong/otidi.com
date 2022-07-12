@@ -10,6 +10,7 @@ import { ServerStyleSheet } from "styled-components";
 export default class CustomDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
+
     const originalRenderPage = ctx.renderPage;
 
     try {
@@ -20,6 +21,7 @@ export default class CustomDocument extends Document {
         });
 
       const initialProps = await Document.getInitialProps(ctx);
+
       return {
         ...initialProps,
         styles: (
@@ -33,8 +35,10 @@ export default class CustomDocument extends Document {
       sheet.seal();
     }
   }
+
   render() {
     const GA_MEASUREMENT_ID = "UA-187951136-1";
+
     return (
       <Html lang="en">
         <Head>

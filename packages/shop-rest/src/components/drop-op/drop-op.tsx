@@ -17,22 +17,28 @@ const customStyles = {
 
   indicatorsContainer: () => ({
     position: "absolute",
-    width: 50,
-    height: 50,
+    width: "50px",
+    height: "50px",
     top: 4,
     right: -5,
+  }),
+
+  menuList: () => ({
+    maxHeight: "200px",
+    overflow: "auto",
   }),
 };
 
 const SelectItem: React.FC<any> = ({ options }) => {
   if (options.length == 0) {
-    return;
+    return <></>;
   }
   const { state, dispatch } = useContext(PostFormContext);
+
   const defaultItem = {
-    key: options[state.indexCategory].key,
-    value: options[state.indexCategory].value,
-    label: options[state.indexCategory].label,
+    key: options[state.indexBrand].key,
+    value: options[state.indexBrand].value,
+    label: options[state.indexBrand].label,
   };
 
   const [valueCategory, setValueCategory] = React.useState(defaultItem);
@@ -40,21 +46,22 @@ const SelectItem: React.FC<any> = ({ options }) => {
   const handleChange = (data) => {
     const { key, value } = data;
     setValueCategory(data);
+
     dispatch({
       type: "HANDLE_ON_SELECT_CHANGE",
-      payload: { value, field: "fieldId" },
+      payload: { value, field: "brandId" },
     });
 
     const index = options.findIndex((option) => option.value === value);
     dispatch({
       type: "HANDLE_ON_SELECT_CHANGE",
-      payload: { value: index, field: "indexCategory" },
+      payload: { value: index, field: "indexBrand" },
     });
   };
   return (
     <div style={{ minWidth: "100%" }}>
       <Select
-        instanceId={options[state.indexCategory].value}
+        instanceId={options[state.indexBrand].value}
         classNamePrefix="filter"
         styles={customStyles}
         options={options}

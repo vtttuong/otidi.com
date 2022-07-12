@@ -10,15 +10,17 @@ export const ContainerCategory = styled.div`
   padding: 20px 17px;
   text-align: center;
 
-  img{
-    width: 20%;
+  img {
+    max-width: 100px;
+    max-height: 100px;
   }
+
   .text{
     font-size: 20px;
     font-weight: bold;
     color: #dc6060;
   }
-  .homebtn {
+  .cancelbtn {
     cursor: pointer;
     color: #444;
     font-size: 16px;

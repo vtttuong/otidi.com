@@ -17,8 +17,6 @@ export default function SignInModal() {
   const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
   let token = getCookie("access_token");
 
-  console.log("TOKEN", token);
-
   async function sendVerifyMail() {
     setLoading(true);
     const options = {
@@ -29,7 +27,7 @@ export default function SignInModal() {
       },
     };
 
-    const url = `${baseUrl}/api/client/v1/me/verify-mail/send`;
+    const url = `${baseUrl}/me/verify-mail/send`;
     const res = await fetch(url, options);
 
     setResponseMessage(true);

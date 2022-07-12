@@ -50,7 +50,7 @@ const PopoverWrapper = styled.div`
       min-width: 190px;
       overflow: hidden;
       left: -158px;
-      top: -100px;
+      top: -110%;
       .action p {
         padding: 7px 12px;
         font-size: 14px;

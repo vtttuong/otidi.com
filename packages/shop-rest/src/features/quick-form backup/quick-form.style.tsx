@@ -1,6 +1,6 @@
-import { themeGet } from "@styled-system/theme-get";
-import { Col as Cols, Row as Rows } from "react-styled-flexboxgrid";
 import styled from "styled-components";
+import { themeGet } from "@styled-system/theme-get";
+import { Row as Rows, Col as Cols } from "react-styled-flexboxgrid";
 
 const FormWrapper = styled.div`
   background-color: ${themeGet("colors.gray.200", "#f7f7f7")};
@@ -12,37 +12,16 @@ const FormWrapper = styled.div`
     padding-top: 60px;
   }
 `;
-export const ButtonPayment = styled.div`
-  background-color: #009e7f;
+export const Form = styled.form`
+  background-color: ${themeGet("colors.gray.200", "#f7f7f7")};
   position: relative;
-  padding: 10px;
-  width: 20%;
-  margin: 30px auto;
-  text-align: center;
-  color: #fff;
-  border-radius: 3px;
-  cursor: pointer;
+  padding: 130px 0 60px 0;
+
+  @media (max-width: 990px) {
+    padding: 0;
+    padding-top: 60px;
+  }
 `;
-export const CustomStyles = {
-  control: () => ({
-    border: "1px solid #f1f1f1",
-    borderRadius: 7,
-    padding: 6,
-    background: "#F7F7F7",
-
-    "&:hover": {
-      borderColor: "#009E7F",
-    },
-  }),
-
-  indicatorsContainer: () => ({
-    position: "absolute",
-    width: 50,
-    height: 50,
-    top: 4,
-    right: -5,
-  }),
-};
 
 export const Container = styled.div`
   background-color: ${themeGet("colors.white", "#ffffff")};
@@ -59,40 +38,6 @@ export const Container = styled.div`
 
   @media (max-width: 480px) {
     padding: 30px;
-  }
-`;
-
-export const Error = styled.span`
-  color: red;
-  left: 5px;
-  display: inline-block;
-  // margin-bottom: 20px;
-  position: relative;
-  &.errorStep1 {
-    top: 5px;
-    left: 0;
-  }
-`;
-
-export const Require = styled.span`
-  color: red;
-  font-size: 18px;
-  top: 3px;
-  left: 5px;
-  position: relative;
-`;
-
-export const InputPrice = styled.div`
-  input {
-    width: 100%;
-    border: 1px solid #ededed;
-    border-radius: 6px;
-    padding-left: 10px;
-    height: 47px;
-    background: #f7f7f7;
-    &:hover {
-      border: 1px solid #019376;
-    }
   }
 `;
 
@@ -121,14 +66,6 @@ export const NoteText = styled.span`
   line-height: 1.5;
 `;
 
-export const NoteSmallText = styled.span`
-  font-family: ${themeGet("fonts.body", "Lato")};
-  font-size: ${themeGet("fontSizes.base", "10")}px;
-  font-weight: ${themeGet("fontWeights.regular", "300")};
-  color: ${themeGet("colors.text.bold", "#F7F7F7")};
-  line-height: 1.5;
-`;
-
 export const Heading = styled.h3`
   font-family: ${themeGet("fonts.body", "Lato")};
   font-size: ${themeGet("fontSizes.base", "15")}px;
@@ -137,24 +74,6 @@ export const Heading = styled.h3`
   line-height: 1.2;
   margin-bottom: 20px;
 `;
-export const ButtonCategory = styled.div`
-  width: 100%;
-  text-align: left;
-  padding: 10px;
-  height: 48px;
-  background: #f7f7f7;
-  border: 0;
-  border-radius: 7px;
-  :hover {
-    border: 1px solid #009e7f;
-    cursor: pointer;
-  }
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
 export const Col = styled(Cols)`
   @media only screen and (min-width: 0em) and (max-width: 47.99em) {
     margin-bottom: 50px;
@@ -163,25 +82,11 @@ export const Col = styled(Cols)`
       margin-bottom: 0;
     }
   }
-  @media (max-width: 426px) {
-    .quick-view-modal {
-      width: 300px;
-    }
-  }
-  #pickupAddressText3 {
-    width: 100%;
-    height: 48px;
-    background: #f7f7f7;
-    border: 1px solid #f1f1f1;
-    border-radius: 5px;
-    padding: 0 18px;
-    font-size: 15px;
-    margin-bottom: 20px;
-  }
 `;
 
 export const Row = styled(Rows)`
   margin-top: 50px;
+
   @media only screen and (min-width: 0em) and (max-width: 47.99em) {
     margin-bottom: 30px;
   }
@@ -469,40 +374,6 @@ export const AddcontactWrapper = styled.div`
     }
     &:hover {
       border-color: ${themeGet("colors.primary.regular", "#009e7f")};
-    }
-  }
-`;
-
-export const BackButton = styled.div`
-  position: relative;
-  margin-bottom: 20px;
-  z-index: 999;
-
-  @media (max-width: 990px) {
-    top: 20px;
-    left: 0;
-    margin-bottom: 50px;
-  }
-  @media (max-width: 776px) {
-    top: 20px;
-    margin-bottom: 70px;
-  }
-
-  @media (max-width: 426px) {
-    top: 5px;
-    left: 0;
-  }
-  .reusecore__button {
-    font-family: ${themeGet("fonts.body", "sans-serif")};
-    font-size: ${themeGet("fontSizes.sm", "13")}px;
-    font-weight: ${themeGet("fontWeights.bold", "700")};
-    color: ${themeGet("colors.text.regular", "#77798C")};
-    height: 30px;
-    .btn-icon {
-      margin-right: 5px;
-    }
-    .btn-text {
-      padding: 0;
     }
   }
 `;

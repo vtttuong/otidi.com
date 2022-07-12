@@ -1,9 +1,10 @@
 import { getCookie } from "utils/session";
 
-const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
+const baseUrlIndex = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
+const baseUrlClient = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
 
 export async function getAllPosts() {
-  const posts = await fetch(`${baseUrl}/posts`);
+  const posts = await fetch(`${baseUrlIndex}/posts`);
   return await posts.json();
 }
 
@@ -17,20 +18,20 @@ export async function getPostBySlug(token, slug) {
       },
     };
 
-    const res = await fetch(`${baseUrl}/posts/${slug}`, options);
+    const res = await fetch(`${baseUrlIndex}/posts/${slug}`, options);
     return res.json();
   } else {
-    const res = await fetch(`${baseUrl}/posts/${slug}`);
+    const res = await fetch(`${baseUrlIndex}/posts/${slug}`);
     return res.json();
   }
 }
 
 export async function getUserLike(id) {
-  const res = await fetch(`${baseUrl}/posts/${id}/user-likes`);
+  const res = await fetch(`${baseUrlIndex}/posts/${id}/user-likes`);
   return res.json();
 }
 export async function getUserSave(id) {
-  const res = await fetch(`${baseUrl}/posts/${id}/user-saves`);
+  const res = await fetch(`${baseUrlIndex}/posts/${id}/user-saves`);
   return res.json();
 }
 
@@ -38,7 +39,7 @@ export async function viewPost(slug) {
   const options = {
     method: "POST",
   };
-  const res = await fetch(`${baseUrl}/posts/${slug}/view`, options);
+  const res = await fetch(`${baseUrlIndex}/posts/${slug}/view`, options);
 
   if (res.ok && res.status == 200) return { result: true };
 }
@@ -53,7 +54,7 @@ export async function onSave(token: string, id: number) {
   };
 
   const data = await fetch(
-    baseUrl + `/api/client/v1/posts/${id}/save`,
+    baseUrlClient + `/api/client/v1/posts/${id}/save`,
     options
   );
   return data;
@@ -69,7 +70,7 @@ export async function onLike(token: string, id: number) {
   };
 
   const data = await fetch(
-    baseUrl + `/api/client/v1/posts/${id}/like`,
+    baseUrlClient + `/api/client/v1/posts/${id}/like`,
     options
   );
   return data;
@@ -85,7 +86,7 @@ export async function onFollow(token: string, id: number) {
   };
 
   const data = await fetch(
-    baseUrl + `/api/client/v1/users/${id}/follow`,
+    baseUrlClient + `/api/client/v1/users/${id}/follow`,
     options
   );
   return data;
@@ -101,7 +102,7 @@ export async function onUnFollow(token: string, id: number) {
   };
 
   const data = await fetch(
-    baseUrl + `/api/client/v1/users/${id}/unfollow`,
+    baseUrlClient + `/api/client/v1/users/${id}/unfollow`,
     options
   );
   return data;
@@ -117,7 +118,7 @@ export async function onUnLike(token: string, id: number) {
   };
 
   const data = await fetch(
-    baseUrl + `/api/client/v1/posts/${id}/unlike`,
+    baseUrlClient + `/api/client/v1/posts/${id}/unlike`,
     options
   );
   return data;
@@ -133,7 +134,7 @@ export async function onUnSave(token: string, id: number) {
   };
 
   const data = await fetch(
-    baseUrl + `/api/client/v1/posts/${id}/unsave`,
+    baseUrlClient + `/api/client/v1/posts/${id}/unsave`,
     options
   );
   return data;
@@ -150,7 +151,7 @@ export async function report(model: any) {
     body: model,
   };
 
-  const data = await fetch(baseUrl + `/posts/report`, options);
+  const data = await fetch(baseUrlIndex + `/posts/report`, options);
   return data;
 }
 
@@ -163,8 +164,14 @@ export async function deletePost(id: number) {
       "Content-Type": "application/json",
     },
   };
-  const data = await fetch(baseUrl + `/posts/${id}/delete`, options);
-  if (data.ok && data.status == 200) return { result: true };
+  const data = await fetch(baseUrlClient + `/posts/${id}`, options);
+  const dataJson = await data.json();
+
+  if (data.ok && data.status == 200 && dataJson.success) {
+    return { result: true };
+  } else {
+    return { result: false };
+  }
 }
 
 export async function markPost(id: number) {
@@ -177,7 +184,7 @@ export async function markPost(id: number) {
     },
   };
 
-  const data = await fetch(baseUrl + `/posts/${id}/mark-sold`, options);
+  const data = await fetch(baseUrlClient + `/posts/${id}/mark-sold`, options);
 
   if (data.ok && data.status == 200) return { result: true };
 }

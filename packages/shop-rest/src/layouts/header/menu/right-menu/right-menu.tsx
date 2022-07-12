@@ -123,8 +123,6 @@ export const RightMenu: React.FC<Props> = ({
       const fetchData = async () => {
         const data = await getNotifications(token, notiPage, limit);
 
-        console.log(data);
-
         if (data !== null) {
           const notiUnRead = data.filter((item) => item.readAt === null).length;
           dispatch({
