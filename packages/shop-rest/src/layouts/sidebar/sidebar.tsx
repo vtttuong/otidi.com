@@ -6,11 +6,10 @@ import {
 } from "components/placeholder/placeholder";
 import { Scrollbar } from "components/scrollbar/scrollbar";
 import { TreeMenu } from "components/tree-menu/tree-menu";
-import { useAppState } from "contexts/app/app.provider";
+import { useAppDispatch, useAppState } from "contexts/app/app.provider";
 import useBrands from "data/use-brand";
 import { useRouter } from "next/router";
 import React from "react";
-import Sticky from "react-stickynode";
 import {
   CategoryWrapper,
   PopoverWrapper,
@@ -36,9 +35,16 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
 
   if (error) return <ErrorMessage message={error.message} />;
   const { pathname, query } = router;
-  const selectedQueries = query.category;
+  const selectedQueries = query.text;
+  const dispatch = useAppDispatch();
+
+  console.log(
+    "🚀 ~ file: sidebar.tsx ~ line 40 ~ selectedQueries",
+    selectedQueries
+  );
 
   const onCategoryClick = (slug: string) => {
+    dispatch({ type: "SET_SEARCH_TERM", payload: "" });
     router.push({
       pathname,
       query: { ...query, text: slug },

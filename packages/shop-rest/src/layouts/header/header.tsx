@@ -20,6 +20,7 @@ import { FormattedMessage } from "react-intl";
 import { getMyprofile, getMyText } from "utils/api/profile";
 import AuthenticationForm from "features/authentication-form";
 import ProgressBox from "components/progress-routing/progress-bar";
+import { useAppDispatch } from "contexts/app/app.provider";
 
 type Props = {
   className?: string;
@@ -62,6 +63,7 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
       });
       pusher.subscribe("privateChannel." + data.id);
+
       setAvatar(data.avatar);
       setCookie("userId", data.id);
       setCookie("userAvatar", data.avatar);
@@ -78,6 +80,10 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
 
     if (token != null) {
       const text = await getMyText(token);
+      console.log(
+        "🚀 ~ file: header.tsx ~ line 82 ~ getSearchText ~ text",
+        text
+      );
       setTexts(text);
     }
   };
@@ -155,12 +161,14 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
             token={token}
             className="headerSearch"
             onClick={() => setIsComponentVisible(true)}
+            onSubmit={() => setIsComponentVisible(false)}
           />
           {isComponentVisible && (
             <ShowHistory
               texts={texts}
               closeSearch={closeSearch}
               isAuthenticated={isAuthenticated}
+              getSearchText={getSearchText}
             />
           )}
         </BoxSave>
@@ -213,6 +221,7 @@ type ShowHistoryProps = {
   data?: any;
   texts?: any;
   closeSearch?: any;
+  getSearchText: () => void;
   isAuthenticated?: boolean;
 };
 
@@ -220,20 +229,26 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
   texts,
   closeSearch,
   isAuthenticated,
+  getSearchText,
 }) => {
   const [token, setToken] = useState("");
-  const [toogle, setToggle] = useState(false);
+  const [togle, setToggle] = useState(false);
   const router = useRouter();
   const { pathname, query } = router;
-  const { type } = query;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setToken(getCookie("access_token"));
   });
 
+  useEffect(() => {
+    getSearchText();
+  }, []);
+
   useEffect(() => {}, [isAuthenticated]);
 
   const handleSearch = (text) => {
+    dispatch({ type: "SET_SEARCH_TERM", payload: text });
     closeSearch();
     let queryParams = {
       text: text,
@@ -249,7 +264,7 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
 
   return (
     <>
-      <BoxSave className={toogle ? "toggle save" : "save"}>
+      <BoxSave className={togle ? "toggle save" : "save"}>
         {token ? (
           <SearchSave className={"first"}>
             <BoxSave className={"title saved"}>
@@ -269,14 +284,23 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
                 return (
                   <SearchSaveItem
                     key={item.id}
-                    onClick={() => handleSearch(item.text)}
+                    onClick={() => handleSearch(item.keyword)}
                   >
-                    {item.text}
+                    {item.keyword}
                   </SearchSaveItem>
                 );
               })
             ) : (
-              <p style={{ color: "#009e7f", margin: "10px 5px" }}>No data</p>
+              <p
+                style={{
+                  color: "#009e7f",
+                  margin: "20px auto",
+                  textAlign: "center",
+                  fontSize: "16px",
+                }}
+              >
+                <FormattedMessage id="noData" defaultMessage={"No data"} />
+              </p>
             )}
           </SearchSave>
         ) : null}

@@ -3,7 +3,7 @@ import { SearchBox } from "components/search-box/search-box";
 import Notice from "components/notice/notice";
 import { useAppState, useAppDispatch } from "contexts/app/app.provider";
 import { useRouter } from "next/router";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { ButtonSave, Container } from "./search.style";
 import { Saved } from "assets/icons/Saved";
 import { Booked } from "assets/icons/BookMark";
@@ -31,6 +31,7 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
   const [valueSaved, setValueSaved] = React.useState("");
   // const token = getCookie("access_token");
   const handleOnChange = (e) => {
+    setIsBooked(false);
     const { value } = e.target;
     setValueSaved(value);
     dispatch({ type: "SET_SEARCH_TERM", payload: value });
@@ -42,26 +43,46 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
   };
 
   const onSaveText = async (e) => {
+    console.log(
+      "🚀 ~ file: search.tsx ~ line 49 ~ onSaveText ~ isBooked",
+      isBooked
+    );
+
     if (!isBooked) {
       setErSave("");
       const result = await saveTextSearch(props.token, valueSaved);
+      console.log(
+        "🚀 ~ file: search.tsx ~ line 48 ~ onSaveText ~ result",
+        result
+      );
+
       onGetText(valueSaved);
-      if (result.result == false) setErSave("error");
+
+      if (result.result === false) {
+        console.log("error");
+
+        setErSave("error");
+      } else {
+        setIsBooked(true);
+      }
     }
-    setIsBooked(!isBooked);
     return;
   };
 
   const { pathname, query } = router;
   const onSearch = (e) => {
     e.preventDefault();
+
+    if (!searchTerm || searchTerm.trim().length === 0) {
+      return;
+    }
     const { type, ...rest } = query;
     router.push({
       pathname,
-      query: { ...rest, text: searchTerm },
+      query: { ...rest, text: searchTerm.trim() },
     });
 
-    dispatch({ type: "SET_SEARCH_TERM", payload: "" });
+    // dispatch({ type: "SET_SEARCH_TERM", payload: "" });
     if (onSubmit) {
       onSubmit();
     }
@@ -90,16 +111,19 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
           {!isBooked ? <Saved /> : <Booked />}
         </ButtonSave>
       ) : null}
-      {isBooked ? (
+
+      {erSave.length !== 0 && (
         <Notice
           status={erSave.length != 0 ? "error" : "success"}
           content={
-            erSave.length != 0
-              ? "Lưu quá 5 từ khoá, thử lại !"
-              : "Lưu thành công!"
+            erSave.length != 0 ? (
+              <FormattedMessage id="overSaveKeywords" />
+            ) : (
+              <FormattedMessage id="saveSuccess" />
+            )
           }
         />
-      ) : null}
+      )}
     </Container>
   );
 };

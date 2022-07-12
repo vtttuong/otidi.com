@@ -14,6 +14,7 @@ Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
 
 const customStyles = {
   control: () => ({
+    display: "flex",
     border: 1,
     borderRadius: 5,
     padding: 3,
@@ -27,21 +28,16 @@ const customStyles = {
     },
   }),
 
-  indicatorsContainer: () => ({
-    position: "absolute",
-    width: 50,
-    height: 40,
-    top: 2,
-    right: -5,
-  }),
+  // indicatorsContainer: () => ({
+  //   position: "absolute",
+  //   width: 50,
+  //   height: 40,
+  //   top: 2,
+  //   right: -5,
+  // }),
 };
 
-const postType = [
-  {
-    key: "type",
-    value: "",
-    label: "Sắp xếp theo...",
-  },
+const postTypes = [
   {
     key: "type",
     value: "created_at",
@@ -82,11 +78,12 @@ const Filter: React.FC<any> = () => {
     // localStorage.setItem("isShowModal", "true");
   };
 
-  const handleSortData = async (value) => {
+  const handleSortData = async (e) => {
     let queryParams = {
       ...query,
-      sort: value,
+      sort: e ? e.value : "",
     };
+
     let newParams = {};
     Object.keys(queryParams).map((key) => {
       if (typeof queryParams[key] !== "undefined" && queryParams[key] != "") {
@@ -120,7 +117,7 @@ const Filter: React.FC<any> = () => {
     <form style={{ position: "relative", zIndex: 100 }}>
       <Container>
         <Row>
-          <Col xs={12} sm={6} md={6} lg={8} className="address">
+          {/* <Col xs={12} sm={6} md={6} lg={8} className="address">
             {address != "" ? (
               <>
                 <Map />
@@ -139,21 +136,25 @@ const Filter: React.FC<any> = () => {
               <FormattedMessage id="filterButton" />
               <FilterIcon />
             </ButtonFilter>
-          </Col>
-          <Col xs={6} sm={3} md={3} lg={2}>
+          </Col> */}
+          <Col xs={6} sm={4} md={4} lg={4}>
             <Select
               classNamePrefix="filter"
               styles={customStyles}
-              options={postType}
+              options={postTypes}
+              isClearable={true}
+              isSearchable={true}
+              placeholder={
+                <FormattedMessage id="orderBy" defaultMessage={"Order by..."} />
+              }
               value={
                 query.sort === "created_at"
-                  ? postType[1]
+                  ? postTypes[0]
                   : query.sort === "views"
-                  ? postType[2]
-                  : postType[0]
+                  ? postTypes[1]
+                  : null
               }
-              placeholder="Sắp xếp theo"
-              onChange={({ value }) => handleSortData(value)}
+              onChange={(e) => handleSortData(e)}
             />
           </Col>
         </Row>

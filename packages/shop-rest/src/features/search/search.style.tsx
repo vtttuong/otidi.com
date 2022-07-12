@@ -5,6 +5,8 @@ export const ButtonSave = styled.div`
   position: absolute;
   top: 17px;
   right: 50px;
+  cursor: pointer;
+
   @media (max-width: 1025px) {
     right: 20px;
   }
