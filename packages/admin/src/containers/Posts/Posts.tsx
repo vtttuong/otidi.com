@@ -3,7 +3,7 @@ import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Placeholder from "components/Placeholder/Placeholder";
-import ProductCard from "components/ProductCard/ProductCard";
+import PostCard from "components/PostCard/PostCard";
 import Select from "components/Select/Select";
 import { Header } from "components/Wrapper.style";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
@@ -193,18 +193,18 @@ export default function Posts() {
   const [isExpired, setIsExpired] = useState(false);
   const [users, setUsers] = useState([]);
 
-  const { data, error } = useProducts({
-    postType: postType,
-    status: postStatus,
-    text: search ? search : "",
-    dir: sortBy === "lasted" ? "desc" : "asc",
-    brand: brand,
-    isSold: isSoldType,
-    isPriority: isPriorityType,
-    isExpired: isExpired,
-  });
+  // const { data, error } = useProducts({
+  //   postType: postType,
+  //   status: postStatus,
+  //   text: search ? search : "",
+  //   dir: sortBy === "lasted" ? "desc" : "asc",
+  //   brand: brand,
+  //   isSold: isSoldType,
+  //   isPriority: isPriorityType,
+  //   isExpired: isExpired,
+  // });
 
-  let posts = data;
+  let posts = FAKE_DATA;
 
   React.useEffect(() => {
     let isMounted = true;
@@ -240,9 +240,9 @@ export default function Posts() {
     isExpired,
   ]);
 
-  if (error) {
-    return <div>Error! {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error! {error.message}</div>;
+  // }
 
   function handleSort({ value }) {
     setSortByOption(value);
@@ -381,7 +381,7 @@ export default function Posts() {
                     style={{ margin: "15px 0" }}
                   >
                     <Fade bottom duration={800} delay={index * 10}>
-                      <ProductCard
+                      <PostCard
                         title={item.title}
                         weight={item.unit}
                         image={item.main_image[0].url}
@@ -390,7 +390,8 @@ export default function Posts() {
                         price={item.price}
                         salePrice={0}
                         typeOfPost={item.type}
-                        data={item.created_at}
+                        postId={25}
+                        status={item.status}
                       />
                     </Fade>
                   </Col>

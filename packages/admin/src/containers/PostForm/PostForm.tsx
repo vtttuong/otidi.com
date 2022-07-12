@@ -89,7 +89,7 @@ const CREATE_PRODUCT = gql`
 `;
 type Props = any;
 
-const AddProduct: React.FC<Props> = (props) => {
+const AddPost: React.FC<Props> = (props) => {
   const dispatch = useDrawerDispatch();
   const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
@@ -417,4 +417,4 @@ const AddProduct: React.FC<Props> = (props) => {
   );
 };
 
-export default AddProduct;
+export default AddPost;

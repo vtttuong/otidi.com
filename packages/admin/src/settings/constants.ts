@@ -18,4 +18,4 @@ export const BRANDS = "/brands";
 
 // **************** ROUTE CONSTANT END **************************
 
-export const CURRENCY = "$";
+export const CURRENCY = "VND";
