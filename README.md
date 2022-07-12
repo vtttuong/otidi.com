@@ -77,6 +77,7 @@ password: min123456
 
 6. Paging: Không return tổng số page => Không paging được
 
+
 7. Get all posts error:
    https://api.otodi.vn/api/admin/v1/posts
 
@@ -92,4 +93,6 @@ password: min123456
 3. Thiếu Verify email, send OTP
 4. Thiếu API mark as sold, đánh dấu đã bán
 5. Không có API trả về 1 post của mình, dù nó là waiting cũng cần trả về để update post
+
 6. get all posts thiếu trả về like_counts
+
