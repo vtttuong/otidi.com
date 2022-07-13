@@ -68,20 +68,12 @@ const PostCard: React.FC<PostCardProps> = ({
       <PostImageWrapper>
         <Image url={image} className="product-image" />
         {status === "waiting" && (
-          <>
-            <WaitingTag className="waiting">Waiting</WaitingTag>
-          </>
+          <WaitingTag className="waiting">Waiting</WaitingTag>
         )}
         {status === "active" && (
-          <>
-            <ActiveTag className="active">Active</ActiveTag>
-          </>
+          <ActiveTag className="active">Active</ActiveTag>
         )}
-        {status === "sold" && (
-          <>
-            <SoldTag className="sold">Sold</SoldTag>
-          </>
-        )}
+        {status === "sold" && <SoldTag className="sold">Sold</SoldTag>}
       </PostImageWrapper>
       <PostInfo>
         <PostTitle>{title}</PostTitle>

@@ -18,12 +18,13 @@ interface Props {
   sort?: string;
 }
 export default function usePayments(variables: Props) {
-  const {from, to, status, sort} = variables ?? {};
+  const { from, to, status, sort } = variables ?? {};
 
   let queryParams = {
     from: from,
     to: to,
     dir: sort ? sort : "",
+    order_by: sort ? "amount" : "",
     status: status ? status : "",
   };
 
@@ -39,14 +40,14 @@ export default function usePayments(variables: Props) {
     {
       ...newParams,
     },
-    {sort: false}
+    { sort: false }
   );
 
   let url = baseUrl + "/payment-transactions?" + parsed;
 
   console.log(url);
 
-  const {data, mutate, error} = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, productFetcher);
 
   const loading = !data && !error;
   // need to remove when you using real API integration

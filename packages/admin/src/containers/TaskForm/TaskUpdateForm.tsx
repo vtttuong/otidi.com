@@ -47,17 +47,19 @@ const EditTask: React.FC<Props> = (props) => {
       redirect_link: link,
     };
     const result = await updateTask(data.id, task);
-    if (result) {
-      console.log(result.data);
+    setLoading(false);
 
+    if (result.success) {
       dispatch({
         type: "SAVE_ID",
-        data: data.id,
+        data: 2,
       });
       closeDrawer();
       alert.success("Update success!");
     } else {
-      alert.success("Update failed!");
+      Object.keys(result.data).forEach((key) => {
+        alert.error(result.data[key][0]);
+      });
     }
   };
 
@@ -93,7 +95,7 @@ const EditTask: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Task Name</FormLabel>
                   <Input
-                    inputRef={register}
+                    inputRef={register({ required: true })}
                     name="name"
                     value={defaultName || ""}
                     onChange={(e) => setName(e.target.value)}
@@ -144,9 +146,9 @@ const EditTask: React.FC<Props> = (props) => {
                   <FormLabel>Redirect_link</FormLabel>
                   <Input
                     type="text"
-                    inputRef={register}
+                    inputRef={register({ required: true })}
                     name="redirect_link"
-                    value={link || "/"}
+                    value={link || ""}
                     onChange={(e) => setLink(e.target.value)}
                   />
                 </FormFields>

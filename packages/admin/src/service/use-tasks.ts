@@ -19,11 +19,11 @@ export async function getTasks() {
       "Content-Type": "application/json",
     },
   };
-  const response = await fetch(`${baseUrl}/tasks`, options);
-  const jsonData = await response.json();
-  if (response.status === 200) {
-    return jsonData.data;
-  } else {
+  try {
+    const response = await fetch(`${baseUrl}/tasks`, options);
+    const jsonData = await response.json();
+    return jsonData.success ? jsonData.data : null;
+  } catch (err) {
     return null;
   }
 }
@@ -69,10 +69,10 @@ export async function updateTask(id: number, vc: Task) {
     },
     body: JSON.stringify(vc),
   };
-  const response = await fetch(`${baseUrl}/tasks/${id}`, options);
-  if (response.status === 200) {
+  try {
+    const response = await fetch(`${baseUrl}/tasks/${id}`, options);
     return await response.json();
-  } else {
+  } catch (err) {
     return null;
   }
   // return await tasks.json();
