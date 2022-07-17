@@ -43,9 +43,12 @@ export async function getUsers(variables?: PROPS) {
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/users?${parsed}`, options);
-
-  return await users.json();
+  try {
+    const users = await fetch(`${baseUrl}/users?${parsed}`, options);
+    return await users.json();
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function createUser(email, name, password) {

@@ -33,18 +33,17 @@ interface Props {
   text?: string;
   type?: string;
   page?: number;
+  count?: number;
 }
 
 export default function useVouchers(variables: Props) {
-  const {status, type, text, page} = variables ?? {};
-
-  const COUNT = 10;
+  const { status, type, text, page, count } = variables ?? {};
 
   let queryParams = {
     status: status,
     type: type,
-    page: page ? page : 1,
-    count: COUNT,
+    page: page ? page : "",
+    count: count ? count : "",
   };
 
   let newParams = {};
@@ -59,12 +58,12 @@ export default function useVouchers(variables: Props) {
     {
       ...newParams,
     },
-    {sort: false}
+    { sort: false }
   );
 
   let url = baseUrl + "/vouchers?" + parsed;
 
-  const {data, mutate, error} = useSWR(url, productFetcher);
+  const { data, mutate, error } = useSWR(url, productFetcher);
 
   const loading = !data && !error;
   // need to remove when you using real API integration
@@ -96,7 +95,7 @@ export function addVoucher(formData: any) {
     if (response.status === 200) {
       return response.data.data;
     } else {
-      return {error: ""};
+      return { error: "" };
     }
   });
 }
@@ -111,7 +110,7 @@ export async function delVoucher(id: number) {
   };
   const response = await fetch(`${baseUrl}/vouchers/${id}`, options);
   if (response.status === 200) {
-    return {status: true};
+    return { status: true };
   }
   return null;
   // return await users.json();

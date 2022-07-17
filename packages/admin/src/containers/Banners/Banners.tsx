@@ -1,6 +1,7 @@
 import { Plus } from "assets/icons/Plus";
+import axios from "axios";
 import { styled, withStyle } from "baseui";
-import Button from "components/Button/Button";
+import Button, { KIND } from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
 import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import { InLineLoader } from "components/InlineLoader/InlineLoader";
@@ -8,6 +9,7 @@ import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
 import { Header, Heading, Wrapper } from "components/Wrapper.style";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import moment from "moment";
 import React, { useCallback, useState } from "react";
 import useBanners from "service/use-banners";
 import {
@@ -50,35 +52,19 @@ const Image = styled("img", () => ({
   height: "auto",
 }));
 
-const FAKE_DATA = [
-  {
-    id: 1,
-    url:
-      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/8VDdzPMsQqxgg6Qt.png",
-    created_at: "2022-05-15T10:06:36.000000Z",
-    updated_at: "2022-05-15T10:06:36.000000Z",
-    title: "Banner 1",
-    content: "Content 1",
-  },
-  {
-    id: 2,
-    url:
-      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/HRbiWH8QhRx80RqN.png",
-    created_at: "2022-05-15T10:06:54.000000Z",
-    updated_at: "2022-05-15T10:06:54.000000Z",
-    title: "Banner 2",
-    content: "Content 2",
-  },
-];
-export default function BannersAll() {
-  const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
+const base_url = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 
-  const [datas, setDatas] = useState(FAKE_DATA);
+export default function BannersAll() {
+  const [datas, setDatas] = useState(null);
   const [checkedAll, setCheckedAll] = useState(false);
   const [bannerDetail, setBannerDetail] = useState<any>({});
   const [checkedId, setCheckedId] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const saveId = useDrawerState("saveId");
   const dispatch = useDrawerDispatch();
+  var { data, mutate } = useBanners();
+
   const openDrawer = useCallback(
     () =>
       dispatch({ type: "OPEN_DRAWER", drawerComponent: "CREATEBANNER_FORM" }),
@@ -97,8 +83,6 @@ export default function BannersAll() {
 
   function handleCheckbox(event) {
     const name = parseInt(event.currentTarget.name);
-
-    console.log("Before checked: ", checkedId);
 
     if (!checkedId.includes(name)) {
       setCheckedId((prevState) => [...prevState, name]);
@@ -129,14 +113,38 @@ export default function BannersAll() {
     }
   }, [dispatch, checkedId, datas]);
 
-  var { data } = useBanners();
-  // React.useEffect(() => {
-  //   setDatas(data);
-  //   dispatch({
-  //     type: "SAVE_ID",
-  //     data: null,
-  //   });
-  // }, [saveId, dispatch, data]);
+  const onDelete = React.useCallback(() => {
+    const token = localStorage.getItem("secondhand_token");
+    const configs = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-type": "application/json",
+      },
+    };
+    checkedId.forEach(async (id) => {
+      setLoading(true);
+      await axios
+        .delete(`${base_url}/banners/${id}`, configs)
+        .then((res) => {});
+      setLoading(false);
+      setCheckedAll(false);
+      mutate();
+    });
+  }, [dispatch, checkedId, datas]);
+
+  React.useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      setDatas(data);
+    }
+    mutate();
+    dispatch({
+      type: "SAVE_ID",
+      data: null,
+    });
+
+    return () => (mounted = false);
+  }, [data, dispatch, saveId]);
 
   return (
     <Grid fluid={true}>
@@ -182,7 +190,7 @@ export default function BannersAll() {
 
           <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, 200px) minmax(200px, auto) minmax(150px, auto)">
+              <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(70px, 70px) minmax(250px, auto) minmax(200px, auto)">
                 <StyledHeadCell>
                   <Checkbox
                     type="checkbox"
@@ -207,8 +215,8 @@ export default function BannersAll() {
                 </StyledHeadCell>
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Image</StyledHeadCell>
-                <StyledHeadCell>Title</StyledHeadCell>
-                <StyledHeadCell>Content</StyledHeadCell>
+                <StyledHeadCell>Created At</StyledHeadCell>
+                {/* <StyledHeadCell>Content</StyledHeadCell> */}
                 {/* <StyledHeadCell>Type</StyledHeadCell> */}
 
                 {datas ? (
@@ -243,8 +251,10 @@ export default function BannersAll() {
                             <Image src={item.url} alt={"avatar"} />
                           </ImageWrapper>
                         </StyledBodyCell>
-                        <StyledBodyCell>{item.title}</StyledBodyCell>
-                        <StyledBodyCell>{item.content}</StyledBodyCell>
+                        <StyledBodyCell>
+                          {moment(item.created_at).format("YYYY-MM-DD hh:mm")}
+                        </StyledBodyCell>
+                        {/* <StyledBodyCell>{item.content}</StyledBodyCell> */}
                         {/* <StyledBodyCell>{item.content}</StyledBodyCell> */}
                       </React.Fragment>
                     ))
@@ -274,7 +284,7 @@ export default function BannersAll() {
 
       {checkedId.length !== 0 ? (
         <Row>
-          <Col md={2}>
+          {/* <Col md={2}>
             <Button
               onClick={onEdit}
               startEnhancer={() => <Plus />}
@@ -293,6 +303,27 @@ export default function BannersAll() {
               }}
             >
               Update
+            </Button>
+          </Col> */}
+          <Col md={2}>
+            <Button
+              kind={KIND.secondary}
+              onClick={onDelete}
+              overrides={{
+                BaseButton: {
+                  style: ({ $theme }) => ({
+                    width: "50%",
+                    borderTopLeftRadius: "3px",
+                    borderTopRightRadius: "3px",
+                    borderBottomRightRadius: "3px",
+                    borderBottomLeftRadius: "3px",
+                    marginRight: "15px",
+                    color: $theme.colors.red400,
+                  }),
+                },
+              }}
+            >
+              Delete
             </Button>
           </Col>
         </Row>

@@ -34,6 +34,7 @@ const UpdatePost: React.FC<Props> = () => {
   ]);
 
   const { post, postLoading, error } = usePost(postId);
+  console.log("🚀 ~ file: PostUpdateForm.tsx ~ line 37 ~ postId", postId);
   console.log("POST", post);
 
   const { register, handleSubmit, setValue } = useForm({
@@ -98,7 +99,21 @@ const UpdatePost: React.FC<Props> = () => {
       setDetails(
         Object.keys(post.detail)
           .filter((key) => key !== "id" && key !== "post_id")
-          .map((key) => [key, post.detail[key]])
+          .map((key) => {
+            if (
+              (key === "deleted_at" ||
+                key === "created_at" ||
+                key === "updated_at") &&
+              post.detail[key]
+            ) {
+              return [
+                key,
+                moment(post.detail[key]).format("YYYY-MM-DD HH:mm:ss"),
+              ];
+            } else {
+              return [key, post.detail[key] || ""];
+            }
+          })
       );
     }
   }, [post]);
@@ -115,7 +130,7 @@ const UpdatePost: React.FC<Props> = () => {
 
   return (
     <>
-      {!postLoading && post && (
+      {post && (
         <>
           <DrawerTitleWrapper>
             <DrawerTitle>Detail Post</DrawerTitle>
@@ -196,7 +211,9 @@ const UpdatePost: React.FC<Props> = () => {
                         disabled={true}
                         type="text"
                         name="price"
-                        value={`${numberWithCommas(post.price)} ${CURRENCY}`}
+                        value={`${numberWithCommas(
+                          post.original_price
+                        )} ${CURRENCY}`}
                       />
                     </FormFields>
 

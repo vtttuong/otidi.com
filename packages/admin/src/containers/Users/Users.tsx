@@ -211,7 +211,7 @@ export default function Users() {
 
                     <Col lg={11}>
                       <Row>
-                        <Col lg={3}>
+                        <Col lg={3} style={{ marginLeft: "auto" }}>
                           <Input
                             value={search}
                             placeholder="Ex: Search By Name"
@@ -222,7 +222,7 @@ export default function Users() {
                           />
                         </Col>
 
-                        <Col lg={3} style={{ marginLeft: "auto" }}>
+                        <Col lg={3}>
                           <Select
                             options={sortBy}
                             labelKey="label"
@@ -248,7 +248,7 @@ export default function Users() {
                             }
                           />
                         </Col>
-                        <Col lg={3}>
+                        {/* <Col lg={3}>
                           <Button
                             onClick={openDrawer}
                             startEnhancer={() => <Plus />}
@@ -268,7 +268,7 @@ export default function Users() {
                           >
                             Create User
                           </Button>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Col>
                   </Header>

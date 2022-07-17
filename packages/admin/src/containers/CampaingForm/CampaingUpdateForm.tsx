@@ -24,10 +24,10 @@ import moment from "moment";
 const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 
 const optionsType = [
-  { value: "1", name: "Normal", id: "1" },
-  { value: "2", name: "Copper", id: "2" },
-  { value: "3", name: "Silver", id: "3" },
-  { value: "4", name: "Gold", id: "4" },
+  { value: "1", name: "Normal", id: 1 },
+  { value: "2", name: "Copper", id: 2 },
+  { value: "3", name: "Silver", id: 3 },
+  { value: "4", name: "Gold", id: 4 },
 ];
 const userType = [
   { value: "exchangeable", label: "Exchangeable", id: "1" },
@@ -313,47 +313,45 @@ const EditCampaing: React.FC<Props> = (props) => {
                     onChange={(e) => setTotal(e.target.value)}
                   />
                 </FormFields>
-                {data.type === "personal" ? (
-                  <FormFields>
-                    <FormLabel>Type Member</FormLabel>
-                    <Select
-                      options={optionsType}
-                      labelKey="name"
-                      valueKey="value"
-                      placeholder={tag}
-                      value={tag}
-                      onChange={handleMultiChange}
-                      overrides={{
-                        Placeholder: {
-                          style: ({ $theme }) => {
-                            return {
-                              ...$theme.typography.fontBold14,
-                              color: $theme.colors.textNormal,
-                            };
-                          },
+                <FormFields>
+                  <FormLabel>Type Member</FormLabel>
+                  <Select
+                    options={optionsType}
+                    labelKey="name"
+                    valueKey="value"
+                    placeholder={tag}
+                    value={tag}
+                    onChange={handleMultiChange}
+                    overrides={{
+                      Placeholder: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
                         },
-                        DropdownListItem: {
-                          style: ({ $theme }) => {
-                            return {
-                              ...$theme.typography.fontBold14,
-                              color: $theme.colors.textNormal,
-                            };
-                          },
+                      },
+                      DropdownListItem: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
                         },
-                        Popover: {
-                          props: {
-                            overrides: {
-                              Body: {
-                                style: { zIndex: 5 },
-                              },
+                      },
+                      Popover: {
+                        props: {
+                          overrides: {
+                            Body: {
+                              style: { zIndex: 5 },
                             },
                           },
                         },
-                      }}
-                      multi
-                    />
-                  </FormFields>
-                ) : null}
+                      },
+                    }}
+                    multi
+                  />
+                </FormFields>
 
                 {data.type !== "personal" ? (
                   <FormFields>

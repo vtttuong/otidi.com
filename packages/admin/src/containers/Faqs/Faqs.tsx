@@ -90,7 +90,7 @@ export default function Faqs() {
 
   const onEdit = () => {
     const updatedFaq = dataFaqs
-      ? dataFaqs.filter((f) => f.id === checkedId.slice(-1)[0])[0]
+      ? dataFaqs.find((f) => f.id === checkedId.slice(-1)[0])
       : null;
 
     if (updatedFaq) {

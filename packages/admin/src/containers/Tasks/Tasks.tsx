@@ -10,7 +10,7 @@ import Select from "components/Select/Select";
 import { Header, Heading, Wrapper } from "components/Wrapper.style";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
 import Fuse from "fuse.js";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getTasks, sortTasks } from "service/use-tasks";
 import {
   StyledBodyCell,
@@ -34,11 +34,6 @@ const Row = withStyle(Rows, () => ({
     alignItems: "center",
   },
 }));
-
-const statusSelectOptions = [
-  { value: "en", label: "En" },
-  { value: "vi", label: "Vi" },
-];
 
 const options = {
   isCaseSensitive: false,
@@ -73,24 +68,21 @@ export default function Tasks() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loadingEdit, setLoadingEdit] = useState(false);
 
+  const fetchData = async () => {
+    const tasks = await getTasks();
+
+    setData(tasks);
+    setDataSearch(tasks);
+    setUpdate(false);
+
+    dispatch({
+      type: "SAVE_ID",
+      data: null,
+    });
+  };
+
   React.useEffect(() => {
     let isMounted = true;
-
-    const fetchData = async () => {
-      const tasks = await getTasks();
-
-      if (isMounted) {
-        setData(tasks);
-        setDataSearch(tasks);
-        setUpdate(false);
-
-        dispatch({
-          type: "SAVE_ID",
-          data: null,
-        });
-      }
-    };
-
     fetchData();
 
     return () => (isMounted = false);
@@ -136,17 +128,21 @@ export default function Tasks() {
     const fuse = new Fuse(list, options);
     return fuse.search(pattern).map((current) => current.item);
   };
+
+  useEffect(() => {
+    if (search && search.trim().length > 0) {
+      const results = searchN(dataSearch, search);
+      setData(results);
+    } else {
+      fetchData();
+    }
+  }, [search]);
+
   const handleSearch = async (event) => {
     const value = event.currentTarget.value;
 
     setSearch(value);
-    if (value.length === 0) {
-      const tasks = await getTasks();
-      setData(tasks);
-      setDataSearch(tasks);
-    }
-    const results = searchN(dataSearch, value);
-    setData(results);
+
     // refetch({
     //   status: status.length ? status[0].value : null,
     //   searchBy: value,

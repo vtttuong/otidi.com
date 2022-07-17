@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from "react";
-import {withStyle} from "baseui";
+import React, { useState, useEffect } from "react";
+import { withStyle } from "baseui";
 import dayjs from "dayjs";
-import {Grid, Row as Rows, Col as Column} from "components/FlexBox/FlexBox";
+import { Grid, Row as Rows, Col as Column } from "components/FlexBox/FlexBox";
 import Select from "components/Select/Select";
-import {Wrapper, Header, Heading} from "components/Wrapper.style";
-import {InLineLoader} from "components/InlineLoader/InlineLoader";
+import { Wrapper, Header, Heading } from "components/Wrapper.style";
+import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import usePayments from "service/use-payment";
 import NoResult from "components/NoResult/NoResult";
 import moment from "moment";
@@ -18,7 +18,8 @@ import {
   StyledCell,
   DateRangePickerWrapper,
 } from "./Payments.style";
-import {getUsers} from "service/use-users";
+import { getUsers } from "service/use-users";
+import { numberWithCommas } from "utils/format-number";
 
 // type CustomThemeT = {red400: string; textNormal: string; colors: any};
 
@@ -63,13 +64,13 @@ const Row = withStyle(Rows, () => ({
 }));
 
 const statusSelectOptions = [
-  {value: "authorized", label: "Authorized"},
-  {value: "captured", label: "Capture"},
+  { value: "authorized", label: "Authorized" },
+  { value: "captured", label: "Capture" },
 ];
 
 const sortSelectOptions = [
-  {value: "asc", label: "Amount ascending"},
-  {value: "desc", label: "Amount descending"},
+  { value: "asc", label: "Amount ascending" },
+  { value: "desc", label: "Amount descending" },
 ];
 
 export default function Payments() {
@@ -95,7 +96,7 @@ export default function Payments() {
   const [status, setStatus] = useState("");
   const [sort, setSort] = useState("");
 
-  const {data} = usePayments({
+  const { data } = usePayments({
     from: dateRange ? moment(dateRange[0]).format("YYYY-MM-DD") : "",
     to: dateRange ? moment(dateRange[1]).format("YYYY-MM-DD") : "",
     status: status,
@@ -112,7 +113,7 @@ export default function Payments() {
 
   useEffect(() => {}, [status, sort]);
 
-  function handleStatus({value}) {
+  function handleStatus({ value }) {
     setStatusOptions(value);
     if (value.length) {
       setStatus(value[0].value);
@@ -121,7 +122,7 @@ export default function Payments() {
     }
   }
 
-  function handleSort({value}) {
+  function handleSort({ value }) {
     setSortOptions(value);
     if (value.length) {
       setSort(value[0].value);
@@ -131,11 +132,6 @@ export default function Payments() {
   }
   const onDateChange = (value) => {
     setDateRange(value);
-  };
-
-  const getUsername = (userId: number) => {
-    const user = users.filter((u) => u.id === userId)[0];
-    return user.name || "";
   };
 
   return (
@@ -196,9 +192,9 @@ export default function Payments() {
             </Col>
           </Header>
 
-          <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
+          <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(200px,auto) minmax(100px, 1fr) minmax(150px, 1fr) minmax(150px, max-content) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr)">
+              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(150px, 200px) minmax(150px, 1fr) minmax(200px, 1fr) minmax(150px, max-content) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr)">
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>User name</StyledHeadCell>
                 <StyledHeadCell>Order ID</StyledHeadCell>
@@ -214,18 +210,25 @@ export default function Payments() {
                     data.map((item) => (
                       <React.Fragment key={item.id}>
                         <StyledCell>{item.id}</StyledCell>
-                        <StyledCell>{getUsername(item["user_id"])}</StyledCell>
+                        <StyledCell>
+                          {users.find((u) => u.id === item["user_id"])?.name}
+                        </StyledCell>
                         <StyledCell>{item["order_id"]}</StyledCell>
                         <StyledCell>{item["order_info"]}</StyledCell>
                         <StyledCell>{item["status"]}</StyledCell>
-                        <StyledCell>{item["amount"]}</StyledCell>
+                        <StyledCell>
+                          {numberWithCommas(item["amount"])}
+                        </StyledCell>
                         <StyledCell>
                           {dayjs(item["created_at"]).format("DD MMM YYYY")}
                         </StyledCell>
                         <StyledCell>
                           {dayjs(item["updated_at"]).format("DD MMM YYYY")}
                         </StyledCell>
-                        <StyledCell>{item.email || ""}</StyledCell>
+                        <StyledCell>
+                          {users.find((u) => u.id === item["user_id"])
+                            ?.phone_number || ""}
+                        </StyledCell>
                       </React.Fragment>
                     ))
                   ) : (
