@@ -127,10 +127,6 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
     } else {
       setChatLoading(true);
       const { result, chanelData } = await createChat(token, query.id);
-      console.log(
-        "🚀 ~ file: author-infor.tsx ~ line 130 ~ onChat ~ data",
-        data
-      );
 
       if (result) {
         const id: number = chanelData.id;

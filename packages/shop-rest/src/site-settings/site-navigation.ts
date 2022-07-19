@@ -26,6 +26,7 @@ export const PAYMENT_REQUEST = "/payment-request";
 export const LOGIN = "/login";
 export const POSTS = "/posts";
 export const UPDATE_PHONE = "/update-phone";
+export const VERIFY_EMAIL = "/verify-mail";
 // Mobile Drawer Menus
 
 export const PRIVACY_ITEM = {

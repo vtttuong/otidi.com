@@ -22,7 +22,11 @@ import Loader from "react-loader-spinner";
 import { getMessages, sendMessage, readMessage } from "utils/api/chat";
 import { getPost } from "utils/api/post";
 import { getUserById } from "utils/api/user";
-import { CURRENCY } from "utils/constant";
+import {
+  CURRENCY,
+  NEW_MESSAGE_CHANNEL,
+  NEW_MESSAGE_EVENT,
+} from "utils/constant";
 import { numberWithCommas } from "utils/formatNumber";
 import { formatRelativeTime } from "utils/formatRelativeTime";
 import { formatCreatedAtTime } from "utils/formatTime";
@@ -42,18 +46,19 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
   const router = useRouter();
   const scrollRef = useRef(null);
   const [loading, setLoading] = useState(false);
-
   const [showDropdown, setShowDropdown] = useState(false);
   const [valueInput, setValueInput] = useState("");
   const [valueImg, setValueImg] = useState("");
   const [chat, setChat] = useState(
     chats.find((chat) => chat.id == state.chatId)
   );
-  const [client, setClient] = useState(
-    chat.role == ChatRole.BUYER ? chat.seller : chat.buyer
-  );
+  const [channelId, setChannelId] = useState(chat.seller_id);
 
-  console.log(state.messages);
+  const [client, setClient] = useState({
+    ...(chat.role == ChatRole.BUYER
+      ? { ...chat.seller, id: chat.seller_id }
+      : { ...chat.buyer, id: chat.buyer_id }),
+  });
 
   for (let i = 0; i < state.messages?.length; i++) {
     if (state.messages[i]?.sender_id != state.messages[i + 1]?.sender_id)
@@ -65,21 +70,17 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
     const fetchData = async () => {
       setLoading(true);
       const currentChat = chats.find((chat) => chat.id == state.chatId);
-      console.log(
-        "🚀 ~ file: contentMessage.tsx ~ line 68 ~ fetchData ~ currentChat",
-        currentChat
-      );
 
       const clientInfo = await getUserById(
         currentChat.role == ChatRole.SELLER
           ? currentChat.buyer_id
-          : currentChat.sender_id
+          : currentChat.seller_id
       );
 
       setClient(clientInfo);
       const post = await getPost(currentChat.post.id);
 
-      setChat({ ...currentChat, post: post });
+      setChat({ ...currentChat, post: { ...chat.post, ...post } });
 
       const data = await getMessages(token, state.chatId);
       if (data) {
@@ -110,27 +111,31 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       fetchData();
     }
 
-    var pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
-    });
-    const channel = pusher.subscribe("myMessage." + currentUserId);
-
-    channel.bind("NewMessage", async function (data) {
-      let message = {
-        chanel_id: state.chatId,
-        message: data.message,
-        isAvatar: true,
-        sender_id: data.user.id,
-        id: data.id,
-      };
-
-      dispatch({
-        type: "SET_DATA_BROADCAST",
-        payload: { value: message, field: "messages" },
+    if (currentUserId !== channelId) {
+      var pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
       });
+      const channel = pusher.subscribe(`${NEW_MESSAGE_CHANNEL}.${channelId}`);
 
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    });
+      channel.bind(NEW_MESSAGE_EVENT, async function (data) {
+        let message = {
+          chanel_id: state.chatId,
+          created_at: data.created_at,
+          message: data.message,
+          isAvatar: true,
+          sender_id: data.sender_id,
+          id: data.id,
+        };
+
+        if (message.sender_id != currentUserId) {
+          dispatch({
+            type: "SET_DATA_BROADCAST",
+            payload: { value: message, field: "messages" },
+          });
+          scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
   }, []);
 
   useLayoutEffect(() => {
@@ -151,8 +156,6 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
     //mark as read all un read message, which is not my
     state.messages.forEach(async (message) => {
       if (!message.read_at && message.sender_id != currentUserId) {
-        console.log("READ MESSAGE", message.id, message.message);
-
         const { result } = await readMessage(token, message.id);
         if (result) {
           dispatch({
@@ -251,9 +254,8 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
     }
   };
 
-  if (chat.last_message.created_at) {
+  if (chat.last_message) {
     var relativeTime = formatRelativeTime(chat.last_message.created_at);
-    console.log(relativeTime);
   }
 
   return (
@@ -279,16 +281,16 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
                 </div>
                 <div className="header-infor">
                   <div className="name">{client?.name}</div>
-                  <div style={{ color: "#9e9e9e", display: "flex" }}>
+                  {/* <div style={{ color: "#9e9e9e", display: "flex" }}>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      {chat.last_message.created_at ? (
+                      {chat.last_message ? (
                         <CircleFill width={8} color="#9e9e9e" />
                       ) : (
                         <CircleFill width={8} color="#008000" />
                       )}
                     </div>
                     &nbsp;
-                    {chat.last_message.created_at ? (
+                    {chat.last_message ? (
                       <div>
                         Online {relativeTime["time"]}
                         <FormattedMessage id={relativeTime["unit"]} />
@@ -296,7 +298,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
                     ) : (
                       <div>Online</div>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="header-action">
@@ -358,30 +360,28 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
               </div>
             </div>
 
-            <div className="header-receive">
-              <div style={{ display: "flex" }}>
-                <div className="header-avatar ">
-                  <Avatar
-                    radius="5px"
-                    src={
-                      chat.post.images
-                        ? chat.post.images[0].url
-                        : chat.post.main_image_url
-                    }
-                    type={"post"}
-                    post={chat.post}
-                  />
-                </div>
-                <div className="header-infor">
-                  <div className="name">{chat.post.name}</div>
-                  <div className="money">
-                    {numberWithCommas(chat.post.price)}
-                    {"   "}
-                    {CURRENCY}
+            {chat.post && (
+              <div className="header-receive">
+                <div style={{ display: "flex" }}>
+                  <div className="header-avatar ">
+                    <Avatar
+                      radius="5px"
+                      src={chat.post.main_image_url}
+                      type={"post"}
+                      post={chat.post}
+                    />
+                  </div>
+                  <div className="header-infor">
+                    <div className="name">{chat.post.title}</div>
+                    <div className="money">
+                      {numberWithCommas(chat.post.price_after_tax)}
+                      {"   "}
+                      {CURRENCY}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div id="style-1" className="content" onMouseEnter={onMouse}>
               <div className="time-space">

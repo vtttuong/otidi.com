@@ -34,7 +34,7 @@ export class MessageItem extends React.Component<props> {
     return (
       <div
         onClick={() => this.on(id)}
-        className={`wrap-item ${selected === id ? "selected-item" : ""}`}
+        className={`wrap-item ${selected == id ? "selected-item" : ""}`}
       >
         <div className="left">
           <div className="avatar-left">

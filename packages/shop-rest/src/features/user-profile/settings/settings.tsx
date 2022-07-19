@@ -1,5 +1,6 @@
 import { NotVerified } from "assets/icons/notVerified";
 import { Verified } from "assets/icons/verified";
+import { Warning } from "assets/icons/Warning";
 import { Button } from "components/button/button";
 import Notice from "components/notice/notice";
 import UploadAvatar from "components/upload-avatar/upload-avatar";
@@ -360,6 +361,21 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
               </Row>
             </div>
             <div className="profile-right">
+              {(!data.email_verified_at ||
+                !data.phone_verified_at ||
+                !data.address ||
+                data.address.length === 0) && (
+                <Row>
+                  <div className="profile-warning">
+                    <Warning />
+                    <p>
+                      Update and verify email, phone number, address to create
+                      post.
+                    </p>
+                  </div>
+                </Row>
+              )}
+
               <Row>
                 <Col md={12} sm={6} xs={12}>
                   <Form.Label style={{ display: "flex" }}>

@@ -377,11 +377,14 @@ export async function getMyprofile(token: string) {
   };
 
   const url = baseUrl + "/me";
-  const data = await fetch(url, options);
+  try {
+    const data = await fetch(url, options);
 
-  const dataJson = await data.json();
-
-  return dataJson.data;
+    const dataJson = await data.json();
+    return dataJson.success ? dataJson.data : null;
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function getMyPosts(token: string) {

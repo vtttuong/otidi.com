@@ -137,7 +137,7 @@ const ManagePostReview: React.FC<ManagePostProps> = ({
                 {d.description}
               </div>
               {/* check me to edit */}
-              {Number(getCookie("userId")) == d.reviewer.id ? (
+              {Number(getCookie("userId")) == d.reviewer_id ? (
                 <div className="td" style={{ maxWidth: 100 }}>
                   <span
                     style={{ cursor: "pointer" }}

@@ -98,6 +98,7 @@ const Step1 = (props) => {
               className="inputPrice"
               label="Price"
               name="price"
+              allowNegative={false}
               thousandSeparator={true}
               onValueChange={(data) => {
                 dispatch({
@@ -152,6 +153,7 @@ const Step1 = (props) => {
               className="inputPrice"
               label="Price"
               name="price"
+              allowNegative={false}
               thousandSeparator={true}
               onValueChange={(data) => {
                 dispatch({
@@ -206,6 +208,7 @@ const Step1 = (props) => {
               className="inputPrice"
               label="Price"
               name="price"
+              allowNegative={false}
               thousandSeparator={true}
               onValueChange={(data) => {
                 dispatch({

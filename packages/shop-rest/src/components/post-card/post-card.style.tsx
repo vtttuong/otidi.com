@@ -586,7 +586,7 @@ export const FoodCardWrapper = styled.div`
 
 export const FoodImageWrapper = styled.div`
   span.label,
-  span.persion:nth-child(1) {
+  span.person:nth-child(1) {
     position: absolute;
     bottom: -35px;
     right: 0;
@@ -609,7 +609,7 @@ export const FoodImageWrapper = styled.div`
     font-weight: 600;
     border-radius: 10px;
   }
-  span.persion:nth-child(2) {
+  span.person:nth-child(2) {
     position: absolute;
     bottom: -35px;
     right: 70px;
@@ -621,7 +621,7 @@ export const FoodImageWrapper = styled.div`
     // border-bottom-left-radius: 5px;
     // border-bottom-right-radius: 5px;
   }
-  span.persion:nth-child(3) {
+  span.person:nth-child(3) {
     position: absolute;
     bottom: -35px;
     right: 130px;
@@ -633,7 +633,7 @@ export const FoodImageWrapper = styled.div`
     // border-bottom-left-radius: 5px;
     // border-bottom-right-radius: 5px;
   }
-  span.persion:nth-child(4) {
+  span.person:nth-child(4) {
     position: absolute;
     bottom: -35px;
     right: 200px;
@@ -715,7 +715,18 @@ export const DeliveryOpt = styled.span`
   }
 
   span.label,
-  span.persion:nth-child(1) {
+  span.person {
+    right: 0;
+    background: #009e7e;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 30px;
+    // border-bottom-right-radius: 5px;
+    margin-left: 5px;
+  }
+
+  span.person:nth-child(1) {
     // position: absolute;
     // bottom: -35px;
     right: 0;
@@ -728,7 +739,7 @@ export const DeliveryOpt = styled.span`
     margin-left: 5px;
   }
 
-  span.persion:nth-child(2) {
+  span.person:nth-child(2) {
     // position: absolute;
     // bottom: -35px;
     // right: 70px;
@@ -741,7 +752,7 @@ export const DeliveryOpt = styled.span`
     // border-bottom-right-radius: 5px;
   }
 
-  span.persion:nth-child(3) {
+  span.person:nth-child(3) {
     position: absolute;
     bottom: -35px;
     right: 130px;
@@ -753,7 +764,7 @@ export const DeliveryOpt = styled.span`
     // border-bottom-left-radius: 5px;
     // border-bottom-right-radius: 5px;
   }
-  span.persion:nth-child(4) {
+  span.person:nth-child(4) {
     position: absolute;
     bottom: -35px;
     right: 200px;
@@ -788,6 +799,7 @@ export const DeliveryOpt = styled.span`
     color: #009e7f;
     justify-content: center;
     align-items: center;
+    gap: 5px;
     display: flex;
     > img {
       width: 20px;

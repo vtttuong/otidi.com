@@ -6,7 +6,7 @@ import Conversation from "features/message/conversation/conversation";
 import { PageWrapper } from "features/message/message";
 import { NextPage } from "next";
 import Router, { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { getChats } from "utils/api/chat";
 import { getCookie } from "utils/session";
 

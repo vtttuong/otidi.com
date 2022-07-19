@@ -211,7 +211,7 @@ const PostCard: React.FC<CardProps> = ({
         <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
             <NumberFormat
-              value={data.original_price}
+              value={data.price_after_tax}
               displayType={"text"}
               thousandSeparator={true}
               suffix={CURRENCY}

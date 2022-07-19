@@ -31,7 +31,6 @@ const PostDetails: React.FunctionComponent<PostDetailsProps> = ({
   token,
   deviceType,
 }) => {
-  console.log("🚀 ~ file: post-details-one.tsx ~ line 32 ~ data", data);
   const router = useRouter();
 
   return (
