@@ -34,9 +34,9 @@ const Uploader: React.FC<Props> = ({
     multiple: true,
     onDrop: useCallback(
       (acceptedFiles) => {
-        acceptedFiles = acceptedFiles.filter(
-          (file) => file.size <= ACCEPTED_SIZE
-        );
+        // acceptedFiles = acceptedFiles.filter(
+        //   (file) => file.size <= ACCEPTED_SIZE
+        // );
 
         // Trường hợp muốn add ảnh liên tục mà không bị mất ảnh cũ
 
@@ -62,10 +62,22 @@ const Uploader: React.FC<Props> = ({
     ),
   });
 
+  const removeUploadedImage = (index: number) => {
+    const images = [
+      ...state.files.slice(0, index),
+      ...state.files.slice(index + 1),
+    ];
+
+    dispatch({
+      type: "HANDLE_ON_SELECT_CHANGE",
+      payload: { value: images, field: "files" },
+    });
+  };
+
   const thumbs =
     state.files &&
     state.files !== "" &&
-    state.files.map((file) => {
+    state.files.map((file, index) => {
       const objectURL = file.url ? file.url : URL.createObjectURL(file);
       listObjectURL.push(objectURL);
       const newFile = {
@@ -80,6 +92,10 @@ const Uploader: React.FC<Props> = ({
               src={newFile.url ? newFile.url : newFile.preview}
               alt={newFile.url}
             />
+
+            <span onClick={() => removeUploadedImage(index)} className="remove">
+              x
+            </span>
           </ThumbInner>
         </Thumb>
       );

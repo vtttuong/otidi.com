@@ -100,11 +100,27 @@ export async function getFollowers(id: number) {
   try {
     const res = await fetch(`${baseUrlIndex}/users/${id}/followers`, options);
     const json = await res.json();
-    console.log("🚀 ~ file: user.ts ~ line 103 ~ getFollowers ~ json", json);
 
-    return json.success ? json.data : null;
+    return json.success ? json.data : [];
   } catch {
-    return null;
+    return [];
+  }
+}
+
+export async function getFollowings(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlIndex}/users/${id}/followings`, options);
+    const json = await res.json();
+
+    return json.success ? json.data : [];
+  } catch {
+    return [];
   }
 }
 
@@ -122,9 +138,9 @@ export async function getReviews(id: number, param?: any) {
     );
     const json = await res.json();
 
-    return json.success ? json.data : null;
+    return json.success ? json.data : [];
   } catch {
-    return null;
+    return [];
   }
 }
 

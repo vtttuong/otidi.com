@@ -1,2 +1,2 @@
 /************ CONSTANTS ***********/
-export const CURRENCY = "VND";
+export const CURRENCY = " đ";

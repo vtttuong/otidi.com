@@ -55,6 +55,11 @@ export const fuelOptions = [
     value: "hybrid",
     label: <FormattedMessage id="hybridFuelOption" />,
   },
+  {
+    id: 4,
+    value: "other",
+    label: <FormattedMessage id="otherOption" />,
+  },
 ];
 
 export const gearOptions = [
@@ -82,7 +87,7 @@ export const originOptions = [
   },
   {
     id: 1,
-    value: "imported",
-    label: <FormattedMessage id="imported" defaultMessage="Imported" />,
+    value: "import",
+    label: <FormattedMessage id="import" defaultMessage="Imported" />,
   },
 ];

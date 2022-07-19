@@ -4,7 +4,7 @@ import { Button } from "components/button-avatar/button";
 import { MainEditor } from "./image-crop.style";
 
 export const ImageCrop = (props) => {
-  const { imagefile, setEditorRef, onImageCrop } = props;
+  const { imagefile, setEditorRef, onImageCrop, width, height } = props;
 
   const [scaleValue, setScaleValue] = useState(1);
 
@@ -22,6 +22,8 @@ export const ImageCrop = (props) => {
           scale={scaleValue}
           rotate={0}
           ref={setEditorRef}
+          height={height}
+          width={width}
         />
       </div>
 

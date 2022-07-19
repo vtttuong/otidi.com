@@ -98,7 +98,7 @@ export const Posts: React.FC<PostsProps> = () => {
                   style={{ height: "100%" }}
                 >
                   <PostCard
-                    name={item.name}
+                    name={item.title}
                     image={item.main_image.url}
                     address={item.user.address}
                     createdAt={item.created_at}

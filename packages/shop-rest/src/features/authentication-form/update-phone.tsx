@@ -29,10 +29,6 @@ export default function SignInModal() {
     if (!token || token.trim().length === 0) {
       router.push("/login");
     }
-    console.log(
-      "🚀 ~ file: update-phone.tsx ~ line 29 ~ phoneCallback ~ token",
-      token
-    );
 
     if (typeof window !== "undefined") {
       setLoading(true);
@@ -50,15 +46,13 @@ export default function SignInModal() {
       );
       try {
         const data = await res.json();
-        console.log(
-          "🚀 ~ file: update-phone.tsx ~ line 45 ~ phoneCallback ~ data",
-          data
-        );
+
         if (data && !data.success) {
           setLoading(false);
           return;
         } else {
           setCookie("verify-phone", phone);
+
           router.push("/verify-phone");
           return;
         }

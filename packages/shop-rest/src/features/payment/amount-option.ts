@@ -6,12 +6,6 @@ export const options = {
       type: "primary",
       info: "MOMO",
     },
-    {
-      id: "2",
-      type: "paypal",
-      name: "momo",
-      info: "PAYPAL",
-    },
   ],
   balances: [
     {

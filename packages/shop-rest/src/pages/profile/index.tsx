@@ -30,14 +30,14 @@ import WrapCardSaved from "features/wrap-card/wrap-card-saved";
 import Footer from "layouts/footer";
 import moment from "moment";
 import { NextPage } from "next";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   getMyPosts,
   getPackage,
   getProfile,
   pushPost,
 } from "utils/api/profile";
-import { getFollowers, getReviews } from "utils/api/user";
+import { getFollowers, getFollowings, getReviews } from "utils/api/user";
 import { getCookie } from "utils/session";
 
 type Props = {
@@ -77,10 +77,6 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
   }, []);
 
   React.useEffect(() => {
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 84 ~ React.useEffect ~ data",
-      data
-    );
     data.waiting_approve_posts = data.posts.filter(
       (post) => post.status === post_status.WAITING
     );
@@ -133,7 +129,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       icon: <Bookmarks color="#00d9ff" />,
     },
     {
-      number: data.following_count || 0,
+      number: data.followings?.length || 0,
       key: "following",
       title: "Dang theo doi",
       icon: <Following />,
@@ -158,7 +154,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     data.posts.map((item) => {
       if (item.id == id) {
         item.is_sold = true;
-        data.sold_post.push(item);
+        data.sold_posts.push(item);
         return;
       }
     });
@@ -176,30 +172,35 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     if (i == "following") setActiveTab("following");
     else setActiveTab("follower");
   };
-  const onPush = (id) => {
-    openModal({
-      show: true,
-      overlayClassName: "quick-view-overlay",
-      closeOnClickOutside: true,
-      component: PushForm,
-      closeComponent: "",
-      config: {
-        enableResizing: false,
-        disableDragging: true,
-        className: "quick-view-modal",
-        width: "500px",
-        height: "auto",
-      },
-      componentProps: {
-        onPush: onPushClick,
-        service: arrayService,
-        id: id,
-      },
-    });
-  };
+  const onPush = useCallback(
+    (id) => {
+      openModal({
+        show: true,
+        overlayClassName: "quick-view-overlay",
+        closeOnClickOutside: true,
+        component: PushForm,
+        closeComponent: "",
+        config: {
+          enableResizing: false,
+          disableDragging: true,
+          className: "quick-view-modal",
+          width: "500px",
+          height: "auto",
+        },
+        componentProps: {
+          onPush: onPushClick,
+          service: arrayService,
+          id: id,
+          loading: loading,
+        },
+      });
+    },
+    [arrayService]
+  );
+
   const onPushClick = async (id, packageId, time) => {
     let serviceMoney =
-      arrayService.filter((service) => service.id == packageId)[0]?.price || 0;
+      arrayService.find((service) => service.id == packageId)?.price || 0;
 
     if (data.balance < serviceMoney) {
       closeModal();
@@ -209,6 +210,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     }
 
     const formatTime = moment(time).format("YYYY-MM-DD HH:mm");
+    closeModal();
     setLoading(true);
     const { result, advertise } = await pushPost(
       token,
@@ -216,7 +218,6 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       packageId,
       String(formatTime)
     );
-    setLoading(false);
 
     if (result) {
       data.posts.forEach((item) => {
@@ -229,17 +230,18 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       data.balance = data.balance - serviceMoney;
 
       setData({ ...data });
-
+      setLoading(false);
       setSuccessPush(true);
-      closeModal();
     } else {
+      setLoading(false);
       setErrorTime(true);
     }
   };
 
-  // setTimeout(() => {
-  //   setErrorMoneyPush(false);
-  // }, 3000);
+  setTimeout(() => {
+    setErrorMoneyPush(false);
+    setErrorTime(false);
+  }, 3000);
 
   return (
     <>
@@ -316,7 +318,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                     />
                   ) : null}
                   {activeTab === "following" ? (
-                    <ManagePost data={data.following} />
+                    <ManagePost data={data.followings} />
                   ) : null}
 
                   {activeTab === "follower" ? (
@@ -366,10 +368,12 @@ export async function getServerSideProps(context) {
   if (data) {
     const posts = await getMyPosts(token);
     const followers = await getFollowers(data.id);
+    const followings = await getFollowings(data.id);
     const reviews = await getReviews(data.id);
     data.posts = posts;
     data.followers = followers;
     data.reviews = reviews;
+    data.followings = followings;
 
     data.waiting_approve_posts = data.posts.filter(
       (post) => post.status === post_status.WAITING

@@ -17,20 +17,12 @@ type Props = {
 
 const WrapCard: React.FC<Props> = ({ data, token, onExchange }) => {
   const router = useRouter();
-  const [datas, setDatas] = React.useState(null);
-  const getVouchers = async () => {
-    const vouchers = await getAllVoucher(token);
-    setDatas(vouchers);
-  };
-  React.useEffect(() => {
-    getVouchers();
-  }, []);
 
   return (
     <div>
-      {datas ? (
-        datas.length != 0 ? (
-          datas.map((d) => (
+      {data ? (
+        data.length != 0 ? (
+          data.map((d) => (
             <ItemCard key={d.id} className={"voucher"}>
               <VoucherCard
                 data={d}

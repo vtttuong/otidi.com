@@ -17,10 +17,11 @@ import { setCookie, getCookie, removeCookie } from "utils/session";
 import Pusher from "pusher-js";
 import { ProfileProvider } from "contexts/profile/profile.provider";
 import { FormattedMessage } from "react-intl";
-import { getMyprofile, getMyText } from "utils/api/profile";
+import { getMyprofile, getMyText, logout } from "utils/api/profile";
 import AuthenticationForm from "features/authentication-form";
 import ProgressBox from "components/progress-routing/progress-bar";
 import { useAppDispatch } from "contexts/app/app.provider";
+import { POSTS } from "site-settings/site-navigation";
 
 type Props = {
   className?: string;
@@ -58,21 +59,23 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
 
     if (token != null) {
       const data = await getMyprofile(token);
+      console.log("🚀 ~ file: header.tsx ~ line 62 ~ getData ~ data", data);
 
       const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
       });
       pusher.subscribe("privateChannel." + data.id);
 
-      console.log("🚀 ~ file: header.tsx ~ line 65 ~ getData ~ pusher", pusher);
-
       setAvatar(data.avatar);
       setCookie("userId", data.id);
       setCookie("userAvatar", data.avatar);
       setCookie("userName", data.name);
       setCookie("userEmail", data.email);
+      setCookie("userAddress", data.address);
       setCookie("userPhone", data.phone_number);
       setCookie("phone_verified_at", data.phone_verified_at);
+      setCookie("email_verified_at", data.email_verified_at);
+      setCookie("identity_verified_at", data.identity_verified_at);
       setCookie("balance", data.balance);
     }
   };
@@ -82,15 +85,12 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
 
     if (token != null) {
       const text = await getMyText(token);
-      console.log(
-        "🚀 ~ file: header.tsx ~ line 82 ~ getSearchText ~ text",
-        text
-      );
+
       setTexts(text);
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setTimeout(() => {
       window.scrollTo({
         top: 0,
@@ -98,6 +98,7 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
         behavior: "smooth",
       });
     }, 500);
+    await logout(token);
 
     if (typeof window !== "undefined") {
       removeCookie("access_token");
@@ -257,7 +258,7 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
     };
 
     router.push({
-      pathname,
+      pathname: POSTS,
       query: {
         ...queryParams,
       },

@@ -527,6 +527,7 @@ const MainAvatar = styled.div`
   &.name {
     flex-direction: column;
     width: auto;
+    align-items: start;
   }
   &.sub {
     flex: 1;
@@ -577,7 +578,7 @@ const Name = styled.h5`
     font-size: 13px;
     display: flex;
     flex-direction: row;
-    top: 15px;
+    top: 5px;
     position: relative;
   }
   &:hover {

@@ -4,6 +4,7 @@ import { ProfileProvider } from "contexts/profile/profile.provider";
 import Point from "features/poin-pay";
 import ManagePostOrder from "features/user-profile/manage-posts/manage-posts-order";
 import Sidebar from "features/user-profile/sidebar/sidebar";
+import { SidebarWrapper } from "features/user-profile/sidebar/sidebar.style";
 import {
   BodyContain,
   ContainBody,
@@ -39,12 +40,48 @@ const OrderPage: NextPage<Props> = ({ data, token, deviceType }) => {
         <PageWrapper>
           <ContainBody>
             <BodyContain>
-              <Sidebar balance={data.balance} dataPost={data} />
+              <SidebarWrapper>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    borderBottom: "1px solid #e1e1e1",
+                  }}
+                >
+                  <img
+                    src="https://trangdangtin.com/htdocs/templates/eshopper/images/icon-usd-active.png"
+                    width={40}
+                    height={40}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginLeft: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: "#009E7F",
+                        marginLeft: 10,
+                        marginBottom: 5,
+                        fontSize: 35,
+                        fontWeight: 800,
+                        position: "relative",
+                        top: -5,
+                      }}
+                    >
+                      {data.balance}
+                    </div>
+                  </div>
+                </div>
+              </SidebarWrapper>
+              {/* <Sidebar balance={data.balance} dataPost={data} /> */}
               <Point deviceType={deviceType} />
             </BodyContain>
             <ContentContainer>
               <ContentBox className="order">
-                <ManagePostOrder token={token} data={data.following} />
+                <ManagePostOrder token={token} data={data.followings} />
               </ContentBox>
             </ContentContainer>
           </ContainBody>

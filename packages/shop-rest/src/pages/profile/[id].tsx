@@ -24,6 +24,7 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import {
   getFollowers,
+  getFollowings,
   getPostsForUser,
   getReviews,
   getUserById,
@@ -64,12 +65,12 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
       title: "Ngừoi theo dõi",
       icon: <Hourglass color="#0000ff" width="15px" height="15px" />,
     },
-    // {
-    //   key: "following",
-    //   title: "Đang theo dõi",
-    //   icon: <SquareCheck color="#fb00ff" />,
-    //   number: data.following.length,
-    // },
+    {
+      key: "following",
+      title: "Đang theo dõi",
+      icon: <SquareCheck color="#fb00ff" />,
+      number: data.followings?.length || 0,
+    },
     {
       key: "review",
       title: "Nhận xét",
@@ -150,13 +151,13 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
                       data={reviews}
                     />
                   ) : null}
+
+                  {activeTab === "following" ? (
+                    <ManagePost data={data.followings} />
+                  ) : null}
                 </ContentBox>
               </ContentContainer>
             </ContainBody>
-
-            {/* {activeTab === "following" ? (
-                    <ManagePost data={data.following} />
-                  ) : null} */}
 
             <Footer />
           </PageWrapper>
@@ -175,9 +176,12 @@ export async function getServerSideProps(context) {
     const posts = await getPostsForUser(context.params.id);
     const followers = await getFollowers(context.params.id);
     const reviews = await getReviews(context.params.id);
+    const followings = await getFollowings(context.params.id);
+
     data.posts = posts;
     data.followers = followers;
     data.reviews = reviews;
+    data.followings = followings;
   }
 
   // const users = await getUsers();

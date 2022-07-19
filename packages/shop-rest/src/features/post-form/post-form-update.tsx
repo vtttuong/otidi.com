@@ -143,6 +143,116 @@ const Step1 = (props) => {
         </Col>
       </Row>
 
+      {/* <Row>
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputPrice" />
+            <Require>*</Require>
+          </Label>
+          <InputPrice>
+            <NumberFormat
+              className="inputPrice"
+              label="Price"
+              name="price"
+              thousandSeparator={true}
+              onValueChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.floatValue, field: "discountPrice" },
+                });
+              }}
+              background="#F7F7F7"
+              height="48px"
+              placeholder="Enter discount price"
+              value={state.discountPrice}
+              autoComplete={"off"}
+            />
+          </InputPrice>
+        </Col>
+
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputUnit" />
+          </Label>
+          <div style={{ minWidth: "100%" }}>
+            <Select
+              isDisabled={true}
+              instanceId="input-unit"
+              classNamePrefix="filter"
+              styles={CustomStyles}
+              options={unitOptions}
+              defaultValue={unitOptions[0]}
+              value={unitOptions[state.indexOptionUnit]}
+              onChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.value, field: "unit" },
+                });
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.index, field: "indexOptionUnit" },
+                });
+              }}
+            />
+          </div>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputPrice" />
+            <Require>*</Require>
+          </Label>
+          <InputPrice>
+            <NumberFormat
+              className="inputPrice"
+              label="Price"
+              name="price"
+              thousandSeparator={true}
+              onValueChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.floatValue, field: "priceAfterTax" },
+                });
+              }}
+              background="#F7F7F7"
+              height="48px"
+              placeholder="Enter price after tax"
+              value={state.priceAfterTax}
+              autoComplete={"off"}
+            />
+          </InputPrice>
+        </Col>
+
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputUnit" />
+          </Label>
+          <div style={{ minWidth: "100%" }}>
+            <Select
+              isDisabled={true}
+              instanceId="input-unit"
+              classNamePrefix="filter"
+              styles={CustomStyles}
+              options={unitOptions}
+              defaultValue={unitOptions[0]}
+              value={unitOptions[state.indexOptionUnit]}
+              onChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.value, field: "unit" },
+                });
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.index, field: "indexOptionUnit" },
+                });
+              }}
+            />
+          </div>
+        </Col>
+      </Row> */}
+
       <Row>
         <Col xs={12} sm={12} md={12} lg={12}>
           <Label>
@@ -190,12 +300,9 @@ const Step2 = (props) => {
             intlUploadText="rmUploadText"
           />
         </Col>
-        {(state.files !== "" &&
-          state.files.length >= 0 &&
-          state.files.length <= 3) ||
-        props.errorImage !== "" ? (
+        {props.errorImage !== "" ? (
           <Error>
-            <FormattedMessage id="errorImage" />
+            <FormattedMessage id={props.errorImage} />
           </Error>
         ) : null}
       </Row>
@@ -223,8 +330,6 @@ const Step3 = (props) => {
       setErrorSubmit("Error");
     } else {
       setErrorSubmit("");
-      console.log("OKE");
-
       props.handleSubmit();
     }
   };
@@ -289,12 +394,15 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
   const [errorStep, setErrorStep] = useState("");
   const [errorImage, setErrorImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const ACCEPTED_SIZE = 512 * 1000;
 
   const _next = () => {
     if (currentStep === 1) {
       if (
         state.title &&
         state.price &&
+        state.discountPrice &&
+        state.priceAfterTax &&
         state.unit &&
         state.description !== ""
       ) {
@@ -306,14 +414,28 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
         setErrorStep("error");
       }
     }
+
     if (currentStep === 2) {
-      if (state.files !== "" && state.files.length > 3) {
+      if (!state.files || state.files === "" || state.files.length <= 3) {
+        setErrorImage("errorImage.length");
+        return;
+      }
+
+      let isOverSize = false;
+
+      state.files.forEach((file) => {
+        if (file.size && file.size > ACCEPTED_SIZE) {
+          setErrorImage("errorImage.size");
+          isOverSize = true;
+          return;
+        }
+      });
+
+      if (!isOverSize) {
         let newStep = currentStep;
         newStep = newStep + 1;
         setCurrentStep(newStep);
         setErrorStep("");
-      } else {
-        setErrorImage("error");
       }
     }
   };
@@ -389,7 +511,11 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
     });
 
     state.files.forEach((file, index) => {
-      formdata.append(`images[${index}][file]`, file);
+      if (file.url) {
+        formdata.append(`images[${index}][path]`, file.url);
+      } else {
+        formdata.append(`images[${index}][file]`, file);
+      }
       formdata.append(`images[${index}][is_main]`, index === 0 ? "1" : "0");
       formdata.append(`images[${index}][position]`, index);
     });
@@ -404,7 +530,7 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
     };
 
     axios
-      .put(
+      .post(
         process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + `/posts/${state.id}`,
         formdata,
         configs

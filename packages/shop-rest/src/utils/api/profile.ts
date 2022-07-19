@@ -122,6 +122,18 @@ export async function getProfile(token: string) {
   return dataJson.data;
 }
 
+export async function logout(token: string) {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const data = await fetch(`${baseUrl}/me/logout`, options);
+}
+
 export async function getHistoryPay(token: string) {
   const options = {
     method: "GET",
@@ -230,7 +242,7 @@ export async function parseNotiData(data) {
       break;
     case NotificationType.RecommendPost:
       values = {
-        title: data.post_name,
+        title: data.post_name || data.title,
       };
       type = "recommendPostTit";
       messageId = "newPost";
@@ -238,7 +250,7 @@ export async function parseNotiData(data) {
       break;
     case NotificationType.PushPostSuccess:
       values = {
-        title: data.post_name,
+        title: data.post_name || data.title,
       };
       type = "pushPostSuccessTit";
       messageId = "pushPostSuccessMess";

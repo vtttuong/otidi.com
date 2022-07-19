@@ -10,7 +10,7 @@ export async function getChats(token: string) {
   };
 
   try {
-    const res = await fetch(`${baseUrl}/channels`);
+    const res = await fetch(`${baseUrl}/channels`, options);
     const json = await res.json();
     return {
       result: json.success ? json.data : null,

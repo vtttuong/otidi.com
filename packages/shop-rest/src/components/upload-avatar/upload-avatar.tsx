@@ -6,6 +6,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { getCookie } from "utils/session";
 import { MainDiv, ProfileImageDiv } from "./upload-avatar.style";
+import placeholder from "./placeholder.png";
 
 export const verifyFile = (file, acceptedFileExtensions) => {
   const { name } = file;
@@ -71,8 +72,13 @@ const UploadAvatar: React.FC<{}> = () => {
     const profileImage = imageData.userProfileImage
       ? imageData.userProfileImage
       : avatar;
+    console.log("RENDER");
 
-    return <img src={profileImage} alt="user-logo" />;
+    return profileImage ? (
+      <img src={profileImage} alt="user-logo" />
+    ) : (
+      <Image url={placeholder} />
+    );
   };
 
   return (

@@ -17,22 +17,12 @@ type Props = {
 
 const WrapMy: React.FC<Props> = ({ data, token, onExchange }) => {
   const router = useRouter();
-  const [datas, setDatas] = React.useState(null);
-  const getMyVouchers = async () => {
-    const data = await getMyVoucher(token);
-    if (data) {
-      setDatas(data);
-    }
-  };
-  React.useEffect(() => {
-    getMyVouchers();
-  }, []);
 
   return (
     <div>
-      {datas ? (
-        datas.length != 0 ? (
-          datas.map((d) => (
+      {data ? (
+        data.length != 0 ? (
+          data.map((d) => (
             <ItemCard key={d.id} className={"voucher"}>
               <VoucherMy
                 data={d}
@@ -44,7 +34,7 @@ const WrapMy: React.FC<Props> = ({ data, token, onExchange }) => {
             </ItemCard>
           ))
         ) : (
-          <p>No data</p>
+          <p style={{ textAlign: "center" }}>No data</p>
         )
       ) : (
         <div

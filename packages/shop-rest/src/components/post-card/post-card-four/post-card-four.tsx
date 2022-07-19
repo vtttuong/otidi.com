@@ -27,6 +27,7 @@ import {
   SellLabel,
   SellLabelTop,
 } from "../post-card.style";
+import { CURRENCY } from "utils/constant";
 
 type CardProps = {
   name?: string;
@@ -82,12 +83,12 @@ const PostCard: React.FC<CardProps> = ({
   const handler = <span>...</span>;
   const content = (
     <div className="action">
-      {data && data.status == "waiting" ? null : (
+      {data && (data.status == "waiting" || data.status == "sold") ? null : (
         <p
           style={{
             fontWeight: 600,
           }}
-          // onClick={onMark}
+          onClick={onMark}
         >
           Mark bought
         </p>
@@ -168,7 +169,7 @@ const PostCard: React.FC<CardProps> = ({
           <Countdown date={Date.now() + c} renderer={renderer} />
         ) : null}
 
-        {prioriry ? (
+        {data.advertise ? (
           <SellLabelTop className="main-content">
             <FormattedMessage id="topPost" defaultMessage="Top post" />
           </SellLabelTop>
@@ -210,13 +211,13 @@ const PostCard: React.FC<CardProps> = ({
         <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
             <NumberFormat
-              value={price}
+              value={data.original_price}
               displayType={"text"}
               thousandSeparator={true}
-              suffix={" đ"}
+              suffix={CURRENCY}
               renderText={(value) => <div>{value}</div>}
             />
-            <span>{unit}</span>
+            {/* <span>{CURRENCY}</span> */}
             {/*<FormattedMessage id='deliveryText' defaultMessage='Delivery' />*/}
           </DeliveryOpt>
           <Duration>
