@@ -4,6 +4,93 @@ import useSWR from "swr";
 const queryString = require("query-string");
 const baseUrl = process.env.REACT_APP_LARAVEL_API_URL_ADMIN;
 
+const FAKE_DATA = [
+  {
+    id: 25,
+    title: "Cần bán xe gấp",
+    status: "waiting",
+    slug: "can-ban-xe-gap",
+    views: 0,
+    price: 1500000000,
+    description:
+      '<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Jean LEVIS 501</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Dáng Slim lên form chuẩn</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Chất jean co giãn, mặc siêu thoải mái</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Màu đẹp: trung và đậm</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Size:29-30-31-32-34</span></p>',
+    user_id: 1,
+    brand_id: 4,
+    deleted_at: null,
+    created_at: "2022-04-12T06:52:02+00:00",
+    updated_at: "2022-04-12T06:52:02+00:00",
+    brand_model_id: 6,
+    latitude: null,
+    longitude: null,
+    main_image: [
+      {
+        id: 2,
+        path: "products/1/1_OMUUycO3k4uppkHo.jpg",
+        url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        is_main: 1,
+        position: 0,
+      },
+    ],
+  },
+  {
+    id: 32,
+    title: "Cần bán xe gấp",
+    status: "waiting",
+    slug: "can-ban-xe-gap",
+    views: 0,
+    price: 1500000000,
+    description:
+      '<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Jean LEVIS 501</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Dáng Slim lên form chuẩn</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Chất jean co giãn, mặc siêu thoải mái</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Màu đẹp: trung và đậm</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Size:29-30-31-32-34</span></p>',
+    user_id: 1,
+    brand_id: 4,
+    deleted_at: null,
+    created_at: "2022-04-12T06:52:02+00:00",
+    updated_at: "2022-04-12T06:52:02+00:00",
+    brand_model_id: 6,
+    latitude: null,
+    longitude: null,
+    main_image: [
+      {
+        id: 2,
+        path: "products/1/1_OMUUycO3k4uppkHo.jpg",
+        url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        is_main: 1,
+        position: 0,
+      },
+    ],
+  },
+  {
+    id: 36,
+    title: "Bán xe giá rẻ",
+    status: "waiting",
+    slug: "can-ban-xe-gap",
+    views: 0,
+    price: 1500000000,
+    description:
+      '<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Jean LEVIS 501</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Dáng Slim lên form chuẩn</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Chất jean co giãn, mặc siêu thoải mái</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Màu đẹp: trung và đậm</span></p>\n<p style="text-align:start;"><span style="color: rgb(5,5,5);background-color: rgb(255,255,255);font-size: 15px;font-family: Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;">Size:29-30-31-32-34</span></p>',
+    user_id: 1,
+    brand_id: 4,
+    deleted_at: null,
+    created_at: "2022-04-12T06:52:02+00:00",
+    updated_at: "2022-04-12T06:52:02+00:00",
+    brand_model_id: 6,
+    latitude: null,
+    longitude: null,
+    main_image: [
+      {
+        id: 2,
+        path: "products/1/1_OMUUycO3k4uppkHo.jpg",
+        url:
+          "https://otody.s3.ap-southeast-1.amazonaws.com/products/1/1_OMUUycO3k4uppkHo.jpg",
+        is_main: 1,
+        position: 0,
+      },
+    ],
+  },
+];
+
 const options = {
   isCaseSensitive: false,
   // includeScore: false,
@@ -17,7 +104,7 @@ const options = {
   // useExtendedSearch: false,
   // ignoreLocation: false,
   // ignoreFieldNorm: false,
-  minMatchCharLength: 2,
+  // minMatchCharLength: 2,
   keys: ["title"],
 };
 function search(list, pattern) {
@@ -36,32 +123,23 @@ const productFetcher = (url) =>
     },
   }).then((res) => res.json());
 interface Props {
-  type?: string;
-  postType?: string;
   status?: string;
-  categoryType?: string;
   text?: any;
   brand?: any;
-  offset?: number;
+  count?: number;
   page?: any;
-  limit?: number;
-  dir?: string;
-  isSold?: boolean;
-  isPriority?: boolean;
-  isExpired?: boolean;
+  sortBy?: string;
 }
-export default function useProducts(variables: Props) {
-  const { postType, status, brand, text, dir, isSold, isPriority, isExpired } =
-    variables ?? {};
+export default function usePosts(variables: Props) {
+  const { status, brand, text, sortBy, page, count } = variables ?? {};
 
   let queryParams = {
-    dir: dir,
+    dir: sortBy ? (sortBy === "lasted" ? "desc" : "asc") : "",
     status: status,
     brand: brand,
-    type: postType,
-    is_sold: isSold ? 1 : 0,
-    is_priority: isPriority ? 1 : 0,
-    is_expired: isExpired ? 1 : 0,
+    page: page ? page : "",
+    count: count ? count : "",
+    order_by: sortBy ? "created_at" : "",
   };
 
   let newParams = {};
@@ -87,9 +165,9 @@ export default function useProducts(variables: Props) {
   // need to remove when you using real API integration
   // const [formattedData, setFormattedData] = useState(false);
 
-  let posts = data;
+  let posts = data?.data || FAKE_DATA;
 
-  if (text) {
+  if (text && data) {
     posts = search(posts, text);
   }
 
@@ -114,9 +192,21 @@ export default function useProducts(variables: Props) {
   return {
     loading,
     error,
-    data: posts?.data,
+    data: posts,
     // hasMore,
     mutate,
     // fetchMore,
   };
 }
+
+export const usePost = (postId: number) => {
+  const url = `${baseUrl}/posts/${postId}`;
+  const { data, error } = useSWR(url, productFetcher);
+  const loading = !data && !error;
+
+  return {
+    postLoading: loading,
+    error,
+    post: data?.data,
+  };
+};

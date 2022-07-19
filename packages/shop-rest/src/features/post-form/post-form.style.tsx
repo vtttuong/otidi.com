@@ -65,6 +65,8 @@ export const Container = styled.div`
 export const Error = styled.span`
   color: red;
   left: 5px;
+  display: inline-block;
+  // margin-bottom: 20px;
   position: relative;
   &.errorStep1 {
     top: 5px;
@@ -147,6 +149,10 @@ export const ButtonCategory = styled.div`
     border: 1px solid #009e7f;
     cursor: pointer;
   }
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 export const Col = styled(Cols)`
@@ -431,7 +437,7 @@ export const OtherPayOption = styled.div`
 `;
 
 export const SubmitBtnWrapper = styled.div`
-  margin-top: 100px;
+  margin-top: 60px;
   .reusecore__button {
     width: 100%;
   }
@@ -474,8 +480,14 @@ export const BackButton = styled.div`
 
   @media (max-width: 990px) {
     top: 20px;
-    left: 25px;
+    left: 0;
+    margin-bottom: 50px;
   }
+  @media (max-width: 776px) {
+    top: 20px;
+    margin-bottom: 70px;
+  }
+
   @media (max-width: 426px) {
     top: 5px;
     left: 0;

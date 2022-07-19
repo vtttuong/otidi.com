@@ -19,26 +19,29 @@ const OTPInput: React.FC<Props> = ({ token }) => {
   const [loadingClear, setLoadingClear] = React.useState(false);
 
   const onSubmit = async () => {
+    if (!values || values.trim().length === 0) {
+      setError(true);
+      setErrorC("Vui lòng nhập OTP");
+      return;
+    }
     setLoadingSubmit(true);
     if (values.length === 6) {
       const object = {
-        phone_number: getCookie("verify-phone"),
         verify_code: values,
       };
       const data = await sendOtp(object, token);
-      if (!data.error) {
+
+      if (data && data.success) {
         setSuccess(true);
         setLoadingSubmit(false);
         setCookie("phone_verified_at", new Date());
         setTimeout(() => {
-          Router.push("/post");
+          Router.push("/");
           return;
         }, 1000);
       } else {
-        if (data.error.phone_number) {
-          setErrorC(data.error.phone_number[0]);
-          setError(true);
-        }
+        setErrorC("Invalid OTP");
+        setError(true);
         setLoadingSubmit(false);
         setTimeout(() => {
           setError(false);

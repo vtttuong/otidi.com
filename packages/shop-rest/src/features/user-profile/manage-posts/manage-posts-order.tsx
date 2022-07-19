@@ -30,7 +30,7 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
   }, []);
   return (
     <Box>
-      <Table responsive="sm">
+      <Table style={{ minWidth: "500px" }} responsive="sm">
         <thead>
           <tr>
             <th>
@@ -46,24 +46,28 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
             <th>Created At </th>
 
             <th>Subcription Type </th>
-            <th>Post </th>
+            <th>Status </th>
           </tr>
         </thead>
         <tbody>
-          {datas.length != 0
+          {datas && datas.length != 0
             ? datas.map((d) => {
                 return (
                   <tr key={d.id}>
                     <td
                       onClick={() => {}}
-                      style={{ cursor: "pointer", color: "#009e7f" }}
+                      style={{
+                        cursor: "pointer",
+                        color: "#009e7f",
+                        textAlign: "start",
+                      }}
                     >
-                      {d.type == "pushPostPayment" ? (
+                      {d.type == "advertisePostPayment" ? (
                         <b>- {d.old_balance - d.balance}</b>
                       ) : (
                         <b>+ {d.balance - d.old_balance}</b>
                       )}
-                      {d.price}
+                      {/* {d.price} */}
                     </td>
                     <td>
                       <p>{moment(d.created_at).format("YYYY-MM-DD")}</p>
@@ -74,51 +78,8 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
                         defaultMessage="Thanh toán MOMO"
                       />
                     </td>
-                    <td>
-                      {d.post ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignItems: "center",
-                            alignSelf: "center",
-                          }}
-                          onClick={
-                            d.post.deleted_at != null
-                              ? null
-                              : () =>
-                                  router.push(
-                                    "/[type]/[slug]",
-                                    `/${d.post.type}/${d.post.slug}`
-                                  )
-                          }
-                        >
-                          <Image
-                            style={{ width: 50, height: 50 }}
-                            url={d.post.main_img_url}
-                          />
-                          <span
-                            style={{
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              marginLeft: 10,
-                            }}
-                          >
-                            {d.post.title}
-                            <br />
-                            {d.post.deleted_at != null ? (
-                              <p style={{ color: "red" }}>Tin bị xoá</p>
-                            ) : null}
-                          </span>
-                        </div>
-                      ) : (
-                        <Image
-                          style={{ width: 50, height: 50 }}
-                          url="https://static.mservice.io/img/logo-momo.png"
-                        />
-                      )}
-                    </td>
+
+                    <td>{d.extra.message}</td>
                   </tr>
                 );
               })

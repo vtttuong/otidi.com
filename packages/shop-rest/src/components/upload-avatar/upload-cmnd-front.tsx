@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { Button } from "../button/button";
 import { Camera } from "assets/icons/camera";
 import { getCookie } from "utils/session";
+import placeholder from "./placeholder.png";
 
 export const verifyFile = (file, acceptedFileExtensions) => {
   const { name } = file;
@@ -65,12 +66,17 @@ const UploadCMND: React.FC<{}> = () => {
 
   const renderProfileImage = () => {
     let avata = getCookie("userFrontId");
-    avata = process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/storage/" + avata;
     const profileImage = imageData.userProfileImage
       ? imageData.userProfileImage
       : avata;
 
-    return <img className="front-image" src={profileImage} alt="user-logo" />;
+    return (
+      <img
+        className="front-image"
+        src={profileImage || placeholder}
+        alt="user-logo"
+      />
+    );
   };
 
   return (
@@ -82,7 +88,12 @@ const UploadCMND: React.FC<{}> = () => {
         <label
           className="label-upload-front"
           title="Select image"
-          style={{ padding: "0px", justifyContent: "center", display: "flex" }}
+          style={{
+            padding: "0px",
+            justifyContent: "center",
+            display: "flex",
+            cursor: "pointer",
+          }}
         >
           <input
             hidden
@@ -99,6 +110,8 @@ const UploadCMND: React.FC<{}> = () => {
 
         <AvatarModal show={showModal} onClose={toggleModal} title="Crop">
           <ImageCrop
+            width={320}
+            height={200}
             imagefile={imageData.selectedFile}
             setEditorRef={setEditorRef}
             onImageCrop={onImageCrop}

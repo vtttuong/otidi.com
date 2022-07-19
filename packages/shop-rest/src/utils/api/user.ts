@@ -1,19 +1,30 @@
-const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
+import data from "features/checkouts/data";
 
+const baseUrlIndex = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
+const baseUrlClient = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 export async function getUsers() {
-  const posts = await fetch(`${baseUrl}/api/v1/users`);
+  const posts = await fetch(`${baseUrlIndex}/users`);
   return await posts.json();
 }
-export async function getUserById(id) {
-  const res = await fetch(`${baseUrl}/api/v1/users/${id}/profile`);
-  return await res.json();
+
+export async function getUserById(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlIndex}/users/${id}`, options);
+    const json = await res.json();
+
+    return json.success ? json.data : null;
+  } catch {
+    return null;
+  }
 }
-export async function getReviews(id, param) {
-  const res = await fetch(
-    `${baseUrl}/api/v1/users/reviews?user_id=${id}${param}`
-  );
-  return await res.json();
-}
+
 export async function deleteReview(token: string, id: number) {
   const options = {
     method: "DELETE",
@@ -23,16 +34,24 @@ export async function deleteReview(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/client/v1/users/review/${id}`,
-    options
-  );
-  console.log(await data.json(), 77);
+  try {
+    const res = await fetch(`${baseUrlClient}/user-reviews/${id}`, options);
+    const json = await res.json();
+    return {
+      result: json.success ? true : false,
+      error: json.result,
+    };
+  } catch (err) {
+    return {
+      result: false,
+      error: err.message || "Failed to create review",
+    };
+  }
+
   // return await data.json();
 }
 
-export async function creatReviewChild(token: string, object: any) {
-  console.log(object, 88);
+export async function createReview(token: string, object: any) {
   const options = {
     method: "POST",
     headers: {
@@ -42,8 +61,19 @@ export async function creatReviewChild(token: string, object: any) {
     body: JSON.stringify(object),
   };
 
-  const data = await fetch(`${baseUrl}/api/client/v1/users/review`, options);
-  return await data.json();
+  try {
+    const res = await fetch(`${baseUrlClient}/user-reviews`, options);
+    const json = await res.json();
+    return {
+      result: json.success ? true : false,
+      error: json.result,
+    };
+  } catch (err) {
+    return {
+      result: false,
+      error: err.message || "Failed to create review",
+    };
+  }
 }
 
 export async function editReview(token: string, id: number, object: any) {
@@ -56,9 +86,121 @@ export async function editReview(token: string, id: number, object: any) {
     body: JSON.stringify(object),
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/client/v1/users/review/${id}`,
-    options
-  );
+  const data = await fetch(`${baseUrlClient}/users/review/${id}`, options);
   return await data.json();
 }
+
+export async function getFollowers(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlIndex}/users/${id}/followers`, options);
+    const json = await res.json();
+
+    return json.success ? json.data : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getFollowings(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlIndex}/users/${id}/followings`, options);
+    const json = await res.json();
+
+    return json.success ? json.data : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getReviews(id: number, param?: any) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  try {
+    const res = await fetch(
+      `${baseUrlIndex}/users/${id}/reviews?${param}`,
+      options
+    );
+    const json = await res.json();
+
+    return json.success ? json.data : [];
+  } catch {
+    return [];
+  }
+}
+
+export const getPostsForUser = async (id: number) => {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlIndex}/posts?user_id=${id}`, options);
+    const json = await res.json();
+
+    return json.success ? json.data : null;
+  } catch {
+    return null;
+  }
+};
+
+export const follow = async (token: string, id: number) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlClient}/users/${id}/follow`, options);
+    const json = await res.json();
+
+    return {
+      result: json.success ? true : false,
+    };
+  } catch {
+    return {
+      result: false,
+    };
+  }
+};
+
+export const unfollow = async (token: string, id: number) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrlClient}/users/${id}/unfollow`, options);
+    const json = await res.json();
+
+    return {
+      result: json.success ? true : false,
+    };
+  } catch {
+    return {
+      result: false,
+    };
+  }
+};

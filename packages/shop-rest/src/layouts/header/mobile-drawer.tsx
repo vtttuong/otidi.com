@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { openModal } from "@redq/reuse-modal";
 import Router from "next/router";
 import { FormattedMessage } from "react-intl";
@@ -9,6 +9,7 @@ import NavLink from "components/nav-link/nav-link";
 import { CloseIcon } from "assets/icons/CloseIcon";
 import { AuthContext } from "contexts/auth/auth.context";
 import AuthenticationForm from "features/authentication-form";
+import Pusher from "pusher-js";
 import {
   DrawerBody,
   HamburgerIcon,
@@ -29,11 +30,15 @@ import {
   PROFILE_PAGE,
 } from "site-settings/site-navigation";
 import { useAppState, useAppDispatch } from "contexts/app/app.provider";
-import { removeCookie } from "utils/session";
+import { getCookie, removeCookie, setCookie } from "utils/session";
+import { getMyprofile } from "utils/api/profile";
 
 const MobileDrawer: React.FunctionComponent = () => {
   const isDrawerOpen = useAppState("isDrawerOpen");
   const dispatch = useAppDispatch();
+  const [avatar, setAvatar] = useState("");
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const {
     authState: { isAuthenticated },
     authDispatch,
@@ -44,6 +49,36 @@ const MobileDrawer: React.FunctionComponent = () => {
       type: "TOGGLE_DRAWER",
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    // Always do navigations after the first render
+    getData();
+  }, [isAuthenticated]);
+
+  const getData = async () => {
+    const token = getCookie("access_token");
+    // setToken(token);
+
+    if (token != null) {
+      const data = await getMyprofile(token);
+
+      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
+      });
+      pusher.subscribe("privateChannel." + data.id);
+
+      setAvatar(data.avatar);
+      setName(data.name);
+      setPhoneNumber(data.phone_number);
+      setCookie("userId", data.id);
+      setCookie("userAvatar", data.avatar);
+      setCookie("userName", data.name);
+      setCookie("userEmail", data.email);
+      setCookie("userPhone", data.phone_number);
+      setCookie("phone_verified_at", data.phone_verified_at);
+      setCookie("balance", data.balance);
+    }
+  };
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
@@ -86,7 +121,7 @@ const MobileDrawer: React.FunctionComponent = () => {
 
   return (
     <Drawer
-      width="316px"
+      width="380px"
       drawerHandler={
         <HamburgerIcon>
           <span />
@@ -110,11 +145,11 @@ const MobileDrawer: React.FunctionComponent = () => {
                 <>
                   <LoginView>
                     <UserAvatar>
-                      <img src={UserImage} alt="user_avatar" />
+                      <img src={avatar} alt="user_avatar" />
                     </UserAvatar>
                     <UserDetails>
-                      <h3>David Kinderson</h3>
-                      <span>+990 374 987</span>
+                      <h3>{name}</h3>
+                      <span>{phoneNumber}</span>
                     </UserDetails>
                   </LoginView>
                   <DrawerMenu>
@@ -146,18 +181,10 @@ const MobileDrawer: React.FunctionComponent = () => {
             {isAuthenticated && (
               <UserOptionMenu>
                 <DrawerMenuItem>
-                  <NavLink
-                    href={PROFILE_PAGE}
-                    label="Your Account Settings"
-                    className="drawer_menu_item"
-                    intlId="navlinkAccountSettings"
-                  />
-                </DrawerMenuItem>
-                <DrawerMenuItem>
                   <div onClick={handleLogout} className="drawer_menu_item">
                     <span className="logoutBtn">
                       <FormattedMessage
-                        id="navlinkLogout"
+                        id="nav.logout"
                         defaultMessage="Logout"
                       />
                     </span>

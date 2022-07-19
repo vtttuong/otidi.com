@@ -87,11 +87,9 @@ const AddCampaing: React.FC<Props> = (props) => {
     formData.set("start_at", moment(new Date()).format("YYYY-MM-DD HH:mm"));
     formData.set("end_at", moment(data.expired).format("YYYY-MM-DD HH:mm"));
 
-    if (type[0].value === "personal" && level.length > 0) {
-      level.forEach((l) => {
-        formData.append("level_ids[]", l);
-      });
-    }
+    level.forEach((l) => {
+      formData.append("level_ids[]", l);
+    });
     if (type[0].value === "exchangeable") {
       formData.set("reward_point", data.reward_point);
     }
@@ -234,47 +232,45 @@ const AddCampaing: React.FC<Props> = (props) => {
                     name="total"
                   />
                 </FormFields>
-                {type.length !== 0 && type[0].value !== "exchangeable" ? (
-                  <FormFields>
-                    <FormLabel>Type Member</FormLabel>
-                    <Select
-                      options={optionsType}
-                      labelKey="name"
-                      valueKey="value"
-                      placeholder="Type"
-                      value={tag}
-                      onChange={handleMultiChange}
-                      overrides={{
-                        Placeholder: {
-                          style: ({ $theme }) => {
-                            return {
-                              ...$theme.typography.fontBold14,
-                              color: $theme.colors.textNormal,
-                            };
-                          },
+                <FormFields>
+                  <FormLabel>Type Member</FormLabel>
+                  <Select
+                    options={optionsType}
+                    labelKey="name"
+                    valueKey="value"
+                    placeholder="Type"
+                    value={tag}
+                    onChange={handleMultiChange}
+                    overrides={{
+                      Placeholder: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
                         },
-                        DropdownListItem: {
-                          style: ({ $theme }) => {
-                            return {
-                              ...$theme.typography.fontBold14,
-                              color: $theme.colors.textNormal,
-                            };
-                          },
+                      },
+                      DropdownListItem: {
+                        style: ({ $theme }) => {
+                          return {
+                            ...$theme.typography.fontBold14,
+                            color: $theme.colors.textNormal,
+                          };
                         },
-                        Popover: {
-                          props: {
-                            overrides: {
-                              Body: {
-                                style: { zIndex: 5 },
-                              },
+                      },
+                      Popover: {
+                        props: {
+                          overrides: {
+                            Body: {
+                              style: { zIndex: 5 },
                             },
                           },
                         },
-                      }}
-                      multi
-                    />
-                  </FormFields>
-                ) : null}
+                      },
+                    }}
+                    multi
+                  />
+                </FormFields>
 
                 <FormFields>
                   <FormLabel>Date Expired</FormLabel>

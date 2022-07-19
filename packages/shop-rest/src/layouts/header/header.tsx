@@ -17,8 +17,11 @@ import { setCookie, getCookie, removeCookie } from "utils/session";
 import Pusher from "pusher-js";
 import { ProfileProvider } from "contexts/profile/profile.provider";
 import { FormattedMessage } from "react-intl";
-import { getMyprofile, getMyText } from "utils/api/profile";
+import { getMyprofile, getMyText, logout } from "utils/api/profile";
 import AuthenticationForm from "features/authentication-form";
+import ProgressBox from "components/progress-routing/progress-bar";
+import { useAppDispatch } from "contexts/app/app.provider";
+import { POSTS } from "site-settings/site-navigation";
 
 type Props = {
   className?: string;
@@ -56,18 +59,23 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
 
     if (token != null) {
       const data = await getMyprofile(token);
+      console.log("🚀 ~ file: header.tsx ~ line 62 ~ getData ~ data", data);
 
       const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
       });
       pusher.subscribe("privateChannel." + data.id);
-      setAvatar(data.avatar_img_url);
+
+      setAvatar(data.avatar);
       setCookie("userId", data.id);
-      setCookie("userAvatar", data.avatar_img_url);
+      setCookie("userAvatar", data.avatar);
       setCookie("userName", data.name);
       setCookie("userEmail", data.email);
+      setCookie("userAddress", data.address);
       setCookie("userPhone", data.phone_number);
       setCookie("phone_verified_at", data.phone_verified_at);
+      setCookie("email_verified_at", data.email_verified_at);
+      setCookie("identity_verified_at", data.identity_verified_at);
       setCookie("balance", data.balance);
     }
   };
@@ -77,11 +85,21 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
 
     if (token != null) {
       const text = await getMyText(token);
+
       setTexts(text);
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }, 500);
+    await logout(token);
+
     if (typeof window !== "undefined") {
       removeCookie("access_token");
       removeCookie("userId");
@@ -146,12 +164,14 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
             token={token}
             className="headerSearch"
             onClick={() => setIsComponentVisible(true)}
+            onSubmit={() => setIsComponentVisible(false)}
           />
           {isComponentVisible && (
             <ShowHistory
               texts={texts}
               closeSearch={closeSearch}
               isAuthenticated={isAuthenticated}
+              getSearchText={getSearchText}
             />
           )}
         </BoxSave>
@@ -204,6 +224,7 @@ type ShowHistoryProps = {
   data?: any;
   texts?: any;
   closeSearch?: any;
+  getSearchText: () => void;
   isAuthenticated?: boolean;
 };
 
@@ -211,53 +232,42 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
   texts,
   closeSearch,
   isAuthenticated,
+  getSearchText,
 }) => {
   const [token, setToken] = useState("");
-  const [toogle, setToggle] = useState(false);
+  const [togle, setToggle] = useState(false);
   const router = useRouter();
   const { pathname, query } = router;
-  const { type } = query;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setToken(getCookie("access_token"));
   });
 
+  useEffect(() => {
+    getSearchText();
+  }, []);
+
   useEffect(() => {}, [isAuthenticated]);
 
   const handleSearch = (text) => {
+    dispatch({ type: "SET_SEARCH_TERM", payload: text });
     closeSearch();
     let queryParams = {
       text: text,
     };
 
-    if (type) {
-      router.push(
-        {
-          pathname,
-          query: {
-            ...queryParams,
-          },
-        },
-        {
-          pathname: `/${type}`,
-          query: {
-            ...queryParams,
-          },
-        }
-      );
-    } else {
-      router.push({
-        pathname,
-        query: {
-          ...queryParams,
-        },
-      });
-    }
+    router.push({
+      pathname: POSTS,
+      query: {
+        ...queryParams,
+      },
+    });
   };
 
   return (
     <>
-      <BoxSave className={toogle ? "toggle save" : "save"}>
+      <BoxSave className={togle ? "toggle save" : "save"}>
         {token ? (
           <SearchSave className={"first"}>
             <BoxSave className={"title saved"}>
@@ -277,14 +287,23 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({
                 return (
                   <SearchSaveItem
                     key={item.id}
-                    onClick={() => handleSearch(item.text)}
+                    onClick={() => handleSearch(item.keyword)}
                   >
-                    {item.text}
+                    {item.keyword}
                   </SearchSaveItem>
                 );
               })
             ) : (
-              <p style={{ color: "#009e7f", margin: "10px 5px" }}>No data</p>
+              <p
+                style={{
+                  color: "#009e7f",
+                  margin: "20px auto",
+                  textAlign: "center",
+                  fontSize: "16px",
+                }}
+              >
+                <FormattedMessage id="noData" defaultMessage={"No data"} />
+              </p>
             )}
           </SearchSave>
         ) : null}

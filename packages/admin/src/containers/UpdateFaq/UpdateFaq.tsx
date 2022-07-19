@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Button, {KIND} from "components/Button/Button";
+import Button, { KIND } from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import {Col, Row} from "components/FlexBox/FlexBox";
-import {FormFields, FormLabel} from "components/FormFields/FormFields";
+import { Col, Row } from "components/FlexBox/FlexBox";
+import { FormFields, FormLabel } from "components/FormFields/FormFields";
 import Input from "components/Input/Input";
 import Select from "components/Select/Select";
-import {Textarea} from "components/Textarea/Textarea";
-import {assert} from "console";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import React, {useCallback} from "react";
-import {useAlert} from "react-alert";
-import {Scrollbars} from "react-custom-scrollbars";
-import {useForm} from "react-hook-form";
-import {updateFaq} from "service/use-faqs";
+import { Textarea } from "components/Textarea/Textarea";
+import { assert } from "console";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import React, { useCallback } from "react";
+import { useAlert } from "react-alert";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useForm } from "react-hook-form";
+import { updateFaq } from "service/use-faqs";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -32,13 +32,13 @@ const UpdateFaq: React.FC<Props> = (props) => {
   const [dfTitle, setTitle] = React.useState(data.title);
   const [loading, setLoading] = React.useState(false);
   const [valueArea, setValueArea] = React.useState(data.content);
-  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
+  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
   ]);
 
-  const {register} = useForm();
+  const { register } = useForm();
   React.useEffect(() => {
-    register({name: "category"});
+    register({ name: "category" });
   }, [register]);
 
   const onSubmit = async () => {
@@ -48,15 +48,17 @@ const UpdateFaq: React.FC<Props> = (props) => {
     };
 
     const result = await updateFaq(data.id, newFaq);
-    if (!result) {
-      alert.error("Update FAQ failed");
-    } else {
+    if (result && result.success) {
       dispatch({
         type: "SAVE_ID",
         data: 1,
       });
       closeDrawer();
       alert.success("Update FAQ successfully");
+    } else {
+      Object.keys(result.data).forEach((key) => {
+        alert.error(result.data[key][0]);
+      });
     }
   };
 
@@ -66,23 +68,23 @@ const UpdateFaq: React.FC<Props> = (props) => {
         <DrawerTitle> Edit Faq</DrawerTitle>
       </DrawerTitleWrapper>
 
-      <Form style={{height: "100%"}}>
+      <Form style={{ height: "100%" }}>
         <Scrollbars
           autoHide
           renderView={(props) => (
-            <div {...props} style={{...props.style, overflowX: "hidden"}} />
+            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
           )}
           renderTrackHorizontal={(props) => (
             <div
               {...props}
-              style={{display: "none"}}
+              style={{ display: "none" }}
               className="track-horizontal"
             />
           )}
         >
           <Row>
             <Col lg={4}>
-              <FieldDetails>Edit informations of faq from here</FieldDetails>
+              <FieldDetails>Edit information of faq from here</FieldDetails>
             </Col>
 
             <Col lg={8}>
@@ -90,7 +92,7 @@ const UpdateFaq: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel> Title</FormLabel>
                   <Input
-                    inputRef={register({required: true})}
+                    inputRef={register({ required: true })}
                     name="title"
                     value={dfTitle}
                     onChange={(e) => setTitle(e.target.value)}
@@ -101,7 +103,7 @@ const UpdateFaq: React.FC<Props> = (props) => {
                   <FormLabel>Content</FormLabel>
                   <Textarea
                     type="text"
-                    inputRef={register({required: true})}
+                    inputRef={register({ required: true })}
                     value={valueArea}
                     onChange={(e) => setValueArea(e.target.value)}
                   />
@@ -117,7 +119,7 @@ const UpdateFaq: React.FC<Props> = (props) => {
             onClick={closeDrawer}
             overrides={{
               BaseButton: {
-                style: ({$theme}) => ({
+                style: ({ $theme }) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",
@@ -138,7 +140,7 @@ const UpdateFaq: React.FC<Props> = (props) => {
             onClick={onSubmit}
             overrides={{
               BaseButton: {
-                style: ({$theme}) => ({
+                style: ({ $theme }) => ({
                   width: "50%",
                   borderTopLeftRadius: "3px",
                   borderTopRightRadius: "3px",

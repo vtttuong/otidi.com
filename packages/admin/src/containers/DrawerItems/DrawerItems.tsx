@@ -1,12 +1,9 @@
-import React, {useCallback} from "react";
-import {styled} from "baseui";
+import React, { useCallback } from "react";
+import { styled } from "baseui";
 import Drawer from "components/Drawer/Drawer";
-import {CloseIcon} from "assets/icons/CloseIcon";
-import {useDrawerState, useDrawerDispatch} from "context/DrawerContext";
+import { CloseIcon } from "assets/icons/CloseIcon";
+import { useDrawerState, useDrawerDispatch } from "context/DrawerContext";
 
-/** Drawer Components */
-import ProductForm from "../ProductForm/ProductForm";
-import ProductUpdateForm from "../ProductForm/ProductUpdateForm";
 import CampaingForm from "../CampaingForm/CampaingForm";
 import CampaingUpdateForm from "../CampaingForm/CampaingUpdateForm";
 import TaskUpdateForm from "../TaskForm/TaskUpdateForm";
@@ -22,10 +19,12 @@ import BrandForm from "containers/BrandForm/BrandForm";
 import StaffMemberForm from "../StaffMemberForm/StaffMemberForm";
 import Sidebar from "../Layout/Sidebar/Sidebar";
 import RevenueByUser from "../StatisticRevenueUser/StatisticRevenueUser";
+import AddPostForm from "containers/PostForm/PostForm";
+import UpdatePostForm from "containers/PostForm/PostUpdateForm";
 /** Components Name Constants */
 const DRAWER_COMPONENTS = {
-  PRODUCT_FORM: ProductForm,
-  PRODUCT_UPDATE_FORM: ProductUpdateForm,
+  POST_FORM: AddPostForm,
+  POST_UPDATE_FORM: UpdatePostForm,
   CAMPAING_FORM: CampaingForm,
   CAMPAING_UPDATE_FORM: CampaingUpdateForm,
   TASK_UPDATE_FORM: TaskUpdateForm,
@@ -42,7 +41,7 @@ const DRAWER_COMPONENTS = {
   REVENUE_USER_DETAIL: RevenueByUser,
 };
 
-const CloseButton = styled("button", ({$theme}) => ({
+const CloseButton = styled("button", ({ $theme }) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.textNormal,
   lineHeight: 1.2,
@@ -75,7 +74,7 @@ export default function DrawerItems() {
   const drawerComponent = useDrawerState("drawerComponent");
   const data = useDrawerState("data");
   const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
+  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
   ]);
   if (!drawerComponent) {

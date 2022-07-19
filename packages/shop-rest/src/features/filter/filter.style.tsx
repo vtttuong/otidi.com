@@ -92,5 +92,5 @@ export const Col = styled(Cols)`
 export const Row = styled(Rows)`
   margin: 0 !important;
   padding: 5px 0;
-  justify-content: flex-end;
+  // justify-content: flex-end;
 `;

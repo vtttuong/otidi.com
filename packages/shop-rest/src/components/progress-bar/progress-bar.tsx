@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 import {
   ProgressBarWrapper,
   ProgressText,
   ProgressBar,
   ProgressMeter,
-} from './progress-bar.style';
+} from "./progress-bar.style";
 
 type ProgressProps = {
   total: any;
@@ -19,7 +19,7 @@ const ProgressBox: React.FC<ProgressProps> = ({ total, completed, text }) => {
         <ProgressBar>
           <ProgressMeter
             style={{
-              width: `${completed}%`,
+              width: `${(completed * 100) / total}%`,
             }}
           />
         </ProgressBar>

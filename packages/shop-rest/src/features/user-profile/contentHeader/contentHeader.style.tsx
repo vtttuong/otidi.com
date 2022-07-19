@@ -5,12 +5,17 @@ import { Row as Rows, Col as Cols } from "react-styled-flexboxgrid";
 const ButtonFollow = styled.div`
   background-color: #009e7f;
   margin-right: 5px;
+  height: 40px;
   padding: 7px;
   margin-top: 10px;
   text-align: center;
   color: white;
   border-radius: 3px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &.following {
     background: #ffc107;
   }
@@ -30,7 +35,7 @@ const ItemRate = styled.span`
 `;
 const ContentHeaderWrapper = styled.div`
   width: 100%;
-  height: 200px;
+  height: auto;
   display: flex;
   &.voucher {
     max-width: 500px;
@@ -50,22 +55,35 @@ const ContentHeaderWrapper = styled.div`
   flex-shrink: 0;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.16);
   font-family: ${themeGet("fonts.body", "sans-serif")};
+
   @media only screen and (max-width: 426px) {
-    height: 550px !important;
+    // height: 550px !important;
   }
+
   @media only screen and (max-width: 1199px) {
-    height: 500px;
+    height: max-content;
     width: 96%;
-    margin-left: 20px;
+    margin: 0 auto;
+
+    // margin-left: 20px;
+
     .col {
       border-right: 1px solid transparent !important;
     }
   }
+
   @media only screen and (max-width: 850px) {
     width: 95%;
   }
+
   @media only screen and (max-width: 650px) {
     width: 92%;
+  }
+
+  & .avatar-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
   }
 `;
 
@@ -100,10 +118,10 @@ const SettingsFormContent = styled.div`
 
 const Row = styled(Rows)`
   &.header-profile {
-    height: 200px !important;
+    // height: 200px !important;
     margin-bottom: 0;
     @media (max-width: 1025px) {
-      height: 500px !important;
+      // height: 500px !important;
     }
   }
   &.header-voucher {

@@ -12,7 +12,7 @@ import Like from "features/filter-modal/userLike";
 import ListSocial from "features/list-social/list-social";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PostDetailsLeftDf from "./post-details-left-df";
 import { FormattedMessage } from "react-intl";
 import {
@@ -43,7 +43,7 @@ import { getCookie } from "utils/session";
 import {
   BackButton,
   Detail,
-  H2Text,
+  H4Text,
   MetaItem,
   MetaSingle,
   PostDescription,
@@ -60,12 +60,12 @@ import {
 } from "./post-details-one.style";
 
 type PostDetailsProps = {
-  slug: string;
+  data: any;
   userId: number;
 };
 
 const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
-  slug,
+  data,
   userId,
 }) => {
   const { isRtl } = useLocale();
@@ -78,65 +78,73 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   const [likeCount, setLikeCount] = React.useState<number>(0);
   const [successSave, setSuccessSave] = React.useState(false);
   const [locationHref, setLocationHref] = React.useState("");
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     getPost();
     setLocationHref(window.location.href);
-  }, [locationHref, slug]);
+  }, [locationHref, post]);
+  useEffect(() => {
+    onCheckLike();
+  }, [dataLike]);
 
   const getUserLiked = async (id) => {
     const datas = await getUserLike(id);
     setDataLike(datas);
   };
   const getUserSaved = async (id) => {
-    const datas = await getUserSave(id);
-    setDataSave(datas);
+    // const datas = await getUserSave(id);
+    // setDataSave(datas);
   };
 
   const getPost = async () => {
     const token = getCookie("access_token");
-    const post = await getPostBySlug(token, slug);
-    setPost(post);
-    onCheckLike(post);
-    setLikeCount(post.likes_count);
-    onCheckSave(post);
-    setSaveCount(post.saves_count);
-    getUserLiked(post.id);
-    getUserSaved(post.id);
+    // const post = await getPostBySlug(token, slug);
+    setPost(data);
+    setLikeCount(data.likes_count);
+    onCheckSave(data);
+    setSaveCount(data.saves_count);
+    getUserLiked(data.id);
+    getUserSaved(data.id);
   };
 
-  const onCheckLike = (post) => {
+  const onCheckLike = () => {
     setLiked(false);
-    post.likes?.map((like) => {
-      if (like.user_id == userId) {
+    dataLike?.map((like) => {
+      if (like.user.id == userId) {
         setLiked(true);
         return;
       }
     });
   };
+
   const onCheckSave = (post) => {
     setSuccessSave(false);
-    post.saves?.map((save) => {
-      if (save.user_id == userId) {
-        setSuccessSave(true);
-        return;
-      }
-    });
+    // post.saves?.map((save) => {
+    //   if (save.user_id == userId) {
+    //     setSuccessSave(true);
+    //     return;
+    //   }
+    // });
   };
 
-  const onReportClick = async (e: any, f: any) => {
-    if (e && f.length != 0) {
-      const body = { error: e, content: f, post_id: post.id };
-      const resultReport = await report(JSON.stringify(body));
-      if (resultReport) {
-        closeModal();
-        setReportSuccess(true);
-        setTimeout(() => {
-          setReportSuccess(false);
-        }, 2000);
-      }
+  const onReportClick = async (type: string, phone_number: string) => {
+    const body = { type: type, phone_number: phone_number };
+    const { result, error } = await report(post.id, body);
+
+    if (result) {
+      setReportSuccess(true);
+      setTimeout(() => {
+        setReportSuccess(false);
+      }, 2000);
+    } else {
+      setError(error);
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
     }
+    closeModal();
   };
 
   const onReport = () => {
@@ -183,17 +191,21 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   const onLikes = async () => {
     const token = getCookie("access_token");
 
-    if (token == undefined) {
+    if (!token) {
       router.push("/login");
     } else {
-      if (liked == false) {
-        setLiked(true);
-        setLikeCount(likeCount + 1);
-        await onLike(token, post.id);
+      if (!liked) {
+        const { result } = await onLike(token, post.id);
+        if (result) {
+          setLiked(true);
+          setLikeCount(likeCount + 1);
+        }
       } else {
-        setLiked(false);
-        setLikeCount(likeCount - 1);
-        await onUnLike(token, post.id);
+        const { result } = await onUnLike(token, post.id);
+        if (result) {
+          setLiked(false);
+          setLikeCount(likeCount - 1);
+        }
       }
       getUserLiked(post.id);
     }
@@ -263,7 +275,7 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
           </Button>
         </BackButton>
 
-        <CarouselWithCustomDots items={post.gallery} deviceType={"desktop"} />
+        <CarouselWithCustomDots items={post.images} deviceType={"desktop"} />
 
         <PostInfo dir={isRtl ? "rtl" : "ltr"}>
           <Detail className={"social"}>
@@ -293,23 +305,39 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
           <PostTitlePriceWrapper>
             <PostTitle>{post.title}</PostTitle>
             <PostPriceWrapper>
-              {post.discountInPercent ? (
+              {post.discount_price ? (
                 <SalePrice>
+                  {parseInt(post.original_price).toLocaleString()}
                   {CURRENCY}
-                  {parseInt(post.price).toLocaleString()}
                 </SalePrice>
               ) : null}
             </PostPriceWrapper>
           </PostTitlePriceWrapper>
           <PostPrice>
             <div style={{ display: "block", marginBottom: 33 }}>
-              <span style={{ fontSize: 20, fontWeight: 600 }}>
-                {post.salePrice
-                  ? parseInt(post.salePrice).toLocaleString()
-                  : parseInt(post.price).toLocaleString()}
-              </span>
-              <span style={{ marginLeft: 10 }}>{post.unit}</span>
-              <BackButton className={"saveIcon"}>
+              <div>
+                <span style={{ display: "inline-block", width: "115px" }}>
+                  Giá:{" "}
+                </span>
+                <span style={{ fontSize: 20, fontWeight: 600 }}>
+                  {post.discount_price
+                    ? `${parseInt(post.discount_price).toLocaleString()}`
+                    : `${parseInt(post.original_price).toLocaleString()}`}
+                </span>
+                <span style={{ marginLeft: 5 }}>{CURRENCY}</span>
+              </div>
+              <div>
+                <span style={{ display: "inline-block", width: "115px" }}>
+                  Giá sau thuế:{" "}
+                </span>
+                <span style={{ fontSize: 20, fontWeight: 600 }}>
+                  {post.price_after_tax
+                    ? `${parseInt(post.price_after_tax).toLocaleString()}`
+                    : `${parseInt(post.original_price).toLocaleString()}`}
+                </span>
+                <span style={{ marginLeft: 5 }}>{CURRENCY}</span>
+              </div>
+              {/* <BackButton className={"saveIcon"}>
                 <div
                   style={{
                     width: 50,
@@ -337,73 +365,66 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
                     <FormattedMessage id="saved" defaultMessage="Save" />
                   </span>
                 </div>
-              </BackButton>
+              </BackButton> */}
             </div>
           </PostPrice>
 
           <Detail className={"detail"}>
-            <H2Text>
+            <H4Text>
               <FormattedMessage id="detailPost" defaultMessage="Detail post" />
-            </H2Text>
+            </H4Text>
 
-            {post.additional_info &&
-              Object.keys(post.additional_info).map(function (key) {
-                if (key === "postStatus") {
+            <div style={{ padding: "0 10px" }}>
+              {post.detail &&
+                Object.keys(post.detail).map(function (key) {
+                  if (
+                    post.detail[key] == null ||
+                    key === "post_id" ||
+                    key === "id" ||
+                    key === "updated_at" ||
+                    key === "created_at" ||
+                    key === "deleted_at"
+                  ) {
+                    return;
+                  }
+
                   return (
-                    <SubDetail key={post.additional_info[key]}>
+                    <SubDetail key={key}>
                       <Span className="title">
                         <FormattedMessage id={key} />
                       </Span>
-                      {post.additional_info[key] === "old" ? (
-                        <span style={{ opacity: 0.5 }}>
+                      <Span>
+                        {/[0-9]+/i.test(post.detail[key]) ? (
+                          post.detail[key]
+                        ) : (
                           <FormattedMessage
-                            id="usedStatus"
-                            defaultMessage="Old"
+                            id={post.detail[key]}
+                            defaultMessage={post.detail[key]}
                           />
-                        </span>
-                      ) : (
-                        <span style={{ opacity: 0.5 }}>
-                          <FormattedMessage
-                            id="newStatus"
-                            defaultMessage="New"
-                          />
-                        </span>
-                      )}
+                        )}
+                      </Span>
                     </SubDetail>
                   );
-                }
-
-                if (post.additional_info[key] == null) {
-                  return;
-                }
-
-                return (
-                  <SubDetail key={key}>
-                    <Span className="title">
-                      <FormattedMessage id={key} />
-                    </Span>
-                    <Span>{post.additional_info[key]}</Span>
-                  </SubDetail>
-                );
-              })}
+                })}
+            </div>
           </Detail>
 
           <PostDescription>
-            <H2Text>
+            <H4Text>
               <FormattedMessage
                 id="descriptionPost"
                 defaultMessage="Description"
               />
-            </H2Text>
+            </H4Text>
             <p style={{ whiteSpace: "pre-line", margin: "10px 0" }}>
               {post.description}
             </p>
           </PostDescription>
 
           <Detail className={"comment social-share"}>
-            <H2Text>
+            <H4Text style={{ marginBottom: "15px" }}>
               <FormattedMessage id="shareToSocial" />
-            </H2Text>
+            </H4Text>
             {/* <CommentPr /> */}
             <FacebookShareButton url={locationHref}>
               <FacebookIcon size={40} round={true} />
@@ -451,6 +472,7 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
       {reportSuccess ? (
         <Notice status="success" content="Report success !" />
       ) : null}
+      {error ? <Notice status="error" content={error} /> : null}
     </>
   );
 };

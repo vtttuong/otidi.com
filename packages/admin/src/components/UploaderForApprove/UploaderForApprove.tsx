@@ -3,31 +3,33 @@ import React from "react";
 
 const Thumb = styled("div", ({ $theme }) => ({
   ...$theme.borders.borderEA,
-  display: "inline-flex",
+  display: "flex",
+  gap: "10px",
   borderRadius: "2px",
   marginBottom: "8px",
   marginRight: "8px",
   width: "100%",
-  height: "100px",
+  height: "auto",
   padding: "4px",
   boxSizing: "border-box",
+  flexWrap: "wrap",
 }));
 
 const thumbInner = {
   display: "flex",
-  minWidth: 0,
   overflow: "hidden",
+  width: "150px",
+  height: "150px",
 };
 
 const img = {
   display: "block",
-  width: "auto",
-  height: "100%",
+  width: "100%",
+  height: "auto",
+  objectFit: "cover",
 };
 
-function UploaderForApprove({ onChange, images }: any) {
-  const storageUrl = process.env.REACT_APP_LARAVEL_STORAGE_URL;
-
+function UploaderForApprove({ onChange, images = [] }: any) {
   return (
     <section className="container uploader">
       {
@@ -38,7 +40,16 @@ function UploaderForApprove({ onChange, images }: any) {
               className={`previewImage_${image.id}`}
               style={thumbInner}
             >
-              <img src={storageUrl + image.url} style={img} alt={image.name} />
+              <img
+                src={image.url}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                }}
+                alt={image.url}
+              />
             </div>
           ))}
         </Thumb>

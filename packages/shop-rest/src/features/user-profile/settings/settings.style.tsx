@@ -34,6 +34,18 @@ const Title = styled.h3`
   color: ${themeGet("colors.text.bold", "#0D1136")};
 `;
 
+const Col = styled(Cols)`
+  // margin-bottom: 15px;
+  position: relative;
+
+  @media only screen and (min-width: 0em) and (max-width: 47.99em) {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
 const SettingsFormContent = styled.div`
   .change-pass > div {
     margin-bottom: 15px;
@@ -49,19 +61,28 @@ const SettingsFormContent = styled.div`
   .box {
     display: flex;
     width: 100%;
+
+    @media (max-width: 768px) {
+      display: block;
+    }
     @media (max-width: 426px) {
       display: block;
     }
   }
 
   form div.profile-right {
-    @media (max-width: 426px) {
+    @media (max-width: 768px) {
       width: 100%;
       padding-left: 7px;
     }
+
+    & ${Col} {
+      margin-bottom: 17px;
+    }
+
     padding: 7px;
     padding-left: 20px;
-    width: 70%;
+    width: 60%;
     label {
       font-weight: 600;
     }
@@ -76,7 +97,10 @@ const SettingsFormContent = styled.div`
       box-shadow: none;
       transition: unset;
       color: #000;
-      &:hover {
+      outline: none;
+
+      &:hover,
+      &:focus {
         border: 1px solid #009e7f !important;
       }
     }
@@ -96,12 +120,12 @@ const SettingsFormContent = styled.div`
     .label-upload-back {
       margin-bottom: 20px;
     }
-    @media (max-width: 426px) {
+    @media (max-width: 768px) {
       width: 100%;
       max-width: 100%;
       padding-right: 0;
     }
-    width: 30%;
+    width: 40%;
     padding: 7px;
     padding-right: 20px;
     label {
@@ -118,7 +142,10 @@ const SettingsFormContent = styled.div`
       box-shadow: none;
       transition: unset;
       color: #000;
-      &:hover {
+      outline: none;
+
+      &:hover,
+      &:active {
         border: 1px solid #009e7f !important;
       }
     }
@@ -131,16 +158,6 @@ const Row = styled(Rows)`
 
   @media only screen and (min-width: 0em) and (max-width: 47.99em) {
     margin-bottom: 30px;
-  }
-`;
-
-const Col = styled(Cols)`
-  @media only screen and (min-width: 0em) and (max-width: 47.99em) {
-    margin-bottom: 20px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
   }
 `;
 
@@ -216,6 +233,34 @@ const ButtonGroup = styled.div`
     }
   }
 `;
+
+const ListLocations = styled.div`
+  position: absolute;
+  width: 97%;
+
+  margin: 0 8px;
+
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  z-index: 1;
+  top: 110%;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  left: 0;
+  background: #fff;
+  border-radius: 5px;
+`;
+const LocationItem = styled.div`
+  cursor: pointer;
+  padding: 10px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #e9ecef;
+  }
+`;
+
 export {
   SettingsForm,
   HeadingSection,
@@ -225,4 +270,6 @@ export {
   Row,
   ButtonGroup,
   ButtonCancle,
+  ListLocations,
+  LocationItem,
 };

@@ -14,6 +14,7 @@ Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
 
 const customStyles = {
   control: () => ({
+    display: "flex",
     border: 1,
     borderRadius: 5,
     padding: 3,
@@ -27,27 +28,44 @@ const customStyles = {
     },
   }),
 
-  indicatorsContainer: () => ({
-    position: "absolute",
-    width: 50,
-    height: 40,
-    top: 2,
-    right: -5,
-  }),
+  // indicatorsContainer: () => ({
+  //   position: "absolute",
+  //   width: 50,
+  //   height: 40,
+  //   top: 2,
+  //   right: -5,
+  // }),
 };
 
-const postType = [
+const orderByOptions = [
   {
-    key: "type",
-    value: "",
-    label: "Sắp xếp theo...",
-  },
-  {
-    key: "type",
+    key: "sort",
     value: "created_at",
     label: <FormattedMessage id="lasted" />,
   },
-  { key: "type", value: "views", label: <FormattedMessage id="hotNews" /> },
+  {
+    key: "sort",
+    value: "views",
+    label: <FormattedMessage id="hotNews" />,
+  },
+  {
+    key: "sort",
+    value: "price",
+    label: <FormattedMessage id="price" />,
+  },
+];
+
+const dirOptions = [
+  {
+    key: "dir",
+    value: "asc",
+    label: <FormattedMessage id="asc" defaultMessage="Ascending" />,
+  },
+  {
+    key: "dir",
+    value: "desc",
+    label: <FormattedMessage id="desc" defaultMessage="Descending" />,
+  },
 ];
 
 const Filter: React.FC<any> = () => {
@@ -82,11 +100,14 @@ const Filter: React.FC<any> = () => {
     // localStorage.setItem("isShowModal", "true");
   };
 
-  const handleSortData = async (value) => {
+  const handleSortData = async (e, field) => {
+    console.log(e);
+
     let queryParams = {
       ...query,
-      sort: value,
+      [field]: e ? e.value : "",
     };
+
     let newParams = {};
     Object.keys(queryParams).map((key) => {
       if (typeof queryParams[key] !== "undefined" && queryParams[key] != "") {
@@ -101,26 +122,26 @@ const Filter: React.FC<any> = () => {
       },
     });
   };
-  const { latitude, longitude } = usePosition(watch, {
-    enableHighAccuracy: true,
-  });
-  if (latitude && longitude) {
-    Geocode.fromLatLng(latitude, longitude).then(
-      (response) => {
-        setLat(latitude);
-        setLong(longitude);
-        setAddress(response.results[0].formatted_address);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  // const { latitude, longitude } = usePosition(watch, {
+  //   enableHighAccuracy: true,
+  // });
+  // if (latitude && longitude) {
+  //   Geocode.fromLatLng(latitude, longitude).then(
+  //     (response) => {
+  //       setLat(latitude);
+  //       setLong(longitude);
+  //       setAddress(response.results[0].formatted_address);
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     }
+  //   );
+  // }
   return (
     <form style={{ position: "relative", zIndex: 100 }}>
       <Container>
         <Row>
-          <Col xs={12} sm={6} md={6} lg={8} className="address">
+          {/* <Col xs={12} sm={6} md={6} lg={8} className="address">
             {address != "" ? (
               <>
                 <Map />
@@ -139,21 +160,40 @@ const Filter: React.FC<any> = () => {
               <FormattedMessage id="filterButton" />
               <FilterIcon />
             </ButtonFilter>
-          </Col>
-          <Col xs={6} sm={3} md={3} lg={2}>
+          </Col> */}
+          <Col xs={6} sm={4} md={4} lg={4}>
             <Select
               classNamePrefix="filter"
               styles={customStyles}
-              options={postType}
-              value={
-                query.sort === "created_at"
-                  ? postType[1]
-                  : query.sort === "views"
-                  ? postType[2]
-                  : postType[0]
+              options={orderByOptions}
+              isClearable={true}
+              isSearchable={true}
+              placeholder={
+                <FormattedMessage id="orderBy" defaultMessage={"Order by..."} />
               }
-              placeholder="Sắp xếp theo"
-              onChange={({ value }) => handleSortData(value)}
+              value={
+                orderByOptions.filter(
+                  (option) => option.value === query.sort
+                )[0]
+              }
+              onChange={(e) => handleSortData(e, "sort")}
+            />
+          </Col>
+
+          <Col xs={6} sm={3} md={3} lg={3}>
+            <Select
+              classNamePrefix="filter"
+              styles={customStyles}
+              options={dirOptions}
+              isClearable={true}
+              isSearchable={true}
+              placeholder={
+                <FormattedMessage id="dir" defaultMessage={"Order"} />
+              }
+              value={
+                dirOptions.filter((option) => option.value === query.dir)[0]
+              }
+              onChange={(e) => handleSortData(e, "dir")}
             />
           </Col>
         </Row>

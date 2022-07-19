@@ -80,7 +80,7 @@ const WrapCardSaved: React.FC<Props> = ({
         width: "500px",
         height: "auto",
       },
-      componentProps: { titleId: "Post  is waiting approve! Try again." },
+      componentProps: { titleId: "waitingWarning" },
     });
   };
   return (
@@ -110,16 +110,14 @@ const WrapCardSaved: React.FC<Props> = ({
                       d.status == "approving"
                         ? openWarning()
                         : router.push(
-                            "/[type]/[slug]",
-                            `/${
-                              saveNews ? d.post.category_type : d.category_type
-                            }/${saveNews ? d.post.slug : d.slug}`
+                            "/posts/[id]",
+                            `posts/${saveNews ? d.post.id : d.id}`
                           );
                     }}
                     onClickEdit={() => {
                       router.push(
-                        "/post/edit/[slug]",
-                        `/post/edit/${saveNews ? d.post.slug : d.slug}`
+                        "/post/edit/[id]",
+                        `/post/edit/${saveNews ? d.post.id : d.id}`
                       );
                     }}
                     isBook={isSuccess}

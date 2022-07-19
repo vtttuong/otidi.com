@@ -63,14 +63,13 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
         width: "100%",
         height: "100%",
       },
-      closeOnClickOutside: false,
+      closeOnClickOutside: true,
       component: SearchModal,
       closeComponent: () => <div />,
     });
   };
-  const type = pathname === "/restaurant" ? "restaurant" : query.type;
 
-  const isHomePage = isCategoryPage(type);
+  const isHomePage = pathname === "/";
 
   const checkAuth = () => {
     const token = getCookie("access_token");
@@ -105,7 +104,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
 
         <LanguageSwitcher />
 
-        {isHomePage ? (
+        {!isHomePage ? (
           <SearchWrapper
             onClick={handleSearchModal}
             className="searchIconWrapper"

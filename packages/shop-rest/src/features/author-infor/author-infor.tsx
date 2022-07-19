@@ -8,7 +8,7 @@ import { Button } from "components/button/button";
 import AuthoInforDf from "./author-infor-df";
 import ReportModal from "features/filter-modal/bargain";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   GoogleMap,
   Marker,
@@ -19,30 +19,34 @@ import { FormattedMessage } from "react-intl";
 import StarRatings from "react-star-ratings";
 import { compose, withProps } from "recompose";
 import { createChat } from "utils/api/chat";
-import { getPostBySlug, onFollow, onUnFollow } from "utils/api/post";
 import { getCookie } from "utils/session";
 import {
   ActionButton,
-  Avata,
+  Avatar,
   CenterContainer,
   CenterContainerSub,
   ContainerImage,
   Dot,
   InfoBody,
-  MainAvata,
+  MainAvatar,
   Name,
   TextFormat,
   Title,
   TopContainer,
 } from "./author-infor.style";
+import { follow, getFollowers, unfollow } from "utils/api/user";
 
-const AuthoInfor: React.FC<{}> = () => {
+type AuthoInforProps = {
+  data: any;
+};
+
+const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
   const router = useRouter();
   const { query } = useRouter();
-  let slug = query.slug;
   const defaultOptions = { scrollwheel: false };
-  const [data, setData] = useState<any>({ user: { avatar_url: "user.png" } });
+
   const [chatLoading, setChatLoading] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
   const [tok, setTok] = useState("");
   const [followed, setFollowed] = useState(false);
   const [vefifyAccount, setVefifyAccount] = useState(false);
@@ -58,6 +62,11 @@ const AuthoInfor: React.FC<{}> = () => {
     withScriptjs,
     withGoogleMap
   );
+
+  const isCurrentUser = () => {
+    const currentId = getCookie("userId");
+    return currentId == data.id;
+  };
 
   const MapLayout = (props) => (
     <GoogleMap
@@ -77,15 +86,38 @@ const AuthoInfor: React.FC<{}> = () => {
     if (token == undefined) {
       router.push("/login");
     } else {
+      setFollowLoading(true);
       if (followed == false) {
-        setFollowed(true);
-        await onFollow(token, data.user_id);
+        const { result } = await follow(token, data.id);
+        if (result) {
+          setFollowed(true);
+        }
       } else {
-        setFollowed(false);
-        await onUnFollow(token, data.user_id);
+        const { result } = await unfollow(token, data.id);
+        if (result) {
+          setFollowed(false);
+        }
       }
+      setFollowLoading(true);
     }
   };
+
+  useEffect(() => {
+    const checkFollowed = async () => {
+      const token = getCookie("access_token");
+      const currentId = getCookie("userId");
+
+      if (!token) {
+        return;
+      }
+      const followers = await getFollowers(data.id);
+      const isFollowed =
+        followers.filter((item) => item.follower_id == +currentId).length > 0;
+      setFollowed(isFollowed);
+    };
+
+    checkFollowed();
+  }, []);
 
   const onChat = async () => {
     const token = getCookie("access_token");
@@ -94,12 +126,17 @@ const AuthoInfor: React.FC<{}> = () => {
       router.push("/login");
     } else {
       setChatLoading(true);
-      const response = await createChat(token, data.id);
-      if (response.status == 201 || response.status == 200) {
-        const uuid: any = await response.json();
+      const { result, chanelData } = await createChat(token, query.id);
+      console.log(
+        "🚀 ~ file: author-infor.tsx ~ line 130 ~ onChat ~ data",
+        data
+      );
+
+      if (result) {
+        const id: number = chanelData.id;
         router.push({
           pathname: "/message",
-          query: { uuid: uuid.uuid },
+          query: { id: id },
         });
       }
     }
@@ -133,29 +170,25 @@ const AuthoInfor: React.FC<{}> = () => {
     }
   };
 
-  const verify = (data) => {
-    if (
-      data.user.email_verified_at &&
-      data.user.phone_verified_at &&
-      data.user.identify?.identified_at
-    ) {
+  const verify = (user) => {
+    if (user.full_verification) {
       setVefifyAccount(true);
     } else {
       setVefifyAccount(false);
     }
   };
-  const getPost = async () => {
-    var token = getCookie("access_token");
-    if (slug) {
-      setTok(token);
-      let post = await getPostBySlug(token, slug);
-      setData(post);
-      verify(post);
-    }
-  };
+  // const getPost = async () => {
+  //   var token = getCookie("access_token");
+
+  //   if (slug) {
+  //     setTok(token);
+  //     let post = await getPostBySlug(token, slug);
+  //     verify(post);
+  //   }
+  // };
   React.useEffect(() => {
-    getPost();
-  }, [slug]);
+    verify(data);
+  }, []);
 
   if (!data.id) {
     return <AuthoInforDf />;
@@ -163,31 +196,31 @@ const AuthoInfor: React.FC<{}> = () => {
 
   return (
     <InfoBody className={"profile-post"}>
-      <MainAvata
+      <MainAvatar
         className={"border"}
         onClick={() => {
           let currentUserId = getCookie("userId");
-          if (data.user.id == currentUserId) {
+          if (data.id == currentUserId) {
             router.push("/profile");
           } else {
-            router.push("/profile/[id]", `/profile/${data.user.id}`);
+            router.push("/profile/[id]", `/profile/${data.id}`);
           }
         }}
       >
-        <Avata
-          src={data.user?.avatar_img_url}
+        <Avatar
+          src={data.avatar}
           onClick={() => {
             let currentUserId = getCookie("userId");
-            if (data.user.id == currentUserId) {
+            if (data.id == currentUserId) {
               router.push("/profile");
             } else {
-              router.push("/profile/[id]", `/profile/${data.user.id}`);
+              router.push("/profile/[id]", `/profile/${data.id}`);
             }
           }}
         />
-        <MainAvata className={"name"}>
+        <MainAvatar className={"name"}>
           <Name>
-            {data.user?.name}
+            {data.name}
             {vefifyAccount ? (
               <Verified
                 style={{
@@ -207,78 +240,89 @@ const AuthoInfor: React.FC<{}> = () => {
             )}
           </Name>
           <Name className={"status"}>
-            {data.user.last_seen_at ? (
-              <>
-                <Dot />
-                <FormattedMessage id="offStatus" defaultMessage="Offline" />
-              </>
-            ) : (
+            {data.status === "active" ? (
               <>
                 <Dot className={"active"} />
                 <FormattedMessage id="onStatus" defaultMessage="onStatus" />
               </>
+            ) : (
+              <>
+                <Dot />
+                <FormattedMessage id="offStatus" defaultMessage="Offline" />
+              </>
             )}
           </Name>
-        </MainAvata>
-      </MainAvata>
-      <MainAvata className={"border"}>
-        <MainAvata className={"sub"}>
-          <ActionButton
-            onClick={onFollows}
-            className={followed ? "following" : "follow"}
-          >
-            <Follow />
-            <>
-              <Title>
-                <FormattedMessage id={followed ? "following" : "follow"} />
-              </Title>
-            </>
-          </ActionButton>
-        </MainAvata>
-        <MainAvata className={"sub subRate"}>
+        </MainAvatar>
+      </MainAvatar>
+      <MainAvatar className={"border follow"}>
+        {!isCurrentUser() && (
+          <MainAvatar className={"sub"}>
+            <ActionButton
+              onClick={onFollows}
+              className={followed ? "following" : "follow"}
+            >
+              <Follow />
+              <>
+                <Title>
+                  <FormattedMessage id={followed ? "following" : "follow"} />
+                </Title>
+              </>
+            </ActionButton>
+          </MainAvatar>
+        )}
+        <MainAvatar className={"sub subRate"}>
           <Name className={"subInfo rate"}>
-            {"(" + parseFloat(data.user?.rating).toFixed(1) + ")"}
+            {"(" + parseFloat(data.rating).toFixed(1) + ")"}
           </Name>
           <ContainerImage className={"star"}>
             <StarRatings
-              rating={data.user?.rating}
+              rating={data.rating}
               starDimension="20px"
               starSpacing="5px"
               starRatedColor={"#ffc107"}
             />
           </ContainerImage>
-        </MainAvata>
-      </MainAvata>
+        </MainAvatar>
+      </MainAvatar>
       <TopContainer></TopContainer>
-      <MainAvata className={"border"}>
-        <ActionButton className={"chat"}>
-          <Button
-            type="button"
-            onClick={onChat}
-            size="medium"
-            loading={chatLoading}
-            style={{ width: "100%" }}
-          >
-            <Chat />
-            <FormattedMessage id="chat" defaultMessage="Message" />
-          </Button>
-        </ActionButton>
-      </MainAvata>
-      <MainAvata className={"border"}>
-        <ActionButton className={"chat"}>
-          <Money />
-          <Button
-            type="button"
-            onClick={onBargain}
-            size="medium"
-            loading={bargainLoading}
-            style={{ width: "100%" }}
-          >
-            <Money />
-            <FormattedMessage id="bargain" defaultMessage="Trả giá" />
-          </Button>
-        </ActionButton>
-      </MainAvata>
+      {!isCurrentUser() && (
+        <>
+          <MainAvatar className={"border"}>
+            <ActionButton className={"chat"}>
+              <Button
+                type="button"
+                onClick={onChat}
+                size="medium"
+                loading={chatLoading}
+                style={{ width: "100%", height: "100%" }}
+              >
+                <Chat />
+                <FormattedMessage id="chat" defaultMessage="Message" />
+              </Button>
+            </ActionButton>
+          </MainAvatar>
+          <MainAvatar className={"border"}>
+            <ActionButton className={"chat"}>
+              <Money />
+              <Button
+                type="button"
+                onClick={onBargain}
+                size="medium"
+                loading={bargainLoading}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Money />
+                <FormattedMessage id="bargain" defaultMessage="Trả giá" />
+              </Button>
+            </ActionButton>
+          </MainAvatar>
+        </>
+      )}
       <CenterContainer>
         <Title className={"title"}>
           <FormattedMessage id="maps" defaultMessage="Maps" />
@@ -301,15 +345,14 @@ const AuthoInfor: React.FC<{}> = () => {
             <FormattedMessage id="phone" defaultMessage="Phone:" />
           </Title>
           <Title className={"infosub phone"}>
-            {tok ? (
-              <TextFormat>{data.user?.phone_number}</TextFormat>
-            ) : (
-              <TextFormat onClick={() => router.push("/login")}>
-                {data.user?.phone_number.replace(/^\d{1,7}/, (x) =>
+            <TextFormat>
+              <a href={`tel:${data.phone_number}`}>
+                {" "}
+                {data.phone_number.replace(/^\d{1,7}/, (x) =>
                   x.replace(/./g, "*")
                 )}
-              </TextFormat>
-            )}
+              </a>
+            </TextFormat>
           </Title>
         </CenterContainerSub>
       </CenterContainer>

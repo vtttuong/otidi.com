@@ -35,35 +35,42 @@ const WrapCard: React.FC<Props> = ({
   const router = useRouter();
   const [isBooked, setIsBooked] = React.useState(false);
   const [pushN, setPush] = React.useState([]);
-  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [isMarkedSuccess, setIsMarkedSuccess] = React.useState(false);
+  const [isDeletedSuccess, setIsDeletedSuccess] = React.useState(false);
   if (pushNews) {
-    data.map((d) => (d.is_priority == true ? pushN.push(d) : null));
+    data.map((d) => (d.advertise ? pushN.push(d) : null));
   }
 
   React.useEffect(() => {
     if (pushNews) {
-      data.map((d) => (d.is_priority == true ? pushN.push(d) : null));
+      data.map((d) => (d.advertise == true ? pushN.push(d) : null));
       setPush(pushN);
     }
   }, [data]);
 
   const onDeletePostX = async (id) => {
-    setIsSuccess(false);
-    await deletePost(id);
-    const index = data.findIndex((item) => item.id === id);
-    data.splice(index, 1);
-    setIsBooked(!isBooked);
-    setIsSuccess(true);
+    setIsDeletedSuccess(false);
+    const { result } = await deletePost(id);
+
+    if (result) {
+      const index = data.findIndex((item) => item.id === id);
+
+      data.splice(index, 1);
+      setIsBooked(!isBooked);
+      setIsDeletedSuccess(true);
+    }
   };
 
   const onMarkPost = async (id) => {
-    setIsSuccess(false);
-    await markPost(id);
-    onMarkedPost(id);
-    const index = data.findIndex((item) => item.id === id);
-    data.splice(index, 1);
-    setIsBooked(!isBooked);
-    setIsSuccess(true);
+    setIsMarkedSuccess(false);
+    const { result } = await markPost(id);
+    if (result) {
+      onMarkedPost(id);
+      const index = data.findIndex((item) => item.id === id);
+      data.splice(index, 1);
+      setIsBooked(!isBooked);
+      setIsMarkedSuccess(true);
+    }
   };
 
   const openWarning = () => {
@@ -80,7 +87,7 @@ const WrapCard: React.FC<Props> = ({
         width: "500px",
         height: "auto",
       },
-      componentProps: { titleId: "Post  is waiting approve! Try again." },
+      componentProps: { titleId: "waitingWarning" },
     });
   };
   return (
@@ -93,35 +100,33 @@ const WrapCard: React.FC<Props> = ({
           >
             <PostCard
               name={saveNews ? d.post?.title : d.title}
-              image={saveNews ? d.post?.main_img_url : d.main_img_url}
+              image={saveNews ? d.post?.main_image?.url : d.main_image?.url}
               address={saveNews ? d.post?.address : d.address}
               price={saveNews ? d.post?.price : d.price}
               unit={saveNews ? d.post?.unit : d.unit}
-              prioriry={saveNews ? d.post?.is_priority : d.is_priority}
+              prioriry={saveNews ? d.post?.advertise : d.advertise}
               createdAt={saveNews ? d.post?.created_at : d.created_at}
               data={saveNews ? d.post : d}
               currentUser={currentUser}
-              typeOfPost={saveNews ? d.post.type : d.type}
               saveNews={saveNews}
               postId={d.id}
               onClick={() => {
-                d.status == "approving"
+                d.status == "waiting"
                   ? openWarning()
                   : router.push(
-                      "/[type]/[slug]",
-                      `/${saveNews ? d.post.category_type : d.category_type}/${
-                        saveNews ? d.post.slug : d.slug
-                      }`
+                      "/posts/[id]",
+                      `/posts/${saveNews ? d.post.id : d.id}`
                     );
               }}
               onClickEdit={() => {
                 router.push(
-                  "/post/edit/[slug]",
-                  `/post/edit/${saveNews ? d.post.slug : d.slug}`
+                  "/post/edit/[id]",
+                  `/post/edit/${saveNews ? d.post.id : d.id}`
                 );
               }}
-              isBook={isSuccess}
-              isMarked={isSuccess}
+              isBook={isBooked}
+              isDeleted={isDeletedSuccess}
+              isMarked={isMarkedSuccess}
               onDeletePost={() => onDeletePostX(d.id)}
               onMark={() => onMarkPost(d.id)}
               onPush={() => onPush(d.id)}
@@ -138,8 +143,8 @@ const WrapCard: React.FC<Props> = ({
               className={profileOther == true ? "other" : ""}
             >
               <PostCard
-                name={d.title}
-                image={d.image}
+                name={d.name}
+                image={d.main_image.url}
                 address={d.address}
                 price={d.price}
                 unit={d.unit}
@@ -148,14 +153,17 @@ const WrapCard: React.FC<Props> = ({
                 currentUser={currentUser}
                 postId={d.id}
                 prioriry={true}
+                isBook={isBooked}
+                isDeleted={isDeletedSuccess}
+                isMarked={isMarkedSuccess}
                 onClick={() => {
                   router.push(
-                    "/[type]/[slug]",
-                    `/${d.category_type}/${d.slug}`
+                    "/posts/[id]",
+                    `/posts/${saveNews ? d.post.id : d.id}`
                   );
                 }}
                 onClickEdit={() => {
-                  router.push("/post/edit/[slug]", `/post/edit/${d.slug}`);
+                  router.push("/post/edit/[id]", `/post/edit/${d.id}`);
                 }}
                 onDeletePost={onDeletePost}
               />

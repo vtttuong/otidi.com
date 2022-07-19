@@ -1,9 +1,11 @@
 import { SortAZ } from "assets/icons/SortAZ";
+import { Star } from "assets/icons/Star";
 import Image from "components/image/image";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React from "react";
 import Table from "react-bootstrap/Table";
+import { FaStar } from "react-icons/fa";
 import { Box } from "./manage-post.style";
 
 type ManagePostProps = {
@@ -13,9 +15,14 @@ type ManagePostProps = {
     desktop: boolean;
   };
   data?: any;
+  currentId?: number;
 };
 
-const ManagePost: React.FC<ManagePostProps> = ({ deviceType, data }) => {
+const ManagePost: React.FC<ManagePostProps> = ({
+  deviceType,
+  data,
+  currentId,
+}) => {
   const router = useRouter();
 
   return (
@@ -35,21 +42,25 @@ const ManagePost: React.FC<ManagePostProps> = ({ deviceType, data }) => {
                   }}
                 />
               </th>
-              <th>Join At </th>
+              <th>Followed At </th>
 
-              <th>Address </th>
+              <th>Rating </th>
             </tr>
           </thead>
           <tbody>
             {data.length != 0
               ? data.map((d) => {
-                  const user = d.user ? d.user : d.follower;
+                  const user = d.user
+                    ? d.user
+                    : d.follower
+                    ? d.follower
+                    : d.following;
 
                   return (
-                    <tr>
+                    <tr key={user.id}>
                       <td>
                         <Image
-                          url={user.avatar_img_url}
+                          url={user.avatar}
                           className="avatar-in-table"
                           style={{ position: "relative" }}
                           alt={"star"}
@@ -57,7 +68,11 @@ const ManagePost: React.FC<ManagePostProps> = ({ deviceType, data }) => {
                       </td>
                       <td
                         onClick={() => {
-                          router.push("/profile/[id]", `/profile/${user.id}`);
+                          if (currentId == user.id) {
+                            router.push("/profile");
+                          } else {
+                            router.push("/profile/[id]", `/profile/${user.id}`);
+                          }
                         }}
                         style={{ cursor: "pointer" }}
                       >
@@ -66,35 +81,25 @@ const ManagePost: React.FC<ManagePostProps> = ({ deviceType, data }) => {
                       <td>
                         {" "}
                         <p>
-                          {moment(user.created_at, [
-                            "YYYY",
-                            moment.ISO_8601,
-                          ]).date() +
+                          {moment(data.created_at).date() +
                             "/" +
-                            moment(user.created_at, [
-                              "YYYY",
-                              moment.ISO_8601,
-                            ]).month() +
+                            moment(data.created_at).month() +
                             "/" +
-                            moment(user.created_at, [
-                              "YYYY",
-                              moment.ISO_8601,
-                            ]).year()}
+                            moment(data.created_at).year()}
                         </p>
                       </td>
 
                       <td style={{ maxWidth: 500 }}>
-                        {user.address?.length > 3
-                          ? user.address
-                              .replace(
-                                user.address.substring(
-                                  0,
-                                  user.address.indexOf(",")
-                                ),
-                                ""
-                              )
-                              .replace(",", "")
-                          : ""}
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          {user.rating}
+                          <Star />
+                        </div>
                       </td>
                     </tr>
                   );
@@ -103,7 +108,7 @@ const ManagePost: React.FC<ManagePostProps> = ({ deviceType, data }) => {
           </tbody>
         </Table>
       ) : (
-        <span>No data</span>
+        <p style={{ textAlign: "center" }}>No data</p>
       )}
     </Box>
   );

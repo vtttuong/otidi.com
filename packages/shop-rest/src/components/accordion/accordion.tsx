@@ -1,7 +1,7 @@
-import React from 'react';
-import Collapse, { Panel } from 'rc-collapse';
-import AccordionWrapper from './accordion.style';
-import { FormattedMessage } from 'react-intl';
+import React from "react";
+import Collapse, { Panel } from "rc-collapse";
+import AccordionWrapper from "./accordion.style";
+import { FormattedMessage } from "react-intl";
 
 type AccordionProps = {
   router?: any;
@@ -59,24 +59,11 @@ const Accordion: React.FC<AccordionProps> = ({ className, items = [] }) => (
         items.map((item) => {
           return (
             <Panel
-              header={
-                <h3>
-                  <FormattedMessage
-                    id={item.intlTitleId}
-                    defaultMessage="Please add title in language file"
-                  />
-                </h3>
-              }
+              header={<h3>{item.title}</h3>}
               headerClass="accordion-title"
               key={item.id}
             >
-              <p key={item.id}>
-                <FormattedMessage
-                  id={item.intlDetailsId}
-                  defaultMessage="Please add description in language file"
-                  values={item.values ? item.values : ''}
-                />
-              </p>
+              <p key={item.id}>{item.content}</p>
             </Panel>
           );
         })}

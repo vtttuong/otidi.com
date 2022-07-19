@@ -246,3 +246,12 @@ export const RightMenuBox = styled.div`
     }
   }
 `;
+
+export const NoItem = styled.div`
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+`;

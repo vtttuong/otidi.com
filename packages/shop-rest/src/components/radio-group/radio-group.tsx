@@ -4,6 +4,7 @@ import styled from "styled-components";
 const RadioGroupWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
   justify-content: flex-start !important;
 `;
 

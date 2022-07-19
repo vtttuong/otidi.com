@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Select } from 'baseui/select';
-import { CaretDownIcon } from 'assets/icons/CaretDownIcon';
+import * as React from "react";
+import { Select } from "baseui/select";
+import { CaretDownIcon } from "assets/icons/CaretDownIcon";
 
 export const getContainerFontStyle = ({ $theme }) => {
   return $theme.typography.fontBold14;
@@ -17,8 +17,17 @@ export default ({ ...props }) => {
           props: {
             overrides: {
               Body: {
-                style: { zIndex: 1 },
+                style: {
+                  zIndex: 1,
+                  maxHeight: "50vh",
+                  overflow: "auto",
+                },
               },
+              // Inner: {
+              //   style: {
+              //     maxHeight: "50vh",
+              //   },
+              // },
             },
           },
         },
@@ -32,13 +41,13 @@ export default ({ ...props }) => {
           style: ({ $theme }) => ({
             ...getContainerFontStyle({ $theme }),
             color: $theme.colors.textDark,
-            lineHeight: '1.5',
+            lineHeight: "1.5",
           }),
         },
         DropdownListItem: {
           style: ({ $theme }) => ({
-            fontSize: '14px',
-            fontWeight: '700',
+            fontSize: "14px",
+            fontWeight: "700",
             color: $theme.colors.textDark,
           }),
         },
@@ -54,8 +63,8 @@ export default ({ ...props }) => {
         },
         DropdownOption: {
           style: ({ $theme }) => ({
-            fontSize: '14px',
-            fontWeight: '700',
+            fontSize: "14px",
+            fontWeight: "700",
             color: $theme.colors.textDark,
           }),
         },

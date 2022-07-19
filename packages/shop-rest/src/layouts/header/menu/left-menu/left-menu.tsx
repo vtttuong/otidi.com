@@ -7,7 +7,11 @@ import Logo from "layouts/logo/logo";
 import Router, { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
-import { POST_ITEM } from "site-settings/site-navigation";
+import {
+  POST_ITEM,
+  PROFILE_SETTING_PAGE,
+  UPDATE_PHONE,
+} from "site-settings/site-navigation";
 import {
   Arrow,
   Icon,
@@ -21,6 +25,8 @@ import {
   IconLogo,
 } from "./left-menu.style";
 import { getCookie } from "utils/session";
+import { AuthContext } from "contexts/auth/auth.context";
+import CreatePostButton from "components/create-post-button/nav-link";
 
 const CategoryIcon = ({ name }) => {
   const TagName = categoryMenuIcons[name];
@@ -63,19 +69,34 @@ type Props = {
 
 export const LeftMenu: React.FC<Props> = ({ logo }) => {
   const router = useRouter();
+  const {
+    authState: { isAuthenticated },
+    authDispatch,
+  } = React.useContext<any>(AuthContext);
+
   // const [activeMenu, setActiveMenu] = React.useState(initialMenu ?? brands[0]);
 
   const checkAuth = () => {
     let token = getCookie("access_token");
+    let phoneNumber = getCookie("userPhone");
     let isVerifyPhone = getCookie("phone_verified_at");
-    console.log(isVerifyPhone);
+    let isVerifyEmail = getCookie("email_verified_at");
+    let isVerifyAddress = getCookie("userAddress");
     if (!token) {
+      authDispatch({
+        type: "SIGNIN",
+      });
       Router.push("/login");
       return;
     }
-    if (token && isVerifyPhone?.length < 8) {
-      Router.push("/update-phone");
-      return;
+    if (token && (!phoneNumber || phoneNumber?.length < 8)) {
+      Router.push(PROFILE_SETTING_PAGE);
+    } else if (token && (!isVerifyPhone || isVerifyPhone.length <= 0)) {
+      Router.push(UPDATE_PHONE);
+    } else if (token && (!isVerifyEmail || isVerifyEmail.length <= 0)) {
+      Router.push(UPDATE_PHONE);
+    } else if (token && (!isVerifyAddress || isVerifyAddress.length <= 0)) {
+      Router.push(UPDATE_PHONE);
     } else {
       Router.push(POST_ITEM.href);
     }
@@ -85,9 +106,8 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
     <LeftMenuBox>
       <Logo imageUrl={logo} alt={"Shop Logo"} />
       <TextColor onClick={() => checkAuth()}>
-        <NavLink
+        <CreatePostButton
           className="menu-item"
-          href={"/loading"}
           label={POST_ITEM.defaultMessage}
           intlId={POST_ITEM.id}
           iconClass="menu-icon"

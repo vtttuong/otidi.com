@@ -26,7 +26,7 @@ export const ButtonGroup = styled.div<ButtonGroupProps>`
 
       @media (max-width: 700px) {
         flex: calc(50% - 10px);
-        max-width: calc(50% - 10px);
+        width: 100%;
 
         &:nth-child(3n) {
           margin-right: 15px;

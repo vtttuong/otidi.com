@@ -1,4 +1,5 @@
 // post card for food
+import { CoinIcon } from "assets/icons/CoinIcon";
 import Image from "components/image/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -38,57 +39,60 @@ const VoucherCard: React.FC<CardProps> = ({
     >
       <FoodImageWrapper>
         <Image
-          url={baseUrl + data.image}
+          url={data.image}
           className="post-image"
           style={{ position: "relative" }}
         />
-        <span className={data.type == "personal" ? "label-persion" : "label"}>
-          {data.type == "personal"
-            ? data.levels.map((i) => (
-                <span className="persion">
-                  <FormattedMessage id={i.name} />
-                </span>
-              ))
-            : "+" + data.discount + " %"}
-        </span>
       </FoodImageWrapper>
       {/* Sử dụng:  */}
-      <PostMeta className="voucher" style={{ marginTop: 30, marginBottom: 18 }}>
+      <PostMeta className="voucher" style={{ marginTop: 40, marginBottom: 18 }}>
         <DeliveryOpt>
-          <span className="name">{data.name}</span>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <p className="name">{data.name}</p>
+            <span
+              className={data.type == "personal" ? "label-persion" : "label"}
+            >
+              {data.type == "personal"
+                ? data.levels.map((i) => (
+                    <span className="persion">
+                      <FormattedMessage id={i.name} />
+                    </span>
+                  ))
+                : "+" + data.value + " %"}
+            </span>
+          </div>
 
           {<br />}
           <span className="time">
             {"Hết hạn: "}
-            {data.expired}
+            {data.end_at}
           </span>
           <br />
           <span className="using">
             {" "}
-            Sử dụng: {data.using}
+            Sử dụng: {data.used}
             {"/"}
             {data.total}
           </span>
         </DeliveryOpt>
         <DeliveryOpt className="score">
-          <Image
-            url={"https://www.flaticon.com/svg/static/icons/svg/550/550638.svg"}
-            alt="coin"
-          />
+          <span style={{ display: "ïnline-block", marginRight: "5px" }}>
+            <CoinIcon height="17px" width="17px" />
+          </span>
           {data.type == "personal" ? (
             <>
               {"+ "}
-              {data.discount}
+              {data.value}
               {" % "}
             </>
           ) : (
             <div>
               <span>
                 {" "}
-                Đổi {data.exchange_point}{" "}
+                Đổi {data.reward_point}{" "}
                 <FormattedMessage id="score" defaultMessage="Score" />
               </span>
-              {data.user_voucher.length == 0 ? (
+              {data.used < data.total ? (
                 <span
                   className="doingay"
                   onClick={() => {
@@ -110,7 +114,7 @@ const VoucherCard: React.FC<CardProps> = ({
                 </span>
               ) : (
                 <span className="doingay dadoi">
-                  <b>Đã đổi</b>
+                  <b>Hét</b>
                 </span>
               )}
             </div>

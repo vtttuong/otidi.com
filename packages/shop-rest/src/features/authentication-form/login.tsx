@@ -19,8 +19,13 @@ import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 import { setCookie } from "utils/session";
 import { Facebook } from "assets/icons/Facebook";
+import { FaFacebookSquare } from "react-icons/fa";
 
 export default function SignInModal() {
+  const FACEBOOK_APP_ID = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
+  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_LARAVEL_API_BASE_URL;
+
   const intl = useIntl();
   const router = useRouter();
   const { authDispatch } = useContext<any>(AuthContext);
@@ -55,10 +60,11 @@ export default function SignInModal() {
         access_token: response.accessToken,
       }),
     };
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/oauth/token",
-      options
+    console.log(
+      "🚀 ~ file: login.tsx ~ line 61 ~ responseFacebook ~ response",
+      response
     );
+    const res = await fetch(`${API_BASE_URL}/oauth/token`, options);
     const data = await res.json();
 
     if (data && data.error) {
@@ -77,9 +83,9 @@ export default function SignInModal() {
       }
     }
   };
-  const responseFaildGoogle = (response) => {
-    console.log(response);
-  };
+
+  const responseFaildGoogle = (response) => {};
+
   const responseGoogle = async (response) => {
     const options = {
       method: "POST",
@@ -95,11 +101,10 @@ export default function SignInModal() {
       }),
     };
     const res = await fetch(
-      process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/oauth/token",
+      process.env.NEXT_PUBLIC_LARAVEL_API_BASE_URL + "/oauth/token",
       options
     );
     const data = await res.json();
-
     if (data && data.error) {
       setError(data.error);
       setLoading(false);
@@ -137,15 +142,14 @@ export default function SignInModal() {
           provider: process.env.NEXT_PUBLIC_PROVIDER,
         }),
       };
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/oauth/token",
-        options
-      );
+      const res = await fetch(`${API_BASE_URL}/oauth/token`, options);
+
       const data = await res.json();
+      console.log(data);
       if (data && data.error) {
         setError(data.error);
         setLoading(false);
-        // authDispatch({ type: "SIGNIN_FAILED" });
+        authDispatch({ type: "SIGNIN_FAILED" });
         return;
       }
 
@@ -233,7 +237,7 @@ export default function SignInModal() {
         <div className="social">
           <FacebookLogin
             cssClass="facebook-login-button"
-            appId="1806375959407950"
+            appId={FACEBOOK_APP_ID}
             fields="name,email,picture"
             callback={responseFacebook}
             icon={<Facebook />}
@@ -242,7 +246,7 @@ export default function SignInModal() {
 
           <GoogleLogin
             className="google-login-button"
-            clientId="649651581194-rqbdg57bn2bs15fbihidh52ffocuj2e6.apps.googleusercontent.com"
+            clientId={GOOGLE_CLIENT_ID}
             buttonText={"Continue with Google"}
             onSuccess={responseGoogle}
             onFailure={responseFaildGoogle}

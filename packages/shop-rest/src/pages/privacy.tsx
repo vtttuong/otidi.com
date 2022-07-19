@@ -1,5 +1,4 @@
-import { NextPage } from 'next';
-import Sticky from 'react-stickynode';
+import { NextPage } from "next";
 import {
   StyledContainer,
   StyledContent,
@@ -8,16 +7,17 @@ import {
   StyledLeftInnerContent,
   StyledRightContent,
   StyledContentHeading,
-} from 'features/terms-and-services/terms-and-services';
-import { Heading } from 'components/heading/heading';
-import { Element } from 'react-scroll';
-import { SEO } from 'components/seo';
-import { useMedia } from 'utils/use-media';
-import { sitePrivacyPolicy } from 'site-settings/site-privacy-policy';
+} from "features/terms-and-services/terms-and-services";
+import { Heading } from "components/heading/heading";
+import { Element } from "react-scroll";
+import { SEO } from "components/seo";
+import { useMedia } from "utils/use-media";
+import { sitePrivacyPolicy } from "site-settings/site-privacy-policy";
+import Sticky from "components/sticky/sticky";
 
 const PrivacyPage: NextPage<{}> = () => {
   const { title, date, content } = sitePrivacyPolicy;
-  const mobile = useMedia('(max-width: 580px)');
+  const mobile = useMedia("(max-width: 580px)");
   const menuItems: string[] = [];
   content.forEach((item) => {
     menuItems.push(item.title);
@@ -32,7 +32,7 @@ const PrivacyPage: NextPage<{}> = () => {
 
         <StyledContent>
           <StyledLeftContent>
-            <Sticky top={mobile ? 68 : 150} innerZ="1">
+            <Sticky top={mobile ? 68 : 100}>
               <StyledLeftInnerContent>
                 {menuItems.map((item) => (
                   <StyledLink

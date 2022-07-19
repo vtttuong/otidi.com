@@ -18,7 +18,7 @@ import { Bookmarks } from "assets/icons/Bookmarks";
 
 type SidebarProps = {
   setActiveTab?: Dispatch<SetStateAction<string>>;
-  setActive?: Dispatch<SetStateAction<string>>;
+  setActive?: () => void;
   balance?: number;
   dataPost?: any;
 };
@@ -32,7 +32,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
   const [show, setShow] = useState(false);
   const [pushN, setPush] = useState([]);
   React.useEffect(() => {
-    dataPost.posts.map((d) => (d.is_priority == true ? pushN.push(d) : null));
+    dataPost.posts.map((d) => (d.advertise == true ? pushN.push(d) : null));
     setPush(pushN);
   }, [dataPost]);
 
@@ -69,7 +69,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 top: -5,
               }}
             >
-              {"$"} {balance}
+              {balance}
             </div>
           </div>
         </div>
@@ -90,7 +90,9 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             </div>
             <div>
               <FormattedMessage id="push" defaultMessage="Push" />:{" "}
-              <span style={{ color: "#009E7F" }}>{pushN.length}</span>{" "}
+              <span style={{ color: "#009E7F" }}>
+                {dataPost.pushing_posts?.length}
+              </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
           </div>
@@ -113,7 +115,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             <div>
               <FormattedMessage id="soldPosts" defaultMessage="Sold" />:{" "}
               <span style={{ color: "#009E7F" }}>
-                {dataPost.sold_post.length}
+                {dataPost.sold_posts.length}
               </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
@@ -155,7 +157,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("postingPosts");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#1BC24E" }} className="div-icon">
@@ -166,7 +168,9 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                     id="postingPosts"
                     defaultMessage="Posting Posts"
                   />{" "}
-                  <span style={{ color: "#009E7F" }}>(0)</span>{" "}
+                  <span style={{ color: "#009E7F" }}>
+                    ({dataPost.active_posts.length})
+                  </span>{" "}
                 </div>
               </div>
             </div>
@@ -175,7 +179,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("waitingPosts");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#00B4FF" }} className="div-icon">
@@ -186,7 +190,9 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                     id="waitingPosts"
                     defaultMessage="Waiting Posts"
                   />{" "}
-                  <span style={{ color: "#009E7F" }}>(0)</span>{" "}
+                  <span style={{ color: "#009E7F" }}>
+                    ({dataPost.waiting_approve_posts.length})
+                  </span>{" "}
                 </div>
               </div>
             </div>
@@ -195,14 +201,14 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("drafts");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#1BC24E" }} className="div-icon">
                   <Clipboard color="gray" />
                 </div>
                 <div>
-                  <FormattedMessage id="drafts" defaultMessage="Drafts" />{" "}
+                  <FormattedMessage id="draftPosts" defaultMessage="Drafts" />{" "}
                   <span style={{ color: "#009E7F" }}>(0)</span>{" "}
                 </div>
               </div>
@@ -212,7 +218,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("outOfDatePosts");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#F27E61" }} className="div-icon">
@@ -232,7 +238,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("notPassedPosts");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#009E7F" }} className="div-icon">
@@ -252,7 +258,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("hiddenNews");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#B7CBB7" }} className="div-icon">
@@ -260,8 +266,8 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 </div>
                 <div>
                   <FormattedMessage
-                    id="hiddenNews"
-                    defaultMessage="Hidden news"
+                    id="hiddenPosts"
+                    defaultMessage="Hidden Posts"
                   />{" "}
                   <span style={{ color: "#009E7F" }}>(0)</span>{" "}
                 </div>
@@ -272,14 +278,14 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("seenNews");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#FF70AF" }} className="div-icon">
                   <SquareCheck color="#fb00ff" />
                 </div>
                 <div>
-                  <FormattedMessage id="seenNews" defaultMessage="Seen News" />{" "}
+                  <FormattedMessage id="seenPosts" defaultMessage="Seen News" />{" "}
                   <span style={{ color: "#009E7F" }}>(0)</span>{" "}
                 </div>
               </div>
@@ -289,7 +295,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 className="row-manage"
                 onClick={() => {
                   setActiveTab("savedNews");
-                  setActive("postManagement");
+                  setActive();
                 }}
               >
                 <div style={{ color: "#1BC24E" }} className="div-icon">
@@ -297,24 +303,12 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                 </div>
                 <div>
                   <FormattedMessage
-                    id="savedNews"
+                    id="savedPosts"
                     defaultMessage="Saved News"
                   />
                   <span style={{ color: "#009E7F" }}>(0)</span>{" "}
                 </div>
               </div>
-            </div>
-            <div style={{ padding: "20px 10px", color: "white" }}>
-              <span
-                style={{
-                  padding: 10,
-                  backgroundColor: "#009E7F",
-                  cursor: "pointer",
-                }}
-              >
-                <i className="far fa-plus-square"></i>{" "}
-                <FormattedMessage id="newPost" defaultMessage="New Post" />
-              </span>
             </div>
           </div>
         )}

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Fade from "react-reveal/Fade";
-import FoodCard from "../../post-card/post-card-four/post-card-four";
+import PostCard from "../../post-card/post-card-four/post-card-four";
 import {
   ButtonWrapper,
   LoaderItem,
@@ -35,7 +35,7 @@ type PostsProps = {
 export const Posts: React.FC<PostsProps> = () => {
   const router = useRouter();
   const [pageNum, setPageNum] = useState(1);
-
+  const SIZE = 8;
   const {
     posts,
     error,
@@ -46,12 +46,10 @@ export const Posts: React.FC<PostsProps> = () => {
     isLoadingInitialData,
   } = usePosts({
     page: pageNum,
+    count: SIZE,
     sort: router.query.sort,
+    dir: router.query.dir,
     text: router.query.text,
-    dayAgo: router.query.dayAgo,
-    latitue: +router.query.latitude,
-    longitude: +router.query.longitude,
-    radius: +router.query.radius,
   });
 
   if (error) return <ErrorMessage message={error.message} />;
@@ -84,10 +82,7 @@ export const Posts: React.FC<PostsProps> = () => {
   };
 
   const onClickOnCard = async (item) => {
-    router.push(`/posts/${item.slug}`);
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 500);
+    router.push(`/posts/${item.id}`);
   };
 
   return (
@@ -102,8 +97,8 @@ export const Posts: React.FC<PostsProps> = () => {
                   delay={index * 10}
                   style={{ height: "100%" }}
                 >
-                  <FoodCard
-                    name={item.name}
+                  <PostCard
+                    name={item.title}
                     image={item.main_image.url}
                     address={item.user.address}
                     createdAt={item.created_at}
@@ -131,7 +126,7 @@ export const Posts: React.FC<PostsProps> = () => {
             }}
             border="1px solid #f1f1f1"
           >
-            <FormattedMessage id="loadMoreButton" defaultMessage="Load More" />
+            <FormattedMessage id="loadMoreBtn" defaultMessage="Load More" />
           </Button>
         </ButtonWrapper>
       )}

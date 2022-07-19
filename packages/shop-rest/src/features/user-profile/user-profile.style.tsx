@@ -8,12 +8,17 @@ const PageWrapper = styled.div`
   flex-wrap: wrap;
   background-color: ${themeGet("colors.white", "#ffffff")};
   padding: 140px 250px 40px;
+
   &.voucher {
     align-items: center;
     justify-content: center;
     flex-direction: column !important;
     @media only screen and (max-width: 426px) {
     }
+  }
+
+  @media only screen and (max-width: 1800px) {
+    padding: 140px 150px 40px;
   }
 
   @media only screen and (max-width: 990px) {
@@ -27,7 +32,6 @@ const PageWrapper = styled.div`
   }
   @media only screen and (min-width: 1281px) and (max-width: 1400px) {
     padding: 130px 100px 60px;
-    max-width: 1100px;
     margin: 0 auto;
   }
 `;
@@ -74,6 +78,7 @@ const ContentBox = styled.div`
 const ItemCard = styled.div`
   width: 33%;
   padding: 10px;
+
   &.voucher {
     width: 100%;
     border-bottom: 1px solid #009e7f;
@@ -83,10 +88,17 @@ const ItemCard = styled.div`
   }
   &.other {
     width: 25%;
+
+    @media only screen and (max-width: 1440px) {
+      width: 33%;
+    }
+    @media only screen and (max-width: 990px) {
+      width: 50%;
+    }
   }
   @media only screen and (max-width: 990px) {
     width: 50%;
-    padding: 10px;
+    padding: 5px;
   }
 `;
 
@@ -136,8 +148,8 @@ const TabContain = styled.div`
 const BodyContain = styled.div`
   display: flex;
   flex-direction: column;
-  width: 30%;
-  margin-right: 3%;
+  width: 32%;
+  margin-right: 2%;
 
   @media only screen and (max-width: 1199px) {
     width: 100%;

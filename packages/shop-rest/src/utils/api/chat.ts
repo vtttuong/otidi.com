@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
 
 export async function getChats(token: string) {
   const options = {
@@ -9,8 +9,15 @@ export async function getChats(token: string) {
     },
   };
 
-  const data = await fetch(baseUrl + `/api/client/v1/chats`, options);
-  return await data.json();
+  try {
+    const res = await fetch(`${baseUrl}/channels`, options);
+    const json = await res.json();
+    return {
+      result: json.success ? json.data : null,
+    };
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function getChat(token: string, id: number) {
@@ -22,11 +29,8 @@ export async function getChat(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrl + `/api/client/v1/chats/${id}`,
-    options
-  );
-  
+  const data = await fetch(baseUrl + `/channels/${id}`, options);
+
   return await data.json();
 }
 
@@ -39,15 +43,19 @@ export async function getMessages(token: string, id: number) {
     },
   };
 
-  const data = await fetch(
-    baseUrl + `/api/client/v1/chats/${id}/messages`,
-    options
-  );
-  return await data.json();
+  try {
+    const data = await fetch(
+      baseUrl + `/channels/${id}/messages?order_by=created_at&dir=asc`,
+      options
+    );
+    const json = await data.json();
+    return json.success ? json.data : null;
+  } catch (err) {
+    return null;
+  }
 }
 
-
-export async function createChat(token: string, postId: number) {
+export async function createChat(token: string, postId: any) {
   const options = {
     method: "POST",
     headers: {
@@ -56,17 +64,20 @@ export async function createChat(token: string, postId: number) {
     },
     body: JSON.stringify({
       post_id: postId,
-    })
+    }),
   };
 
-  const response = await fetch(
-    baseUrl + `/api/client/v1/chats`,
-    options
-  );
-
-  return await response;
+  try {
+    const response = await fetch(baseUrl + `/channels`, options);
+    const json = await response.json();
+    return {
+      result: json.success ? true : false,
+      chanelData: json.success ? json.data : null,
+    };
+  } catch (err) {
+    return { result: false, data: null };
+  }
 }
-
 
 export async function sendMessage(token: string, content: any, id: number) {
   const options = {
@@ -76,14 +87,29 @@ export async function sendMessage(token: string, content: any, id: number) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      content: content,
-    })
+      message: content,
+    }),
   };
-  const data = await fetch(
-    baseUrl + `/api/client/v1/chats/${id}/messages/send`,
-    options
-  );
-  return await data.json();
+  try {
+    const data = await fetch(baseUrl + `/channels/${id}/messages`, options);
+    const json = await data.json();
+    if (json.success) {
+      return {
+        result: true,
+        data: json.data,
+      };
+    } else {
+      return {
+        result: false,
+        data: null,
+      };
+    }
+  } catch (err) {
+    return {
+      result: false,
+      data: null,
+    };
+  }
 }
 
 export async function readMessage(token: string, chatId: number) {
@@ -94,8 +120,18 @@ export async function readMessage(token: string, chatId: number) {
       "Content-Type": "application/json",
     },
   };
-  await fetch(
-    baseUrl + `/api/client/v1/chats/messages/${chatId}/read`,
-    options
-  );
+  try {
+    const res = await fetch(
+      baseUrl + `/channels/messages/${chatId}/read`,
+      options
+    );
+    const jsonData = await res.json();
+    return {
+      result: jsonData.success ? true : false,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
 }

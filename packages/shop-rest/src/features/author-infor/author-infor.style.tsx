@@ -74,6 +74,8 @@ const ActionButton = styled.div`
   box-shadow: ${themeGet("shadows.base", "0 3px 6px rgba(0, 0, 0, 0.16)")};
   border: 0;
   display: flex;
+  justify-content: center;
+  align-items: center;
   background: #009e7f;
   border-radius: 5px;
 
@@ -90,6 +92,7 @@ const ActionButton = styled.div`
     filter: brightness(0) invert(1);
   }
   &.chat {
+    padding: 0;
     width: 100%;
     margin-left: 0;
     background: #009e7f;
@@ -511,25 +514,39 @@ const CartSlidePopup = styled.div`
     }
   }
 `;
-const MainAvata = styled.div`
+const MainAvatar = styled.div`
   display: flex;
+  align-items: center;
+  padding: 10px 0;
   flex-direction: row;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 0 !important;
   &.border {
     border-bottom: 1px solid #f7f7f7 !important;
   }
   &.name {
     flex-direction: column;
+    width: auto;
+    align-items: start;
   }
   &.sub {
-    width: 50%;
+    flex: 1;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+
+    @media (min-width: 769px) and (max-width: 1000px) {
+      width: 100%;
+    }
   }
   &.subRate {
     flex-direction: column;
+  }
+
+  &.follow {
+    @media (min-width: 769px) and (max-width: 1000px) {
+      flex-direction: column;
+    }
   }
 `;
 const Name = styled.h5`
@@ -561,7 +578,7 @@ const Name = styled.h5`
     font-size: 13px;
     display: flex;
     flex-direction: row;
-    top: 15px;
+    top: 5px;
     position: relative;
   }
   &:hover {
@@ -580,7 +597,7 @@ const Dot = styled.div`
     background: green;
   }
 `;
-const Avata = styled.img`
+const Avatar = styled.img`
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -608,8 +625,8 @@ const TextFormat = styled.span`
 `;
 
 export {
-  MainAvata,
-  Avata,
+  MainAvatar,
+  Avatar,
   Name,
   Dot,
   ContainerImage,

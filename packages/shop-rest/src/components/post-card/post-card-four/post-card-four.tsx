@@ -27,6 +27,7 @@ import {
   SellLabel,
   SellLabelTop,
 } from "../post-card.style";
+import { CURRENCY } from "utils/constant";
 
 type CardProps = {
   name?: string;
@@ -41,6 +42,7 @@ type CardProps = {
   postId?: number;
   prioriry?: boolean;
   isBook?: boolean;
+  isDeleted?: boolean;
   isMarked?: boolean;
   saveNews?: boolean;
   currentUser?: boolean;
@@ -72,6 +74,7 @@ const PostCard: React.FC<CardProps> = ({
   onClick,
   onClickEdit,
   isBook,
+  isDeleted,
   ...props
 }) => {
   let formatTime = formatRelativeTime(createdAt);
@@ -80,7 +83,7 @@ const PostCard: React.FC<CardProps> = ({
   const handler = <span>...</span>;
   const content = (
     <div className="action">
-      {data && data.status == "approving" ? null : (
+      {data && (data.status == "waiting" || data.status == "sold") ? null : (
         <p
           style={{
             fontWeight: 600,
@@ -90,7 +93,7 @@ const PostCard: React.FC<CardProps> = ({
           Mark bought
         </p>
       )}
-      {data && data.status == "active" && !data.is_priority ? (
+      {data && data.status == "active" && !data.advertise ? (
         <p
           style={{
             fontWeight: 600,
@@ -128,8 +131,8 @@ const PostCard: React.FC<CardProps> = ({
   var a: number;
   var b: number;
   var c: number;
-  if (data && data.post_pushes) {
-    const scheduleTime = data.post_pushes[0]?.schedule;
+  if (data && data.advertise) {
+    const scheduleTime = data.advertise.end_time;
     const mNow = new Date().getMinutes();
     const hNow = new Date().getHours();
     let mSchedule = moment(scheduleTime, "HH:mm:ss").minutes();
@@ -162,22 +165,11 @@ const PostCard: React.FC<CardProps> = ({
           style={{ position: "relative" }}
           alt={name}
         />
-        {data &&
-        data.post_pushes?.length !== 0 &&
-        data.is_priority === false &&
-        currentUser ? (
+        {data && data.advertise && currentUser ? (
           <Countdown date={Date.now() + c} renderer={renderer} />
         ) : null}
-        {/* {typeOfPost == "sell" ? (
-          <SellLabel>
-            <FormattedMessage id="sellPost" defaultMessage="Sell" />
-          </SellLabel>
-        ) : (
-          <BuyLabel>
-            <FormattedMessage id="buyPost" defaultMessage="Sell" />
-          </BuyLabel>
-        )} */}
-        {prioriry == true ? (
+
+        {data.advertise ? (
           <SellLabelTop className="main-content">
             <FormattedMessage id="topPost" defaultMessage="Top post" />
           </SellLabelTop>
@@ -215,21 +207,17 @@ const PostCard: React.FC<CardProps> = ({
             <Edit />
           </span>
         ) : null}
-        <Category style={{ marginBottom: 20, display: "inline-block" }}>
-          <img src={AddressIcon} alt={"address"} />
-          {address}
-        </Category>
 
         <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
             <NumberFormat
-              value={price}
+              value={data.original_price}
               displayType={"text"}
               thousandSeparator={true}
-              prefix={"$"}
+              suffix={CURRENCY}
               renderText={(value) => <div>{value}</div>}
             />
-            <span>{unit}</span>
+            {/* <span>{CURRENCY}</span> */}
             {/*<FormattedMessage id='deliveryText' defaultMessage='Delivery' />*/}
           </DeliveryOpt>
           <Duration>
@@ -252,16 +240,16 @@ const PostCard: React.FC<CardProps> = ({
               }
             }}
           />
-          <span style={{ marginTop: 5 }}>
+          <span>
             <Like />
-            <b style={{ position: "relative", top: -2.5 }}>{data?.views}</b>
+            <p style={{ position: "relative" }}>{data?.likes_count}</p>
           </span>
           <span
-            style={{ marginLeft: 20, position: "relative", top: -2.5 }}
+            style={{ marginLeft: 20, position: "relative" }}
             className="view"
           >
             <Eye />
-            <b style={{ position: "relative", top: -5 }}>{data?.views}</b>
+            <p style={{ position: "relative" }}>{data?.views}</p>
           </span>
           {currentUser && !saveNews ? (
             <PopoverNotify
@@ -271,7 +259,7 @@ const PostCard: React.FC<CardProps> = ({
             />
           ) : null}
         </BoxAvatar>
-        {isBook ? (
+        {isDeleted ? (
           <Notice status={"success"} content={"Delete success!"} />
         ) : null}
         {isMarked ? (

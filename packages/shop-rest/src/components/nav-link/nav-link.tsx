@@ -41,6 +41,7 @@ function NavLink({
 }: any) {
   const IconProfile = Icons[icon] || Icons["CreatePost"];
   const isCurrentPath = router.pathname === href || router.asPath === href;
+
   return (
     <div onClick={onClick} className={className ? className : ""}>
       {dynamic ? (

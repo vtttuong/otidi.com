@@ -1,17 +1,17 @@
-import {Plus} from "assets/icons/Plus";
-import {Star} from "assets/icons/Star";
-import {createThemedUseStyletron, styled, withStyle} from "baseui";
+import { Plus } from "assets/icons/Plus";
+import { Star } from "assets/icons/Star";
+import { createThemedUseStyletron, styled, withStyle } from "baseui";
 import Button from "components/Button/Button";
 import Checkbox from "components/CheckBox/CheckBox";
-import {Col as Column, Grid, Row as Rows} from "components/FlexBox/FlexBox";
-import {InLineLoader} from "components/InlineLoader/InlineLoader";
+import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
+import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
 import Select from "components/Select/Select";
-import {Header, Heading, Wrapper} from "components/Wrapper.style";
-import {useDrawerDispatch} from "context/DrawerContext";
-import {Consumer} from "context/updateContext";
-import React, {useCallback, useState} from "react";
+import { Header, Heading, Wrapper } from "components/Wrapper.style";
+import { useDrawerDispatch } from "context/DrawerContext";
+import { Consumer } from "context/updateContext";
+import React, { useCallback, useState } from "react";
 import {
   StyledBodyCell,
   StyledHeadCell,
@@ -35,7 +35,7 @@ const Row = withStyle(Rows, () => ({
   },
 }));
 
-const ImageWrapper = styled("div", ({$theme}) => ({
+const ImageWrapper = styled("div", ({ $theme }) => ({
   width: "38px",
   height: "38px",
   overflow: "hidden",
@@ -53,16 +53,16 @@ const Image = styled("img", () => ({
 }));
 
 const sortDirection = [
-  {value: "asc", label: "Ascending", id: "1"},
-  {value: "desc", label: "Descending", id: "2"},
+  { value: "asc", label: "Ascending", id: "1" },
+  { value: "desc", label: "Descending", id: "2" },
 ];
 
-const sortBy = [{value: "id", label: "Id", id: "1"}];
+const sortBy = [{ value: "id", label: "Id", id: "1" }];
 
-type CustomThemeT = {red400: string; textNormal: string; colors: any};
+type CustomThemeT = { red400: string; textNormal: string; colors: any };
 
 const themedUseStyletron = createThemedUseStyletron<CustomThemeT>();
-const Status = styled("div", ({$theme}) => ({
+const Status = styled("div", ({ $theme }) => ({
   ...$theme.typography.fontBold14,
   color: $theme.colors.textDark,
   display: "flex",
@@ -113,11 +113,11 @@ export default function Users() {
 
   const dispatch = useDrawerDispatch();
   const openDrawer = useCallback(
-    () => dispatch({type: "OPEN_DRAWER", drawerComponent: "CREATEUSER_FORM"}),
+    () => dispatch({ type: "OPEN_DRAWER", drawerComponent: "CREATEUSER_FORM" }),
     [dispatch]
   );
 
-  function handleSortType({value}, sortType, getUser) {
+  function handleSortType({ value }, sortType, getUser) {
     setSearch("");
     setSortTypeOption(value);
     if (value.length) {
@@ -127,7 +127,7 @@ export default function Users() {
     }
   }
 
-  function handleSortDir({value}, sortDir, getUser) {
+  function handleSortDir({ value }, sortDir, getUser) {
     setSearch("");
     setSDirOption(value);
     if (value.length) {
@@ -192,7 +192,7 @@ export default function Users() {
 
   return (
     <Consumer>
-      {({dataUsers, getUser, searchName, sortType, sortDir, page}) => {
+      {({ dataUsers, getUser, searchName, sortType, sortDir, page }) => {
         setDataUsers(dataUsers);
         return (
           <>
@@ -211,7 +211,7 @@ export default function Users() {
 
                     <Col lg={11}>
                       <Row>
-                        <Col lg={3}>
+                        <Col lg={3} style={{ marginLeft: "auto" }}>
                           <Input
                             value={search}
                             placeholder="Ex: Search By Name"
@@ -222,7 +222,7 @@ export default function Users() {
                           />
                         </Col>
 
-                        <Col lg={3} style={{marginLeft: "auto"}}>
+                        <Col lg={3}>
                           <Select
                             options={sortBy}
                             labelKey="label"
@@ -248,13 +248,13 @@ export default function Users() {
                             }
                           />
                         </Col>
-                        <Col lg={3}>
+                        {/* <Col lg={3}>
                           <Button
                             onClick={openDrawer}
                             startEnhancer={() => <Plus />}
                             overrides={{
                               BaseButton: {
-                                style: ({$theme, $size, $shape}) => {
+                                style: ({ $theme, $size, $shape }) => {
                                   return {
                                     width: "100%",
                                     borderTopLeftRadius: "3px",
@@ -268,12 +268,14 @@ export default function Users() {
                           >
                             Create User
                           </Button>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Col>
                   </Header>
 
-                  <Wrapper style={{boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)"}}>
+                  <Wrapper
+                    style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}
+                  >
                     <TableWrapper>
                       <StyledTable $gridTemplateColumns="minmax(50px, 70px) minmax(50px, 70px) minmax(70px, auto) minmax(100px, auto) minmax(150px, auto) minmax(100px, auto) minmax(130px, max-content) minmax(100px, auto) ">
                         <StyledHeadCell>
@@ -336,7 +338,15 @@ export default function Users() {
                                 <StyledBodyCell>{item.id}</StyledBodyCell>
                                 <StyledBodyCell>
                                   <ImageWrapper>
-                                    <Image src={item.avatar} alt={"avatar"} />
+                                    <Image
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                      }}
+                                      src={item.avatar}
+                                      alt={"avatar"}
+                                    />
                                   </ImageWrapper>
                                 </StyledBodyCell>
                                 <StyledBodyCell>{item.name}</StyledBodyCell>
@@ -388,10 +398,14 @@ export default function Users() {
                                 <StyledBodyCell>
                                   <Status
                                     className={
-                                      item.deleted_at ? failed : success
+                                      item.status === "inactive"
+                                        ? failed
+                                        : success
                                     }
                                   >
-                                    {item.deleted_at ? "Blocked" : "Active"}
+                                    {item.status === "inactive"
+                                      ? "Blocked"
+                                      : "Active"}
                                   </Status>
                                 </StyledBodyCell>
                               </React.Fragment>
@@ -428,7 +442,7 @@ export default function Users() {
                       startEnhancer={() => <Plus />}
                       overrides={{
                         BaseButton: {
-                          style: ({$theme, $size, $shape}) => {
+                          style: ({ $theme, $size, $shape }) => {
                             return {
                               width: "100%",
                               borderTopLeftRadius: "3px",
@@ -450,7 +464,7 @@ export default function Users() {
                         startEnhancer={() => <Plus />}
                         overrides={{
                           BaseButton: {
-                            style: ({$theme, $size, $shape}) => {
+                            style: ({ $theme, $size, $shape }) => {
                               return {
                                 width: "100%",
                                 borderTopLeftRadius: "3px",

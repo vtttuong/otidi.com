@@ -21,6 +21,18 @@ const SingleItem = styled.li`
     border: 2px solid ${themeGet("colors.primary.regular", "#009E7F")};
   }
 `;
+
+const ReviewImage = styled.div`
+  display: flex;
+  max-width: 100%;
+  max-height: 590px;
+  cursor: pointer;
+  height: auto;
+  overflow: hidden;
+  border-radius: 10px;
+  align-item: center;
+`;
+
 const responsive = {
   desktop: {
     breakpoint: {
@@ -53,26 +65,28 @@ const CarouselWithCustomDots = ({
 }: any) => {
   const children = items.slice(0, 6).map((item: any, index: number) => (
     <img
-      src={item.url_img}
+      className="post-image"
+      src={item.url}
       key={index}
       alt={title}
       style={{
+        pointerEvents: "none",
         minWidth: "auto",
         height: "auto",
         position: "relative",
         margin: "auto",
       }}
-      className="post-image"
     />
   ));
   const images = items.map((item: any, index: number) => (
     <img
-      src={item.url_img}
+      src={item.url}
       key={index}
       alt={title}
       style={{
         width: "100%",
         height: "100%",
+        borderRadius: "0",
         position: "relative",
         objectFit: "cover",
       }}
