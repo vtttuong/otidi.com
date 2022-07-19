@@ -19,27 +19,26 @@ type Props = {
   chats: any;
   token: string;
   userId?: number;
-  chatUuid?: string;
+  chatId?: number;
   initialChatId?: number;
 };
 const ProfilePage: NextPage<Props> = ({
   chats,
   token,
   userId,
-  chatUuid,
+  chatId,
   initialChatId,
 }) => {
   const router = useRouter();
 
   let initialData = {
-    chatId: initialChatId,
-    chatUuid: chatUuid,
+    chatId: chatId,
     messageUnRead: 0,
     messages: [],
   };
 
   const contentMessageHandle = () => {
-    if (chatUuid == null && router.query.uuid == undefined) {
+    if (chatId == null && router.query.id == undefined) {
       return (
         <div className="wrap-contentmessage container wrap-image-empty">
           <img
@@ -61,11 +60,7 @@ const ProfilePage: NextPage<Props> = ({
       <SEO title="Message - SecondHandApp" description="Conversation" />
       <ChatProvider initData={initialData}>
         <PageWrapper className={"message-chat"}>
-          <Conversation
-            chatUuid={chatUuid}
-            currentUserId={userId}
-            chats={chats}
-          />
+          <Conversation chatId={chatId} currentUserId={userId} chats={chats} />
 
           {contentMessageHandle()}
         </PageWrapper>
@@ -76,6 +71,7 @@ const ProfilePage: NextPage<Props> = ({
 
 export async function getServerSideProps(context) {
   const token = getCookie("access_token", context);
+
   const userId = getCookie("userId", context);
 
   if (token === null) {
@@ -87,20 +83,16 @@ export async function getServerSideProps(context) {
     }
   }
 
-  const chatUuid = context.query.uuid ? context.query.uuid : null;
-  let initialChatId = null;
-  const chats = await getChats(token);
-  if (chatUuid != null) {
-    initialChatId = chats.find((chat) => chat.uuid == chatUuid).id;
-  }
+  const chatId = context.query.id ? context.query.id : null;
+  const response = await getChats(token);
+  const chats = response.result;
 
   return {
     props: {
-      chats: chats,
+      chats: chats || [],
       token: token,
       userId: userId,
-      chatUuid: chatUuid,
-      initialChatId: initialChatId,
+      chatId: chatId,
     }, // will be passed to the page component as props
   };
 }

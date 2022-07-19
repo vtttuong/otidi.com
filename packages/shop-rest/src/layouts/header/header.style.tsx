@@ -492,8 +492,9 @@ export const UserAvatar = styled.div`
   margin-right: 15px;
   img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: cover;
   }
 `;
 
@@ -528,6 +529,7 @@ export const DrawerMenuItem = styled.div`
     .logoutBtn {
       display: block;
       padding: 5px 45px;
+      font-weight: 600;
       font-size: calc(${themeGet("fontSizes.base", "15px")} - 1px);
       font-weight: ${themeGet("fontWeights.regular", "400")};
       color: ${themeGet("colors.text.bold", "#0D1136")};
@@ -715,30 +717,40 @@ export const BoxSave = styled.div`
   width: 40%;
   font-size: 18px;
   position: relative;
+
   .toggle {
     display: none !important;
   }
   .save {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 5px;
     position: absolute;
     @media only screen and (min-width: 991px) and (max-width: 1200px) {
       width: 170% !important;
       background: #fff;
     }
+
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+      rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    border-radius: 8px;
   }
   .title {
     font-weight: 600;
+    font-size: 18px;
     position: relative;
     width: 100%;
     background: #009e7f33;
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 3px;
+    padding: 5px 10px;
     margin-bottom: 10px;
   }
   .title.saved {
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
     background: #d5cf0291;
-    padding: 5px;
+    padding: 5px 10px;
   }
 `;
 export const SearchSave = styled.ul`
@@ -767,12 +779,16 @@ export const SearchSaveItem = styled.li`
   padding: 7px 7px 7px 30px;
   font-size: 15px;
   cursor: pointer;
+  transition: all 0.2s;
   &:hover {
     background: #e0e0e0;
     border-radius: 5px;
   }
 `;
 export const BtnRemove = styled.button`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
   color: blue;
   border: 0;
   background: transparent;

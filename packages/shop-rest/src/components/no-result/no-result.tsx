@@ -19,11 +19,14 @@ const NoResultFound: React.FC<NoResultFoundProps> = ({ id }) => {
   // const { dispatch } = React.useContext(SearchContext);
 
   function onClickButton() {
-    const href = router.pathname;
-    router.push(href, href, { shallow: true });
+    router.back();
   }
   return (
     <NoResultWrapper id={id}>
+      <ImageWrapper>
+        <img src={NoResultSvg} alt="No Result" />
+      </ImageWrapper>
+
       <h3>
         <FormattedMessage
           id="noResultFound"
@@ -31,14 +34,10 @@ const NoResultFound: React.FC<NoResultFoundProps> = ({ id }) => {
         />
       </h3>
 
-      <ImageWrapper>
-        <img src={NoResultSvg} alt="No Result" />
-      </ImageWrapper>
-
       <ButtonWrapper>
         <div onClick={onClickButton}>
           <Button>
-            <ArrowPrev /> Go Back
+            <ArrowPrev /> Go back
           </Button>
         </div>
       </ButtonWrapper>

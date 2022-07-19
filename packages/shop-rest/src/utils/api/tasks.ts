@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
 
 export async function markAsRead(token: string, id: string) {
   const options = {
@@ -16,7 +16,7 @@ export async function markAsRead(token: string, id: string) {
   return await data.json();
 }
 
-export async function getTasks(token: string, lang: string) {
+export async function getTasks(token: string) {
   const options = {
     method: "GET",
     headers: {
@@ -25,9 +25,11 @@ export async function getTasks(token: string, lang: string) {
     },
   };
 
-  const data = await fetch(
-    `${baseUrl}/api/client/v1/tasks?locale=${lang}`,
-    options
-  );
-  return await data.json();
+  try {
+    const data = await fetch(`${baseUrl}/tasks`, options);
+    const json = await data.json();
+    return json.success ? json.data : [];
+  } catch (err) {
+    return [];
+  }
 }

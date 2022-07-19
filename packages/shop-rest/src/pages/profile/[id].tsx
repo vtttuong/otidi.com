@@ -3,12 +3,14 @@ import { Bookmarks } from "assets/icons/Bookmarks";
 import { CheckMark } from "assets/icons/CheckMark";
 import { Hourglass } from "assets/icons/Hourglass";
 import { SquareCheck } from "assets/icons/SquareCheck";
+import NotFound from "components/notfound";
 import { SEO } from "components/seo";
 import { TabPanel } from "components/TabPanel/tabpanel";
 import { ProfileProvider } from "contexts/profile/profile.provider";
 import ContenHeader from "features/user-profile/contentHeader/contentHeader";
 import ManagePost from "features/user-profile/manage-posts/manage-posts";
 import ManagePostReview from "features/user-profile/manage-posts/manage-posts-review";
+
 import {
   ContainBody,
   ContentBox,
@@ -19,8 +21,14 @@ import {
 import WrapCard from "features/wrap-card/wrap-card";
 import Footer from "layouts/footer";
 import { NextPage } from "next";
-import { useState } from "react";
-import { getUserById, getUsers } from "utils/api/user";
+import { useEffect, useState } from "react";
+import {
+  getFollowers,
+  getFollowings,
+  getPostsForUser,
+  getReviews,
+  getUserById,
+} from "utils/api/user";
 import { getCookie } from "utils/session";
 
 type Props = {
@@ -35,6 +43,15 @@ type Props = {
 };
 
 const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
+  if (!data) {
+    return <NotFound />;
+  }
+
+  const [activeTab, setActiveTab] = useState("postingPosts");
+  const [currentUser, setCurrentUser] = useState(false);
+  const [followers, setFollowers] = useState(data.followers);
+  const [reviews, setReviews] = useState(data.reviews);
+
   const dataTab2 = [
     {
       number: data.posts.length,
@@ -43,7 +60,7 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
       icon: <CheckMark width="15px" height="15px" color="green" />,
     },
     {
-      number: data.followers.length,
+      number: followers.length,
       key: "follower",
       title: "Ngừoi theo dõi",
       icon: <Hourglass color="#0000ff" width="15px" height="15px" />,
@@ -52,22 +69,21 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
       key: "following",
       title: "Đang theo dõi",
       icon: <SquareCheck color="#fb00ff" />,
-      number: data.following.length,
+      number: data.followings?.length || 0,
     },
     {
       key: "review",
       title: "Nhận xét",
       icon: <Bookmarks color="#00d9ff" />,
-      number: data.reviews.length,
+      number: reviews.length,
     },
   ];
-  
-  const [activeTab, setActiveTab] = useState("postingPosts");
-  const [currentUser, setCurrentUser] = useState(false);
 
-  if (data.id == currentId) {
-    setCurrentUser(true);
-  }
+  useEffect(() => {
+    if (data.id == currentId) {
+      setCurrentUser(true);
+    }
+  }, []);
 
   const onRate = () => {
     setActiveTab("review");
@@ -75,6 +91,18 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
   const onChangeFollow = (i: string) => {
     if (i == "following") setActiveTab("following");
     else setActiveTab("follower");
+  };
+
+  const resetFollowers = async () => {
+    const followers = await getFollowers(data.id);
+    setFollowers(followers);
+    //reset followers;
+  };
+
+  const resetReviews = async () => {
+    const reviews = await getReviews(data.id);
+    setReviews(reviews);
+    //reset followers;
   };
 
   const title = `Profile - ${data.name}`;
@@ -91,7 +119,7 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
               onRate={onRate}
               userId={currentId}
               onChangeFollow={onChangeFollow}
-              // onFollow={onFollow}
+              onFollow={resetFollowers}
             />
             <ContainBody>
               <ContentContainer>
@@ -113,13 +141,19 @@ const ProfilePage: NextPage<Props> = ({ token, data, currentId }) => {
                     />
                   ) : null}
                   {activeTab === "follower" ? (
-                    <ManagePost data={data.followers} />
+                    <ManagePost currentId={currentId} data={followers} />
                   ) : null}
-                  {activeTab === "following" ? (
-                    <ManagePost data={data.following} />
-                  ) : null}
+
                   {activeTab === "review" ? (
-                    <ManagePostReview userId={data.id} />
+                    <ManagePostReview
+                      onAddReview={resetReviews}
+                      userId={data.id}
+                      data={reviews}
+                    />
+                  ) : null}
+
+                  {activeTab === "following" ? (
+                    <ManagePost data={data.followings} />
                   ) : null}
                 </ContentBox>
               </ContentContainer>
@@ -137,20 +171,33 @@ export async function getServerSideProps(context) {
   const currentId = getCookie("userId", context);
   const token = getCookie("access_token", context);
   const data = await getUserById(context.params.id);
-  const users = await getUsers();
+
+  if (data) {
+    const posts = await getPostsForUser(context.params.id);
+    const followers = await getFollowers(context.params.id);
+    const reviews = await getReviews(context.params.id);
+    const followings = await getFollowings(context.params.id);
+
+    data.posts = posts;
+    data.followers = followers;
+    data.reviews = reviews;
+    data.followings = followings;
+  }
+
+  // const users = await getUsers();
 
   // Get the paths we want to pre-render based on posts
-  const paths = users.map((user) => ({
-    params: {
-      id: user.id.toString(),
-    },
-  }));
+  // const paths = users.map((user) => ({
+  //   params: {
+  //     id: user.id.toString(),
+  //   },
+  // }));
 
   return {
     props: {
       data: data,
       currentId: currentId,
-      paths: paths,
+      // paths: paths,
       fallback: true,
       token: token,
     },

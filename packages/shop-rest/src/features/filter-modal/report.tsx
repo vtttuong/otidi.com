@@ -1,8 +1,13 @@
+import { Input } from "components/forms/input";
 import { Option } from "components/option/option";
 import { AuthContext } from "contexts/auth/auth.context";
-import React, { useContext } from "react";
+import { Require } from "features/post-form/post-form.style";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { Col, Row } from "react-styled-flexboxgrid";
+import { LOGIN } from "site-settings/site-navigation";
+import { getCookie } from "utils/session";
 import { Button, Container, Heading, Wrapper } from "./form.style";
 
 const lists = [
@@ -23,11 +28,6 @@ const lists = [
   },
   {
     id: 4,
-    title: "Sai danh muc",
-    value: "wrong_category",
-  },
-  {
-    id: 5,
     title: "Thông tin sai thực tế",
     value: "unrealistic",
   },
@@ -50,15 +50,19 @@ const ReportModal: React.FC<ManagePostProps> = ({
 }) => {
   const { authDispatch } = useContext<any>(AuthContext);
   const [loading, setLoading] = React.useState(false);
-  const [choose, setChoose] = React.useState("");
-  const [report, setReport] = React.useState("");
+  const [choose, setChoose] = React.useState(lists[0].value);
+  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [errorS, setError] = useState(null);
+  const router = useRouter();
 
   const handleChange = (event: any) => {
+    setError(null);
     let data = event.target ? event.target.value : "";
-    setReport(data);
+    setPhoneNumber(data);
   };
 
   function changeChoose(list) {
+    setError(null);
     let foundIndex = [];
     let index = foundIndex.indexOf(list.id);
     setChoose(list.value);
@@ -68,6 +72,28 @@ const ReportModal: React.FC<ManagePostProps> = ({
       foundIndex.splice(index, 1);
     }
   }
+
+  const onClickReport = async () => {
+    setLoading(true);
+    if (
+      !choose ||
+      !phoneNumber ||
+      choose.trim().length === 0 ||
+      phoneNumber.trim().length === 0
+    ) {
+      setError("ErrorStep");
+      setLoading(false);
+      return;
+    }
+
+    if (!/[0-9]{10}/g.test(phoneNumber)) {
+      setError("invalidPhone");
+      setLoading(false);
+      return;
+    }
+    await onReport(choose, phoneNumber);
+    setLoading(false);
+  };
 
   return (
     <Wrapper>
@@ -88,17 +114,21 @@ const ReportModal: React.FC<ManagePostProps> = ({
           })}
           <Row className="report">
             <Col xs={12} sm={12} md={12} lg={12}>
-              <textarea
-                placeholder={"Your report!"}
+              <label htmlFor="phone_number_report">
+                Enter phone number to report
+                <Require>*</Require>
+              </label>
+              <Input
+                id="phone_number_report"
                 rows={4}
                 cols={50}
-                value={report}
+                value={phoneNumber}
                 style={{ border: "1px solid #009e7f", marginTop: 10 }}
                 onChange={handleChange}
               />
-              {error ? (
+              {errorS ? (
                 <p style={{ textAlign: "left", color: "red" }}>
-                  Check field require!
+                  <FormattedMessage id={errorS} />
                 </p>
               ) : null}
             </Col>
@@ -110,9 +140,9 @@ const ReportModal: React.FC<ManagePostProps> = ({
           size="big"
           style={{ width: "100%" }}
           loading={loading}
-          onClick={() => onReport(choose, report)}
+          onClick={onClickReport}
         >
-          <FormattedMessage id="applyFilter" />
+          <FormattedMessage id="report" />
         </Button>
       </Container>
     </Wrapper>

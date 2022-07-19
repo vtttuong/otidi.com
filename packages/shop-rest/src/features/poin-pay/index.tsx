@@ -5,36 +5,8 @@ import React, { useContext, useState } from "react";
 import { ContainerOption, Text } from "./index.style";
 import { ProfileContext } from "contexts/profile/profile.context";
 import { ProfileProvider } from "contexts/profile/profile.provider";
+import { options } from "features/payment/amount-option";
 
-var initData = {
-  balances: [
-    {
-      id: 1,
-      value: 50000,
-      title: "50.000",
-      type: "primary",
-      source:
-        "https://trangdangtin.com/htdocs/templates/eshopper/images/icon-usd-active.png",
-    },
-    {
-      id: 2,
-      value: 100000,
-      title: "100.000",
-      type: "secondary",
-      source:
-        "https://trangdangtin.com/htdocs/templates/eshopper/images/icon-usd-active.png",
-    },
-    {
-      id: 3,
-      title: "150.000",
-      value: 150000,
-      type: "three",
-      source:
-        "https://trangdangtin.com/htdocs/templates/eshopper/images/icon-usd-active.png",
-    },
-  ],
-  amount: 50000,
-}
 function Point({ deviceType }) {
   const [choose, setChoose] = useState(false);
   const [foundIndex, setFoundIndex] = useState([]);
@@ -63,15 +35,18 @@ function Point({ deviceType }) {
       x.splice(index, 1);
       setFoundIndex(x);
     }
+
+    console.log("🚀 ~ file: index.tsx ~ line 45 ~ Point ~ state", state);
+
     // dispatch({
     //   type: "SET_PRIMARY_BALANCE",
     //   payload: list.id.toString(),
     // });
 
-    // dispatch({
-    //   type: "SET_PAYMENT_INFO",
-    //   payload: { value: list.value, field: "amount" },
-    // });
+    dispatch({
+      type: "SET_PAYMENT_INFO",
+      payload: { value: list.value, field: "amount" },
+    });
   }
 
   function onNext() {
@@ -80,11 +55,11 @@ function Point({ deviceType }) {
 
   return (
     <>
-      <ProfileProvider initData={initData}>
+      <ProfileProvider initData={options}>
         <ContainerOption>
           <Text>{"Chon Menh Gia !"}</Text>
 
-          {initData.balances?.map(function (list) {
+          {options.balances?.map(function (list) {
             return (
               <Option
                 key={list.id}

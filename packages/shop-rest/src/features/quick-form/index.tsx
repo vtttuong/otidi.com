@@ -1,7 +1,7 @@
 import GoogleMapAutocomplete from "components/googleMap-autocomplete";
 import { Formik } from "formik";
 import { observer } from "mobx-react-lite";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import * as yup from "yup";
 import {
@@ -12,6 +12,7 @@ import {
 } from "react-google-maps";
 import { compose, withProps } from "recompose";
 import { PostFormContext } from "contexts/post-form/post-form.context";
+import { searchAddress } from "utils/location";
 
 /*
  * Props of Component
@@ -29,8 +30,18 @@ const QuickForm = (props: ComponentProps) => {
   const { style, className, children, initialValues, handleSubmitForm } = props;
   const defaultCenter = { lat: state.latitude, lng: state.longitude };
 
-  const defaultOptions = { scrollwheel: false };
-  const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+  const [first, setFirst] = useState(true);
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState({
+    address: state.address,
+    latitude: state.latitude,
+    longitude: state.longitude,
+  });
+  const [popupLocationActive, setPopupLocationActive] = useState(false);
+  const [textAddress, setTextAddress] = useState(state.address || "");
+
+  const defaultOptions = { scrollwheel: true };
+  const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
   console.log(googleMapURL);
   const mapEnvironment = compose(
     withProps({
@@ -63,41 +74,62 @@ const QuickForm = (props: ComponentProps) => {
     pickupAddressText: yup.string().required("VALIDATE_REQUIRED"),
   });
 
-  const handleChangePlace = async (
-    data: any,
-    field: string,
-    setFieldValue: any
-  ) => {
-    setFieldValue(field, data?.formatted_address, false);
-    if (field === "pickupAddressText") {
-      setFieldValue(
-        "pickupAddress",
-        [data.geometry?.location?.lat(), data.geometry?.location?.lng()],
-        false
-      );
-    }
-    data?.address_components.map((value: any) => {
-      if (value.types[0] === "administrative_area_level_1") {
-        setFieldValue("pickupCity", value.short_name, false);
-      }
-    });
-    let lat = await data.geometry.location.lat();
-    let long = await data.geometry.location.lng();
-    let address = await data.formatted_address;
+  // const handleChangePlace = async (
+  //   data: any,
+  //   field: string,
+  //   setFieldValue: any
+  // ) => {
+  //   setFieldValue(field, data?.formatted_address, false);
+  //   if (field === "pickupAddressText") {
+  //     setFieldValue(
+  //       "pickupAddress",
+  //       [data.geometry?.location?.lat(), data.geometry?.location?.lng()],
+  //       false
+  //     );
+  //   }
+  //   data?.address_components.map((value: any) => {
+  //     if (value.types[0] === "administrative_area_level_1") {
+  //       setFieldValue("pickupCity", value.short_name, false);
+  //     }
+  //   });
+  //   let lat = await data.geometry.location.lat();
+  //   let long = await data.geometry.location.lng();
+  //   let address = await data.formatted_address;
 
-    dispatch({
-      type: "HANDLE_ON_SELECT_CHANGE",
-      payload: { value: address, field: "address" },
-    });
-    dispatch({
-      type: "HANDLE_ON_SELECT_CHANGE",
-      payload: { value: lat, field: "latitude" },
-    });
-    dispatch({
-      type: "HANDLE_ON_SELECT_CHANGE",
-      payload: { value: long, field: "longitude" },
-    });
+  //   dispatch({
+  //     type: "HANDLE_ON_SELECT_CHANGE",
+  //     payload: { value: address, field: "address" },
+  //   });
+  //   dispatch({
+  //     type: "HANDLE_ON_SELECT_CHANGE",
+  //     payload: { value: lat, field: "latitude" },
+  //   });
+  //   dispatch({
+  //     type: "HANDLE_ON_SELECT_CHANGE",
+  //     payload: { value: long, field: "longitude" },
+  //   });
+  // };
+
+  useEffect(() => {
+    setSelectedLocation(null);
+    const timer = setTimeout(async () => {
+      if (!first) {
+        setPopupLocationActive(true);
+        const data = await searchAddress(textAddress);
+        setLocations(data);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [textAddress]);
+
+  const onSelectLocation = (location) => {
+    setPopupLocationActive(false);
+    setTextAddress(location.address);
+    setSelectedLocation(location);
   };
+
+  const handleChangePlace = async () => {};
 
   return (
     <>
@@ -136,13 +168,35 @@ const QuickForm = (props: ComponentProps) => {
                     controlId="pickupAddressText"
                     className="pickupAddressText"
                   >
-                    <GoogleMapAutocomplete
+                    <Form.Control
+                      placeholder="Address"
+                      name="address"
+                      value={textAddress}
+                      id="uaosfjcvcns"
+                      onChange={(e) => {
+                        setFirst(false);
+                        setTextAddress(e.target.value);
+                      }}
+                    />
+                    {/* {popupLocationActive && (
+                      <ListLocations>
+                        {locations.map((lo) => (
+                          <LocationItem
+                            key={lo.id}
+                            onClick={() => onSelectLocation(lo)}
+                          >
+                            {lo.address}
+                          </LocationItem>
+                        ))}
+                      </ListLocations>
+                    )} */}
+                    {/* <GoogleMapAutocomplete
                       handleChangePlace={handleChangePlace}
                       field="pickupAddressText"
                       setFieldValue={setFieldValue}
                       componentId="pickupAddressText3"
                       defaultValue={state.address ? state.address : ""}
-                    />
+                    /> */}
 
                     <Form.Control.Feedback type="invalid">
                       {errors.pickupAddressText}

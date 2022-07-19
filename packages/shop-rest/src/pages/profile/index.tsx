@@ -30,8 +30,14 @@ import WrapCardSaved from "features/wrap-card/wrap-card-saved";
 import Footer from "layouts/footer";
 import moment from "moment";
 import { NextPage } from "next";
-import React, { useState } from "react";
-import { getPackage, getProfile, pushPost } from "utils/api/profile";
+import React, { useCallback, useRef, useState } from "react";
+import {
+  getMyPosts,
+  getPackage,
+  getProfile,
+  pushPost,
+} from "utils/api/profile";
+import { getFollowers, getFollowings, getReviews } from "utils/api/user";
 import { getCookie } from "utils/session";
 
 type Props = {
@@ -45,30 +51,57 @@ type Props = {
   service?: any;
 };
 
+const post_status = {
+  WAITING: "waiting",
+  SOLD: "sold",
+  ACTIVE: "active",
+};
+
 const ProfilePage: NextPage<Props> = ({ datas, token }) => {
   const [activeTab, setActiveTab] = useState("postingPosts");
   const [successPush, setSuccessPush] = useState(false);
   const [data, setData] = useState(datas);
   const [errorMoneyPush, setErrorMoneyPush] = useState(false);
+  const [errorTime, setErrorTime] = useState(false);
   const [arrayService, setArrayService] = useState([]);
-  const posting = [];
+  const [loading, setLoading] = useState(false);
+  const ref = useRef(null);
+
   const getP = async () => {
-    const service = await getPackage(token);
-    setArrayService(service);
+    const services = await getPackage(token);
+
+    setArrayService(services);
   };
   React.useEffect(() => {
     getP();
   }, []);
-  data.posts.map((item) => {
-    if (!item.is_sold && !item.is_priority) posting.push(item);
-  });
+
+  React.useEffect(() => {
+    data.waiting_approve_posts = data.posts.filter(
+      (post) => post.status === post_status.WAITING
+    );
+
+    data.sold_posts = data.posts.filter(
+      (post) => post.status === post_status.SOLD
+    );
+    data.active_posts = data.posts.filter(
+      (post) => post.status === post_status.ACTIVE
+    );
+    data.pushing_posts = data.posts.filter((post) => post.advertise !== null);
+    // data.posts.map((item) => {
+    //   if (item.status !== post_status.SOLD && !item.advertise) {
+    //     posting.push(item);
+    //   }
+    // });
+  }, [data]);
 
   const dataTab2 = [
     {
+      // number: posting.length,
+      number: data.active_posts.length,
       key: "postingPosts",
       title: "Đang đăng",
       icon: <CheckMark width="15px" height="15px" color="green" />,
-      number: posting.length,
     },
     {
       number: data.waiting_approve_posts.length,
@@ -77,38 +110,38 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       icon: <Hourglass color="#0000ff" width="15px" height="15px" />,
     },
     {
-      number: data.sold_post.length,
+      number: data.sold_posts.length,
       key: "soldPosts",
       title: "Đã bán",
       icon: <Sold />,
     },
     {
-      number: data.posts.length - posting.length,
+      number: data.pushing_posts.length,
       key: "pushPosts",
       title: "Đang đẩy",
       icon: <Push />,
     },
 
     {
-      number: data.post_saves.length,
+      number: data.post_saves?.length,
       key: "savedNews",
       title: "Tin đã lưu",
       icon: <Bookmarks color="#00d9ff" />,
     },
     {
-      number: data.following.length,
+      number: data.followings?.length || 0,
       key: "following",
       title: "Dang theo doi",
       icon: <Following />,
     },
     {
-      number: data.followers.length,
+      number: data.followers_count,
       key: "follower",
       title: "nguoi theo doi",
       icon: <Person color="blue" />,
     },
     {
-      number: data.reviews.length,
+      number: data.reviews_count,
       key: "review",
       title: "review",
       icon: <Review />,
@@ -121,67 +154,93 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     data.posts.map((item) => {
       if (item.id == id) {
         item.is_sold = true;
-        data.sold_post.push(item);
+        data.sold_posts.push(item);
         return;
       }
     });
   };
+
+  const scrollToManageTable = () => {
+    const yOffset = -110;
+    const y =
+      ref.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
   const onChangeFollow = (i: string) => {
+    scrollToManageTable();
     if (i == "following") setActiveTab("following");
     else setActiveTab("follower");
   };
-  const onPush = (id) => {
-    openModal({
-      show: true,
-      overlayClassName: "quick-view-overlay",
-      closeOnClickOutside: true,
-      component: PushForm,
-      closeComponent: "",
-      config: {
-        enableResizing: false,
-        disableDragging: true,
-        className: "quick-view-modal",
-        width: "500px",
-        height: "auto",
-      },
-      componentProps: { onPush: onPushClick, service: arrayService, id: id },
-    });
-  };
-  const onPushClick = async (id, value, time) => {
-    let serviceMoney = 0;
-    arrayService.map((i) => {
-      if (i.id == value) {
-        serviceMoney = i.price;
-        return;
-      }
-    });
+  const onPush = useCallback(
+    (id) => {
+      openModal({
+        show: true,
+        overlayClassName: "quick-view-overlay",
+        closeOnClickOutside: true,
+        component: PushForm,
+        closeComponent: "",
+        config: {
+          enableResizing: false,
+          disableDragging: true,
+          className: "quick-view-modal",
+          width: "500px",
+          height: "auto",
+        },
+        componentProps: {
+          onPush: onPushClick,
+          service: arrayService,
+          id: id,
+          loading: loading,
+        },
+      });
+    },
+    [arrayService]
+  );
+
+  const onPushClick = async (id, packageId, time) => {
+    let serviceMoney =
+      arrayService.find((service) => service.id == packageId)?.price || 0;
+
     if (data.balance < serviceMoney) {
       closeModal();
       setErrorMoneyPush(true);
+
       return;
     }
 
-    const formatTime = moment(time).format("HH:mm");
-    await pushPost(token, id, value, String(formatTime));
-    data.posts.map((item) => {
-      if (item.id == id) {
-        item.post_pushes.push({
-          id: id,
-          schedule: String(formatTime),
-        });
-        return;
-      }
-    });
-    data.balance = data.balance - serviceMoney;
-    setData(data);
+    const formatTime = moment(time).format("YYYY-MM-DD HH:mm");
     closeModal();
-    setSuccessPush(true);
-    setTimeout(() => {
-      setSuccessPush(false);
-    }, 3000);
+    setLoading(true);
+    const { result, advertise } = await pushPost(
+      token,
+      id,
+      packageId,
+      String(formatTime)
+    );
+
+    if (result) {
+      data.posts.forEach((item) => {
+        if (item.id == id) {
+          item.advertise = advertise;
+          return;
+        }
+      });
+
+      data.balance = data.balance - serviceMoney;
+
+      setData({ ...data });
+      setLoading(false);
+      setSuccessPush(true);
+    } else {
+      setLoading(false);
+      setErrorTime(true);
+    }
   };
+
   setTimeout(() => {
     setErrorMoneyPush(false);
+    setErrorTime(false);
   }, 3000);
 
   return (
@@ -190,7 +249,11 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       <ProfileProvider>
         <Modal>
           <PageWrapper>
-            <ContenHeader data={data} onChangeFollow={onChangeFollow} />
+            <ContenHeader
+              data={data}
+              onChangeFollow={onChangeFollow}
+              scrollTo={scrollToManageTable}
+            />
 
             <ContainBody>
               <BodyContain>
@@ -198,11 +261,12 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                   balance={data.balance}
                   dataPost={data}
                   setActiveTab={setActiveTab}
+                  setActive={scrollToManageTable}
                 />
                 {/* <Point deviceType={deviceType} /> */}
               </BodyContain>
 
-              <ContentContainer>
+              <ContentContainer ref={ref}>
                 <TabContain>
                   <TabPanel
                     active={activeTab}
@@ -216,7 +280,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                   {activeTab === "postingPosts" ? (
                     <WrapCard
                       onDeletePost={onDeletePost}
-                      data={posting}
+                      data={data.active_posts}
                       currentUser={true}
                       onMarkedPost={onMarkedPost}
                       onPush={onPush}
@@ -232,14 +296,14 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                   ) : null}
                   {activeTab === "soldPosts" ? (
                     <WrapCard
-                      data={data.sold_post}
+                      data={data.sold_posts}
                       currentUser={true}
                       onDeletePost={onDeletePost}
                     />
                   ) : null}
                   {activeTab === "pushPosts" ? (
                     <WrapCard
-                      data={data.posts}
+                      data={data.pushing_posts}
                       pushNews={true}
                       currentUser={true}
                       onDeletePost={onDeletePost}
@@ -254,14 +318,14 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                     />
                   ) : null}
                   {activeTab === "following" ? (
-                    <ManagePost data={data.following} />
+                    <ManagePost data={data.followings} />
                   ) : null}
 
                   {activeTab === "follower" ? (
                     <ManagePost data={data.followers} />
                   ) : null}
                   {activeTab === "review" ? (
-                    <ManagePostReview userId={data.id} />
+                    <ManagePostReview data={data.reviews} userId={data.id} />
                   ) : null}
                 </ContentBox>
               </ContentContainer>
@@ -274,6 +338,14 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
               <Notice
                 status={"errror"}
                 content={"Vui lòng nạp đủ tiền để  sử dụng dịch vụ!"}
+              />
+            ) : null}
+            {errorTime ? (
+              <Notice
+                status={"errror"}
+                content={
+                  "Vui lòng chọn thời gian bắt đầu từ thời điểm hiện tại"
+                }
               />
             ) : null}
             <Footer />
@@ -293,6 +365,28 @@ export async function getServerSideProps(context) {
     context.res.end();
   }
   const data = await getProfile(token);
+  if (data) {
+    const posts = await getMyPosts(token);
+    const followers = await getFollowers(data.id);
+    const followings = await getFollowings(data.id);
+    const reviews = await getReviews(data.id);
+    data.posts = posts;
+    data.followers = followers;
+    data.reviews = reviews;
+    data.followings = followings;
+
+    data.waiting_approve_posts = data.posts.filter(
+      (post) => post.status === post_status.WAITING
+    );
+
+    data.sold_posts = data.posts.filter(
+      (post) => post.status === post_status.SOLD
+    );
+    data.active_posts = data.posts.filter(
+      (post) => post.status === post_status.ACTIVE
+    );
+    data.pushing_posts = data.posts.filter((post) => post.advertise != null);
+  }
 
   return {
     props: {

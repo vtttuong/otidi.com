@@ -4,6 +4,8 @@ import NavLink from "components/nav-link/nav-link";
 
 const NoticeWrapper = styled.div`
   box-sizing: border-box;
+  z-index: 999;
+
   .btn-remove {
     position: absolute;
     right: -12px;
@@ -17,10 +19,13 @@ const NoticeWrapper = styled.div`
     font-size: 15px;
   }
   display: flex;
-  width: 30%;
+  width: 90%;
+  max-width: 400px;
+
   margin: 0 auto;
   position: fixed;
-  left: 35%;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 0;
   align-items: center;
   justify-content: center;
@@ -28,7 +33,7 @@ const NoticeWrapper = styled.div`
   border-radius: 10px;
   bottom: 20px;
   padding: 10px;
- 
+
   &.notice-success {
     background: #0a735f;
     color: #fff;
@@ -43,9 +48,6 @@ const NoticeWrapper = styled.div`
     margin-left: 10px;
     margin-right: 10px;
     width: 30px;
-  }
-  @media only screen and (max-width: 1199px) {
-    width: 100%;
   }
 `;
 
@@ -78,7 +80,7 @@ const SidebarBottom = styled.div`
   background-color: ${themeGet("colors.gray.200", "#f7f7f7")};
 `;
 
-const SidebarMenu = styled(NavLink) <any>`
+const SidebarMenu = styled(NavLink)<any>`
   display: flex;
   a {
     font-family: ${themeGet("fonts.body", "Lato")};

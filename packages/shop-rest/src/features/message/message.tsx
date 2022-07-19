@@ -6,6 +6,7 @@ const PageWrapper = styled.div`
   height: auto;
   display: flex;
   flex-wrap: wrap;
+  gap: 20px;
   background-color: ${themeGet("colors.white", "#ffffff")};
   padding: 0px 70px;
   &.message-chat {
@@ -15,13 +16,19 @@ const PageWrapper = styled.div`
   }
   justify-content: center;
 
-
+  @media only screen and (max-width: 990px) {
+    padding: 0px;
+    margin-top: 68px;
+  }
 
   @media only screen and (max-width: 990px) {
     padding: 0px;
     margin-top: 68px;
   }
 
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 
   @media only screen and (min-width: 991px) and (max-width: 1280px) {
     padding: 0px 15px;

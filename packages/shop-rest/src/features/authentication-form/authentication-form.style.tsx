@@ -26,19 +26,25 @@ export const Container = styled.div`
   .facebook-login-button {
     width: 100%;
     height: 48px;
+    cursor: pointer;
+    display: flex;
     text-align: center;
     background: #4267b2;
     margin-bottom: 10px;
     border-radius: 6px;
-    padding: 0px 30px;
+    padding: auto;
     font-size: 15px;
     font-family: "Lato";
     color: #ffffff;
     font-weight: 700;
     border: 0px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 
-    .fa-facebook {
-      margin-right: 7px;
+    svg {
+      top: 10px;
+      display: inline-block;
     }
   }
 

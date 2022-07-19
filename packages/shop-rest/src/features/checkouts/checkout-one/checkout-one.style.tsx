@@ -335,6 +335,13 @@ export const OrderAmount = styled.span`
   font-weight: ${themeGet("fontWeights.bold", "700")};
   color: ${themeGet("colors.text.bold", "#0D1136")};
   line-height: 24px;
+
+  display: flex;
+  align-items: center;
+
+  > span {
+    display: inline-block;
+  }
 `;
 
 export const OrderSummaryItem = styled.div`

@@ -1,8 +1,9 @@
 import { Modal } from "@redq/reuse-modal";
 import { SEO } from "components/seo";
+import { AuthContext } from "contexts/auth/auth.context";
 import AuthenticationForm from "features/authentication-form";
 import Footer from "layouts/footer";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 
 const Heading = styled.p`
@@ -50,6 +51,13 @@ export function Welcome() {
 }
 
 export default function Login() {
+  const { authDispatch } = useContext<any>(AuthContext);
+
+  useEffect(() => {
+    authDispatch({
+      type: "SIGNIN",
+    });
+  }, []);
   return (
     <Modal>
       <SEO title="Login-2hands" description="Login" />

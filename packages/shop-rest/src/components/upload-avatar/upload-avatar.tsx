@@ -1,10 +1,12 @@
 import { Camera } from "assets/icons/camera";
 import { AvatarModal } from "components/avatar-modal/avatar-modal";
 import { ImageCrop } from "components/image-crop/image-crop";
-import React, { useState } from "react";
+import Image from "components/image/image";
+import React, { useCallback, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { getCookie } from "utils/session";
 import { MainDiv, ProfileImageDiv } from "./upload-avatar.style";
+import placeholder from "./placeholder.png";
 
 export const verifyFile = (file, acceptedFileExtensions) => {
   const { name } = file;
@@ -28,6 +30,7 @@ const UploadAvatar: React.FC<{}> = () => {
   let imageEditor = null;
   const [imageData, setImageData] = useState(initialState);
   const [showModal, setShowModal] = useState(false);
+  const [avatarValue, setAvatarValue] = useState(null);
 
   const setEditorRef = (editor) => {
     imageEditor = editor;
@@ -39,12 +42,15 @@ const UploadAvatar: React.FC<{}> = () => {
 
   const onImageCrop = () => {
     if (imageEditor !== null) {
-      const url = imageEditor.getImageScaledToCanvas().toDataURL();
+      const img = imageEditor.getImageScaledToCanvas();
+      const url = img.toDataURL();
+
       setImageData({
         ...imageData,
         userProfileImage: url,
       });
     }
+
     toggleModal();
   };
 
@@ -62,20 +68,23 @@ const UploadAvatar: React.FC<{}> = () => {
   };
 
   const renderProfileImage = () => {
-    let avata = getCookie("userAvatar");
-    avata = process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/storage/" + avata;
+    let avatar = getCookie("userAvatar");
     const profileImage = imageData.userProfileImage
       ? imageData.userProfileImage
-      : avata;
+      : avatar;
+    console.log("RENDER");
 
-    return <img className="profile-image" src={profileImage} alt="user-logo" />;
+    return profileImage ? (
+      <img src={profileImage} alt="user-logo" />
+    ) : (
+      <Image url={placeholder} />
+    );
   };
 
   return (
     <ProfileImageDiv>
       <MainDiv>
         {renderProfileImage()}
-
         <br />
         <label
           className="label-upload"

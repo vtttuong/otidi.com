@@ -14,7 +14,6 @@ interface props {
 interface state {}
 
 export class Avatar extends React.Component<props, state> {
-  
   constructor(props: props) {
     super(props);
   }
@@ -28,12 +27,16 @@ export class Avatar extends React.Component<props, state> {
         width={this.props.width ?? 50}
         height={this.props.height ?? 50}
         src={this.props.src}
-        style={{ borderRadius: this.props.radius ?? 25, cursor: 'pointer' }}
+        style={{
+          borderRadius: this.props.radius ?? 25,
+          cursor: "pointer",
+          objectFit: "cover",
+        }}
         alt="avatar"
         onClick={() => {
-          if (this.props.type == 'post') {
-            Router.push("/[type]/[slug]", `/${this.props.post.category_type}/${this.props.post.slug}`);
-          } else if (this.props.type == 'user') {
+          if (this.props.type == "post") {
+            Router.push("/posts/[id]", `/posts/${this.props.post.id}`);
+          } else if (this.props.type == "user") {
             Router.push("/profile/[id]", `/profile/${this.props.clientId}`);
           }
         }}

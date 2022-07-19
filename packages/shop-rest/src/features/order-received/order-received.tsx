@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import OrderReceivedWrapper, {
   OrderReceivedContainer,
@@ -10,8 +10,8 @@ import OrderReceivedWrapper, {
   ListItem,
   ListTitle,
   ListDes,
-} from './order-received.style';
-import { FormattedMessage } from 'react-intl';
+} from "./order-received.style";
+import { FormattedMessage } from "react-intl";
 import { numberWithCommas } from "utils/formatNumber";
 
 type OrderReceivedProps = {};
@@ -19,23 +19,34 @@ type OrderReceivedProps = {};
 const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const router = useRouter();
   const { query } = router;
+  const isSuccess = !query.errorCode || query.errorCode.length === 0;
+
+  console.log("🚀 ~ file: order-received.tsx ~ line 22 ~ query", query);
 
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>
         <Link href="/profile">
           <a className="home-btn">
-            <FormattedMessage id="backProfileBtn"/>
+            <FormattedMessage id="backProfileBtn" />
           </a>
         </Link>
 
         <OrderInfo>
           <BlockTitle>
-            <FormattedMessage id="paymentSubscriptionText" />
+            {isSuccess ? (
+              <FormattedMessage id="paymentSubscriptionTextSuccess" />
+            ) : (
+              <FormattedMessage id="paymentSubscriptionTextFailed" />
+            )}
           </BlockTitle>
 
           <Text>
-            <FormattedMessage id="paymentSubscriptionSuccess"  />
+            {isSuccess ? (
+              <FormattedMessage id="paymentSubscriptionSuccess" />
+            ) : (
+              <FormattedMessage id="paymentSubscriptionFailed" />
+            )}
           </Text>
         </OrderInfo>
 
@@ -73,7 +84,9 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-              <Text>{query.orderInfo}{' '}<FormattedMessage id="paymentType" /></Text>
+              <Text>
+                {query.orderInfo} <FormattedMessage id="paymentType" />
+              </Text>
             </ListDes>
           </ListItem>
 

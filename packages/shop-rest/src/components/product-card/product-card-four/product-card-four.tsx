@@ -26,7 +26,7 @@ import {
   PostMeta,
   SellLabel,
   SellLabelTop,
-} from "../post-card.style";
+} from "../product-card.style";
 
 type CardProps = {
   name?: string;

@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "components/button/button";
-import SelectFieldCategory from "components/drop-op/drop-op";
+import SelectBrand from "components/drop-op/drop-op";
 import { Input } from "components/forms/input";
 import { Label } from "components/forms/label";
 import Uploader from "components/upload/upload";
@@ -32,161 +32,21 @@ import FormWrapper, {
   Require,
 } from "./post-form.style";
 import { openModal } from "@redq/reuse-modal";
-import SelectCategory from "../select-category/select-category";
 import { PostFormContext } from "contexts/post-form/post-form.context";
 import { LongArrowLeft } from "assets/icons/LongArrowLeft";
 import NumberFormat from "react-number-format";
 import { getCookie } from "utils/session";
-
-export const unitOptions = [
-  { index: 0, key: "unit", value: "VND", label: "VND" },
-  { index: 1, key: "unit", value: "USD", label: "USD" },
-];
-
-export const postType = [
-  {
-    index: 0,
-    key: "type",
-    value: "sell",
-    label: <FormattedMessage id="sell" />,
-  },
-  {
-    index: 1,
-    key: "type",
-    value: "buy",
-    label: <FormattedMessage id="buy" />,
-  },
-];
-
-export const postStatus = [
-  {
-    index: 0,
-    key: "postStatus",
-    value: "new",
-    label: <FormattedMessage id="newStatus" />,
-  },
-  {
-    index: 1,
-    key: "postStatus",
-    value: "old_not_repaired",
-    label: <FormattedMessage id="oldNotRepaired" />,
-  },
-  {
-    index: 2,
-    key: "postStatus",
-    value: "old_and_repaired",
-    label: <FormattedMessage id="oldRepaired" />,
-  },
-];
+import { unitOptions } from "./options";
+import ErrorModel from "features/on-error/error";
 
 const TextArea = dynamic(() => import("../../components/text-area/text-area"), {
   ssr: false,
 });
 
 const Step1 = (props) => {
+  const { state, dispatch } = useContext(PostFormContext);
   if (props.currentStep !== 1) {
-    return null;
-  }
-  const { state, dispatch } = useContext(PostFormContext);
-
-  return (
-    <div>
-      <Row>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Heading>
-            <FormattedMessage
-              id="selectCategory"
-              defaultMessage="Choose a posting category"
-            />
-          </Heading>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col xs={4} sm={4} md={4} lg={4}>
-          <Label>
-            <FormattedMessage id="typeOfCategory" />
-            <Require>*</Require>
-          </Label>
-          <SelectFieldCategory options={props.categoryTypes} />
-        </Col>
-
-        <Col xs={8} sm={8} md={8} lg={8}>
-          <Label>
-            <FormattedMessage
-              id="categoryOption"
-              defaultMessage="Select category"
-            />
-            <Require>*</Require>
-          </Label>
-
-          <ButtonCategory
-            className={"button-select-category"}
-            onClick={() => {
-              if (state.fieldId !== undefined) {
-                openModal({
-                  show: true,
-                  overlayClassName: "quick-view-overlay",
-                  closeOnClickOutside: false,
-                  component: SelectCategory,
-                  closeComponent: "",
-                  config: {
-                    enableResizing: false,
-                    disableDragging: true,
-                    className: "quick-view-modal",
-                    width: "500px",
-                    height: "auto",
-                  },
-                  componentProps: { fields: props.fields },
-                });
-              }
-            }}
-          >
-            {state.categoryTitle ? state.categoryTitle : <SelectCat />}
-            {state.categoryTitle == "" ? (
-              <Error>
-                <FormattedMessage id={"errorSubCat"} />
-              </Error>
-            ) : null}
-          </ButtonCategory>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Heading>
-            <FormattedMessage id="postType" defaultMessage="Type of post" />
-          </Heading>
-          <div style={{ minWidth: "100%" }}>
-            <Select
-              instanceId="type-of-post"
-              classNamePrefix="filter"
-              styles={CustomStyles}
-              options={postType}
-              defaultValue={postType[0]}
-              value={postType[state.indexOptionType]}
-              onChange={(data) => {
-                dispatch({
-                  type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.value, field: "type" },
-                });
-                dispatch({
-                  type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.index, field: "indexOptionType" },
-                });
-              }}
-            />
-          </div>
-        </Col>
-      </Row>
-    </div>
-  );
-};
-
-const Step2 = (props) => {
-  const { state, dispatch } = useContext(PostFormContext);
-  if (props.currentStep !== 2) {
-    return null;
+    return <div></div>;
   }
 
   return (
@@ -261,6 +121,62 @@ const Step2 = (props) => {
           </Label>
           <div style={{ minWidth: "100%" }}>
             <Select
+              isDisabled={true}
+              instanceId="input-unit"
+              classNamePrefix="filter"
+              styles={CustomStyles}
+              options={unitOptions}
+              defaultValue={unitOptions[0]}
+              value={unitOptions[state.indexOptionUnit]}
+              onChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.value, field: "unit" },
+                });
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.index, field: "indexOptionUnit" },
+                });
+              }}
+            />
+          </div>
+        </Col>
+      </Row>
+
+      {/* <Row>
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputPrice" />
+            <Require>*</Require>
+          </Label>
+          <InputPrice>
+            <NumberFormat
+              className="inputPrice"
+              label="Price"
+              name="price"
+              thousandSeparator={true}
+              onValueChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.floatValue, field: "discountPrice" },
+                });
+              }}
+              background="#F7F7F7"
+              height="48px"
+              placeholder="Enter discount price"
+              value={state.discountPrice}
+              autoComplete={"off"}
+            />
+          </InputPrice>
+        </Col>
+
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputUnit" />
+          </Label>
+          <div style={{ minWidth: "100%" }}>
+            <Select
+              isDisabled={true}
               instanceId="input-unit"
               classNamePrefix="filter"
               styles={CustomStyles}
@@ -283,9 +199,65 @@ const Step2 = (props) => {
       </Row>
 
       <Row>
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputPrice" />
+            <Require>*</Require>
+          </Label>
+          <InputPrice>
+            <NumberFormat
+              className="inputPrice"
+              label="Price"
+              name="price"
+              thousandSeparator={true}
+              onValueChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.floatValue, field: "priceAfterTax" },
+                });
+              }}
+              background="#F7F7F7"
+              height="48px"
+              placeholder="Enter price after tax"
+              value={state.priceAfterTax}
+              autoComplete={"off"}
+            />
+          </InputPrice>
+        </Col>
+
+        <Col xs={6} sm={6} md={6} lg={6}>
+          <Label>
+            <FormattedMessage id="inputUnit" />
+          </Label>
+          <div style={{ minWidth: "100%" }}>
+            <Select
+              isDisabled={true}
+              instanceId="input-unit"
+              classNamePrefix="filter"
+              styles={CustomStyles}
+              options={unitOptions}
+              defaultValue={unitOptions[0]}
+              value={unitOptions[state.indexOptionUnit]}
+              onChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.value, field: "unit" },
+                });
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.index, field: "indexOptionUnit" },
+                });
+              }}
+            />
+          </div>
+        </Col>
+      </Row> */}
+
+      <Row>
         <Col xs={12} sm={12} md={12} lg={12}>
           <Label>
             <FormattedMessage id="description" />
+            <Require>*</Require>
           </Label>
           <NoteSmallText>
             <FormattedMessage
@@ -301,11 +273,15 @@ const Step2 = (props) => {
   );
 };
 
-const Step3 = (props) => {
+const Step2 = (props) => {
   const { state, dispatch } = useContext(PostFormContext);
-  if (props.currentStep !== 3) {
-    return null;
+
+  if (props.currentStep !== 2) {
+    return <div></div>;
   }
+
+  console.log("STATE: ", state);
+
   return (
     <div>
       <Row>
@@ -324,12 +300,9 @@ const Step3 = (props) => {
             intlUploadText="rmUploadText"
           />
         </Col>
-        {(state.files != "" &&
-          state.files.length >= 0 &&
-          state.files.length < 2) ||
-        props.errorImage != "" ? (
+        {props.errorImage !== "" ? (
           <Error>
-            <FormattedMessage id="errorImage" />
+            <FormattedMessage id={props.errorImage} />
           </Error>
         ) : null}
       </Row>
@@ -337,29 +310,29 @@ const Step3 = (props) => {
   );
 };
 
-const Step4 = (props) => {
-  if (props.currentStep !== 4) {
+const Step3 = (props) => {
+  const { state, dispatch } = useContext(PostFormContext);
+  const [errorSubmit, setErrorSubmit] = useState("");
+
+  if (props.currentStep !== 3) {
     return null;
   }
 
-  return (
-    <div>
-      <Row>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Label>
-            <FormattedMessage id="location" />
-          </Label>
-          <QuickForm initialValues={[]} />
-        </Col>
-      </Row>
-    </div>
-  );
-};
-
-const Step5 = (props) => {
-  if (props.currentStep !== 5) {
-    return null;
-  }
+  const onclickSubmit = () => {
+    if (
+      !state.modelId ||
+      state.modelId === "" ||
+      !state.additionalInfo.origin ||
+      state.additionalInfo.origin === "" ||
+      !state.additionalInfo.kilometers ||
+      parseInt(state.additionalInfo.kilometers) <= 0
+    ) {
+      setErrorSubmit("Error");
+    } else {
+      setErrorSubmit("");
+      props.handleSubmit();
+    }
+  };
 
   return (
     <div>
@@ -381,15 +354,20 @@ const Step5 = (props) => {
         </Col>
       </Row>
 
-      <Row>{props.additionalFormByCat}</Row>
+      <Row>{props.additionalForm}</Row>
 
       <SubmitBtnWrapper>
+        {errorSubmit !== "" ? (
+          <Error className="errorStep1">
+            <FormattedMessage id="ErrorStep" />
+          </Error>
+        ) : null}
         <Button
           type="button"
-          onClick={props.handleSubmit}
+          onClick={onclickSubmit}
           size="big"
           loading={props.loading}
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginTop: "20px" }}
         >
           <FormattedMessage
             id="submitRequest"
@@ -400,6 +378,7 @@ const Step5 = (props) => {
     </div>
   );
 };
+
 type Props = {
   deviceType?: {
     mobile: boolean;
@@ -407,37 +386,23 @@ type Props = {
     desktop: boolean;
   };
   title?: string;
-  categoryTypes: any;
-  fields: any;
+  brands: any;
 };
-
-const PostFormUpdate: React.FC<Props> = ({
-  deviceType,
-  title,
-  categoryTypes,
-  fields,
-}) => {
+const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
   const { state, dispatch } = useContext(PostFormContext);
   const [currentStep, setCurrentStep] = useState(1);
-  const [errorImage, setErrorImage] = useState("");
   const [errorStep, setErrorStep] = useState("");
+  const [errorImage, setErrorImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const ACCEPTED_SIZE = 512 * 1000;
 
   const _next = () => {
-    if (currentStep == 1) {
-      if (state.fieldId && state.categoryTitle && state.type) {
-        let newStep = currentStep;
-        newStep = newStep + 1;
-        setCurrentStep(newStep);
-        setErrorStep("");
-      } else {
-        setErrorStep("error");
-      }
-    }
-    if (currentStep == 2) {
+    if (currentStep === 1) {
       if (
         state.title &&
         state.price &&
+        state.discountPrice &&
+        state.priceAfterTax &&
         state.unit &&
         state.description !== ""
       ) {
@@ -449,24 +414,28 @@ const PostFormUpdate: React.FC<Props> = ({
         setErrorStep("error");
       }
     }
-    if (currentStep == 3) {
-      if (state.files != "" && state.files.length >= 2) {
-        let newStep = currentStep;
-        newStep = newStep + 1;
-        setCurrentStep(newStep);
-        setErrorStep("");
-      } else {
-        setErrorImage("error");
+
+    if (currentStep === 2) {
+      if (!state.files || state.files === "" || state.files.length <= 3) {
+        setErrorImage("errorImage.length");
+        return;
       }
-    }
-    if (currentStep == 4) {
-      if (state.address != "") {
+
+      let isOverSize = false;
+
+      state.files.forEach((file) => {
+        if (file.size && file.size > ACCEPTED_SIZE) {
+          setErrorImage("errorImage.size");
+          isOverSize = true;
+          return;
+        }
+      });
+
+      if (!isOverSize) {
         let newStep = currentStep;
         newStep = newStep + 1;
         setCurrentStep(newStep);
         setErrorStep("");
-      } else {
-        setErrorStep("error");
       }
     }
   };
@@ -474,6 +443,7 @@ const PostFormUpdate: React.FC<Props> = ({
   const _prev = () => {
     let newStep = currentStep;
     newStep = newStep - 1;
+    setErrorStep("");
     setCurrentStep(newStep);
   };
 
@@ -501,22 +471,23 @@ const PostFormUpdate: React.FC<Props> = ({
   };
 
   const nextButton = () => {
-    if (currentStep < 5) {
+    if (currentStep < 3) {
       return (
         <SubmitBtnWrapper>
-          <Button
-            type="button"
-            size="big"
-            onClick={_next}
-            style={{ width: "100%" }}
-          >
-            <FormattedMessage id="nextBtn" defaultMessage="Next" />
-          </Button>
           {errorStep ? (
             <Error className="errorStep1">
               <FormattedMessage id="ErrorStep" />
             </Error>
           ) : null}
+
+          <Button
+            type="button"
+            size="big"
+            onClick={_next}
+            style={{ width: "100%", marginTop: "20px" }}
+          >
+            <FormattedMessage id="nextBtn" defaultMessage="Next" />
+          </Button>
         </SubmitBtnWrapper>
       );
     }
@@ -527,28 +498,29 @@ const PostFormUpdate: React.FC<Props> = ({
     setLoading(true);
 
     const token = getCookie("access_token");
-    var formData = new FormData();
 
-    formData.set("title", state.title);
-    formData.set("description", state.description);
-    formData.set("price", state.price);
-    formData.set("unit", state.unit);
-    formData.set("category_id", state.categoryId);
-    formData.set("address", state.address);
-    formData.set("type", state.type);
-    formData.set("latitude", state.latitude);
-    formData.set("longitude", state.longitude);
+    var formdata = new FormData();
+    formdata.append("title", state.title);
+    formdata.append("description", state.description);
+    formdata.append("brand_id", state.brandId);
+    formdata.append("brand_model_id", state.modelId);
+    formdata.append("price", state.price);
 
-    if (Object.keys(state.files).length > 1) {
-      state.files.forEach((file) => {
-        formData.append("files[]", file);
-      });
-    } else {
-      formData.append("files[]", state.files);
-    }
-    Object.keys(state.additionalInfo).forEach((key) =>
-      formData.append(`additional_info[${key}]`, state.additionalInfo[key])
-    );
+    Object.keys(state.additionalInfo).forEach((key) => {
+      formdata.append(`detail[${key}]`, state.additionalInfo[key]);
+    });
+
+    state.files.forEach((file, index) => {
+      if (file.url) {
+        formdata.append(`images[${index}][path]`, file.url);
+      } else {
+        formdata.append(`images[${index}][file]`, file);
+      }
+      formdata.append(`images[${index}][is_main]`, index === 0 ? "1" : "0");
+      formdata.append(`images[${index}][position]`, index);
+    });
+
+    formdata.set(`detail[origin]`, "inland");
 
     const configs = {
       headers: {
@@ -559,17 +531,21 @@ const PostFormUpdate: React.FC<Props> = ({
 
     axios
       .post(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL +
-          `/api/client/v1/posts/${state.postId}`,
-        formData,
+        process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + `/posts/${state.id}`,
+        formdata,
         configs
       )
       .then((response) => {
-        if (response.status === 200) {
+        console.log(response);
+
+        if (
+          (response.status === 200 || response.status === 201) &&
+          response.data.success
+        ) {
           openModal({
             show: true,
             overlayClassName: "quick-view-overlay",
-            closeOnClickOutside: false,
+            closeOnClickOutside: true,
             component: SuccessModel,
             closeComponent: "",
             config: {
@@ -579,14 +555,14 @@ const PostFormUpdate: React.FC<Props> = ({
               width: "500px",
               height: "auto",
             },
-            componentProps: { textId: "updatePostSuccess" },
+            componentProps: { textId: "updateSuccess" },
           });
         } else {
           openModal({
             show: true,
             overlayClassName: "quick-view-overlay",
-            closeOnClickOutside: false,
-            component: SuccessModel,
+            closeOnClickOutside: true,
+            component: ErrorModel,
             closeComponent: "",
             config: {
               enableResizing: false,
@@ -595,17 +571,18 @@ const PostFormUpdate: React.FC<Props> = ({
               width: "500px",
               height: "auto",
             },
-            componentProps: { textId: "updatePostFailed" },
+            componentProps: { textId: "createPostFailed" },
           });
         }
         setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         openModal({
           show: true,
           overlayClassName: "quick-view-overlay",
-          closeOnClickOutside: false,
-          component: SuccessModel,
+          closeOnClickOutside: true,
+          component: ErrorModel,
           closeComponent: "",
           config: {
             enableResizing: false,
@@ -614,7 +591,7 @@ const PostFormUpdate: React.FC<Props> = ({
             width: "500px",
             height: "auto",
           },
-          componentProps: { textId: "updatePostFailed" },
+          componentProps: { textId: "createPostFailed" },
         });
       });
   };
@@ -624,9 +601,8 @@ const PostFormUpdate: React.FC<Props> = ({
     files.map((file) => {
       fileCollection.push(file);
     });
-    setErrorImage("");
+    // setErrorImage("");
   };
-
   return (
     <form>
       <FormWrapper>
@@ -638,25 +614,18 @@ const PostFormUpdate: React.FC<Props> = ({
             </FormTitle>
           </FormTitleWrapper>
 
-          <Step1
-            currentStep={currentStep}
-            categoryTypes={categoryTypes}
-            fields={fields}
-          />
-          <Step2 currentStep={currentStep} />
-          <Step3
+          <Step1 currentStep={currentStep} />
+
+          <Step2
             currentStep={currentStep}
             handleUploader={handleUploader}
             errorImage={errorImage}
           />
-          <Step4 currentStep={currentStep} />
-          <Step5
+          <Step3
             currentStep={currentStep}
             loading={loading}
             handleSubmit={onSubmit}
-            additionalFormByCat={
-              <FormAdditional categorySlug={state.categorySlug} />
-            }
+            additionalForm={<FormAdditional brands={brands} />}
           />
           {nextButton()}
         </Container>

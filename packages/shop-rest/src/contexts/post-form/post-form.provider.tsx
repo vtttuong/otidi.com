@@ -9,10 +9,10 @@ function reducer(state: any, action: Action): any {
   switch (action.type) {
     case "HANDLE_ON_SELECT_CHANGE":
       // Trường hợp không muốn xóa các ảnh trong state cũ đang có
-      // if (action.payload.field == 'files') {
-      //   return { 
-      //     ...state, 
-      //     [action.payload.field]: [action.payload.value, ...state.files] 
+      // if (action.payload.field == "files") {
+      //   return {
+      //     ...state,
+      //     [action.payload.field]: [...action.payload.value, ...state.files],
       //   };
       // }
       return { ...state, [action.payload.field]: action.payload.value };
@@ -22,7 +22,7 @@ function reducer(state: any, action: Action): any {
         additionalInfo: {
           ...state.additionalInfo,
           [action.payload.field]: action.payload.value,
-        }
+        },
       };
     default:
       return state;

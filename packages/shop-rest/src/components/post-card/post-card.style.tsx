@@ -101,6 +101,7 @@ export const DotDelete = styled.span`
   }
 `;
 export const BoxAvatar = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -128,18 +129,27 @@ export const BoxAvatar = styled.div`
     span {
       font-size: 12px;
       margin-left: 15px;
-      margin-top: 4px;
+      display: inline-flex;
+      align-items: end;
     }
     span.view img {
+      position: relative;
       width: 18px;
-      height: 18px;
-      margin-top: 3px;
+      height: auto;
+      top: 2px;
     }
     span > img {
       width: 15px;
       height: 15px;
       border-radius: 0;
       margin-right: 5px;
+      line-height: 1;
+      margin-top: auto;
+    }
+
+    span > p {
+      font-weight: bold;
+      line-height: 1;
     }
   }
 `;
@@ -238,7 +248,7 @@ export const PostInfo = styled.div`
     font-size: ${themeGet("fontSizes.base", "15")}px;
     font-weight: ${themeGet("fontWeights.bold", "700")};
     color: ${themeGet("colors.text.bold", "#0D1136")};
-    margin: 0 0 7px 0;
+    margin: 0 0 20px 0;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -691,12 +701,71 @@ export const PostMeta = styled.div`
       gap: 10px;
     }
   }
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 8px;
+  }
 `;
 
 export const DeliveryOpt = styled.span`
   span.dadoi {
     background: #54565a !important;
   }
+
+  span.label,
+  span.persion:nth-child(1) {
+    // position: absolute;
+    // bottom: -35px;
+    right: 0;
+    background: #009e7e;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 30px;
+    // border-bottom-right-radius: 5px;
+    margin-left: 5px;
+  }
+
+  span.persion:nth-child(2) {
+    // position: absolute;
+    // bottom: -35px;
+    // right: 70px;
+    background: #1874d4;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 30px;
+    // border-bottom-left-radius: 5px;
+    // border-bottom-right-radius: 5px;
+  }
+
+  span.persion:nth-child(3) {
+    position: absolute;
+    bottom: -35px;
+    right: 130px;
+    background: orange;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 30px;
+    // border-bottom-left-radius: 5px;
+    // border-bottom-right-radius: 5px;
+  }
+  span.persion:nth-child(4) {
+    position: absolute;
+    bottom: -35px;
+    right: 200px;
+    background: red;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 30px;
+    // border-bottom-left-radius: 5px;
+    // border-bottom-right-radius: 5px;
+  }
+
   span.doingay {
     top: 28px;
     min-width: 70px;

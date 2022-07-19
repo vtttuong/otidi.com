@@ -15,7 +15,7 @@ type Props = {
 const OTP: React.FC<Props> = ({ token }) => {
   const [loadingClear, setLoadingClear] = React.useState(false);
   const Completionist = () => {
-    return <p style={{ color: "red" }}>{"( 00 )"}</p>;
+    return <p style={{ color: "red" }}>Time out!!!</p>;
   };
 
   const renderer = ({ seconds, completed }) => {

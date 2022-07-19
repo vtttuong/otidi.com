@@ -11,7 +11,9 @@ import {
 } from "./post-details-one.style";
 
 type PostDetailsProps = {
-  slug: string;
+  slug?: string;
+  data: any;
+  user: any;
   userId: number;
   token: string;
   deviceType: {
@@ -23,18 +25,21 @@ type PostDetailsProps = {
 
 const PostDetails: React.FunctionComponent<PostDetailsProps> = ({
   slug,
+  data,
+  user,
   userId,
   token,
   deviceType,
 }) => {
+  console.log("🚀 ~ file: post-details-one.tsx ~ line 32 ~ data", data);
   const router = useRouter();
 
   return (
     <>
       <PostDetailsWrapper className="post-card" dir="ltr">
-        <PostDetailsLeft slug={slug} userId={userId} />
+        <PostDetailsLeft data={data} userId={userId} />
         <AuthorInfor>
-          <AuthorInfo />
+          <AuthorInfo data={user} />
         </AuthorInfor>
       </PostDetailsWrapper>
 
@@ -54,8 +59,7 @@ const PostDetails: React.FunctionComponent<PostDetailsProps> = ({
 
         <RecommendPosts
           token={token}
-          slug={slug}
-          type={router.query.type.toString()}
+          postId={data.id}
           deviceType={deviceType}
           loadMore={false}
           fetchLimit={8}

@@ -1,3 +1,4 @@
+import { CoinIcon } from "assets/icons/CoinIcon";
 import { UserAvatar } from "assets/icons/UserAvatar";
 import Image from "components/image/image";
 import moment from "moment";
@@ -36,7 +37,7 @@ const ContenHeader: React.FC<Props> = ({ data }) => {
                       height: 70,
                       objectFit: "cover",
                     }}
-                    src={data.avatar_img_url}
+                    src={data.avatar}
                     alt="img"
                   />
                 </div>
@@ -71,14 +72,23 @@ const ContenHeader: React.FC<Props> = ({ data }) => {
               style={{ justifyContent: "center" }}
             >
               <div className="wrap-header" style={{ cursor: "pointer" }}>
-                <div className="coin-icon" style={{ color: "rgb(228 168 16)" }}>
-                  <Image
-                    url={
-                      "https://www.flaticon.com/svg/static/icons/svg/550/550638.svg"
-                    }
-                    alt="coin"
-                  />
-                  <b style={{ fontSize: 16 }}>{data.cumulative_points}</b>
+                <div
+                  className="coin-icon"
+                  style={{
+                    color: "rgb(228 168 16)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                  }}
+                >
+                  <CoinIcon width="17px" height="17px" />
+                  <b
+                    style={{
+                      fontSize: 16,
+                    }}
+                  >
+                    {data.balance}
+                  </b>
                 </div>
                 <div className="content-like">
                   <p

@@ -66,6 +66,17 @@ const Box = styled.div`
     height: 50px;
     border-radius: 50%;
   }
+
+  & textarea {
+    outline: none;
+    border-radius: 5px;
+    transition: all 0.2s;
+    padding: 5px;
+
+    &:focus {
+      border: 2px solid #009e7f;
+    }
+  }
 `;
 
 export { Box };

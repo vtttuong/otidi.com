@@ -45,9 +45,10 @@ const Topbar = ({ refs }: any) => {
   const [outOfData, setOutOfData] = React.useState(false);
   const [notiUnRead, setNotiUnRead] = React.useState(0);
   const [allRead, setAllRead] = useState(false);
+  const NOTI_SIZE = 10;
   useEffect(() => {
     const fetchData = async () => {
-      const newData = await getNotifications(page, 2);
+      const newData = await getNotifications(page, NOTI_SIZE);
 
       if (newData && newData.length === 0) {
         setOutOfData(true);

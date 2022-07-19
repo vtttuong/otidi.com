@@ -53,6 +53,7 @@ export function Welcome() {
 
 export default function VerifyMail(props) {
   const { authDispatch } = React.useContext<any>(AuthContext);
+  console.log(AuthContext);
 
   useEffect(() => {
     authDispatch({
@@ -71,14 +72,17 @@ export default function VerifyMail(props) {
     </Modal>
   );
 }
-export async function getServerSideProps(context) {
-  const token = getCookie("access_token", context);
 
-  if (token === null) {
-    context.res.writeHead(302, { Location: "/login" });
-    context.res.end();
-  }
-  return {
-    props: { token: token },
-  };
-}
+// export async function getServerSideProps(context) {
+//   const token = getCookie("access_token", context);
+
+//   console.log("token", token);
+
+//   if (token === null) {
+//     context.res.writeHead(302, { Location: "/login" });
+//     context.res.end();
+//   }
+//   return {
+//     props: { token: token },
+//   };
+// }

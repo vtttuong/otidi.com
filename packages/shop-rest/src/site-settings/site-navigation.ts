@@ -23,6 +23,9 @@ export const MESSAGE_PAGE = "/message";
 export const HISTORY_SEARCH_PAGE = "/profile/history-search";
 export const HISTORY_PAY_PAGE = "/payment-history";
 export const PAYMENT_REQUEST = "/payment-request";
+export const LOGIN = "/login";
+export const POSTS = "/posts";
+export const UPDATE_PHONE = "/update-phone";
 // Mobile Drawer Menus
 
 export const PRIVACY_ITEM = {
