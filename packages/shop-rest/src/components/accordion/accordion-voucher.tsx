@@ -58,15 +58,8 @@ const Accordion: React.FC<AccordionProps> = ({
   items = [],
   token,
 }) => {
-  const [datas, setDatas] = React.useState(null);
   const router = useRouter();
-  const getAllTasks = async () => {
-    const tasks = await getTasks(token);
-    setDatas(tasks);
-  };
-  React.useEffect(() => {
-    getAllTasks();
-  }, []);
+
   return (
     <AccordionWrapper>
       <Collapse
@@ -75,9 +68,9 @@ const Accordion: React.FC<AccordionProps> = ({
         defaultActiveKey="active"
         expandIcon={expandIcon}
       >
-        {datas ? (
-          datas.length !== 0 &&
-          datas.map((item) => {
+        {items ? (
+          items.length !== 0 &&
+          items.map((item) => {
             return (
               <Panel
                 header={

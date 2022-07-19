@@ -21,6 +21,7 @@ import { getMyPosts } from "utils/api/profile";
 import NoResultFound from "components/no-result/no-result";
 import srcToFile from "utils/url-to-file";
 import NotFound from "components/notfound";
+import { CURRENCY } from "utils/constant";
 
 type Props = {
   deviceType: {
@@ -40,37 +41,40 @@ const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
     return <NotFound />;
   }
 
-  post.files = [];
-  post.images[0].url =
-    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  post.images[1].url =
-    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  post.images[2].url =
-    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  post.images[3].url =
-    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  // post.files = [];
+  // post.images[0].url =
+  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  // post.images[1].url =
+  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  // post.images[2].url =
+  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
+  // post.images[3].url =
+  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
 
-  post.images.forEach(async (image) => {
-    const file = await srcToFile(image.url, "image-" + uuid());
-    if (file) {
-      post.files.push(file);
-    }
-    console.log(post.files);
-  });
+  // post.images.forEach(async (image) => {
+  //   const file = await srcToFile(image.url, "image-" + uuid());
+  //   if (file) {
+  //     post.files.push(file);
+  //   }
+  //   console.log(post.files);
+  // });
 
   let initData = {
     id: post.id,
     title: post.title,
     description: post.description,
     indexOptionType: 0,
-    price: post.price,
-    unit: post.unit || "VND",
+    price: post.original_price,
+    originalPrice: post.original_price,
+    discountPrice: post.discount_price,
+    priceAfterTax: post.price_after_tax,
+    unit: post.unit || CURRENCY,
     indexOptionUnit: 0,
     brandId: post.brand_id,
     modelName: "",
     modelId: post.brand_model_id,
     indexBrand: 0,
-    files: post.files,
+    files: post.images,
     additionalInfo: {
       fuel: post.detail.fuel,
       gear: post.detail.gear,

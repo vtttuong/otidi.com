@@ -41,6 +41,7 @@ export class TabPanel extends React.Component<props, state> {
               cursor: "pointer",
               transition: "all 0.2s",
               height: "100%",
+              flex: 1,
             }}
             role="presentation"
             onClick={() => this.on(item.key.toString())}
@@ -62,6 +63,9 @@ export class TabPanel extends React.Component<props, state> {
             >
               {item.icon ? item.icon : null}{" "}
               <FormattedMessage id={item.key} defaultMessage="All" />
+              <span>
+                {"  "}({item.number})
+              </span>
             </div>
           </li>
         ))}

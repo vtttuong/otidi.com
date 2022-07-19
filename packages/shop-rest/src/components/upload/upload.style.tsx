@@ -44,6 +44,31 @@ export const Thumb = styled.div`
   height: 100px;
   padding: 4px;
   box-sizing: border-box;
+  position: relative;
+
+  & .remove {
+    display: flex;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background: red;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+
+    cursor: pointer;
+    vertical-align: middle;
+
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  &:hover .remove {
+    opacity: 1;
+  }
 `;
 
 export const ThumbInner = styled.div`

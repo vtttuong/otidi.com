@@ -21,12 +21,13 @@ import { useState } from "react";
 import { getPackage, getProfile } from "utils/api/profile";
 import { getCookie } from "utils/session";
 import Accordion from "components/accordion/accordion-voucher";
-import { exchange } from "utils/api/voucher";
+import { exchange, getAllVoucher, getMyVoucher } from "utils/api/voucher";
 import Notice from "components/notice/notice";
 import { isNull } from "util";
 import WrapMy from "features/wrap-card/wrap-card-myvoucher";
 import { siteMetadata } from "site-settings/site-metadata";
 import React from "react";
+import { getTasks } from "utils/api/tasks";
 
 type Props = {
   deviceType?: {
@@ -35,25 +36,10 @@ type Props = {
     desktop: boolean;
   };
   token: string;
+  dataVoucher: any;
   service?: any;
 };
-const dataTab2 = [
-  {
-    key: "allVoucher",
-    title: "Tất cả ưu đãi",
-    icon: <CheckMark width="15px" height="15px" color="green" />,
-  },
-  {
-    key: "myVoucher",
-    title: "Ưu đãi của tôi",
-    icon: <Hourglass color="#0000ff" width="15px" height="15px" />,
-  },
-  {
-    key: "getPoin",
-    title: "Săn điểm",
-    icon: <Sold />,
-  },
-];
+
 const accordionData = [
   {
     id: 1,
@@ -82,11 +68,32 @@ const accordionData = [
   },
 ];
 
-const VoucherPage: NextPage<Props> = ({ token }) => {
+const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
   const [activeTab, setActiveTab] = useState("allVoucher");
   const [data, setData] = useState([]);
   const [error, setError] = useState(0);
   const posting = [];
+
+  const dataTab2 = [
+    {
+      key: "allVoucher",
+      number: dataVoucher.allVouchers?.length || 0,
+      title: "Tất cả ưu đãi",
+      icon: <CheckMark width="15px" height="15px" color="green" />,
+    },
+    {
+      key: "myVoucher",
+      number: dataVoucher.myVouchers?.length || 0,
+      title: "Ưu đãi của tôi",
+      icon: <Hourglass color="#0000ff" width="15px" height="15px" />,
+    },
+    {
+      key: "getPoin",
+      number: dataVoucher.tasks?.length || 0,
+      title: "Săn điểm",
+      icon: <Sold />,
+    },
+  ];
 
   const onExchange = async (id) => {
     const result = await exchange(token, id);
@@ -131,15 +138,15 @@ const VoucherPage: NextPage<Props> = ({ token }) => {
                     <WrapVoucher
                       onExchange={onExchange}
                       token={token}
-                      data={posting}
+                      data={dataVoucher.allVouchers}
                     />
                   ) : null}
 
                   {activeTab === "myVoucher" ? (
-                    <WrapMy token={token} data={posting} />
+                    <WrapMy token={token} data={dataVoucher.myVouchers} />
                   ) : null}
                   {activeTab === "getPoin" ? (
-                    <Accordion token={token} items={accordionData} />
+                    <Accordion token={token} items={dataVoucher.tasks} />
                   ) : null}
                 </ContentBox>
               </ContentContainer>
@@ -169,9 +176,20 @@ export async function getServerSideProps(context) {
     context.res.end();
   }
 
+  const allVouchers = await getAllVoucher(token);
+  const myVouchers = await getMyVoucher(token);
+  const tasks = await getTasks(token);
+
+  const data = {
+    allVouchers: allVouchers,
+    myVouchers: myVouchers,
+    tasks: tasks,
+  };
+
   return {
     props: {
       token: token,
+      dataVoucher: data,
     }, // will be passed to the page component as props
   };
 }

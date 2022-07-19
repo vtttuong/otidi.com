@@ -7,7 +7,11 @@ import Logo from "layouts/logo/logo";
 import Router, { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
-import { POST_ITEM } from "site-settings/site-navigation";
+import {
+  POST_ITEM,
+  PROFILE_SETTING_PAGE,
+  UPDATE_PHONE,
+} from "site-settings/site-navigation";
 import {
   Arrow,
   Icon,
@@ -74,7 +78,10 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
 
   const checkAuth = () => {
     let token = getCookie("access_token");
+    let phoneNumber = getCookie("userPhone");
     let isVerifyPhone = getCookie("phone_verified_at");
+    let isVerifyEmail = getCookie("email_verified_at");
+    let isVerifyAddress = getCookie("userAddress");
     if (!token) {
       authDispatch({
         type: "SIGNIN",
@@ -82,9 +89,14 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
       Router.push("/login");
       return;
     }
-    if (token && isVerifyPhone?.length < 8) {
-      Router.push("/update-phone");
-      return;
+    if (token && (!phoneNumber || phoneNumber?.length < 8)) {
+      Router.push(PROFILE_SETTING_PAGE);
+    } else if (token && (!isVerifyPhone || isVerifyPhone.length <= 0)) {
+      Router.push(UPDATE_PHONE);
+    } else if (token && (!isVerifyEmail || isVerifyEmail.length <= 0)) {
+      Router.push(UPDATE_PHONE);
+    } else if (token && (!isVerifyAddress || isVerifyAddress.length <= 0)) {
+      Router.push(UPDATE_PHONE);
     } else {
       Router.push(POST_ITEM.href);
     }

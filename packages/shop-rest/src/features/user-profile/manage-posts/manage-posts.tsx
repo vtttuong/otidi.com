@@ -50,7 +50,11 @@ const ManagePost: React.FC<ManagePostProps> = ({
           <tbody>
             {data.length != 0
               ? data.map((d) => {
-                  const user = d.user ? d.user : d.follower;
+                  const user = d.user
+                    ? d.user
+                    : d.follower
+                    ? d.follower
+                    : d.following;
 
                   return (
                     <tr key={user.id}>
@@ -64,10 +68,6 @@ const ManagePost: React.FC<ManagePostProps> = ({
                       </td>
                       <td
                         onClick={() => {
-                          console.log(
-                            "🚀 ~ file: manage-posts.tsx ~ line 68 ~ ?data.map ~ currentId",
-                            currentId
-                          );
                           if (currentId == user.id) {
                             router.push("/profile");
                           } else {

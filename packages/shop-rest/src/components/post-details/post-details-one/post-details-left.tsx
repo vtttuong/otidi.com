@@ -85,10 +85,13 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
     getPost();
     setLocationHref(window.location.href);
   }, [locationHref, post]);
+  useEffect(() => {
+    onCheckLike();
+  }, [dataLike]);
 
   const getUserLiked = async (id) => {
-    // const datas = await getUserLike(id);
-    // setDataLike(datas);
+    const datas = await getUserLike(id);
+    setDataLike(datas);
   };
   const getUserSaved = async (id) => {
     // const datas = await getUserSave(id);
@@ -99,7 +102,6 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
     const token = getCookie("access_token");
     // const post = await getPostBySlug(token, slug);
     setPost(data);
-    onCheckLike(data);
     setLikeCount(data.likes_count);
     onCheckSave(data);
     setSaveCount(data.saves_count);
@@ -107,15 +109,16 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
     getUserSaved(data.id);
   };
 
-  const onCheckLike = (post) => {
+  const onCheckLike = () => {
     setLiked(false);
-    // post.likes?.map((like) => {
-    //   if (like.user_id == userId) {
-    //     setLiked(true);
-    //     return;
-    //   }
-    // });
+    dataLike?.map((like) => {
+      if (like.user.id == userId) {
+        setLiked(true);
+        return;
+      }
+    });
   };
+
   const onCheckSave = (post) => {
     setSuccessSave(false);
     // post.saves?.map((save) => {
@@ -129,10 +132,7 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   const onReportClick = async (type: string, phone_number: string) => {
     const body = { type: type, phone_number: phone_number };
     const { result, error } = await report(post.id, body);
-    console.log(
-      "🚀 ~ file: post-details-left.tsx ~ line 131 ~ onReportClick ~ resultReport",
-      error
-    );
+
     if (result) {
       setReportSuccess(true);
       setTimeout(() => {
@@ -305,9 +305,9 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
           <PostTitlePriceWrapper>
             <PostTitle>{post.title}</PostTitle>
             <PostPriceWrapper>
-              {post.discountInPercent ? (
+              {post.discount_price ? (
                 <SalePrice>
-                  {parseInt(post.price).toLocaleString()}
+                  {parseInt(post.original_price).toLocaleString()}
                   {CURRENCY}
                 </SalePrice>
               ) : null}
@@ -315,12 +315,28 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
           </PostTitlePriceWrapper>
           <PostPrice>
             <div style={{ display: "block", marginBottom: 33 }}>
-              <span style={{ fontSize: 20, fontWeight: 600 }}>
-                {post.salePrice
-                  ? `${parseInt(post.salePrice).toLocaleString()} ${CURRENCY}`
-                  : `${parseInt(post.price).toLocaleString()} ${CURRENCY}`}
-              </span>
-              <span style={{ marginLeft: 10 }}>{post.unit}</span>
+              <div>
+                <span style={{ display: "inline-block", width: "115px" }}>
+                  Giá:{" "}
+                </span>
+                <span style={{ fontSize: 20, fontWeight: 600 }}>
+                  {post.discount_price
+                    ? `${parseInt(post.discount_price).toLocaleString()}`
+                    : `${parseInt(post.original_price).toLocaleString()}`}
+                </span>
+                <span style={{ marginLeft: 5 }}>{CURRENCY}</span>
+              </div>
+              <div>
+                <span style={{ display: "inline-block", width: "115px" }}>
+                  Giá sau thuế:{" "}
+                </span>
+                <span style={{ fontSize: 20, fontWeight: 600 }}>
+                  {post.price_after_tax
+                    ? `${parseInt(post.price_after_tax).toLocaleString()}`
+                    : `${parseInt(post.original_price).toLocaleString()}`}
+                </span>
+                <span style={{ marginLeft: 5 }}>{CURRENCY}</span>
+              </div>
               {/* <BackButton className={"saveIcon"}>
                 <div
                   style={{

@@ -43,9 +43,22 @@ export async function getPost(id: number) {
   return null;
 }
 
-export async function getUserLike(id) {
-  const res = await fetch(`${baseUrlIndex}/posts/${id}/user-likes`);
-  return res.json();
+export async function getUserLike(id: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+
+  try {
+    const res = await fetch(`${baseUrlIndex}/posts/${id}/users/like`, options);
+
+    const json = await res.json();
+    return json.success ? json.data : [];
+  } catch (err) {
+    return [];
+  }
 }
 export async function getUserSave(id) {
   const res = await fetch(`${baseUrlIndex}/posts/${id}/user-saves`);
@@ -211,14 +224,20 @@ export async function deletePost(id: number) {
 export async function markPost(id: number) {
   const token = getCookie("access_token");
   const options = {
-    method: "POST",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   };
 
-  const data = await fetch(baseUrlClient + `/posts/${id}/mark-sold`, options);
-
-  if (data.ok && data.status == 200) return { result: true };
+  try {
+    const data = await fetch(baseUrlClient + `/posts/${id}`, options);
+    const json = await data.json();
+    return { result: json.success ? true : false };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
 }

@@ -57,6 +57,7 @@ export default function SignOutModal() {
         setErrorPass("errorConfirmPass");
         return;
       }
+
       setErrorPass("");
       setLoading(true);
 
@@ -83,7 +84,10 @@ export default function SignOutModal() {
           options
         );
         const data = await res.json();
-        console.log(data);
+        console.log(
+          "🚀 ~ file: register.tsx ~ line 86 ~ registerCallback ~ data",
+          data
+        );
 
         if (data.success) {
           setLoading(false);

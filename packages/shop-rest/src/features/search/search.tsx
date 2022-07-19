@@ -9,6 +9,7 @@ import { Saved } from "assets/icons/Saved";
 import { Booked } from "assets/icons/BookMark";
 import { getCookie } from "utils/session";
 import { saveTextSearch } from "utils/api/searches";
+import { POSTS } from "site-settings/site-navigation";
 
 interface Props {
   minimal?: boolean;
@@ -29,6 +30,7 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
   const [erSave, setErSave] = React.useState("");
   const [isBooked, setIsBooked] = React.useState(false);
   const [valueSaved, setValueSaved] = React.useState("");
+
   // const token = getCookie("access_token");
   const handleOnChange = (e) => {
     setIsBooked(false);
@@ -50,8 +52,6 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
       onGetText(valueSaved);
 
       if (result.result === false) {
-        console.log("error");
-
         setErSave("error");
       } else {
         setIsBooked(true);
@@ -60,7 +60,7 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
     return;
   };
 
-  const { pathname, query } = router;
+  const { query, pathname } = router;
   const onSearch = (e) => {
     e.preventDefault();
 
@@ -68,8 +68,10 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
       return;
     }
     const { type, ...rest } = query;
+    console.log("🚀 ~ file: search.tsx ~ line 71 ~ onSearch ~ query", query);
+
     router.push({
-      pathname,
+      pathname: POSTS,
       query: { ...rest, text: searchTerm.trim() },
     });
 

@@ -624,6 +624,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
               <Notice status="error" content={error.phone_number} />
             ) : null}
             {error.name ? <Notice status="error" content={error.name} /> : null}
+
+            {error.avatar ? (
+              <Notice status="error" content={error.avatar} />
+            ) : null}
           </>
         ) : null}
       </SettingsFormContent>

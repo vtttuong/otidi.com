@@ -60,6 +60,10 @@ export default function SignInModal() {
         access_token: response.accessToken,
       }),
     };
+    console.log(
+      "🚀 ~ file: login.tsx ~ line 61 ~ responseFacebook ~ response",
+      response
+    );
     const res = await fetch(`${API_BASE_URL}/oauth/token`, options);
     const data = await res.json();
 
@@ -79,9 +83,9 @@ export default function SignInModal() {
       }
     }
   };
-  const responseFaildGoogle = (response) => {
-    console.log(response);
-  };
+
+  const responseFaildGoogle = (response) => {};
+
   const responseGoogle = async (response) => {
     const options = {
       method: "POST",
@@ -97,11 +101,10 @@ export default function SignInModal() {
       }),
     };
     const res = await fetch(
-      process.env.NEXT_PUBLIC_LARAVEL_API_URL + "/oauth/token",
+      process.env.NEXT_PUBLIC_LARAVEL_API_BASE_URL + "/oauth/token",
       options
     );
     const data = await res.json();
-
     if (data && data.error) {
       setError(data.error);
       setLoading(false);

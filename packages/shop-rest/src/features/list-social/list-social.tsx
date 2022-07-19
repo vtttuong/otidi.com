@@ -26,10 +26,8 @@ const ListSocial: React.FC<CartPropsType> = ({
 }) => {
   return (
     <TopContainer>
-      <ActionButton >
-        <p onClick={onLike}>
-          {liked ? <LikedPost /> : <LikePost />}
-        </p>
+      <ActionButton>
+        <p onClick={onLike}>{liked ? <LikedPost /> : <LikePost />}</p>
         <Title onClick={onViewLike}>
           {likes} <FormattedMessage id="nav.save" defaultMessage="likes" />
         </Title>

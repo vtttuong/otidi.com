@@ -67,25 +67,27 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
             newForm,
             configs
           )
-          .then((response) => {
+          .then((response) => response.data)
+          .then((data) => {
             setLoadingId(false);
 
-            console.log("RES", response);
-
-            if (response.data && response.data.success) {
+            if (data && data.success) {
               setisAlertId(true);
               setIdError(null);
-              setCookie("userFrontId", response.data.data?.img_front_url);
-              setCookie("userBackId", response.data.data?.img_back_url);
+              setCookie("userFrontId", data.data?.img_front_url);
+              setCookie("userBackId", data.data?.img_back_url);
               return;
-            } else if (response.data && !response.data.success) {
-              const error = response.data.data;
+            } else if (data && !data.success) {
+              const error = data.data;
               setIdError(
                 error.image_back || error.image_front
                   ? "Please upload both of two sides of your identity"
                   : null
               );
             }
+          })
+          .catch((err) => {
+            setIdError("Failed to upload identify card");
           });
         return;
       }
@@ -143,6 +145,14 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
                   }
                 />
               ) : null,
+            avatar: error.avatar ? (
+              <FormattedMessage
+                id="avatarSizeError"
+                defaultMessage={
+                  "The avatar must not be greater than 512 kilobytes!!!"
+                }
+              />
+            ) : null,
           });
         }
       });

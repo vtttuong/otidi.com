@@ -63,12 +63,14 @@ const WrapCard: React.FC<Props> = ({
 
   const onMarkPost = async (id) => {
     setIsMarkedSuccess(false);
-    await markPost(id);
-    onMarkedPost(id);
-    const index = data.findIndex((item) => item.id === id);
-    data.splice(index, 1);
-    setIsBooked(!isBooked);
-    setIsMarkedSuccess(true);
+    const { result } = await markPost(id);
+    if (result) {
+      onMarkedPost(id);
+      const index = data.findIndex((item) => item.id === id);
+      data.splice(index, 1);
+      setIsBooked(!isBooked);
+      setIsMarkedSuccess(true);
+    }
   };
 
   const openWarning = () => {
@@ -97,7 +99,7 @@ const WrapCard: React.FC<Props> = ({
             className={profileOther == true ? "other" : ""}
           >
             <PostCard
-              name={saveNews ? d.post?.name : d.name}
+              name={saveNews ? d.post?.title : d.title}
               image={saveNews ? d.post?.main_image?.url : d.main_image?.url}
               address={saveNews ? d.post?.address : d.address}
               price={saveNews ? d.post?.price : d.price}

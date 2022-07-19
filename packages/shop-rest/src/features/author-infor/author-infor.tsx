@@ -240,17 +240,17 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
             )}
           </Name>
           <Name className={"status"}>
-            {/* {data.user.status === "active" ? (
-              <>
-                <Dot />
-                <FormattedMessage id="offStatus" defaultMessage="Offline" />
-              </>
-            ) : (
+            {data.status === "active" ? (
               <>
                 <Dot className={"active"} />
                 <FormattedMessage id="onStatus" defaultMessage="onStatus" />
               </>
-            )} */}
+            ) : (
+              <>
+                <Dot />
+                <FormattedMessage id="offStatus" defaultMessage="Offline" />
+              </>
+            )}
           </Name>
         </MainAvatar>
       </MainAvatar>
@@ -345,15 +345,14 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
             <FormattedMessage id="phone" defaultMessage="Phone:" />
           </Title>
           <Title className={"infosub phone"}>
-            {tok ? (
-              <TextFormat>{data.phone_number}</TextFormat>
-            ) : (
-              <TextFormat onClick={() => router.push("/login")}>
+            <TextFormat>
+              <a href={`tel:${data.phone_number}`}>
+                {" "}
                 {data.phone_number.replace(/^\d{1,7}/, (x) =>
                   x.replace(/./g, "*")
                 )}
-              </TextFormat>
-            )}
+              </a>
+            </TextFormat>
           </Title>
         </CenterContainerSub>
       </CenterContainer>

@@ -82,11 +82,13 @@ const ReportModal: React.FC<ManagePostProps> = ({
       phoneNumber.trim().length === 0
     ) {
       setError("ErrorStep");
+      setLoading(false);
       return;
     }
 
     if (!/[0-9]{10}/g.test(phoneNumber)) {
       setError("invalidPhone");
+      setLoading(false);
       return;
     }
     await onReport(choose, phoneNumber);

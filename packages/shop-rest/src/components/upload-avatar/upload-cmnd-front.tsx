@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { Button } from "../button/button";
 import { Camera } from "assets/icons/camera";
 import { getCookie } from "utils/session";
+import placeholder from "./placeholder.png";
 
 export const verifyFile = (file, acceptedFileExtensions) => {
   const { name } = file;
@@ -69,7 +70,13 @@ const UploadCMND: React.FC<{}> = () => {
       ? imageData.userProfileImage
       : avata;
 
-    return <img className="front-image" src={profileImage} alt="user-logo" />;
+    return (
+      <img
+        className="front-image"
+        src={profileImage || placeholder}
+        alt="user-logo"
+      />
+    );
   };
 
   return (
@@ -103,6 +110,8 @@ const UploadCMND: React.FC<{}> = () => {
 
         <AvatarModal show={showModal} onClose={toggleModal} title="Crop">
           <ImageCrop
+            width={320}
+            height={200}
             imagefile={imageData.selectedFile}
             setEditorRef={setEditorRef}
             onImageCrop={onImageCrop}
