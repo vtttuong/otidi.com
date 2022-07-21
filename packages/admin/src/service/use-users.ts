@@ -5,20 +5,18 @@ const token = localStorage.getItem("secondhand_token");
 
 // https://api.otodi.vn/api/admin/v1/users?count=10&page=1&order_by=id&dir=asc
 interface PROPS {
-  sortType?: string;
-  sortDir?: string;
+  status?: string;
   page?: number;
   count?: number;
 }
 
 export async function getUsers(variables?: PROPS) {
-  const { sortType, sortDir, page, count } = variables ?? {};
+  const { status, page, count } = variables ?? {};
 
   let queryParams = {
     page: page,
     count: count,
-    order_by: sortType,
-    dir: sortDir,
+    status: status,
   };
 
   let newParams = {};
@@ -45,7 +43,8 @@ export async function getUsers(variables?: PROPS) {
   };
   try {
     const users = await fetch(`${baseUrl}/users?${parsed}`, options);
-    return await users.json();
+    const usersJson = await users.json();
+    return usersJson.success ? usersJson.data : null;
   } catch (err) {
     return null;
   }
@@ -90,17 +89,45 @@ export async function getUsersType(id) {
   return await users.json();
 }
 
-export async function deleteUser(id: number) {
+export async function blockUser(id: number) {
   const options = {
-    method: "DELETE",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/users/${id}`, options);
-  if (users.status === 200) {
-    return { status: true };
+  try {
+    const res = await fetch(`${baseUrl}/users/${id}/block`, options);
+    const resJson = await res.json();
+    return {
+      result: resJson.success,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
+  // return await users.json();
+}
+export async function unblockUser(id: number) {
+  const options = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const res = await fetch(`${baseUrl}/users/${id}/unblock`, options);
+    const resJson = await res.json();
+    return {
+      result: resJson.success,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
   }
   // return await users.json();
 }
@@ -121,14 +148,26 @@ export async function unDeleteUser(id: number) {
 
 export async function verifyId(id: number) {
   const options = {
-    method: "POST",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   };
-  const users = await fetch(`${baseUrl}/users/identify/confirm/${id}`, options);
-  return users;
+  try {
+    const res = await fetch(
+      `${baseUrl}/users/${id}/identity-card/verify`,
+      options
+    );
+    const resJson = await res.json();
+    return {
+      result: resJson.success,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
 }
 
 export async function getUserById(id) {

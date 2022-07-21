@@ -1,5 +1,5 @@
 import React from "react";
-import {getUsers} from "service/use-users";
+import { getUsers } from "service/use-users";
 import Fuse from "fuse.js";
 import UpdateContext from "./updateContext";
 const options = {
@@ -23,18 +23,19 @@ const UpdateProvider = (props) => {
   const [dataUsers, setDataUsers] = React.useState(null);
   const [dataSearch, setDataSearch] = React.useState([]);
   const [dataSortType, setDataSortType] = React.useState("id");
+  const [status, setStatus] = React.useState("");
   const [dataSortDir, setDataSortDir] = React.useState("");
   const [page, setPage] = React.useState(1);
   const COUNT = 10;
 
   const getUser = async () => {
     const response = await getUsers({
-      sortType: dataSortType,
-      sortDir: dataSortDir,
+      status: status,
+      // sortDir: dataSortDir,
       page,
       count: COUNT,
     });
-    const users = response.data;
+    const users = response;
 
     setDataUsers(users);
     setDataSearch(users);
@@ -42,7 +43,7 @@ const UpdateProvider = (props) => {
 
   React.useEffect(() => {
     getUser();
-  }, [dataSortType, dataSortDir]);
+  }, [status, dataSortDir]);
 
   const searchN = (list, pattern) => {
     const fuse = new Fuse(list, options);
@@ -53,10 +54,6 @@ const UpdateProvider = (props) => {
     if (text.length === 0) getUser();
     const results = searchN(dataSearch, text);
     setDataUsers(results);
-  };
-
-  const sortType = async (type: string) => {
-    setDataSortType(type.length !== 0 ? type : "");
   };
 
   const sortDir = async (dir: string) => {
@@ -73,7 +70,7 @@ const UpdateProvider = (props) => {
         dataUsers: dataUsers,
         getUser: getUser,
         searchName: searchName,
-        sortType: sortType,
+        setStatus: setStatus,
         sortDir: sortDir,
         page: page,
       }}

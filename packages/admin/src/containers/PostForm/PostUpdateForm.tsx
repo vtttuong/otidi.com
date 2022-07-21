@@ -34,8 +34,6 @@ const UpdatePost: React.FC<Props> = () => {
   ]);
 
   const { post, postLoading, error } = usePost(postId);
-  console.log("🚀 ~ file: PostUpdateForm.tsx ~ line 37 ~ postId", postId);
-  console.log("POST", post);
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: post,
@@ -86,7 +84,7 @@ const UpdatePost: React.FC<Props> = () => {
     if (res.ok && postResponse.success) {
       dispatch({
         type: "SAVE_APPROVE_POST_ID",
-        data: postResponse.id,
+        data: postResponse.data.id,
       });
 
       alert.success("Approve post successfully");
@@ -277,24 +275,26 @@ const UpdatePost: React.FC<Props> = () => {
                 Cancel
               </Button>
 
-              <Button
-                type="submit"
-                onClick={onSubmit}
-                overrides={{
-                  BaseButton: {
-                    style: ({ $theme }) => ({
-                      width: "50%",
-                      borderTopLeftRadius: "3px",
-                      borderTopRightRadius: "3px",
-                      borderBottomRightRadius: "3px",
-                      borderBottomLeftRadius: "3px",
-                    }),
-                  },
-                }}
-                isLoading={loading}
-              >
-                {textButton()}
-              </Button>
+              {post.status === "waiting" && (
+                <Button
+                  type="submit"
+                  onClick={onSubmit}
+                  overrides={{
+                    BaseButton: {
+                      style: ({ $theme }) => ({
+                        width: "50%",
+                        borderTopLeftRadius: "3px",
+                        borderTopRightRadius: "3px",
+                        borderBottomRightRadius: "3px",
+                        borderBottomLeftRadius: "3px",
+                      }),
+                    },
+                  }}
+                  isLoading={loading}
+                >
+                  {textButton()}
+                </Button>
+              )}
             </ButtonGroup>
           </Form>
         </>

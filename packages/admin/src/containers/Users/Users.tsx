@@ -57,7 +57,10 @@ const sortDirection = [
   { value: "desc", label: "Descending", id: "2" },
 ];
 
-const sortBy = [{ value: "id", label: "Id", id: "1" }];
+const statusOptions = [
+  { value: "active", label: "Active", id: "active" },
+  { value: "inactive", label: "Inactive", id: "inactive" },
+];
 
 type CustomThemeT = { red400: string; textNormal: string; colors: any };
 
@@ -109,6 +112,8 @@ export default function Users() {
   const [dataDetail, setDataDetail] = useState<any>({});
   const [search, setSearch] = useState("");
   const [sortTypeOption, setSortTypeOption] = useState([]);
+  const [statusOption, setStatusOption] = useState([]);
+  // const [status, setStatus] = useState("");
   const [sortDirOption, setSDirOption] = useState([]);
 
   const dispatch = useDrawerDispatch();
@@ -117,13 +122,13 @@ export default function Users() {
     [dispatch]
   );
 
-  function handleSortType({ value }, sortType, getUser) {
+  function handleSortType({ value }, setStatus, getUser) {
     setSearch("");
-    setSortTypeOption(value);
+    setStatusOption(value);
     if (value.length) {
-      sortType(value[0].value);
+      setStatus(value[0].value);
     } else {
-      sortType("");
+      setStatus("");
     }
   }
 
@@ -163,18 +168,18 @@ export default function Users() {
     });
   }, [dispatch, dataDetail]);
 
-  const onVerify = React.useCallback(
-    () =>
-      dispatch({
-        type: "OPEN_DRAWER",
-        drawerComponent: "USER_ID_FORM",
-        data: dataDetail,
-      }),
-    [dispatch, dataDetail]
-  );
+  const onVerify = React.useCallback(() => {
+    setCheckedId([]);
+    dispatch({
+      type: "OPEN_DRAWER",
+      drawerComponent: "USER_ID_FORM",
+      data: dataDetail,
+    });
+  }, [dispatch, dataDetail]);
 
   function handleCheckbox(event) {
     const name = parseInt(event.currentTarget.name);
+
     if (dataUsers.length !== 0) {
       // eslint-disable-next-line array-callback-return
       dataUsers.map((i) => {
@@ -192,7 +197,7 @@ export default function Users() {
 
   return (
     <Consumer>
-      {({ dataUsers, getUser, searchName, sortType, sortDir, page }) => {
+      {({ dataUsers, getUser, searchName, status, setStatus, page }) => {
         setDataUsers(dataUsers);
         return (
           <>
@@ -224,18 +229,18 @@ export default function Users() {
 
                         <Col lg={3}>
                           <Select
-                            options={sortBy}
+                            options={statusOptions}
                             labelKey="label"
                             // valueKey="value"
-                            placeholder="Sort by"
-                            value={sortTypeOption}
+                            placeholder="Status"
+                            value={statusOption}
                             searchable={false}
                             onChange={(value) =>
-                              handleSortType(value, sortType, getUser)
+                              handleSortType(value, setStatus, getUser)
                             }
                           />
                         </Col>
-                        <Col lg={3}>
+                        {/* <Col lg={3}>
                           <Select
                             options={sortDirection}
                             labelKey="label"
@@ -247,7 +252,7 @@ export default function Users() {
                               handleSortDir(value, sortDir, getUser)
                             }
                           />
-                        </Col>
+                        </Col> */}
                         {/* <Col lg={3}>
                           <Button
                             onClick={openDrawer}
@@ -457,7 +462,7 @@ export default function Users() {
                       Detail
                     </Button>
                   </Col>
-                  {dataDetail.identify ? (
+                  {dataDetail.identity_card ? (
                     <Col md={2}>
                       <Button
                         onClick={onVerify}

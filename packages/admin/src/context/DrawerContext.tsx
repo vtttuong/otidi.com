@@ -1,5 +1,5 @@
-import {useCreateContext} from "./create-context";
-import {ANCHOR} from "components/Drawer/Drawer";
+import { useCreateContext } from "./create-context";
+import { ANCHOR } from "components/Drawer/Drawer";
 
 const initialState = {
   isOpen: false,
@@ -86,4 +86,4 @@ const [useDrawerState, useDrawerDispatch, DrawerProvider] = useCreateContext(
   reducer
 );
 
-export {useDrawerState, useDrawerDispatch, DrawerProvider};
+export { useDrawerState, useDrawerDispatch, DrawerProvider };

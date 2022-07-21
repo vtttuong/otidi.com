@@ -106,7 +106,7 @@ export default function Payments() {
   React.useEffect(() => {
     const fetchUser = async () => {
       const response = await getUsers();
-      setUsers(response.data);
+      setUsers(response);
     };
     fetchUser();
   }, []);

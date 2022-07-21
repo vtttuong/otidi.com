@@ -1,10 +1,21 @@
 import { Box, BoxContent, BoxTitle, BoxTitleWrapper } from "components/Box/Box";
 import Chart from "components/Charts/Chart";
-import { Col } from "components/FlexBox/FlexBox";
+import { Col as Column, Row } from "components/FlexBox/FlexBox";
 import Select from "components/Select/Select";
 import React from "react";
 import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 import timeOptions from "feature/time-options";
+import { withStyle } from "baseui";
+
+const Col = withStyle(Column, () => ({
+  "@media only screen and (max-width: 767px)": {
+    marginBottom: "20px",
+
+    ":last-child": {
+      marginBottom: 0,
+    },
+  },
+}));
 
 const LineChart = ({
   widgetTitle,
@@ -117,27 +128,31 @@ const LineChart = ({
   return (
     <Box>
       <BoxTitleWrapper>
-        <BoxTitle title={widgetTitle} />
-
-        {postStatistics ? (
-          <Col md={3} lg={3} className="select-cat">
-            <Select
-              options={timeOptions}
-              labelKey="label"
-              valueKey="value"
-              placeholder="Time"
-              value={timeOption}
-              searchable={false}
-              onChange={onChangeTimeType}
-            />
+        <Row>
+          <Col xs={12} md={4}>
+            <BoxTitle title={widgetTitle} />
           </Col>
-        ) : null}
 
-        <Col md={5} className="select-year">
-          <div>
-            <DateRangePicker onChange={onChangeDateRange} value={dateRange} />
-          </div>
-        </Col>
+          {postStatistics ? (
+            <Col xs={12} md={3}>
+              <Select
+                options={timeOptions}
+                labelKey="label"
+                valueKey="value"
+                placeholder="Time"
+                value={timeOption}
+                searchable={false}
+                onChange={onChangeTimeType}
+              />
+            </Col>
+          ) : null}
+
+          <Col xs={12} md={3} className="select-year">
+            <div>
+              <DateRangePicker onChange={onChangeDateRange} value={dateRange} />
+            </div>
+          </Col>
+        </Row>
       </BoxTitleWrapper>
 
       <BoxContent style={{ display: "block" }}>

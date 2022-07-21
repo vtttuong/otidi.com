@@ -90,7 +90,7 @@ export default function Posts() {
   const [search, setSearch] = useState("");
   const [postType, setPostType] = useState("");
   const [postStatus, setPostStatus] = useState("");
-  const [brand, setBrand] = useState("");
+  const [brands, setBrands] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const [isSoldType, setIsSoldType] = useState(false);
   const [isPriorityType, setIsPriorityType] = useState(false);
@@ -99,22 +99,28 @@ export default function Posts() {
   const [page, setPage] = useState(1);
   const COUNT = 10;
 
+  const approvedPostId = useDrawerState("approvedPostId");
+
   const { data, error, mutate } = usePosts({
     status: postStatus,
     text: search ? search : "",
-    brand: brand,
+    brand: brands,
     sortBy: sortBy,
+    page: page,
+    count: COUNT,
   });
 
-  let posts = data;
+  React.useEffect(() => {
+    mutate();
+    console.log("MUTATE");
+  }, [approvedPostId]);
 
-  // https://api.otodi.vn/api/admin/v1/posts?count=2&page=1&order_by=created_at&dir=asc&brand_ids=3,4&user_id=1
   React.useEffect(() => {
     let isMounted = true;
     const fetchBrands = async () => {
       const brands = await getBrands();
       const options = brands.map((brand) => ({
-        value: brand.id + "",
+        value: brand.id,
         label: brand.name,
       }));
       if (isMounted) {
@@ -137,10 +143,11 @@ export default function Posts() {
     postStatus,
     search,
     sortBy,
-    brand,
+    brands,
     isSoldType,
     isPriorityType,
     isExpired,
+    approvedPostId,
   ]);
 
   // if (error) {
@@ -161,9 +168,9 @@ export default function Posts() {
     setBrandOption(value);
 
     if (value.length === 0) {
-      setBrand("");
+      setBrands([]);
     } else {
-      setBrand(value[0].value);
+      setBrands(value.map((item) => item.value));
     }
   }
   function handlePostStatus({ value }) {
@@ -172,15 +179,7 @@ export default function Posts() {
     if (value.length === 0) {
       setPostStatus("");
     } else {
-      if (value[0].value === "expired") {
-        setIsExpired(true);
-      } else if (value[0].value === "isSold") {
-        setIsSoldType(true);
-      } else if (value[0].value === "isPriority") {
-        setIsPriorityType(true);
-      } else {
-        setPostStatus(value[0].value);
-      }
+      setPostStatus(value[0].value);
     }
   }
   function handleSearch(event) {
@@ -198,10 +197,10 @@ export default function Posts() {
     }
   }
 
-  function getUserAvatar(userId: number): string {
-    const user = users.find((u) => u.id === userId);
-    return user?.avatar;
-  }
+  // function getUserAvatar(userId: number): string {
+  //   const user = users.find((u) => u.id === userId);
+  //   return user?.avatar;
+  // }
 
   return (
     <Grid fluid={true}>
@@ -224,18 +223,19 @@ export default function Posts() {
                     options={productStatusSelectOptions}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Filter"
+                    placeholder="Status"
                     value={postStatusOption}
                     searchable={false}
                     onChange={handlePostStatus}
                   />
                 </Col>
-                <Col md={2} xs={12}>
+                <Col md={4} xs={12}>
                   <Select
                     options={brandSelectOptions}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Brand"
+                    placeholder="Brands"
+                    multi={true}
                     value={brandOption}
                     searchable={false}
                     onChange={handleBrand}
@@ -273,10 +273,11 @@ export default function Posts() {
                       <PostCard
                         title={item.title}
                         weight={item.unit}
-                        image={item.main_image[0].url}
-                        avatar={getUserAvatar(item.user_id)}
+                        image={item.main_image?.url}
+                        // avatar={getUserAvatar(item.user_id)}
+                        user={item.user}
                         currency={CURRENCY}
-                        price={item.price}
+                        price={item.price_after_tax}
                         salePrice={0}
                         typeOfPost={item.type}
                         postId={item.id}
