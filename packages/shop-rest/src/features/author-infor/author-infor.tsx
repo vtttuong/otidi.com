@@ -38,9 +38,10 @@ import { follow, getFollowers, unfollow } from "utils/api/user";
 
 type AuthoInforProps = {
   data: any;
+  postId?: number;
 };
 
-const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
+const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
   const router = useRouter();
   const { query } = useRouter();
   const defaultOptions = { scrollwheel: false };
@@ -159,7 +160,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data }) => {
         },
         componentProps: {
           titleId: "Bargain !",
-          data: { token: token, postId: data.id },
+          data: { token: token, postId: postId },
         },
       });
       setBargainLoading(false);
