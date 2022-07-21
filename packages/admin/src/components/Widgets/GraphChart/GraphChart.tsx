@@ -1,7 +1,7 @@
-import React from 'react';
-import Chart from 'components/Charts/Chart';
-import { Box, BoxTitleWrapper, BoxContent, BoxTitle } from 'components/Box/Box';
-import { Col } from 'components/FlexBox/FlexBox';
+import React from "react";
+import Chart from "components/Charts/Chart";
+import { Box, BoxTitleWrapper, BoxContent, BoxTitle } from "components/Box/Box";
+import { Col } from "components/FlexBox/FlexBox";
 const GrpahChart = ({
   widgetTitle,
   series,
@@ -25,24 +25,26 @@ const GrpahChart = ({
         enabled: false,
       },
       fill: {
-        type: 'solid',
+        type: "solid",
       },
       stroke: {
         show: false,
-        curve: 'smooth',
+        curve: "smooth",
       },
       legend: {
         show: true,
       },
       xaxis: {
-        type: 'datetime',
+        type: "category",
         categories: labels,
         labels: {
           show: true,
-          offsetX: -25,
+          rotate: -45,
+          rotateAlways: false,
+          offsetX: 0,
           style: {
-            colors: '#161F6A',
-            fontSize: '14px',
+            colors: "#161F6A",
+            fontSize: "14px",
             fontFamily: "'Lato', sans-serif",
           },
         },
@@ -56,16 +58,16 @@ const GrpahChart = ({
           show: true,
           width: 1,
           tickWidth: 0,
-          position: 'back',
+          position: "back",
           opacity: 1,
           stroke: {
-            color: 'transparent',
+            color: "transparent",
             width: 0,
             dashArray: 0,
           },
           fill: {
-            type: 'solid',
-            color: '#F2F3FC',
+            type: "solid",
+            color: "#F2F3FC",
           },
         },
         tooltip: {
@@ -77,14 +79,14 @@ const GrpahChart = ({
         labels: {
           show: true,
           style: {
-            color: '#161F6A',
-            fontSize: '14px',
+            color: "#161F6A",
+            fontSize: "14px",
             fontFamily: "'Lato', sans-serif",
           },
         },
       },
       grid: {
-        borderColor: '#F7F7F7',
+        borderColor: "#F7F7F7",
         xaxis: {
           lines: {
             show: true,
@@ -95,7 +97,7 @@ const GrpahChart = ({
         size: 0,
         opacity: 1,
         colors: colors,
-        strokeColor: '#fff',
+        strokeColor: "#fff",
         strokeWidth: 4,
         hover: {
           size: 8,
@@ -104,7 +106,7 @@ const GrpahChart = ({
     },
     series: [
       {
-        name: '',
+        name: "",
         data: series,
       },
     ],
@@ -114,12 +116,10 @@ const GrpahChart = ({
     <Box>
       <BoxTitleWrapper>
         <BoxTitle title={widgetTitle} />
-        <Col md={8} className="select-year">
-         
-       </Col>
+        <Col md={8} className="select-year"></Col>
       </BoxTitleWrapper>
 
-      <BoxContent style={{ display: 'block', width: '100%' }}>
+      <BoxContent style={{ display: "block", width: "100%" }}>
         <Chart
           options={options.options}
           series={options.series}

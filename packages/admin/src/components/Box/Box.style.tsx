@@ -52,7 +52,7 @@ const BoxWrapper = stylede.div`
         height: 44px;
         background: #eeeeee; 
         padding: 0 5px;
-        font-family: lato;
+        font-family: sans-serif !important;
         font-weight: 600;
         font-size: 14.5px;
         color: #20286f; 

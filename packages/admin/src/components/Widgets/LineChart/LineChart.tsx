@@ -1,26 +1,27 @@
-import { Box, BoxContent, BoxTitle, BoxTitleWrapper } from 'components/Box/Box';
-import Chart from 'components/Charts/Chart';
-import { Col } from 'components/FlexBox/FlexBox';
-import Select from 'components/Select/Select';
-import React from 'react';
-import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import { Box, BoxContent, BoxTitle, BoxTitleWrapper } from "components/Box/Box";
+import Chart from "components/Charts/Chart";
+import { Col } from "components/FlexBox/FlexBox";
+import Select from "components/Select/Select";
+import React from "react";
+import DateRangePicker from "@wojtekmaj/react-daterange-picker";
+import timeOptions from "feature/time-options";
 
 const LineChart = ({
   widgetTitle,
   series,
   color,
   categories,
-  seriesName = '',
+  seriesName = "",
   dateRange,
   onChangeDateRange,
-  categoryOption,
-  onChangeCategory,
-  postStatistics
+  timeOption,
+  onChangeTimeType,
+  postStatistics,
 }: any) => {
   const options = {
     options: {
       chart: {
-        type: 'line',
+        type: "line",
         dropShadow: {
           enabled: true,
           color: color,
@@ -35,7 +36,7 @@ const LineChart = ({
       },
       stroke: {
         width: 7,
-        curve: 'smooth',
+        curve: "smooth",
       },
       xaxis: {
         categories: categories,
@@ -52,16 +53,16 @@ const LineChart = ({
           show: true,
           width: 5,
           tickWidth: 0,
-          position: 'back',
+          position: "back",
           opacity: 1,
           stroke: {
-            color: '#b6b6b6',
+            color: "#b6b6b6",
             width: 0,
             dashArray: 0,
           },
           fill: {
-            type: 'solid',
-            color: '#F2F3FC',
+            type: "solid",
+            color: "#F2F3FC",
           },
         },
         tooltip: {
@@ -73,21 +74,21 @@ const LineChart = ({
         labels: {
           show: true,
           style: {
-            color: '#161F6A',
-            fontSize: '14px',
+            color: "#161F6A",
+            fontSize: "14px",
             fontFamily: "'Lato', sans-serif",
           },
         },
       },
       grid: {
-        borderColor: '#F7F7F7',
+        borderColor: "#F7F7F7",
       },
       colors: color,
       markers: {
         size: 0,
         opacity: 1,
         colors: color,
-        strokeColor: '#fff',
+        strokeColor: "#fff",
         strokeWidth: 4,
         hover: {
           size: 8,
@@ -101,52 +102,45 @@ const LineChart = ({
       },
     ],
   };
-  
-  const categorySelectOptions = [
-    { value: 'vehicle', label: 'Vehicle' },
-    { value: 'electronic', label: 'Electronic' },
-    { value: 'technology', label: 'Technology' },
-    { value: 'fashion', label: 'Fashion' },
-    { value: 'furniture', label: 'Furniture' },
-    { value: 'sport_relax', label: 'Sport & relax' },
-    { value: 'office', label: 'Office' },
-    { value: 'others', label: 'Others' },
-  ];
+
+  // const categorySelectOptions = [
+  //   { value: "vehicle", label: "Vehicle" },
+  //   { value: "electronic", label: "Electronic" },
+  //   { value: "technology", label: "Technology" },
+  //   { value: "fashion", label: "Fashion" },
+  //   { value: "furniture", label: "Furniture" },
+  //   { value: "sport_relax", label: "Sport & relax" },
+  //   { value: "office", label: "Office" },
+  //   { value: "others", label: "Others" },
+  // ];
 
   return (
     <Box>
       <BoxTitleWrapper>
         <BoxTitle title={widgetTitle} />
 
-        {
-          postStatistics ? (
-            <Col md={3} lg={3} className="select-cat">
-              <Select
-                options={categorySelectOptions}
-                labelKey="label"
-                valueKey="value"
-                placeholder="Category"
-                value={categoryOption}
-                searchable={false}
-                onChange={onChangeCategory}
-              />
-            </Col>
-          ) : (
-            null
-          )
-        }
-        
+        {postStatistics ? (
+          <Col md={3} lg={3} className="select-cat">
+            <Select
+              options={timeOptions}
+              labelKey="label"
+              valueKey="value"
+              placeholder="Time"
+              value={timeOption}
+              searchable={false}
+              onChange={onChangeTimeType}
+            />
+          </Col>
+        ) : null}
+
         <Col md={5} className="select-year">
           <div>
-            <DateRangePicker
-              onChange={onChangeDateRange}
-              value={dateRange}
-            />
+            <DateRangePicker onChange={onChangeDateRange} value={dateRange} />
           </div>
         </Col>
       </BoxTitleWrapper>
 
-      <BoxContent style={{ display: 'block' }}>
+      <BoxContent style={{ display: "block" }}>
         <Chart
           type={"area"}
           options={options.options}

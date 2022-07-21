@@ -3,10 +3,15 @@ import AdvertiseYear from "feature/dashboard-advertiseYear";
 import PostByYear from "feature/dashboard-postByYear";
 import RevenueTotal from "feature/dashboard-revenueTotal";
 import RevenueYear from "feature/dashboard-revenueYear";
+import RevenueDay from "feature/dashboard-revenueDay";
+import PostDay from "feature/dashboard-postDay";
+
 import React, { useState } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import styled from "styled-components";
+
+import AdvertiseDay from "feature/dashboard-advertiseDay";
 
 const AllTab = styled.div`
   width: 100%;
@@ -114,14 +119,17 @@ const Dashboard = () => {
           <TabPanel>
             <RevenueTotal />
             <RevenueYear />
+            <RevenueDay />
           </TabPanel>
 
           <TabPanel>
-            <PostByYear year={year} setYear={setYear} />
+            <PostByYear />
+            <PostDay />
           </TabPanel>
 
           <TabPanel>
             <AdvertiseYear />
+            <AdvertiseDay />
           </TabPanel>
         </Tabs>
       </AllTab>
