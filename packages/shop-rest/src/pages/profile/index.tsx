@@ -13,6 +13,7 @@ import { SEO } from "components/seo";
 import { TabPanel } from "components/TabPanel/tabpanel";
 import { ProfileProvider } from "contexts/profile/profile.provider";
 import PushForm from "features/filter-modal/push-post";
+import PushUpdate from "features/filter-modal/push-update-post";
 import ContenHeader from "features/user-profile/contentHeader/contentHeader";
 import ManagePost from "features/user-profile/manage-posts/manage-posts";
 import ManagePostReview from "features/user-profile/manage-posts/manage-posts-review";
@@ -36,6 +37,7 @@ import {
   getPackage,
   getProfile,
   pushPost,
+  updatePushPackage,
 } from "utils/api/profile";
 import { getFollowers, getFollowings, getReviews } from "utils/api/user";
 import { getCookie } from "utils/session";
@@ -198,6 +200,59 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     },
     [arrayService]
   );
+  const onUpdatePackage = useCallback((id) => {
+    openModal({
+      show: true,
+      overlayClassName: "quick-view-overlay",
+      closeOnClickOutside: true,
+      component: PushUpdate,
+      closeComponent: "",
+      config: {
+        enableResizing: false,
+        disableDragging: true,
+        className: "quick-view-modal",
+        width: "500px",
+        height: "auto",
+      },
+      componentProps: {
+        onUpdate: onUpdatePackageClick,
+        id: id,
+        loading: loading,
+      },
+    });
+  }, []);
+
+  const onUpdatePackageClick = async (packId: number, time: string) => {
+    const formatTime = moment(time).format("YYYY-MM-DD HH:mm");
+    console.log(packId, formatTime);
+
+    closeModal();
+    setLoading(true);
+    const { result, advertise } = await updatePushPackage(
+      token,
+      packId,
+      String(formatTime)
+    );
+
+    console.log(
+      "🚀 ~ file: index.tsx ~ line 232 ~ onUpdatePackageClick ~ advertise",
+      advertise
+    );
+    if (result) {
+      data.posts.forEach((item) => {
+        if (item.id == advertise[0].post_id) {
+          item.advertise = advertise[0];
+          return;
+        }
+      });
+
+      setData({ ...data });
+      setSuccessPush(true);
+    } else {
+      setErrorTime(true);
+    }
+    setLoading(false);
+  };
 
   const onPushClick = async (id, packageId, time) => {
     let serviceMoney =
@@ -285,6 +340,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                       currentUser={true}
                       onMarkedPost={onMarkedPost}
                       onPush={onPush}
+                      onUpdatePackage={onUpdatePackage}
                     />
                   ) : null}
 
@@ -308,6 +364,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
                       pushNews={true}
                       currentUser={true}
                       onDeletePost={onDeletePost}
+                      onUpdatePackage={onUpdatePackage}
                     />
                   ) : null}
 

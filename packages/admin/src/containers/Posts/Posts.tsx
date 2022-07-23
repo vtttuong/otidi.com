@@ -2,10 +2,12 @@ import { styled, withStyle } from "baseui";
 import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
+import Pagination from "components/Pagination/Pagination";
 import Placeholder from "components/Placeholder/Placeholder";
 import PostCard from "components/PostCard/PostCard";
 import Select from "components/Select/Select";
 import { Header } from "components/Wrapper.style";
+import UpdatePost from "containers/PostForm/PostUpdateForm";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
 import React, { useState } from "react";
 import Fade from "react-reveal/Fade";
@@ -97,11 +99,12 @@ export default function Posts() {
   const [isExpired, setIsExpired] = useState(false);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
-  const COUNT = 10;
+  const [totalPages, setTotalPages] = useState(0);
+  const COUNT = 12;
 
   const approvedPostId = useDrawerState("approvedPostId");
 
-  const { data, error, mutate } = usePosts({
+  const { data, error, mutate, total } = usePosts({
     status: postStatus,
     text: search ? search : "",
     brand: brands,
@@ -109,6 +112,12 @@ export default function Posts() {
     page: page,
     count: COUNT,
   });
+
+  React.useEffect(() => {
+    if (total !== 0) {
+      setTotalPages(Math.ceil(total / COUNT));
+    }
+  }, [total]);
 
   React.useEffect(() => {
     mutate();
@@ -156,6 +165,7 @@ export default function Posts() {
 
   function handleSort({ value }) {
     setSortByOption(value);
+    setPage(1);
 
     if (value.length === 0) {
       setSortBy("");
@@ -165,6 +175,7 @@ export default function Posts() {
   }
 
   function handleBrand({ value }) {
+    setPage(1);
     setBrandOption(value);
 
     if (value.length === 0) {
@@ -174,6 +185,7 @@ export default function Posts() {
     }
   }
   function handlePostStatus({ value }) {
+    setPage(1);
     setPostStatusOption(value);
 
     if (value.length === 0) {
@@ -183,6 +195,7 @@ export default function Posts() {
     }
   }
   function handleSearch(event) {
+    setPage(1);
     const value = event.currentTarget.value;
     setSearch(value);
   }
@@ -257,35 +270,43 @@ export default function Posts() {
             </Col>
           </Header>
 
+          {totalPages !== 0 && (
+            <Row style={{ margin: 0 }}>
+              <Pagination page={page} total={totalPages} setPage={setPage} />
+            </Row>
+          )}
+
           <Row>
             {data ? (
               data.length !== 0 ? (
-                data.map((item: any, index: number) => (
-                  <Col
-                    md={4}
-                    lg={3}
-                    sm={6}
-                    xs={12}
-                    key={index}
-                    style={{ margin: "15px 0" }}
-                  >
-                    <Fade bottom duration={800} delay={index * 10}>
-                      <PostCard
-                        title={item.title}
-                        weight={item.unit}
-                        image={item.main_image?.url}
-                        // avatar={getUserAvatar(item.user_id)}
-                        user={item.user}
-                        currency={CURRENCY}
-                        price={item.price_after_tax}
-                        salePrice={0}
-                        typeOfPost={item.type}
-                        postId={item.id}
-                        status={item.status}
-                      />
-                    </Fade>
-                  </Col>
-                ))
+                <>
+                  {data.map((item: any, index: number) => (
+                    <Col
+                      md={4}
+                      lg={3}
+                      sm={6}
+                      xs={12}
+                      key={index}
+                      style={{ margin: "15px 0" }}
+                    >
+                      <Fade bottom duration={800} delay={index * 10}>
+                        <PostCard
+                          title={item.title}
+                          weight={item.unit}
+                          image={item.main_image?.url}
+                          // avatar={getUserAvatar(item.user_id)}
+                          user={item.user}
+                          currency={CURRENCY}
+                          price={item.price_after_tax}
+                          salePrice={0}
+                          typeOfPost={item.type}
+                          postId={item.id}
+                          status={item.status}
+                        />
+                      </Fade>
+                    </Col>
+                  ))}
+                </>
               ) : (
                 <NoResult />
               )

@@ -95,6 +95,8 @@ export default function Vouchers() {
   const deletedVoucherIds = useDrawerState("deletedVoucherIds");
   const createdVoucher = useDrawerState("createdVoucher");
   const updatedVoucher = useDrawerState("updatedVoucher");
+  // const count = 10;
+  // const [page, setPage] = useState(1);
 
   const active = useCss({
     ":before": {
@@ -110,7 +112,11 @@ export default function Vouchers() {
     },
   });
 
-  const { data, mutate, maxId } = useVouchers({ status, type, text });
+  const { data, mutate, maxId } = useVouchers({
+    status,
+    type,
+    text,
+  });
 
   console.log("DATA: ", data);
 
@@ -256,6 +262,12 @@ export default function Vouchers() {
     return (num * 100) / total;
   };
 
+  const isExpired = (time: string) => {
+    const currentTime = dayjs(new Date());
+    const _time = dayjs(time);
+    return _time.isBefore(currentTime);
+  };
+
   return (
     <Grid fluid={true}>
       <Row>
@@ -332,7 +344,7 @@ export default function Vouchers() {
 
           <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(250px, 100px) minmax(200px, auto) minmax(200px, auto) minmax(200px, max-content) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
+              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(70px, 70px) minmax(250px, 100px) minmax(200px, auto) minmax(200px, auto) minmax(200px, max-content) minmax(180px, auto) minmax(180px, auto) minmax(150px, auto)">
                 <StyledHeadCell>
                   <Checkbox
                     type="checkbox"
@@ -357,8 +369,8 @@ export default function Vouchers() {
                 </StyledHeadCell>
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>Image</StyledHeadCell>
-                <StyledHeadCell>Vouchers Name</StyledHeadCell>
                 <StyledHeadCell>Code</StyledHeadCell>
+                <StyledHeadCell>Type</StyledHeadCell>
                 <StyledHeadCell>Remaining coupon</StyledHeadCell>
                 <StyledHeadCell>Creation Date</StyledHeadCell>
                 <StyledHeadCell>Expiration Date</StyledHeadCell>
@@ -397,7 +409,11 @@ export default function Vouchers() {
                             </ImageWrapper>
                           </StyledBodyCell>
                           <StyledBodyCell>{item.name}</StyledBodyCell>
-                          <StyledBodyCell>{item.name}</StyledBodyCell>
+                          <StyledBodyCell>
+                            {item.type === "personal"
+                              ? "Personal"
+                              : "Exchangeable"}
+                          </StyledBodyCell>
                           <StyledBodyCell>
                             <ProgressWrapper>
                               <ProgressBar
@@ -439,16 +455,20 @@ export default function Vouchers() {
                             </ProgressWrapper>
                           </StyledBodyCell>
                           <StyledBodyCell>
-                            {dayjs(item.created_at).format("DD MMM YYYY")}
+                            {dayjs(item.created_at).format(
+                              "MMM D, YYYY h:mm A"
+                            )}
                           </StyledBodyCell>
                           <StyledBodyCell>
-                            {dayjs(item.end_at).format("DD MMM YYYY")}
+                            {dayjs(item.end_at).format("MMM D, YYYY h:mm A")}
                           </StyledBodyCell>
                           <StyledBodyCell>
                             <Status
-                              className={item.deleted_at ? revoked : active}
+                              className={
+                                isExpired(item.end_at) ? revoked : active
+                              }
                             >
-                              {item.deleted_at ? "Expired" : "active"}
+                              {isExpired(item.end_at) ? "Expired" : "active"}
                             </Status>
                           </StyledBodyCell>
                         </React.Fragment>

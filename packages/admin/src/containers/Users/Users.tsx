@@ -7,6 +7,7 @@ import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
+import Pagination from "components/Pagination/Pagination";
 import Select from "components/Select/Select";
 import { Header, Heading, Wrapper } from "components/Wrapper.style";
 import { useDrawerDispatch } from "context/DrawerContext";
@@ -197,7 +198,17 @@ export default function Users() {
 
   return (
     <Consumer>
-      {({ dataUsers, getUser, searchName, status, setStatus, page }) => {
+      {({
+        dataUsers,
+        getUser,
+        searchName,
+        status,
+        setStatus,
+        page,
+        totalPages,
+        setPage,
+        loading,
+      }) => {
         setDataUsers(dataUsers);
         return (
           <>
@@ -278,6 +289,12 @@ export default function Users() {
                     </Col>
                   </Header>
 
+                  <Pagination
+                    total={totalPages}
+                    setPage={setPage}
+                    page={page}
+                  />
+
                   <Wrapper
                     style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}
                   >
@@ -314,7 +331,7 @@ export default function Users() {
                         <StyledHeadCell>Verify</StyledHeadCell>
                         <StyledHeadCell>Status</StyledHeadCell>
 
-                        {dataUsers ? (
+                        {!loading ? (
                           dataUsers.length !== 0 ? (
                             dataUsers.map((item) => (
                               <React.Fragment key={item.id}>

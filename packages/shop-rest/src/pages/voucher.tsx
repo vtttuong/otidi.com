@@ -71,7 +71,7 @@ const accordionData = [
 const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
   const [activeTab, setActiveTab] = useState("allVoucher");
   const [data, setData] = useState([]);
-  const [error, setError] = useState(0);
+  const [error, setError] = useState("");
   const posting = [];
 
   const dataTab2 = [
@@ -97,14 +97,17 @@ const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
 
   const onExchange = async (id) => {
     const result = await exchange(token, id);
-    if (!result.ok) {
-      setError(1);
+    if (result && !result.success) {
+      setError(result.result);
     } else {
-      setError(2);
+      setError("");
+      dataVoucher.myVouchers.push(
+        dataVoucher.allVouchers.find((voucher) => voucher.id === id)
+      );
       setActiveTab("myVoucher");
     }
     setTimeout(() => {
-      setError(0);
+      setError("");
     }, 2000);
   };
   const getProfiles = async () => {
@@ -151,12 +154,9 @@ const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
                 </ContentBox>
               </ContentContainer>
             </ContainBody>
-            {error == 1 ? (
-              <Notice
-                status={"errror"}
-                content={"Không đủ điểm đổi thưởng !"}
-              />
-            ) : error == 2 ? (
+            {error ? (
+              <Notice status={"errror"} content={error} />
+            ) : error && error.length !== 0 ? (
               <Notice status={"success"} content={"Đổi thành công !"} />
             ) : null}
             <Footer />

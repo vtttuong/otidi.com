@@ -569,7 +569,7 @@ export const FoodCardWrapper = styled.div`
   position: relative;
   font-family: ${themeGet("fonts.body", "sans-serif")};
   border-radius: ${themeGet("radii.base", "6px")};
-  overflow: hidden;
+  // overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -827,6 +827,17 @@ export const Category = styled.span`
     object-fit: cover;
     margin-right: 5px;
     padding-top: 4px;
+  }
+
+  .address {
+    width: calc(100% - 15px);
+    word-wrap: break-word;
+    display: inline-block;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 

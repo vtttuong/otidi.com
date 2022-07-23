@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { CouponBoxWrapper, Error } from "./coupon.style";
+import { CouponBoxWrapper, Error, Success } from "./coupon.style";
 import { Input } from "components/forms/input";
 import { Button } from "components/button/button";
-import { verifyVoucher } from "utils/api/voucher";
+import { getMyVoucher, verifyVoucher } from "utils/api/voucher";
 import { getCookie } from "utils/session";
 import { ProfileContext } from "contexts/profile/profile.context";
+import { min } from "moment";
 
 type CouponProps = {
   disabled?: any;
@@ -28,39 +29,75 @@ const Coupon: React.FC<CouponProps> = ({
   const [code, setCode] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [valid, setValid] = useState(false);
 
   const handleApplyCoupon = async () => {
+    if (code.trim().length === 0) {
+      return;
+    }
+
     setLoading(true);
     let token = getCookie("access_token");
-    const res = await verifyVoucher(token, code);
+
+    const myVouchers = await getMyVoucher(token);
+    const applyVoucher = myVouchers.find(
+      (voucher) => voucher.name === code.trim()
+    );
+
+    // const res = await verifyVoucher(token, code);
     setLoading(false);
     setCode(code);
-    if (res.ok) {
-      const data = await res.json();
+    // if (applyVoucher) {
+    //   // const data = await res.json();
 
-      if (data) {
-        setError("");
-        dispatch({
-          type: "SET_DISCOUNT_PAYMENT_INFO",
-          payload: { value: data.discount, field: "discount" },
-        });
-        dispatch({
-          type: "SET_DISCOUNT_PAYMENT_INFO",
-          payload: { value: data.id, field: "voucherId" },
-        });
-      } else {
-        setError("couponError");
-        dispatch({
-          type: "SET_DISCOUNT_PAYMENT_INFO",
-          payload: { value: 0, field: "discount" },
-        });
-        dispatch({
-          type: "SET_DISCOUNT_PAYMENT_INFO",
-          payload: { value: null, field: "voucherId" },
-        });
-      }
+    //   if (applyVoucher) {
+    //     setError("");
+    //     dispatch({
+    //       type: "SET_DISCOUNT_PAYMENT_INFO",
+    //       payload: { value: applyVoucher.value, field: "discount" },
+    //     });
+    //     dispatch({
+    //       type: "SET_DISCOUNT_PAYMENT_INFO",
+    //       payload: { value: applyVoucher.id, field: "voucherId" },
+    //     });
+    //   } else {
+    //     setError("couponUsed");
+    //     dispatch({
+    //       type: "SET_DISCOUNT_PAYMENT_INFO",
+    //       payload: { value: 0, field: "discount" },
+    //     });
+    //     dispatch({
+    //       type: "SET_DISCOUNT_PAYMENT_INFO",
+    //       payload: { value: null, field: "voucherId" },
+    //     });
+    //   }
+    // } else {
+    //   setError("couponError");
+    //   dispatch({
+    //     type: "SET_DISCOUNT_PAYMENT_INFO",
+    //     payload: { value: 0, field: "discount" },
+    //   });
+    //   dispatch({
+    //     type: "SET_DISCOUNT_PAYMENT_INFO",
+    //     payload: { value: null, field: "voucherId" },
+    //   });
+    // }
+
+    if (applyVoucher) {
+      setError("");
+      setValid(true);
+
+      dispatch({
+        type: "SET_DISCOUNT_PAYMENT_INFO",
+        payload: { value: applyVoucher.value, field: "discount" },
+      });
+      dispatch({
+        type: "SET_DISCOUNT_PAYMENT_INFO",
+        payload: { value: applyVoucher.id, field: "voucherId" },
+      });
     } else {
-      setError("couponUsed");
+      setValid(false);
+      setError("couponError");
       dispatch({
         type: "SET_DISCOUNT_PAYMENT_INFO",
         payload: { value: 0, field: "discount" },
@@ -71,7 +108,18 @@ const Coupon: React.FC<CouponProps> = ({
       });
     }
   };
+
   const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setError("");
+    setValid(false);
+    dispatch({
+      type: "SET_DISCOUNT_PAYMENT_INFO",
+      payload: { value: 0, field: "discount" },
+    });
+    dispatch({
+      type: "SET_DISCOUNT_PAYMENT_INFO",
+      payload: { value: null, field: "voucherId" },
+    });
     setCode(e.currentTarget.value);
   };
   return (
@@ -96,14 +144,18 @@ const Coupon: React.FC<CouponProps> = ({
           padding="0 30px"
           loading={loading}
         >
-          <FormattedMessage id="voucherApply" defaultMessage="Apply" />
+          {/* <FormattedMessage id="voucherApply" defaultMessage="Apply" /> */}
+          {/* <FormattedMessage id="voucherApply" defaultMessage="Apply" /> */}
+          Check
         </Button>
       </CouponBoxWrapper>
-      {error && (
+      {error && error.length !== 0 && (
         <Error errorMsgFixed={errorMsgFixed}>
           <FormattedMessage id={error} defaultMessage={error} />
         </Error>
       )}
+
+      {valid && <Success>Valid Coupon</Success>}
     </>
   );
 };

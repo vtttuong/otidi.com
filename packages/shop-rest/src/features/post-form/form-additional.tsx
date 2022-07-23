@@ -24,6 +24,7 @@ import {
   originOptions,
   statusOptions,
 } from "./options";
+import { numberWithCommas } from "utils/formatNumber";
 
 const CarAdditionalInfo = ({ brands }) => {
   const { state, dispatch } = useContext(PostFormContext);
@@ -204,7 +205,9 @@ const CarAdditionalInfo = ({ brands }) => {
               styles={CustomStyles}
               options={statusOptions}
               defaultValue={statusOptions[0]}
-              value={statusOptions[state.indexOptionStatus]}
+              value={statusOptions.find(
+                (opt) => opt.value === state.additionalInfo.status
+              )}
               onChange={(data) => {
                 dispatch({
                   type: "HANDLE_ON_CHANGE_ADDITIONAL_DATA",

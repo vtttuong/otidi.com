@@ -193,6 +193,35 @@ export async function pushPost(token: string, post_id, packages_id, schedule) {
   }
 }
 
+export async function updatePushPackage(
+  token: string,
+  package_id: number,
+  schedule: string
+) {
+  const options = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      start_time: schedule,
+    }),
+  };
+
+  try {
+    const res = await fetch(`${baseUrl}/advertises/${package_id}`, options);
+    const json = await res.json();
+
+    return {
+      result: json.success ? true : false,
+      advertise: json.success ? json.data : null,
+    };
+  } catch (err) {
+    return { result: false };
+  }
+}
+
 export async function getSettingProfile(token: string) {
   const options = {
     method: "GET",

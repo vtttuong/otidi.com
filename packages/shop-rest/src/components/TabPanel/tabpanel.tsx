@@ -27,7 +27,7 @@ export class TabPanel extends React.Component<props, state> {
     return (
       <ul
         // onClick={this.on}
-        style={{ width: "100%" }}
+        style={{ width: "100%", overflow: "auto" }}
         className="tab-panel tab-profile tab-voucher"
         id="myTab"
         role="tablist"

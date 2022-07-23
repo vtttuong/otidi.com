@@ -241,3 +241,17 @@ export async function markPost(id: number) {
     };
   }
 }
+
+export const getTopPosts = async (top: number, orderBy: string) => {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": API_KEY,
+    },
+  };
+  const posts = await fetch(
+    `${baseUrlIndex}/posts?page=1&count=${top}&order_by=${orderBy}&dir=desc`,
+    options
+  );
+  return await posts.json();
+};

@@ -50,7 +50,7 @@ const options = {
   // ignoreLocation: false,
   // ignoreFieldNorm: false,
   // minMatchCharLength: 2,
-  keys: ["type"],
+  keys: ["name", "description"],
 };
 export default function Tasks() {
   const dispatch = useDrawerDispatch();
@@ -184,7 +184,7 @@ export default function Tasks() {
 
             <Col md={10}>
               <Row>
-                <Col md={5}></Col>
+                {/* <Col md={5}></Col> */}
                 {/* <Col md={3}>
                   <Select
                     options={sortCreatedAt}
@@ -197,7 +197,7 @@ export default function Tasks() {
                   />
                 </Col> */}
 
-                <Col md={5}>
+                <Col md={6} style={{ marginLeft: "auto" }}>
                   <Input
                     value={search}
                     placeholder="Ex: Search By Name"

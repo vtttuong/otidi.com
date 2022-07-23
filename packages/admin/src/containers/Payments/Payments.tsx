@@ -20,6 +20,8 @@ import {
 } from "./Payments.style";
 import { getUsers } from "service/use-users";
 import { numberWithCommas } from "utils/format-number";
+import { getVoucher } from "service/use-vouchers";
+import Pagination from "components/Pagination/Pagination";
 
 // type CustomThemeT = {red400: string; textNormal: string; colors: any};
 
@@ -65,7 +67,7 @@ const Row = withStyle(Rows, () => ({
 
 const statusSelectOptions = [
   { value: "authorized", label: "Authorized" },
-  { value: "captured", label: "Capture" },
+  { value: "captured", label: "Captured" },
 ];
 
 const sortSelectOptions = [
@@ -88,6 +90,7 @@ export default function Payments() {
   //   },
   // });
   const [users, setUsers] = useState([]);
+  const [voucher, setVouchers] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [sortOptions, setSortOptions] = useState([]);
 
@@ -95,20 +98,30 @@ export default function Payments() {
 
   const [status, setStatus] = useState("");
   const [sort, setSort] = useState("");
+  const [page, setPage] = useState(1);
+  const COUNT = 10;
+  const [totalPages, setTotalPages] = useState(0);
 
-  const { data } = usePayments({
+  const { data, total } = usePayments({
     from: dateRange ? moment(dateRange[0]).format("YYYY-MM-DD") : "",
     to: dateRange ? moment(dateRange[1]).format("YYYY-MM-DD") : "",
     status: status,
     sort: sort,
+    sortBy: "amount",
+    page: page,
+    count: COUNT,
   });
 
   React.useEffect(() => {
-    const fetchUser = async () => {
+    setTotalPages(Math.ceil(total / COUNT));
+  }, [total]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
       const response = await getUsers();
-      setUsers(response);
+      setUsers(response.data);
     };
-    fetchUser();
+    fetchData();
   }, []);
 
   useEffect(() => {}, [status, sort]);
@@ -191,16 +204,20 @@ export default function Payments() {
               </Row>
             </Col>
           </Header>
+          {totalPages !== 0 && (
+            <Pagination page={page} setPage={setPage} total={totalPages} />
+          )}
 
           <Wrapper style={{ boxShadow: "0 0 5px rgba(0, 0 , 0, 0.05)" }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(150px, 200px) minmax(150px, 1fr) minmax(200px, 1fr) minmax(150px, max-content) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr)">
+              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(150px, 200px) minmax(150px, 1fr) minmax(200px, 1fr) minmax(150px, max-content) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr)">
                 <StyledHeadCell>ID</StyledHeadCell>
                 <StyledHeadCell>User name</StyledHeadCell>
                 <StyledHeadCell>Order ID</StyledHeadCell>
                 <StyledHeadCell>Order Info</StyledHeadCell>
                 <StyledHeadCell>Status</StyledHeadCell>
                 <StyledHeadCell>Amount</StyledHeadCell>
+                <StyledHeadCell>VoucherID</StyledHeadCell>
                 <StyledHeadCell>Created At</StyledHeadCell>
                 <StyledHeadCell>Updated At</StyledHeadCell>
                 <StyledHeadCell>Contact</StyledHeadCell>
@@ -219,6 +236,7 @@ export default function Payments() {
                         <StyledCell>
                           {numberWithCommas(item["amount"])}
                         </StyledCell>
+                        <StyledCell>{item["voucher_id"]}</StyledCell>
                         <StyledCell>
                           {dayjs(item["created_at"]).format("DD MMM YYYY")}
                         </StyledCell>

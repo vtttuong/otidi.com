@@ -29,6 +29,10 @@ export const PostDetailsWrapper = styled.div`
     max-width: 1200px;
     width: auto;
   }
+
+  @media (max-width: 991px) {
+    flex-direction: column;
+  }
 `;
 
 export const PostPreview = styled.div`
@@ -48,7 +52,7 @@ export const PostPreview = styled.div`
     height: auto;
     border-radius: 10px;
   }
-  @media (max-width: 769px) {
+  @media (max-width: 991px) {
     width: 99%;
     display: block;
     padding: 0;
@@ -366,11 +370,12 @@ export const AuthorInfor = styled.div`
       height: calc(100vh - 385px);
     }
   }
-  @media (max-width: 768px) {
-    width: 80%;
+  @media (max-width: 991px) {
+    width: 60%;
+    // width: 90%;
     margin: 0 auto;
   }
-  @media (max-width: 426px) {
+  @media (max-width: 767px) {
     width: 99%;
     padding: 0;
   }
@@ -397,6 +402,12 @@ export const PostCartBtn = styled.div`
   .quantity {
     width: 115px;
     height: 38px;
+  }
+`;
+export const ChatButtons = styled.div`
+  @media (min-width: 576px) and (max-width: 991px) {
+    display: flex;
+    gap: 10px;
   }
 `;
 

@@ -44,7 +44,7 @@ export async function getUsers(variables?: PROPS) {
   try {
     const users = await fetch(`${baseUrl}/users?${parsed}`, options);
     const usersJson = await users.json();
-    return usersJson.success ? usersJson.data : null;
+    return usersJson.success ? usersJson : null;
   } catch (err) {
     return null;
   }

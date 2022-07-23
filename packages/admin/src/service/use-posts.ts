@@ -109,6 +109,7 @@ export default function usePosts(variables: Props) {
     // hasMore,
     mutate,
     // fetchMore,
+    total: data?.total || 0,
   };
 }
 
@@ -122,4 +123,24 @@ export const usePost = (postId: number) => {
     error,
     post: data?.data,
   };
+};
+
+export const getReports = async (postId: number) => {
+  const token = localStorage.getItem("secondhand_token");
+  const url = `${baseUrl}/post-reports?post_id=${postId}&order_by=id&dir=asc`;
+
+  const configs = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const response = await fetch(url, configs);
+    return await response.json();
+  } catch (err) {
+    return null;
+  }
 };

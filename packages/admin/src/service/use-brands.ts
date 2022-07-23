@@ -38,12 +38,17 @@ const productFetcher = async (url) =>
 interface Props {
   locale?: string;
   text?: string;
+  page?: number;
+  count?: number;
 }
 
 export default function useBrands(variables: Props) {
-  const { text } = variables ?? {};
+  const { text, page, count } = variables ?? {};
 
-  let queryParams = {};
+  let queryParams = {
+    page: page,
+    count: count,
+  };
 
   let newParams = {};
   // eslint-disable-next-line array-callback-return
@@ -77,6 +82,7 @@ export default function useBrands(variables: Props) {
     error,
     data: brands,
     mutate,
+    total: data?.total || 0,
   };
 }
 

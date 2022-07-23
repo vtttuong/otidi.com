@@ -18,6 +18,7 @@ import { FormattedMessage } from "react-intl";
 import AddressIcon from "../../../assets/images/location.png";
 import { formatRelativeTime } from "utils/formatRelativeTime";
 import NumberFormat from "react-number-format";
+import { CURRENCY } from "utils/constant";
 
 type CardProps = {
   name: string;
@@ -89,9 +90,9 @@ const PostCard: React.FC<CardProps> = ({
         >
           {name}
         </h3>
-        <Category style={{ marginBottom: 20, display: "inline-block" }}>
+        <Category style={{ marginBottom: 20, display: "flex" }}>
           <img src={AddressIcon} alt={"address"} />
-          {address}
+          <span className="address"> {address}</span>
         </Category>
         <PostMeta style={{ marginTop: "auto" }} className="top">
           <DeliveryOpt>
@@ -99,7 +100,7 @@ const PostCard: React.FC<CardProps> = ({
               value={price}
               displayType={"text"}
               thousandSeparator={true}
-              prefix={"$"}
+              suffix={CURRENCY}
               renderText={(value) => <div>{value}</div>}
             />
             <span style={{ position: "absolute", left: "121%", top: 0 }}>
@@ -111,7 +112,7 @@ const PostCard: React.FC<CardProps> = ({
             {formatTime.time}
             <FormattedMessage id={formatTime.unit} />
           </Duration>
-          {prioriry == true ? (
+          {data.advertise ? (
             <SellLabelTop>
               <FormattedMessage id="topPost" defaultMessage="Top post" />
             </SellLabelTop>

@@ -69,7 +69,7 @@ const storageUrl = process.env.REACT_APP_LARAVEL_STORAGE_URL;
 
 function Uploader({ onChange, imageURL }: any) {
   const [files, setFiles] = useState(
-    imageURL ? [{ name: "demo", preview: storageUrl + imageURL }] : []
+    imageURL ? [{ name: "demo", preview: imageURL }] : []
   );
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",

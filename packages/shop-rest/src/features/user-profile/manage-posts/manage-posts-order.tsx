@@ -6,6 +6,7 @@ import React from "react";
 import Table from "react-bootstrap/Table";
 import { FormattedMessage } from "react-intl";
 import { getHistoryPay } from "utils/api/profile";
+import { numberWithCommas } from "utils/formatNumber";
 import { Box } from "./manage-post.style";
 
 type ManagePostProps = {
@@ -34,7 +35,7 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
         <thead>
           <tr>
             <th>
-              Price{" "}
+              Coin Change{" "}
               <SortAZ
                 style={{
                   marginRight: "0px",
@@ -43,6 +44,7 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
                 }}
               />
             </th>
+            <th>Amount </th>
             <th>Created At </th>
 
             <th>Subcription Type </th>
@@ -68,6 +70,9 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
                         <b>+ {d.balance - d.old_balance}</b>
                       )}
                       {/* {d.price} */}
+                    </td>
+                    <td>
+                      <p>{numberWithCommas(d.extra.amount)}</p>
                     </td>
                     <td>
                       <p>{moment(d.created_at).format("YYYY-MM-DD")}</p>

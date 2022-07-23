@@ -12,7 +12,7 @@ interface Props {
 const NotificationType = {
   PostCreated: "post_created",
   PostReported: "post_reported",
-  UserIdentifyCreated: "user_identify_created",
+  UserIdentifyCreated: "verify_user_identity_card_request",
 };
 
 export async function parseNotiData(data) {
