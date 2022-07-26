@@ -71,46 +71,46 @@ const Push: React.FC<ManagePostProps> = ({
           <Row className="report">
             <Col xs={12} sm={12} md={12} lg={12}>
               <p style={{ margin: "10px 0" }}>Please choose when post pushed</p>
-              <div
+              <Row
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "10px 12px",
                   alignItems: "center",
-                  gap: "10px",
-                  height: "60px",
                 }}
               >
-                <span
-                  style={{
-                    textAlign: "center",
-                    padding: "7px",
-                    background: "#009e7f",
-                    color: "#fff",
-                    marginTop: "5px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {" "}
-                  <FormattedMessage
-                    id="chooseTime"
-                    defaultMessage="Choose  Time"
+                <Col xs={12} md={5}>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      textAlign: "center",
+                      padding: "7px",
+                      background: "#009e7f",
+                      color: "#fff",
+                      margin: "5px 0",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    {" "}
+                    <FormattedMessage
+                      id="chooseTime"
+                      defaultMessage="Choose  Time"
+                    />
+                  </span>
+                </Col>
+                <Col xs={12} md={7}>
+                  <input
+                    style={{
+                      border: "1px solid #009e7f",
+                      padding: "3px 5px",
+                      borderRadius: "5px",
+                      height: "40px",
+                    }}
+                    name="time"
+                    type="datetime-local"
+                    onChange={handleChange}
+                    value={(datetime || "").toString().substring(0, 16)}
+                    // min="2022-7-08T22:22:55"
                   />
-                </span>
-                <input
-                  style={{
-                    border: "1px solid #009e7f",
-                    padding: "3px 5px",
-                    borderRadius: "5px",
-                    height: "100%",
-                  }}
-                  name="time"
-                  type="datetime-local"
-                  onChange={handleChange}
-                  value={(datetime || "").toString().substring(0, 16)}
-                  // min="2022-7-08T22:22:55"
-                />
-              </div>
+                </Col>
+              </Row>
               {error ? (
                 <p style={{ textAlign: "left", color: "red" }}>
                   Check field require!

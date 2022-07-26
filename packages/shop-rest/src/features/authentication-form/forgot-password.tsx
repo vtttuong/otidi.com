@@ -42,32 +42,39 @@ export default function ForgotPasswordModal() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
         },
         body: JSON.stringify({
           email: email,
         }),
       };
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX + "/auth/reset-password",
-        options
-      );
-      if (res.ok) {
-        openModal({
-          show: true,
-          overlayClassName: "quick-view-overlay",
-          closeOnClickOutside: false,
-          component: SuccessModel,
-          closeComponent: "",
-          config: {
-            enableResizing: false,
-            disableDragging: true,
-            className: "quick-view-modal",
-            width: "500px",
-            height: "auto",
-          },
-          componentProps: { textId: "forgotSuccess" },
-        });
-      }
+      try {
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX +
+            "/auth/reset-password",
+          options
+        );
+
+        const resJson = await res.json();
+
+        if (res.ok && resJson.success) {
+          openModal({
+            show: true,
+            overlayClassName: "quick-view-overlay",
+            closeOnClickOutside: false,
+            component: SuccessModel,
+            closeComponent: "",
+            config: {
+              enableResizing: false,
+              disableDragging: true,
+              className: "quick-view-modal",
+              width: "500px",
+              height: "auto",
+            },
+            componentProps: { textId: "forgotSuccess" },
+          });
+        }
+      } catch (err) {}
     }
   };
 

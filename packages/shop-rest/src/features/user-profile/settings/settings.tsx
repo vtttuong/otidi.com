@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { updatePass } from "utils/api/profile";
 import { searchAddress } from "utils/location";
 import {
@@ -69,6 +69,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   });
   // const [popupLocationActive, setPopupLocationActive] = useState(false);
   const [textAddress, setTextAddress] = useState("");
+  const intl = useIntl();
 
   // useEffect(() => {
   //   setSelectedLocation({
@@ -86,7 +87,6 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
       setLoadingPass(true);
       setErrorPass(false);
       const data = await updatePass(token, oldPass, pass, confirmPass);
-      console.log("DATA RESPONSE", data);
 
       if (data.error) {
         setErrorContent(
@@ -366,8 +366,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                   <div className="profile-warning">
                     <Warning />
                     <p>
-                      Update and verify email, phone number, address to create
-                      post.
+                      <FormattedMessage
+                        id="profileSettingText"
+                        defaultMessage="Update and verify email, phone number, address to create post"
+                      />
                     </p>
                   </div>
                 </Row>
@@ -541,8 +543,12 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                   >
                     {selectedLocation.address}
                   </div>
+
                   <Form.Control
-                    placeholder="Find location..."
+                    placeholder={intl.formatMessage({
+                      id: "findLocationPlaceholder",
+                      defaultMessage: "Find location...",
+                    })}
                     name="address"
                     value={textAddress}
                     id="uaosfjcvcns"
@@ -550,6 +556,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                       setTextAddress(e.target.value);
                     }}
                   />
+
                   {/* {popupLocationActive && ( */}
                   <ListLocations>
                     {locations.map((lo) => (

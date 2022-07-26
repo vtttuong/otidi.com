@@ -32,9 +32,10 @@ const SpringModal = dynamic(
 
 interface Props {
   intlTitleId: string;
+  banner: any;
 }
 
-export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
+export const MobileBanner: React.FC<Props> = ({ intlTitleId, banner }) => {
   const [isOpen, setOpen] = useState(false);
   const [token, setToken] = useState("");
   const [text, setText] = useState("");
@@ -80,9 +81,16 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
   };
 
   return (
-    <Box display={["flex", "flex", "none"]}>
+    <Box
+      style={{
+        backgroundImage: `url(${banner.url})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+      display={["flex", "flex", "none"]}
+    >
       <Content>
-        <ContentRow>
+        {/* <ContentRow>
           <Description>
             <FormattedMessage
               id={intlTitleId}
@@ -91,14 +99,14 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId }) => {
             />
           </Description>
 
-          {/* <Button
+          <Button
             variant="text"
             onClick={() => setOpen(true)}
             style={{ textTransform: "capitalize" }}
           >
             "OKEE"
-          </Button> */}
-        </ContentRow>
+          </Button>
+        </ContentRow> */}
 
         <SearchWrapper ref={ref}>
           <Search

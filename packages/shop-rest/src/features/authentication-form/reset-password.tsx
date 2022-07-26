@@ -3,7 +3,7 @@ import { Input } from "components/forms/input";
 import { AuthContext } from "contexts/auth/auth.context";
 import SuccessModel from "features/on-success/success";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import {
   Button,
@@ -21,11 +21,16 @@ export default function ResetModal() {
   const intl = useIntl();
   const { authDispatch } = useContext<any>(AuthContext);
   const [confirmPass, setConfirmPass] = React.useState("");
-  const [errorPass, setErrorPass] = React.useState("");
-  const [errorField, setErrorField] = React.useState("");
-  const [errorPassServe, setErrorPassServe] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+
+  const [error, setError] = useState({
+    length: null,
+    field: null,
+    token: null,
+    confirmPass: null,
+  });
+
   const toggleSignInForm = () => {
     authDispatch({
       type: "SIGNIN",
@@ -35,17 +40,28 @@ export default function ResetModal() {
   const { query } = useRouter();
 
   async function resetCallback(e) {
+    setError({
+      length: null,
+      field: null,
+      token: null,
+      confirmPass: null,
+    });
+
     if (typeof window !== "undefined") {
       if (!password) {
-        setErrorField("errorField");
+        setError((prev) => ({ ...prev, field: "errorField" }));
         return;
       }
-      setErrorField("");
+
+      if (password.length < 6) {
+        setError((prev) => ({ ...prev, length: "errorPassLength" }));
+        return;
+      }
       if (password != confirmPass) {
-        setErrorPass("errorConfirmPass");
+        setError((prev) => ({ ...prev, confirmPass: "errorConfirmPass" }));
         return;
       }
-      setErrorPass("");
+
       setLoading(true);
       e.preventDefault();
 
@@ -53,57 +69,76 @@ export default function ResetModal() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
         },
       };
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX +
-          `/auth/find/${query.token}`,
-        configs
-      );
+      try {
+        const response = await fetch(
+          process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX +
+            `/auth/find/${query.token}`,
+          configs
+        );
 
-      const resetPass = await response.json();
+        const resetPass = await response.json();
 
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: resetPass.email,
-          password: password,
-          token: resetPass.token,
-        }),
-      };
+        if (!resetPass.success) {
+          setLoading(false);
+          setError((prev) => ({ ...prev, token: "invalidToken" }));
+          return;
+        }
 
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX + "/auth/reset",
-        options
-      );
-
-      const data = await res.json();
-
-      if (data && data.error) {
-        setLoading(false);
-        setConfirmPass("errorServePass");
-      }
-
-      if (res.ok) {
-        setLoading(false);
-        openModal({
-          show: true,
-          overlayClassName: "quick-view-overlay",
-          closeOnClickOutside: false,
-          component: SuccessModel,
-          closeComponent: "",
-          config: {
-            enableResizing: false,
-            disableDragging: true,
-            className: "quick-view-modal",
-            width: "500px",
-            height: "auto",
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
           },
-          componentProps: { textId: "resConfirmEmailSuccessFul" },
-        });
+          body: JSON.stringify({
+            email: resetPass.data.email,
+            password: password,
+            password_confirmation: confirmPass,
+            token: resetPass.data.token,
+          }),
+        };
+
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX + "/auth/reset",
+          options
+        );
+
+        const resetResult = await res.json();
+
+        if (!resetResult.success) {
+          setLoading(false);
+          setConfirmPass("errorServePass");
+          setError((prev) => ({ ...prev, token: "invalidToken" }));
+        }
+
+        if (resetResult.success) {
+          setLoading(false);
+          openModal({
+            show: true,
+            overlayClassName: "quick-view-overlay",
+            closeOnClickOutside: false,
+            component: SuccessModel,
+            closeComponent: "",
+            config: {
+              enableResizing: false,
+              disableDragging: true,
+              className: "quick-view-modal",
+              width: "500px",
+              height: "auto",
+            },
+            componentProps: {
+              textId: "resetPasswordSuccessfully",
+              btnId: "loginBtnText",
+              href: "/login",
+            },
+          });
+        }
+      } catch (err) {
+        setLoading(false);
+        setError((prev) => ({ ...prev, token: "invalidToken" }));
       }
     }
   }
@@ -141,7 +176,7 @@ export default function ResetModal() {
         <Input
           type="password"
           placeholder={intl.formatMessage({
-            id: "passwordConfirmPlaceholder",
+            id: "confirmPasswordPlaceholder",
             defaultMessage: "Confirm Password",
           })}
           value={confirmPass}
@@ -152,7 +187,7 @@ export default function ResetModal() {
           mb="10px"
         />
 
-        {errorPass && errorPass.length > 0 ? (
+        {error && error.length ? (
           <span
             style={{
               padding: 5,
@@ -163,13 +198,13 @@ export default function ResetModal() {
             }}
           >
             <FormattedMessage
-              id="errorConfirmPass"
-              defaultMessage="Error confirm password"
+              id={error.length}
+              defaultMessage="Password must be at least 6 characters"
             />
           </span>
         ) : null}
 
-        {errorField && errorField.length > 0 ? (
+        {error && error.field ? (
           <span
             style={{
               padding: 5,
@@ -180,13 +215,13 @@ export default function ResetModal() {
             }}
           >
             <FormattedMessage
-              id="errorRegisterField"
+              id={error.field}
               defaultMessage="Check all field required !"
             />
           </span>
         ) : null}
 
-        {errorPassServe && errorPassServe.length > 0 ? (
+        {error && error.confirmPass ? (
           <span
             style={{
               padding: 5,
@@ -197,9 +232,23 @@ export default function ResetModal() {
             }}
           >
             <FormattedMessage
-              id="errorRegister"
-              defaultMessage={errorPassServe}
+              id={error.confirmPass}
+              defaultMessage="Password and confirm password doesn't match"
             />
+          </span>
+        ) : null}
+
+        {error && error.token ? (
+          <span
+            style={{
+              padding: 5,
+              marginBottom: 10,
+              color: "red",
+              display: "block",
+              textAlign: "left",
+            }}
+          >
+            <FormattedMessage id={error.token} defaultMessage="Invalid token" />
           </span>
         ) : null}
 

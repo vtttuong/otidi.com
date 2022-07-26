@@ -35,7 +35,10 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
         <thead>
           <tr>
             <th>
-              Coin Change{" "}
+              <FormattedMessage
+                id="history.change"
+                defaultMessage="Coin change"
+              ></FormattedMessage>{" "}
               <SortAZ
                 style={{
                   marginRight: "0px",
@@ -44,11 +47,31 @@ const ManagePostOrder: React.FC<ManagePostProps> = ({ token }) => {
                 }}
               />
             </th>
-            <th>Amount </th>
-            <th>Created At </th>
+            <th>
+              <FormattedMessage
+                id="history.amount"
+                defaultMessage="Amount"
+              ></FormattedMessage>
+            </th>
+            <th>
+              <FormattedMessage
+                id="history.createAt"
+                defaultMessage="Created at"
+              ></FormattedMessage>
+            </th>
 
-            <th>Subcription Type </th>
-            <th>Status </th>
+            <th>
+              <FormattedMessage
+                id="history.type"
+                defaultMessage="Subscription type"
+              ></FormattedMessage>
+            </th>
+            <th>
+              <FormattedMessage
+                id="history.status"
+                defaultMessage="Status"
+              ></FormattedMessage>{" "}
+            </th>
           </tr>
         </thead>
         <tbody>
