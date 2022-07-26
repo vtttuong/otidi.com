@@ -194,8 +194,8 @@ const AddCampaing: React.FC<Props> = (props) => {
                     options={userType}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="User type"
-                    value={type}
+                    placeholder=""
+                    value={userType.find((t) => t.value === type)}
                     onChange={handleSelectType}
                     overrides={{
                       Placeholder: {

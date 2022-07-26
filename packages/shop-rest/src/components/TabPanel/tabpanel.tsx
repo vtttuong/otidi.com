@@ -40,7 +40,7 @@ export class TabPanel extends React.Component<props, state> {
               textAlign: "center",
               cursor: "pointer",
               transition: "all 0.2s",
-              height: "100%",
+              // height: "100%",
               flex: 1,
             }}
             role="presentation"
@@ -59,6 +59,7 @@ export class TabPanel extends React.Component<props, state> {
               aria-selected="true"
               style={{
                 textDecoration: "none",
+                height: "100% !important",
               }}
             >
               {item.icon ? item.icon : null}{" "}

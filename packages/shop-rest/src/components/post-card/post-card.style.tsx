@@ -702,10 +702,10 @@ export const PostMeta = styled.div`
     }
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 576px) {
     flex-direction: column;
     align-items: start;
-    gap: 8px;
+    gap: 10px;
   }
 `;
 
@@ -782,12 +782,13 @@ export const DeliveryOpt = styled.span`
     min-width: 70px;
     text-align: center;
     right: 0;
-    position: absolute;
+    // position: absolute;
     color: #fff;
     background: #4974ec;
     padding: 5px 10px;
     border-radius: 5px;
   }
+
   span.name {
     font-size: 17px;
     margin-top: -25px;
@@ -807,12 +808,33 @@ export const DeliveryOpt = styled.span`
       align-self: end;
     }
   }
+
+  .exchange-action {
+    .span {
+      display: block;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    @media (max-width: 576px) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
   font-family: ${themeGet("fonts.body", "sans-serif")};
   font-size: 15px;
   font-weight: ${themeGet("fontWeights.bold", "700")};
   color: ${themeGet("colors.text.bold", "#0D1136")};
   white-space: nowrap;
   position: relative;
+
+  @media (max-width: 576px) {
+    &.voucher-info {
+      width: 100%;
+    }
+  }
 `;
 
 export const Category = styled.span`

@@ -34,6 +34,7 @@ import {
 } from "./right-menu.style";
 import { AuthContext } from "contexts/auth/auth.context";
 import { NEW_MESSAGE_CHANNEL, NEW_MESSAGE_EVENT } from "utils/constant";
+import { setInterval } from "timers";
 
 const AuthMenu = dynamic(() => import("../auth-menu"), { ssr: false });
 
@@ -53,6 +54,7 @@ export const RightMenu: React.FC<Props> = ({
   isHome,
 }) => {
   const { state, dispatch } = useContext(ProfileContext);
+
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [token, setToken] = React.useState("");
@@ -62,13 +64,13 @@ export const RightMenu: React.FC<Props> = ({
   const [dataMessageBroadCast, setDataMessageBroadCast] = React.useState(false);
   const limit = 5;
 
-  const getDataNoti = async () => {
+  const getDataNoti = async (page, limit) => {
     let token = getCookie("access_token");
     if (token !== undefined && token.length > 0) {
       setToken(token);
       const fetchData = async () => {
         setLoading(true);
-        const data = await getNotifications(token, notiPage, limit);
+        const data = await getNotifications(token, page, limit);
         if (!data || data.length === 0) {
           setOutOfData(true);
         }
@@ -85,8 +87,23 @@ export const RightMenu: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    getDataNoti();
+    getDataNoti(notiPage, limit);
   }, [notiPage]);
+
+  //auto reload notification
+  useEffect(() => {
+    const interval = setInterval(() => {
+      //reset notify data;
+      dispatch({
+        type: "RESET_NOTI_DATA",
+        payload: { field: "dataNotify" },
+      });
+      setNotiPage(1);
+      setOutOfData(false);
+      getDataNoti(1, limit);
+    }, 120000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (
@@ -103,7 +120,7 @@ export const RightMenu: React.FC<Props> = ({
   }, [dataNotiBroadCast]);
 
   useEffect(() => {
-    getDataNoti();
+    getDataNoti(notiPage, limit);
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
     });

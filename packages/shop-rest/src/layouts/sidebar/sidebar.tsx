@@ -42,7 +42,8 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
     dispatch({ type: "SET_SEARCH_TERM", payload: "" });
     router.push({
       pathname,
-      query: { ...query, text: slug },
+      // query: { ...query, text: slug },
+      query: { text: slug },
     });
   };
   // const isSidebarSticky = useAppState("isSidebarSticky");

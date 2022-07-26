@@ -157,7 +157,7 @@ export const ButtonCategory = styled.div`
 
 export const Col = styled(Cols)`
   @media only screen and (min-width: 0em) and (max-width: 47.99em) {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 
     &:last-child {
       margin-bottom: 0;
@@ -181,7 +181,7 @@ export const Col = styled(Cols)`
 `;
 
 export const Row = styled(Rows)`
-  margin-top: 50px;
+  margin-top: 30px;
   @media only screen and (min-width: 0em) and (max-width: 47.99em) {
     margin-bottom: 30px;
   }

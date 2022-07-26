@@ -269,6 +269,7 @@ const EditCampaing: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Type</FormLabel>
                   <Select
+                    disabled={true}
                     options={userType}
                     labelKey="label"
                     valueKey="value"

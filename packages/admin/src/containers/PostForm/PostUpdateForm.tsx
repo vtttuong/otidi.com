@@ -217,13 +217,35 @@ const UpdatePost: React.FC<Props> = () => {
                       <Input type="text" inputRef={register} name="unit" />
                     </FormFields> */}
                     <FormFields>
-                      <FormLabel>Price</FormLabel>
+                      <FormLabel>Original price</FormLabel>
                       <Input
                         disabled={true}
                         type="text"
                         name="price"
                         value={`${numberWithCommas(
                           post.original_price
+                        )} ${CURRENCY}`}
+                      />
+                    </FormFields>
+                    <FormFields>
+                      <FormLabel>Discount price</FormLabel>
+                      <Input
+                        disabled={true}
+                        type="text"
+                        name="price"
+                        value={`${numberWithCommas(
+                          post.discount_price
+                        )} ${CURRENCY}`}
+                      />
+                    </FormFields>
+                    <FormFields>
+                      <FormLabel>Price after tax</FormLabel>
+                      <Input
+                        disabled={true}
+                        type="text"
+                        name="price"
+                        value={`${numberWithCommas(
+                          post.price_after_tax
                         )} ${CURRENCY}`}
                       />
                     </FormFields>

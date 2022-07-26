@@ -127,7 +127,7 @@ export default function Vouchers() {
 
   useEffect(() => {
     if (createdVoucher) {
-      data?.unshift(createdVoucher);
+      data?.push(createdVoucher);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createdVoucher]);
@@ -417,7 +417,10 @@ export default function Vouchers() {
                           <StyledBodyCell>
                             <ProgressWrapper>
                               <ProgressBar
-                                value={numberToPercent(item.used, item.total)}
+                                value={numberToPercent(
+                                  item.used || 0,
+                                  item.total || 0
+                                )}
                                 successValue={100}
                                 overrides={{
                                   Bar: {
@@ -464,11 +467,9 @@ export default function Vouchers() {
                           </StyledBodyCell>
                           <StyledBodyCell>
                             <Status
-                              className={
-                                isExpired(item.end_at) ? revoked : active
-                              }
+                              className={item.is_available ? active : revoked}
                             >
-                              {isExpired(item.end_at) ? "Expired" : "active"}
+                              {item.is_available ? "Active" : "Expired"}
                             </Status>
                           </StyledBodyCell>
                         </React.Fragment>

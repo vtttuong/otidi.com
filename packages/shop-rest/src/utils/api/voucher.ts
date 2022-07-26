@@ -10,7 +10,10 @@ export async function getAllVoucher(token: string) {
   };
 
   try {
-    const data = await fetch(`${baseUrl}/vouchers`, options);
+    const data = await fetch(
+      `${baseUrl}/vouchers?order_by=id&dir=desc`,
+      options
+    );
     const dataJson = await data.json();
     return dataJson.success ? dataJson.data : [];
   } catch (error) {
@@ -28,7 +31,10 @@ export async function getMyVoucher(token: string) {
   };
 
   try {
-    const data = await fetch(`${baseUrl}/vouchers/me`, options);
+    const data = await fetch(
+      `${baseUrl}/vouchers/me?order_by=id&dir=desc`,
+      options
+    );
     const dataJson = await data.json();
     return dataJson.success ? dataJson.data : [];
   } catch (error) {

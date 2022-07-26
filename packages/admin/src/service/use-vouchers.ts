@@ -40,7 +40,7 @@ export default function useVouchers(variables: Props) {
   const { status, type, text, page, count } = variables ?? {};
 
   let queryParams = {
-    status: status,
+    // status: status,
     type: type,
     page: page ? page : "",
     count: count ? count : "",
@@ -69,6 +69,14 @@ export default function useVouchers(variables: Props) {
   // need to remove when you using real API integration
 
   let vouchers = data?.data;
+
+  if (status && vouchers) {
+    vouchers = vouchers.filter((voucher) =>
+      status === "active"
+        ? voucher.is_available === true
+        : voucher.is_available === false
+    );
+  }
 
   if (text && vouchers) {
     vouchers = search(vouchers, text);

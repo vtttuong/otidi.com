@@ -30,11 +30,11 @@ const ContenHeader: React.FC<Props> = ({ data }) => {
           <Col className="col" xs={8}>
             <div style={{ padding: "15px 0px 15px 15px" }}>
               <div style={{ display: "flex" }}>
-                <div>
+                <div style={{ width: 70, height: 70, minWidth: 70 }}>
                   <img
                     style={{
-                      width: 70,
-                      height: 70,
+                      width: "100%",
+                      height: "100%",
                       objectFit: "cover",
                     }}
                     src={data.avatar}
@@ -90,13 +90,13 @@ const ContenHeader: React.FC<Props> = ({ data }) => {
                     {data.balance}
                   </b>
                 </div>
-                <div className="content-like">
+                {/* <div className="content-like">
                   <p
                     style={{ fontSize: 14, marginTop: 3, textAlign: "center" }}
                   >
                     <FormattedMessage id="score" defaultMessage="coin" />
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
           </Col>

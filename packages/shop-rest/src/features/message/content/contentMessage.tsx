@@ -78,11 +78,12 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       );
 
       setClient(clientInfo);
-      const post = await getPost(currentChat.post.id);
 
+      const post = await getPost(currentChat.post.id);
       setChat({ ...currentChat, post: { ...chat.post, ...post } });
 
       const data = await getMessages(token, state.chatId);
+
       if (data) {
         dispatch({
           type: "SET_DATA_MESSAGE",

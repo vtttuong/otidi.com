@@ -41,24 +41,6 @@ const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
     return <NotFound />;
   }
 
-  // post.files = [];
-  // post.images[0].url =
-  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  // post.images[1].url =
-  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  // post.images[2].url =
-  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  // post.images[3].url =
-  //   "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-
-  // post.images.forEach(async (image) => {
-  //   const file = await srcToFile(image.url, "image-" + uuid());
-  //   if (file) {
-  //     post.files.push(file);
-  //   }
-  //   console.log(post.files);
-  // });
-
   let initData = {
     id: post.id,
     title: post.title,

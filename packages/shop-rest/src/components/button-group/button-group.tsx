@@ -16,8 +16,9 @@ export const ButtonGroup = styled.div<ButtonGroupProps>`
 
     label {
       margin-top: 0;
-      flex: calc(33.333333333% - 10px);
-      max-width: calc(33.333333333% - 10px);
+      // flex: calc(33.333333333% - 10px);
+      // max-width: calc(33.333333333% - 10px);
+      max-width: calc(60% - 10px);
       margin-bottom: 15px;
 
       &:nth-child(3n) {
@@ -25,7 +26,7 @@ export const ButtonGroup = styled.div<ButtonGroupProps>`
       }
 
       @media (max-width: 700px) {
-        flex: calc(50% - 10px);
+        // flex: calc(50% - 10px);
         width: 100%;
 
         &:nth-child(3n) {
