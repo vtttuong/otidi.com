@@ -117,7 +117,7 @@ const WrapCard: React.FC<Props> = ({
                   ? openWarning()
                   : router.push(
                       "/posts/[id]",
-                      `/posts/${saveNews ? d.post.id : d.id}`
+                      `/posts/${saveNews ? d.post.slug : d.slug}`
                     );
               }}
               onClickEdit={() => {

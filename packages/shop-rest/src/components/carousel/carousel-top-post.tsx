@@ -223,7 +223,7 @@ export default function CustomCarousel({
                   avatar={item.user.avatar}
                   user_name={item.user.name}
                   onClick={() => {
-                    router.push(`/posts/${item.id}`);
+                    router.push(`/posts/${item.slug}`);
                   }}
                 />
               </div>

@@ -16,7 +16,9 @@ export async function getChats(token: string) {
       result: json.success ? json.data : null,
     };
   } catch (err) {
-    return null;
+    return {
+      result: null,
+    };
   }
 }
 

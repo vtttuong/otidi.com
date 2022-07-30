@@ -39,10 +39,6 @@ export const RecommendPosts: React.FC<PostsProps> = ({
 }) => {
   const router = useRouter();
   const { loading, data } = useRecommendPosts(postId);
-  console.log(
-    "🚀 ~ file: post-list-recommend.tsx ~ line 43 ~ recommends",
-    data
-  );
 
   if (loading) {
     return (
@@ -89,9 +85,9 @@ export const RecommendPosts: React.FC<PostsProps> = ({
                     isFree={false}
                     typeOfPost={item.type}
                     data={item}
-                    prioriry={item.is_priority}
+                    prioriry={item.is_advertise}
                     onClick={() => {
-                      router.push(`/posts/${item.id}`);
+                      router.push(`/posts/${item.slug}`);
                       setTimeout(() => {
                         window.scrollTo(0, 0);
                       }, 500);

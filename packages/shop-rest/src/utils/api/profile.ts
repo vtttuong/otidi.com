@@ -250,7 +250,7 @@ export async function parseNotiData(data) {
       };
       type = "postApprovedSucess";
       messageId = "postSuccessMess";
-      pathName = `/posts/${data.post_id}`;
+      pathName = `/posts/${data.post_slug}`;
       break;
     case NotificationType.NewUserFollow:
       values = {
@@ -275,7 +275,7 @@ export async function parseNotiData(data) {
       };
       type = "recommendPostTit";
       messageId = "newPost";
-      pathName = `/posts/${data.post_id}`;
+      pathName = `/posts/${data.post_slug}`;
       break;
     case NotificationType.PushPostSuccess:
       values = {
@@ -283,7 +283,7 @@ export async function parseNotiData(data) {
       };
       type = "pushPostSuccessTit";
       messageId = "pushPostSuccessMess";
-      pathName = `/posts/${data.post_id}`;
+      pathName = `/posts/${data.post_slug}`;
       break;
     case NotificationType.UserLevelUp:
       values = {

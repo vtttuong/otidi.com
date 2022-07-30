@@ -103,6 +103,7 @@ export default function SignInModal() {
       options
     );
     const data = await res.json();
+
     if (data && data.error) {
       setError(data.error);
       setLoading(false);
@@ -143,7 +144,7 @@ export default function SignInModal() {
       const res = await fetch(`${API_BASE_URL}/oauth/token`, options);
 
       const data = await res.json();
-      console.log(data);
+
       if (data && data.error) {
         setError(data.error);
         setLoading(false);

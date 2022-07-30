@@ -92,6 +92,7 @@ const Step1 = (props) => {
         <Col xs={8} sm={8} md={8} lg={8}>
           <Label>
             <FormattedMessage id="originalPrice" />
+            <Require>*</Require>
           </Label>
           <InputPrice>
             <NumberFormat
@@ -400,6 +401,7 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
     if (currentStep === 1) {
       if (
         state.title &&
+        state.originalPrice &&
         state.discountPrice &&
         state.priceAfterTax &&
         state.unit &&

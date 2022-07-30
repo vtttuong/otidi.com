@@ -40,10 +40,12 @@ export const LoaderWrapper = styled.div`
   height: 100vh;
   display: flex;
   flex-wrap: wrap;
+  gap: 15px;
 `;
 
 export const LoaderItem = styled.div`
   width: 25%;
+  min-width: 180px;
   padding: 0 15px;
   margin-bottom: 30px;
 `;

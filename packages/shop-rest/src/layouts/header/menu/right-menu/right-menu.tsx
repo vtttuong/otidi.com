@@ -147,10 +147,6 @@ export const RightMenu: React.FC<Props> = ({
     const channelMessage = pusher.subscribe(`${NEW_MESSAGE_CHANNEL}.${userId}`);
     channelMessage.bind(NEW_MESSAGE_EVENT, async function (data) {
       let messageUnread = state.messageUnread || 0;
-      console.log(
-        "🚀 ~ file: right-menu.tsx ~ line 133 ~ messageUnread",
-        messageUnread
-      );
 
       dispatch({
         type: "SET_MESSAGE_UNREAD_COUNT",

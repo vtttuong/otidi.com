@@ -82,7 +82,7 @@ export const Posts: React.FC<PostsProps> = () => {
   };
 
   const onClickOnCard = async (item) => {
-    router.push(`/posts/${item.id}`);
+    router.push(`/posts/${item.slug}`);
   };
 
   return (
@@ -107,7 +107,7 @@ export const Posts: React.FC<PostsProps> = () => {
                     isFree={false}
                     typeOfPost={item.type}
                     data={item}
-                    prioriry={item.is_priority}
+                    prioriry={item.is_advertise}
                     onClick={() => onClickOnCard(item)}
                   />
                 </Fade>

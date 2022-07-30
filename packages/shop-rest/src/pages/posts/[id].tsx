@@ -60,8 +60,8 @@ const PostPage: NextPage<Props> = ({ post, userId, token, deviceType }) => {
   return (
     <>
       <SEO
-        title={`${post.slug || "Do cu"} - SecondHandShop`}
-        description={`${post.slug || "do cu"} Details`}
+        title={`${post.slug || "Xe oto cu"} - Otodi`}
+        description={`${post.slug || "Xe oto cu"} Details`}
       />
 
       <Modal>
