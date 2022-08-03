@@ -43,7 +43,7 @@ const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
 
   let initData = {
     id: post.id,
-    title: post.title,
+    title: post.name,
     description: post.description,
     indexOptionType: 0,
     price: post.original_price,

@@ -107,7 +107,7 @@ export default function Posts() {
   const { data, error, mutate, total } = usePosts({
     status: postStatus,
     text: search ? search : "",
-    brand: brands,
+    brands: brands.join(","),
     sortBy: sortBy,
     page: page,
     count: COUNT,

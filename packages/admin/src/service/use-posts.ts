@@ -38,18 +38,18 @@ const productFetcher = (url) =>
 interface Props {
   status?: string;
   text?: any;
-  brand?: any;
+  brands?: any;
   count?: number;
   page?: number;
   sortBy?: string;
 }
 export default function usePosts(variables: Props) {
-  const { status, brand, text, sortBy, page, count } = variables ?? {};
+  const { status, brands, text, sortBy, page, count } = variables ?? {};
 
   let queryParams = {
     dir: sortBy ? (sortBy === "lasted" ? "desc" : "asc") : "",
     status: status,
-    brand_ids: brand,
+    brand_ids: brands,
     page: page ? page : "",
     count: count ? count : "",
     order_by: sortBy ? "created_at" : "",
