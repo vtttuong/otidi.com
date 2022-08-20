@@ -31,14 +31,14 @@ const optionsType = [
   { value: "4", name: "Gold", id: "4" },
 ];
 const userType = [
-  { value: "exchangeable", label: "Exchangeable", id: "1" },
-  { value: "personal", label: "Personal", id: "2" },
+  { value: "exchangeable", label: "Exchangeable", id: "exchangeable" },
+  { value: "personal", label: "Personal", id: "personal" },
 ];
 type Props = any;
 
 const AddCampaing: React.FC<Props> = (props) => {
   const token = localStorage.getItem("secondhand_token");
-  const [type, setType] = useState([]);
+  const [type, setType] = useState("");
   const [image, setImage] = useState<any>({});
   const [tag, setTag] = useState([]);
   const [level, setLevel] = useState([]);
@@ -73,7 +73,7 @@ const AddCampaing: React.FC<Props> = (props) => {
       return;
     }
 
-    if (type.length === 0) {
+    if (!type || type.length === 0) {
       alert.error("Please choose type");
       setLoading(false);
       return;
@@ -87,17 +87,19 @@ const AddCampaing: React.FC<Props> = (props) => {
     formData.set("start_at", moment(new Date()).format("YYYY-MM-DD HH:mm"));
     formData.set("end_at", moment(data.expired).format("YYYY-MM-DD HH:mm"));
 
-    level.forEach((l) => {
-      formData.append("level_ids[]", l);
-    });
-    if (type[0].value === "exchangeable") {
+    if (type === "personal") {
+      level.forEach((l) => {
+        formData.append("level_ids[]", l);
+      });
+    }
+    if (type === "exchangeable") {
       formData.set("reward_point", data.reward_point);
     }
     if (image.length !== 0) {
       formData.set("image", image[0]);
     }
 
-    formData.set("type", type[0].value);
+    formData.set("type", type);
     await addVoucher(formData);
   };
 
@@ -132,8 +134,10 @@ const AddCampaing: React.FC<Props> = (props) => {
   };
 
   const handleSelectType = ({ value }) => {
-    setType(value);
     if (value.length) {
+      setType(value[0].value);
+    } else {
+      setType("");
     }
   };
 
@@ -223,60 +227,7 @@ const AddCampaing: React.FC<Props> = (props) => {
                     // multi
                   />
                 </FormFields>
-                <Col md={3}></Col>
-                <FormFields>
-                  <FormLabel>Number of Coupon</FormLabel>
-                  <Input
-                    type="number"
-                    inputRef={register({ required: true })}
-                    name="total"
-                  />
-                </FormFields>
-                <FormFields>
-                  <FormLabel>Type Member</FormLabel>
-                  <Select
-                    options={optionsType}
-                    labelKey="name"
-                    valueKey="value"
-                    placeholder="Type"
-                    value={tag}
-                    onChange={handleMultiChange}
-                    overrides={{
-                      Placeholder: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
-                        },
-                      },
-                      DropdownListItem: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
-                        },
-                      },
-                      Popover: {
-                        props: {
-                          overrides: {
-                            Body: {
-                              style: { zIndex: 5 },
-                            },
-                          },
-                        },
-                      },
-                    }}
-                    multi
-                  />
-                </FormFields>
-
-                <FormFields>
-                  <FormLabel>Date Expired</FormLabel>
-                  <Input type="date" inputRef={register} name="expired" />
-                </FormFields>
-                {type.length !== 0 && type[0].value === "exchangeable" ? (
+                {type.length !== 0 && type === "exchangeable" ? (
                   <FormFields>
                     <FormLabel>Reward point</FormLabel>
                     <Input
@@ -286,6 +237,63 @@ const AddCampaing: React.FC<Props> = (props) => {
                     />
                   </FormFields>
                 ) : null}
+
+                {type.length !== 0 && type === "personal" && (
+                  <FormFields>
+                    <FormLabel>Type Member</FormLabel>
+                    <Select
+                      options={optionsType}
+                      labelKey="name"
+                      valueKey="value"
+                      placeholder="Type"
+                      value={tag}
+                      onChange={handleMultiChange}
+                      overrides={{
+                        Placeholder: {
+                          style: ({ $theme }) => {
+                            return {
+                              ...$theme.typography.fontBold14,
+                              color: $theme.colors.textNormal,
+                            };
+                          },
+                        },
+                        DropdownListItem: {
+                          style: ({ $theme }) => {
+                            return {
+                              ...$theme.typography.fontBold14,
+                              color: $theme.colors.textNormal,
+                            };
+                          },
+                        },
+                        Popover: {
+                          props: {
+                            overrides: {
+                              Body: {
+                                style: { zIndex: 5 },
+                              },
+                            },
+                          },
+                        },
+                      }}
+                      multi
+                    />
+                  </FormFields>
+                )}
+                <Col md={3}></Col>
+                <FormFields>
+                  <FormLabel>Number of Coupon</FormLabel>
+                  <Input
+                    type="number"
+                    inputRef={register({ required: true })}
+                    name="total"
+                  />
+                </FormFields>
+
+                <FormFields>
+                  <FormLabel>Date Expired</FormLabel>
+                  <Input type="date" inputRef={register} name="expired" />
+                </FormFields>
+
                 <FormFields>
                   <FormLabel>Image</FormLabel>
                   <Uploader onChange={handleUploader} />

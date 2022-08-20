@@ -1,5 +1,6 @@
 import { Button } from "components/button/button";
 import { CouponDisplay } from "components/coupon-box/coupon-box";
+import Notice from "components/notice/notice";
 import { useCart } from "contexts/cart/use-cart";
 import { ProfileContext } from "contexts/profile/profile.context";
 import BalanceOption from "features/balance-options/balance-option";
@@ -41,12 +42,12 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
     calculateSubTotalPrice,
   } = useCart();
 
-  const { state } = useContext(ProfileContext);
+  const { state, dispatch } = useContext(ProfileContext);
+  console.log("🚀 ~ file: checkout-one.tsx ~ line 45 ~ state", state);
   const [loading, setLoading] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(null);
   const { address, contact, card, schedules } = state;
   const router = useRouter();
-  console.log("🚀 ~ file: checkout-one.tsx ~ line 45 ~ state", state);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -57,6 +58,7 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify({
         amount: state.amount,
         return_url: `${window.location.origin}/payment-capture`,
@@ -75,6 +77,12 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
       if (data.success) {
         router.push(data.data.payUrl);
+      } else {
+        setIsValid(false);
+
+        setTimeout(() => {
+          setIsValid(true);
+        }, 3000);
       }
     } catch (error) {}
   };
@@ -151,7 +159,8 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
               </CouponBoxWrapper>
             )}
           </OrderSummaryItem>
-          <OrderSummaryItem
+
+          {/* <OrderSummaryItem
             style={{ marginBottom: 30 }}
             className="voucherWrapper"
           >
@@ -164,7 +173,7 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 style={{ maxWidth: 350, height: 50 }}
               />
             </CouponBoxWrapper>
-          </OrderSummaryItem>
+          </OrderSummaryItem> */}
 
           <OrderSummaryItem>
             <OrderLabel>
@@ -236,6 +245,10 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
           </Button>
         </CheckoutSubmit>
       </CheckoutContainer>
+
+      {isValid === false && (
+        <Notice status="error" content="Voucher used before" />
+      )}
     </CheckoutWrapper>
   );
 };

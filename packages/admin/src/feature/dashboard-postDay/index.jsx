@@ -5,7 +5,7 @@ import LineChart from "components/Widgets/LineChart/LineChart";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import "react-tabs/style/react-tabs.css";
-import { getPostStatisticsDaily } from "service/use-statistics";
+import { getPostStatisticsByTimeType, getPostStatisticsDaily, getRevenueStatisticsDaily } from "service/use-statistics";
 
 const Col = withStyle(Column, () => ({
   "@media only screen and (max-width: 574px)": {
@@ -18,35 +18,45 @@ const Col = withStyle(Column, () => ({
 }));
 
 const PostsDay = () => {
+
   let from = new Date();
   from.setDate(from.getDate() - 6);
   const [dateRange, setDateRange] = useState([from, new Date()]);
-  const [category, setCategory] = useState("");
-  const [categoryOption, setCategoryOption] = useState([]);
-
   const [valueRange, setValueRange] = useState([]);
   const [dayRange, setDayRange] = useState([]);
+  // const [revenueLast2Week, setRevenueLast2Week] = useState([100, 100]);
+  const [time, setTime] = useState(null);
+  const [timeOption, setTimeOption] = useState([]);
+
 
   const onChangeDateRange = (value) => {
     setDateRange(value);
+
+    if (value) {
+      setTime(null);
+      setTimeOption(null);
+    }
   };
 
-  function onChangeCategory({ value }) {
-    setCategoryOption(value);
-    if (value.length) {
-      setCategory(value[0].value);
+  function handleTime({ value }) {
+    setTimeOption(value);
+
+    if (value.length === 0) {
+      setTime(null);
     } else {
-      setCategory("");
+      setTime(value[0].value);
+      setDateRange(null);
     }
   }
 
   useEffect(() => {
+
+    if (dateRange == null) {
+      return;
+    }
+
     const fetchData = async () => {
-      if (dateRange == null) {
-        return;
-      }
       const data = await getPostStatisticsDaily(
-        category,
         moment(dateRange[0]).format("YYYY-MM-DD"),
         moment(dateRange[1]).format("YYYY-MM-DD")
       );
@@ -55,16 +65,42 @@ const PostsDay = () => {
       let days = [];
 
       // eslint-disable-next-line array-callback-return
-      Object.values(data).map((val) => {
-        sum.push(val.count);
-        days.push(val.date.substr(8, 2) + "-" + val.date.substr(5, 2));
+      Object.keys(data).map((key) => {
+        sum.push(data[key]);
+        days.push(key);
       });
 
       setValueRange(sum);
       setDayRange(days);
     };
+
     fetchData();
-  }, [dateRange, category]);
+  }, [dateRange]);
+
+
+  useEffect(() => {
+    if (time == null) {
+      return;
+    }
+    const fetchData = async () => {
+
+      const data = await getPostStatisticsByTimeType(time);
+
+      let sum = [];
+      let days = [];
+
+      // eslint-disable-next-line array-callback-return
+      Object.keys(data).map((key) => {
+        sum.push(data[key]);
+        days.push(key);
+      });
+
+      setValueRange(sum);
+      setDayRange(days);
+    };
+
+    fetchData();
+  }, [time]);
 
   if (valueRange.length === 0) {
     return (
@@ -89,8 +125,8 @@ const PostsDay = () => {
           series={valueRange}
           dateRange={dateRange}
           onChangeDateRange={onChangeDateRange}
-          categoryOption={categoryOption}
-          onChangeCategory={onChangeCategory}
+          timeOption={timeOption}
+          onChangeTimeType={handleTime}
           postStatistics={true}
         />
       </Col>

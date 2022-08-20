@@ -37,6 +37,7 @@ type Props = any;
 
 const EditCampaing: React.FC<Props> = (props) => {
   const data = useDrawerState("data");
+
   const dfType = [];
   userType.map((t) => {
     if (t.value === data.type) {
@@ -126,7 +127,7 @@ const EditCampaing: React.FC<Props> = (props) => {
     const formData: any = new FormData();
     formData.append("name", fData.name);
 
-    if (level.length > 0) {
+    if (type.length !== 0 && type[0].value === "personal" && level.length > 0) {
       level.forEach((l) => {
         formData.append("level_ids[]", l);
       });
@@ -168,7 +169,7 @@ const EditCampaing: React.FC<Props> = (props) => {
           keys.map((i) => {
             Array.isArray(i) &&
               i.map((err) => {
-                alert.error(i);
+                alert.error(err);
                 setLoading(false);
               });
           });
@@ -186,8 +187,10 @@ const EditCampaing: React.FC<Props> = (props) => {
     setImage(files[0]);
   };
   const handleSelectType = ({ value }) => {
-    setType(value);
     if (value.length) {
+      setType(value);
+    } else {
+      setType([]);
     }
   };
 
@@ -303,57 +306,49 @@ const EditCampaing: React.FC<Props> = (props) => {
                   />
                 </FormFields>
 
-                <FormFields>
-                  <FormLabel>Number of Coupon</FormLabel>
-                  <Input
-                    type="number"
-                    inputRef={register({ required: true })}
-                    name="total"
-                    value={defaultTotal}
-                    onChange={(e) => setTotal(e.target.value)}
-                  />
-                </FormFields>
-                <FormFields>
-                  <FormLabel>Type Member</FormLabel>
-                  <Select
-                    options={optionsType}
-                    labelKey="name"
-                    valueKey="value"
-                    placeholder={tag}
-                    value={tag}
-                    onChange={handleMultiChange}
-                    overrides={{
-                      Placeholder: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
+                {type.length !== 0 && type[0].value === "personal" ? (
+                  <FormFields>
+                    <FormLabel>Type Member</FormLabel>
+                    <Select
+                      options={optionsType}
+                      labelKey="name"
+                      valueKey="value"
+                      placeholder={tag}
+                      value={tag}
+                      onChange={handleMultiChange}
+                      overrides={{
+                        Placeholder: {
+                          style: ({ $theme }) => {
+                            return {
+                              ...$theme.typography.fontBold14,
+                              color: $theme.colors.textNormal,
+                            };
+                          },
                         },
-                      },
-                      DropdownListItem: {
-                        style: ({ $theme }) => {
-                          return {
-                            ...$theme.typography.fontBold14,
-                            color: $theme.colors.textNormal,
-                          };
+                        DropdownListItem: {
+                          style: ({ $theme }) => {
+                            return {
+                              ...$theme.typography.fontBold14,
+                              color: $theme.colors.textNormal,
+                            };
+                          },
                         },
-                      },
-                      Popover: {
-                        props: {
-                          overrides: {
-                            Body: {
-                              style: { zIndex: 5 },
+                        Popover: {
+                          props: {
+                            overrides: {
+                              Body: {
+                                style: { zIndex: 5 },
+                              },
                             },
                           },
                         },
-                      },
-                    }}
-                    multi
-                  />
-                </FormFields>
+                      }}
+                      multi
+                    />
+                  </FormFields>
+                ) : null}
 
-                {data.type !== "personal" ? (
+                {type.length !== 0 && type[0].value === "exchangeable" ? (
                   <FormFields>
                     <FormLabel>Exchange point</FormLabel>
                     <Input
@@ -365,6 +360,18 @@ const EditCampaing: React.FC<Props> = (props) => {
                     />
                   </FormFields>
                 ) : null}
+
+                <FormFields>
+                  <FormLabel>Number of Coupon</FormLabel>
+                  <Input
+                    type="number"
+                    inputRef={register({ required: true })}
+                    name="total"
+                    value={defaultTotal}
+                    onChange={(e) => setTotal(e.target.value)}
+                  />
+                </FormFields>
+
                 <FormFields>
                   <FormLabel>Date Expired</FormLabel>
                   <Input
@@ -379,6 +386,22 @@ const EditCampaing: React.FC<Props> = (props) => {
             </Col>
           </Row>
         </Scrollbars>
+
+        {/* <Scrollbars
+          autoHide
+          renderView={(props) => (
+            <div {...props} style={{ ...props.style, overflowX: "hidden" }} />
+          )}
+          renderTrackHorizontal={(props) => (
+            <div
+              {...props}
+              style={{ display: "none" }}
+              className="track-horizontal"
+            />
+          )}
+        >
+          View Report
+        </Scrollbars> */}
 
         <ButtonGroup>
           <Button

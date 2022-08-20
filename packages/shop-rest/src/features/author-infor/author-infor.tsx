@@ -35,6 +35,7 @@ import {
   TopContainer,
 } from "./author-infor.style";
 import { follow, getFollowers, unfollow } from "utils/api/user";
+import { ChatButtons } from "components/post-details/post-details-one/post-details-one.style";
 
 type AuthoInforProps = {
   data: any;
@@ -283,7 +284,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
       </MainAvatar>
       <TopContainer></TopContainer>
       {!isCurrentUser() && (
-        <>
+        <ChatButtons>
           <MainAvatar className={"border"}>
             <ActionButton className={"chat"}>
               <Button
@@ -318,7 +319,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
               </Button>
             </ActionButton>
           </MainAvatar>
-        </>
+        </ChatButtons>
       )}
       <CenterContainer>
         <Title className={"title"}>

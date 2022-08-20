@@ -51,6 +51,7 @@ type CardProps = {
   onDeletePost?: (e: any) => void;
   onMark?: (e: any) => void;
   onPush?: (e: any) => void;
+  onUpdatePackage?: (e: any) => void;
 };
 
 const PostCard: React.FC<CardProps> = ({
@@ -75,6 +76,7 @@ const PostCard: React.FC<CardProps> = ({
   onClickEdit,
   isBook,
   isDeleted,
+  onUpdatePackage,
   ...props
 }) => {
   let formatTime = formatRelativeTime(createdAt);
@@ -103,6 +105,17 @@ const PostCard: React.FC<CardProps> = ({
           Sell faster
         </p>
       ) : null}
+
+      {data && data.status == "active" && data.advertise ? (
+        <p
+          style={{
+            fontWeight: 600,
+          }}
+          onClick={onUpdatePackage}
+        >
+          Change push start time
+        </p>
+      ) : null}
       <p
         style={{
           fontWeight: 600,
@@ -113,9 +126,9 @@ const PostCard: React.FC<CardProps> = ({
       </p>
     </div>
   );
-  const Completionist = () => <span className="schedule">pushing...</span>;
+  const Completionist = () => <span className="schedule">Push end</span>;
 
-  const renderer = ({ hours, minutes, completed }) => {
+  const renderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       // Render a complete state
       return <Completionist />;
@@ -123,39 +136,53 @@ const PostCard: React.FC<CardProps> = ({
       // Render a countdown
       return (
         <span className="schedule">
-          {"Còn "} {hours}h:{minutes}m
+          {"Còn "} {days}d:{hours}h:{minutes}m:{seconds}s
         </span>
       );
     }
   };
-  var a: number;
-  var b: number;
-  var c: number;
-  if (data && data.advertise) {
-    const scheduleTime = data.advertise.end_time;
-    const mNow = new Date().getMinutes();
-    const hNow = new Date().getHours();
-    let mSchedule = moment(scheduleTime, "HH:mm:ss").minutes();
-    let hSchedule = moment(scheduleTime, "HH:mm:ss").hours();
+  // var a: number;
+  // var b: number;
+  // var c: number;
 
-    if (mSchedule - mNow >= 0) {
-      a = (mSchedule - mNow) * 60000;
-      if (hSchedule - hNow >= 0) {
-        b = (hSchedule - hNow) * 3600000;
-      } else {
-        b = (24 + (hSchedule - hNow)) * 3600000;
-      }
-      c = a + b;
-    } else {
-      a = (60 + (mSchedule - mNow)) * 60000;
-      if (hSchedule - hNow >= 0) {
-        b = (hSchedule - hNow) * 3600000;
-      } else {
-        b = (24 + (hSchedule - hNow)) * 3600000;
-      }
-      c = a + b - 3600000;
-    }
-  }
+  // if (data && data.advertise) {
+  //   const scheduleTime = data.advertise.end_time;
+
+  //   const now = new Date();
+  //   const endDate = new Date(scheduleTime);
+
+  //   c = endDate.getTime() - now.getTime();
+
+  // const mNow = new Date().getMinutes();
+  // const hNow = new Date().getHours();
+
+  // let mSchedule = moment(scheduleTime, "HH:mm:ss").minutes();
+  // console.log(
+  //   "🚀 ~ file: post-card-four.tsx ~ line 157 ~ moment(scheduleTime, 'HH:mm:ss')",
+  //   moment(scheduleTime, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
+  // );
+
+  // let hSchedule = moment(scheduleTime, "HH:mm:ss").hours();
+
+  // if (mSchedule - mNow >= 0) {
+  //   a = (mSchedule - mNow) * 60000;
+  //   if (hSchedule - hNow >= 0) {
+  //     b = (hSchedule - hNow) * 3600000;
+  //   } else {
+  //     b = (24 + (hSchedule - hNow)) * 3600000;
+  //   }
+  //   c = a + b;
+  // } else {
+  //   a = (60 + (mSchedule - mNow)) * 60000;
+  //   if (hSchedule - hNow >= 0) {
+  //     b = (hSchedule - hNow) * 3600000;
+  //   } else {
+  //     b = (24 + (hSchedule - hNow)) * 3600000;
+  //   }
+  //   c = a + b - 3600000;
+  // }
+  // }
+
   return (
     <FoodCardWrapper className="food-card">
       <FoodImageWrapper onClick={onClick}>
@@ -166,7 +193,17 @@ const PostCard: React.FC<CardProps> = ({
           alt={name}
         />
         {data && data.advertise && currentUser ? (
-          <Countdown date={Date.now() + c} renderer={renderer} />
+          <>
+            {Date.now() > new Date(data.advertise.start_time).getTime() ? (
+              <Countdown
+                daysInHours={true}
+                date={new Date(data.advertise.end_time).getTime()}
+                renderer={renderer}
+              />
+            ) : (
+              <span className="schedule">Waiting to push</span>
+            )}
+          </>
         ) : null}
 
         {data.advertise ? (

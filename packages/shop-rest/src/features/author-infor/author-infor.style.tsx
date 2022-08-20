@@ -520,6 +520,7 @@ const MainAvatar = styled.div`
   padding: 10px 0;
   flex-direction: row;
   margin-bottom: 10px;
+  width: 100%;
   border: 0 !important;
   &.border {
     border-bottom: 1px solid #f7f7f7 !important;
@@ -544,9 +545,9 @@ const MainAvatar = styled.div`
   }
 
   &.follow {
-    @media (min-width: 769px) and (max-width: 1000px) {
-      flex-direction: column;
-    }
+    // @media (min-width: 769px) and (max-width: 1000px) {
+    //   flex-direction: column;
+    // }
   }
 `;
 const Name = styled.h5`

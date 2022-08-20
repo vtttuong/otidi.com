@@ -20,6 +20,7 @@ type Props = {
   onDeletePost?: (e: any) => void;
   onMarkedPost?: (e: any) => void;
   onPush?: (e: any) => void;
+  onUpdatePackage?: (e: any) => void;
 };
 
 const WrapCard: React.FC<Props> = ({
@@ -31,6 +32,7 @@ const WrapCard: React.FC<Props> = ({
   onDeletePost,
   onPush,
   onMarkedPost,
+  onUpdatePackage,
 }) => {
   const router = useRouter();
   const [isBooked, setIsBooked] = React.useState(false);
@@ -130,6 +132,7 @@ const WrapCard: React.FC<Props> = ({
               onDeletePost={() => onDeletePostX(d.id)}
               onMark={() => onMarkPost(d.id)}
               onPush={() => onPush(d.id)}
+              onUpdatePackage={() => onUpdatePackage(d.advertise.id)}
             />
           </ItemCard>
         ))

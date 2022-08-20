@@ -28,7 +28,7 @@ import { CURRENCY } from "settings/constants";
 type PostCardProps = {
   title: string;
   image: any;
-  avatar: any;
+  avatar?: any;
   weight?: string;
   currency?: string;
   description?: string;
@@ -38,6 +38,7 @@ type PostCardProps = {
   typeOfPost?: string;
   postId: any;
   status: string;
+  user: any;
 };
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -52,6 +53,7 @@ const PostCard: React.FC<PostCardProps> = ({
   postId,
   orderId,
   status,
+  user,
   ...props
 }) => {
   const dispatch = useDrawerDispatch();
@@ -99,7 +101,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
           <OrderID>{orderId}</OrderID>
           <PostAvatar>
-            <Avatar name="N O" size="scale1200" src={avatar} />
+            <Avatar name={user.name} size="scale1200" src={user.avatar} />
           </PostAvatar>
         </PostMeta>
       </PostInfo>

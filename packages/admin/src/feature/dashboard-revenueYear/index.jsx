@@ -26,12 +26,12 @@ const RevenueYear = ({ ...props }) => {
 
   const [revenueTotal, setRevenueTotal] = useState([]);
   const [yearOption, setYearOption] = useState([]);
-  const [year, setYear] = useState(2020);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   function handleYear({ value }) {
     setYearOption(value);
     if (value.length === 0) {
-      setYear(2020);
+      setYear(new Date().getFullYear());
     } else {
       setYear(value[0].value);
     }

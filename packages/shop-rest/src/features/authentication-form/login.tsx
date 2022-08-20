@@ -60,10 +60,7 @@ export default function SignInModal() {
         access_token: response.accessToken,
       }),
     };
-    console.log(
-      "🚀 ~ file: login.tsx ~ line 61 ~ responseFacebook ~ response",
-      response
-    );
+
     const res = await fetch(`${API_BASE_URL}/oauth/token`, options);
     const data = await res.json();
 
@@ -246,7 +243,7 @@ export default function SignInModal() {
 
           <GoogleLogin
             className="google-login-button"
-            clientId={GOOGLE_CLIENT_ID}
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
             buttonText={"Continue with Google"}
             onSuccess={responseGoogle}
             onFailure={responseFaildGoogle}

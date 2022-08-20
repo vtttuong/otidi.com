@@ -8,6 +8,7 @@ import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import { InLineLoader } from "components/InlineLoader/InlineLoader";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
+import Pagination from "components/Pagination/Pagination";
 import { Header, Heading, Wrapper } from "components/Wrapper.style";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
 import React, { useEffect, useState } from "react";
@@ -51,6 +52,7 @@ export default function Brand() {
   const { data, mutate } = useBrands({
     text: search ? search : "",
   });
+
   useEffect(() => {
     if (savedBrand) {
       mutate();

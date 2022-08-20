@@ -7,39 +7,16 @@ import { Col, Row } from "react-styled-flexboxgrid";
 import { Button, Container, Heading, Wrapper } from "./form.style";
 
 type ManagePostProps = {
-  deviceType?: {
-    mobile: boolean;
-    tablet: boolean;
-    desktop: boolean;
-  };
   data?: any[];
   error?: any;
   service?: any;
   id?: any;
-  onPush?: (e: any, f: any, x: any) => void;
+  onUpdate?: (e: number, x: string) => void;
   loading?: boolean;
 };
-const Push: React.FC<ManagePostProps> = ({
-  deviceType,
-  onPush,
-  service,
-  id,
-  loading,
-}) => {
-  const [choose, setChoose] = React.useState("");
+const PushUpdate: React.FC<ManagePostProps> = ({ onUpdate, id, loading }) => {
   const [datetime, setDatetime] = React.useState("");
   const [error, setError] = React.useState(false);
-
-  function changeChoose(list) {
-    let foundIndex = [];
-    let index = foundIndex.indexOf(list.id);
-    setChoose(list.id);
-    if (index < 0) {
-      foundIndex.push(list.id);
-    } else {
-      foundIndex.splice(index, 1);
-    }
-  }
 
   const handleChange = (ev) => {
     const dt = ev.target["value"];
@@ -53,21 +30,6 @@ const Push: React.FC<ManagePostProps> = ({
           <FormattedMessage id="pushPost" defaultMessage={"Push  post"} />
         </Heading>
         <form style={{ marginBottom: 30 }}>
-          <div className="option-push">
-            {service.map(function (list) {
-              return (
-                <Option
-                  key={list.id}
-                  title={list.name}
-                  onClick={() => changeChoose(list)}
-                  checked={choose == list.id}
-                  price={list.price + " coin"}
-                  source={list.source}
-                  active={choose == list.id}
-                />
-              );
-            })}
-          </div>
           <Row className="report">
             <Col xs={12} sm={12} md={12} lg={12}>
               <p style={{ margin: "10px 0" }}>Please choose when post pushed</p>
@@ -113,7 +75,7 @@ const Push: React.FC<ManagePostProps> = ({
               </div>
               {error ? (
                 <p style={{ textAlign: "left", color: "red" }}>
-                  Check field require!
+                  Choose time before submit!
                 </p>
               ) : null}
             </Col>
@@ -128,16 +90,11 @@ const Push: React.FC<ManagePostProps> = ({
           loading={loading}
           onClick={() => {
             //validate
-            if (
-              !choose ||
-              choose.length === 0 ||
-              !datetime ||
-              datetime.length == 0
-            ) {
+            if (!datetime || datetime.length == 0) {
               setError(true);
               return;
             }
-            onPush(id, choose, datetime);
+            onUpdate(id, datetime);
           }}
         >
           <FormattedMessage id="applyFilter" />
@@ -146,4 +103,4 @@ const Push: React.FC<ManagePostProps> = ({
     </Wrapper>
   );
 };
-export default Push;
+export default PushUpdate;

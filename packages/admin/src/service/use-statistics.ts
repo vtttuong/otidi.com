@@ -62,15 +62,20 @@ export async function getRevenueStatisticsDaily(from, to) {
       "Content-Type": "application/json",
     },
   };
-  const res = await fetch(
-    `${baseUrl}/statistics/revenue/by-day?from_date=${from}&to_date=${to}`,
-    options
-  );
+  try {
+    const res = await fetch(
+      `${baseUrl}/statistics/revenue?type=custom&from=${from}&to=${to}`,
+      options
+    );
 
-  return await res.json();
+    const resJson = await res.json();
+    return resJson.success ? resJson.data : [];
+  } catch (err) {
+    return [];
+  }
 }
 
-export async function getRevenueStatisticsLast2Week() {
+export async function getRevenueStatisticsByType(type: string) {
   const options = {
     method: "GET",
     headers: {
@@ -78,11 +83,16 @@ export async function getRevenueStatisticsLast2Week() {
       "Content-Type": "application/json",
     },
   };
-  const res = await fetch(
-    `${baseUrl}/statistics/revenue/last-two-week`,
-    options
-  );
-  return Object.values(await res.json());
+  try {
+    const res = await fetch(
+      `${baseUrl}/statistics/revenue?type=${type}`,
+      options
+    );
+    const resJson = await res.json();
+    return resJson.success ? resJson.data : [];
+  } catch (err) {
+    return [];
+  }
 }
 
 export async function getPostStatisticsDailyByCategory(from, to) {
@@ -100,11 +110,7 @@ export async function getPostStatisticsDailyByCategory(from, to) {
   return await res.json();
 }
 
-export async function getPostStatisticsByYear(
-  year,
-  isSold = null,
-  isPriority = null
-) {
+export async function getPostStatisticsByYear(year: number) {
   let queryParams = {
     type: "1y",
     year: year,
@@ -142,6 +148,25 @@ export async function getPostStatisticsByYear(
   return Object.values(resJson.data);
 }
 
+export async function getPostStatisticsByTimeType(type: string) {
+  let url = `${baseUrl}/statistics/post?type=${type}`;
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const resJson = await fetch(url, options).then((res) => res.json());
+    return resJson.success ? resJson.data : [];
+  } catch (err) {
+    return [];
+  }
+}
+
 export async function getPostStatisticsByTypeInYear(year, type) {
   let queryParams = {
     type: type || "1y",
@@ -177,11 +202,11 @@ export async function getPostStatisticsByTypeInYear(year, type) {
   return Object.values(await res.json());
 }
 
-export async function getPostStatisticsDaily(category, from, to) {
+export async function getPostStatisticsDaily(from: string, to: string) {
   let queryParams = {
-    from_date: from,
-    to_date: to,
-    category_type: category,
+    type: "custom",
+    from: from,
+    to: to,
   };
 
   let newParams = {};
@@ -199,7 +224,7 @@ export async function getPostStatisticsDaily(category, from, to) {
     { sort: false }
   );
 
-  let url = baseUrl + "/statistics/posts/daily?" + parsed;
+  let url = baseUrl + "/statistics/post?" + parsed;
 
   const options = {
     method: "GET",
@@ -209,9 +234,13 @@ export async function getPostStatisticsDaily(category, from, to) {
     },
   };
 
-  const res = await fetch(url, options);
-
-  return Object.values(await res.json());
+  try {
+    const res = await fetch(url, options);
+    const resJson = await res.json();
+    return resJson.success ? resJson.data : [];
+  } catch (err) {
+    return [];
+  }
 }
 
 export async function getUserJoinStatisticsByYear(year) {
@@ -271,7 +300,7 @@ export async function getTopUser() {
   return await res.json();
 }
 
-export async function getAdvertiseStatisticsByYear(year) {
+export async function getAdvertiseStatisticsByYear(year: number) {
   const options = {
     method: "GET",
     headers: {
@@ -280,11 +309,52 @@ export async function getAdvertiseStatisticsByYear(year) {
     },
   };
   const resJson = await fetch(
-    `${baseUrl}/statistics/advertise?type=1y?&year=${year}`,
+    `${baseUrl}/statistics/advertise?type=1y&year=${year}`,
     options
   ).then((res) => res.json());
   if (!resJson.success) {
     return Array.from({ length: 12 }, (v, i) => 0);
   }
   return Object.values(resJson.data);
+}
+
+export async function getAdvertiseStatisticsByType(type: string) {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const res = await fetch(
+      `${baseUrl}/statistics/advertise?type=${type}`,
+      options
+    );
+    const resJson = await res.json();
+    return resJson.success ? resJson.data : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getAdvertiseStatisticsDaily(from: string, to: string) {
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const res = await fetch(
+      `${baseUrl}/statistics/advertise?type=custom&from=${from}&to=${to}`,
+      options
+    );
+
+    const resJson = await res.json();
+    return resJson.success ? resJson.data : [];
+  } catch (err) {
+    return [];
+  }
 }

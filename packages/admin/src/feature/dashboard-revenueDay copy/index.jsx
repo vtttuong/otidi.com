@@ -14,7 +14,6 @@ import {
 } from "service/use-statistics";
 import { Select } from "baseui/select";
 import timeOptions from "feature/time-options";
-import LineChart from "components/Widgets/LineChart/LineChart";
 
 const Col = withStyle(Column, () => ({
   "@media only screen and (max-width: 574px)": {
@@ -48,7 +47,7 @@ const RevenueDay = () => {
   const [timeOption, setTimeOption] = useState([]);
 
 
-  const onChangeDateRange = (value) => {
+  const onChange = (value) => {
     setDateRange(value);
 
     if (value) {
@@ -130,34 +129,47 @@ const RevenueDay = () => {
 
   return (
     <Row>
-      <Col md={12} lg={12} sm={12}>
-        <LineChart
-          widgetTitle="Revenue detail"
-          color={["#03D3B5"]}
-          categories={dayRange}
-          seriesName="Total"
-          series={valueRange}
-          dateRange={dateRange}
-          onChangeDateRange={onChangeDateRange}
-          timeOption={timeOption}
-          onChangeTimeType={handleTime}
-          postStatistics={true}
-        />
+      <Col md={12}>
+        <div className="style-select-absolute-child">
+          <Select
+            options={timeOptions}
+            labelKey="label"
+            valueKey="value"
+            placeholder="Time"
+            value={timeOption}
+            searchable={false}
+            onChange={handleTime}
+          />
+        </div>
       </Col>
-    </Row>
+      <Col md={12} lg={12} className="style-select-absolute">
+        <div className="style-select-absolute-child select-year">
+          <div style={{ display: "flex" }}>
+            <DateRangePicker onChange={onChange} value={dateRange} />
+          </div>
+        </div>
 
-    /* <Col md={5} lg={4}>
-      <DonutChart
-        widgetTitle="Target"
-        series={revenueLast2Week}
-        labels={["Revenue this week", "Revenue last week"]}
-        colors={["#03D3B5", "#666d92"]}
-        helperText={["Weekly Targets", "Monthly Targets"]}
-        icon={[<Revenue />, <Refund />]}
-        prefix="$"
-      />
-    </Col> */
-    // </Row>
+        <GraphChart
+          widgetTitle="Revenue detail "
+          colors={["#03D3B5"]}
+          series={valueRange}
+          labels={dayRange}
+        />
+
+      </Col>
+
+      {/* <Col md={5} lg={4}>
+        <DonutChart
+          widgetTitle="Target"
+          series={revenueLast2Week}
+          labels={["Revenue this week", "Revenue last week"]}
+          colors={["#03D3B5", "#666d92"]}
+          helperText={["Weekly Targets", "Monthly Targets"]}
+          icon={[<Revenue />, <Refund />]}
+          prefix="$"
+        />
+      </Col> */}
+    </Row>
   );
 };
 

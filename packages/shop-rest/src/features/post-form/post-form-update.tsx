@@ -522,8 +522,6 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
       formdata.append(`images[${index}][position]`, index);
     });
 
-    formdata.set(`detail[origin]`, "inland");
-
     const configs = {
       headers: {
         Authorization: `Bearer ${token}`,

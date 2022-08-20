@@ -123,19 +123,19 @@ const ManagePostReview: React.FC<ManagePostProps> = ({
                   <p>{moment(d.created_at).format("LLL")}</p>
                 </div>
               </div>
-              <div className="td">
+              <div className="td" style={{ flex: 1 }}>
                 <StarRatings
                   rating={d.star}
                   starDimension="20px"
-                  starSpacing="5px"
+                  starSpacing="3px"
                   starRatedColor={"#ffc107"}
                 />
                 <p>{d.content}</p>
               </div>
 
-              <div className="td" style={{ maxWidth: 500 }}>
+              {/* <div className="td" style={{ maxWidth: 500 }}>
                 {d.description}
-              </div>
+              </div> */}
               {/* check me to edit */}
               {Number(getCookie("userId")) == d.reviewer_id ? (
                 <div className="td" style={{ maxWidth: 100 }}>

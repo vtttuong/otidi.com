@@ -58,8 +58,12 @@ export async function exchange(token: string, id: number) {
     },
   };
 
-  const data = await fetch(`${baseUrl}/vouchers/${id}/exchange`, options);
-  return data;
+  try {
+    const data = await fetch(`${baseUrl}/vouchers/${id}/exchange`, options);
+    return await data.json();
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function getProfile(token: string) {

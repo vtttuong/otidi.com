@@ -27,7 +27,7 @@ const PopoverWrapper = styled.div`
   }
   position: relative;
   cursor: pointer;
-  z-index: 9;
+  z-index: 99;
   &.notificationTab {
     .popover-content {
       min-width: 400px;
@@ -38,7 +38,9 @@ const PopoverWrapper = styled.div`
   }
 
   &.action-post {
-    position: absolute;
+    // position: absolute;
+    margin-left: auto;
+
     right: 10px;
     .popover-handler {
       position: relative;

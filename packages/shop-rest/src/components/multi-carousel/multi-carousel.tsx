@@ -6,7 +6,7 @@ import styled from "styled-components";
 const SingleItem = styled.li`
   border: 1px solid ${themeGet("colors.gray.500", "#f1f1f1")};
   border-radius: ${themeGet("radii.base", "6px")};
-  margin-right: 20px;
+  margin-right: 10px;
   padding: 0;
   outline: none;
   width: 70px;

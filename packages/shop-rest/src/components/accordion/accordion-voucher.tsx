@@ -120,7 +120,7 @@ const Accordion: React.FC<AccordionProps> = ({
                       // left: -5,
                       padding: 2,
                     }}
-                    onClick={() => router.push(item.redirect_link)}
+                    onClick={() => router.push(item.redirect_link || "/")}
                   >
                     Khám phá
                   </span>

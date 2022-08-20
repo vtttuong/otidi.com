@@ -24,6 +24,8 @@ const Box = styled.div`
     padding-top: 20px;
     margin-bottom: 20px;
     display: flex;
+    gap: 10px;
+
     > div {
       max-width: 400px;
       position: relative;
@@ -35,6 +37,8 @@ const Box = styled.div`
   }
   .td-img {
     display: flex;
+    align-items: center;
+
     width: 40%;
     > span {
       margin-right: 20px;
@@ -54,13 +58,25 @@ const Box = styled.div`
     }
   }
   .td {
-    width: 30%;
+    width: 45%;
     vertical-align: top;
     text-align: left;
     &:last-child {
+      width: fit-content;
       text-align: left;
     }
   }
+
+  .td-profile {
+    @media (max-width: 576px) {
+      font-size: 14px;
+
+      > p {
+        display: none;
+      }
+    }
+  }
+
   img.avatar-in-table {
     width: 50px;
     height: 50px;
@@ -72,6 +88,7 @@ const Box = styled.div`
     border-radius: 5px;
     transition: all 0.2s;
     padding: 5px;
+    width: min(500px, 100%);
 
     &:focus {
       border: 2px solid #009e7f;

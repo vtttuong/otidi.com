@@ -2,10 +2,12 @@ import { styled, withStyle } from "baseui";
 import { Col as Column, Grid, Row as Rows } from "components/FlexBox/FlexBox";
 import Input from "components/Input/Input";
 import NoResult from "components/NoResult/NoResult";
+import Pagination from "components/Pagination/Pagination";
 import Placeholder from "components/Placeholder/Placeholder";
 import PostCard from "components/PostCard/PostCard";
 import Select from "components/Select/Select";
 import { Header } from "components/Wrapper.style";
+import UpdatePost from "containers/PostForm/PostUpdateForm";
 import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
 import React, { useState } from "react";
 import Fade from "react-reveal/Fade";
@@ -90,31 +92,44 @@ export default function Posts() {
   const [search, setSearch] = useState("");
   const [postType, setPostType] = useState("");
   const [postStatus, setPostStatus] = useState("");
-  const [brand, setBrand] = useState("");
+  const [brands, setBrands] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const [isSoldType, setIsSoldType] = useState(false);
   const [isPriorityType, setIsPriorityType] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
-  const COUNT = 10;
+  const [totalPages, setTotalPages] = useState(0);
+  const COUNT = 12;
 
-  const { data, error, mutate } = usePosts({
+  const approvedPostId = useDrawerState("approvedPostId");
+
+  const { data, error, mutate, total } = usePosts({
     status: postStatus,
     text: search ? search : "",
-    brand: brand,
+    brand: brands,
     sortBy: sortBy,
+    page: page,
+    count: COUNT,
   });
 
-  let posts = data;
+  React.useEffect(() => {
+    if (total !== 0) {
+      setTotalPages(Math.ceil(total / COUNT));
+    }
+  }, [total]);
 
-  // https://api.otodi.vn/api/admin/v1/posts?count=2&page=1&order_by=created_at&dir=asc&brand_ids=3,4&user_id=1
+  React.useEffect(() => {
+    mutate();
+    console.log("MUTATE");
+  }, [approvedPostId]);
+
   React.useEffect(() => {
     let isMounted = true;
     const fetchBrands = async () => {
       const brands = await getBrands();
       const options = brands.map((brand) => ({
-        value: brand.id + "",
+        value: brand.id,
         label: brand.name,
       }));
       if (isMounted) {
@@ -137,10 +152,11 @@ export default function Posts() {
     postStatus,
     search,
     sortBy,
-    brand,
+    brands,
     isSoldType,
     isPriorityType,
     isExpired,
+    approvedPostId,
   ]);
 
   // if (error) {
@@ -149,6 +165,7 @@ export default function Posts() {
 
   function handleSort({ value }) {
     setSortByOption(value);
+    setPage(1);
 
     if (value.length === 0) {
       setSortBy("");
@@ -158,32 +175,27 @@ export default function Posts() {
   }
 
   function handleBrand({ value }) {
+    setPage(1);
     setBrandOption(value);
 
     if (value.length === 0) {
-      setBrand("");
+      setBrands([]);
     } else {
-      setBrand(value[0].value);
+      setBrands(value.map((item) => item.value));
     }
   }
   function handlePostStatus({ value }) {
+    setPage(1);
     setPostStatusOption(value);
 
     if (value.length === 0) {
       setPostStatus("");
     } else {
-      if (value[0].value === "expired") {
-        setIsExpired(true);
-      } else if (value[0].value === "isSold") {
-        setIsSoldType(true);
-      } else if (value[0].value === "isPriority") {
-        setIsPriorityType(true);
-      } else {
-        setPostStatus(value[0].value);
-      }
+      setPostStatus(value[0].value);
     }
   }
   function handleSearch(event) {
+    setPage(1);
     const value = event.currentTarget.value;
     setSearch(value);
   }
@@ -198,10 +210,10 @@ export default function Posts() {
     }
   }
 
-  function getUserAvatar(userId: number): string {
-    const user = users.find((u) => u.id === userId);
-    return user?.avatar;
-  }
+  // function getUserAvatar(userId: number): string {
+  //   const user = users.find((u) => u.id === userId);
+  //   return user?.avatar;
+  // }
 
   return (
     <Grid fluid={true}>
@@ -224,18 +236,19 @@ export default function Posts() {
                     options={productStatusSelectOptions}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Filter"
+                    placeholder="Status"
                     value={postStatusOption}
                     searchable={false}
                     onChange={handlePostStatus}
                   />
                 </Col>
-                <Col md={2} xs={12}>
+                <Col md={4} xs={12}>
                   <Select
                     options={brandSelectOptions}
                     labelKey="label"
                     valueKey="value"
-                    placeholder="Brand"
+                    placeholder="Brands"
+                    multi={true}
                     value={brandOption}
                     searchable={false}
                     onChange={handleBrand}
@@ -257,34 +270,43 @@ export default function Posts() {
             </Col>
           </Header>
 
+          {totalPages !== 0 && (
+            <Row style={{ margin: 0 }}>
+              <Pagination page={page} total={totalPages} setPage={setPage} />
+            </Row>
+          )}
+
           <Row>
             {data ? (
               data.length !== 0 ? (
-                data.map((item: any, index: number) => (
-                  <Col
-                    md={4}
-                    lg={3}
-                    sm={6}
-                    xs={12}
-                    key={index}
-                    style={{ margin: "15px 0" }}
-                  >
-                    <Fade bottom duration={800} delay={index * 10}>
-                      <PostCard
-                        title={item.title}
-                        weight={item.unit}
-                        image={item.main_image[0].url}
-                        avatar={getUserAvatar(item.user_id)}
-                        currency={CURRENCY}
-                        price={item.price}
-                        salePrice={0}
-                        typeOfPost={item.type}
-                        postId={item.id}
-                        status={item.status}
-                      />
-                    </Fade>
-                  </Col>
-                ))
+                <>
+                  {data.map((item: any, index: number) => (
+                    <Col
+                      md={4}
+                      lg={3}
+                      sm={6}
+                      xs={12}
+                      key={index}
+                      style={{ margin: "15px 0" }}
+                    >
+                      <Fade bottom duration={800} delay={index * 10}>
+                        <PostCard
+                          title={item.title}
+                          weight={item.unit}
+                          image={item.main_image?.url}
+                          // avatar={getUserAvatar(item.user_id)}
+                          user={item.user}
+                          currency={CURRENCY}
+                          price={item.price_after_tax}
+                          salePrice={0}
+                          typeOfPost={item.type}
+                          postId={item.id}
+                          status={item.status}
+                        />
+                      </Fade>
+                    </Col>
+                  ))}
+                </>
               ) : (
                 <NoResult />
               )

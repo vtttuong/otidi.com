@@ -1,18 +1,19 @@
-import {CoinIcon} from "assets/icons/CoinIcon";
-import {Star} from "assets/icons/Star";
-import Button, {KIND} from "components/Button/Button";
+import { CoinIcon } from "assets/icons/CoinIcon";
+import { Star } from "assets/icons/Star";
+import Button, { KIND } from "components/Button/Button";
 import DrawerBox from "components/DrawerBox/DrawerBox";
-import {Col, Row} from "components/FlexBox/FlexBox";
-import {FormFields, FormLabel} from "components/FormFields/FormFields";
+import { Col, Row } from "components/FlexBox/FlexBox";
+import { FormFields, FormLabel } from "components/FormFields/FormFields";
 import Image from "components/Image/Image";
 import Input from "components/Input/Input";
-import {useDrawerDispatch, useDrawerState} from "context/DrawerContext";
-import {Consumer} from "context/updateContext";
-import React, {useCallback, useState} from "react";
-import {useAlert} from "react-alert";
-import {Scrollbars} from "react-custom-scrollbars";
-import {useForm} from "react-hook-form";
-import {verifyId} from "service/use-users";
+import { useDrawerDispatch, useDrawerState } from "context/DrawerContext";
+import { Consumer } from "context/updateContext";
+import moment from "moment";
+import React, { useCallback, useState } from "react";
+import { useAlert } from "react-alert";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useForm } from "react-hook-form";
+import { verifyId } from "service/use-users";
 import {
   BoxAvatar,
   ButtonGroup,
@@ -23,48 +24,56 @@ import {
 } from "../DrawerItems/DrawerItems.style";
 
 type Props = any;
-const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
+// const urlServer = process.env.REACT_APP_LARAVEL_API_URL + "/storage/";
 const UserIdForm: React.FC<Props> = (props) => {
   const data = useDrawerState("data");
+
   const [defaultName, setName] = useState(data.name);
   const dispatch = useDrawerDispatch();
   const alert = useAlert();
-  const closeDrawer = useCallback(() => dispatch({type: "CLOSE_DRAWER"}), [
+  const closeDrawer = useCallback(() => dispatch({ type: "CLOSE_DRAWER" }), [
     dispatch,
   ]);
 
-  const {register} = useForm();
+  const { register } = useForm();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
   React.useEffect(() => {
-    register({name: "category"});
+    register({ name: "category" });
   }, [register]);
 
   const onVerify = async (on) => {
-    await verifyId(data.identify?.id);
-    on();
-    closeDrawer();
-    alert.success("Update success!");
+    setLoading(true);
+    const { result } = await verifyId(data.id);
+    if (result) {
+      on();
+      closeDrawer();
+      alert.success("Update success!");
+    }
+    setLoading(false);
   };
 
   return (
     <Consumer>
-      {({getUser}) => (
+      {({ getUser }) => (
         <>
           <DrawerTitleWrapper>
             <DrawerTitle>Detail user</DrawerTitle>
           </DrawerTitleWrapper>
 
-          <Form style={{height: "100%"}}>
+          <Form style={{ height: "100%" }}>
             <Scrollbars
               autoHide
               renderView={(props) => (
-                <div {...props} style={{...props.style, overflowX: "hidden"}} />
+                <div
+                  {...props}
+                  style={{ ...props.style, overflowX: "hidden" }}
+                />
               )}
               renderTrackHorizontal={(props) => (
                 <div
                   {...props}
-                  style={{display: "none"}}
+                  style={{ display: "none" }}
                   className="track-horizontal"
                 />
               )}
@@ -79,7 +88,10 @@ const UserIdForm: React.FC<Props> = (props) => {
                     <FormFields>
                       <FormLabel>User</FormLabel>
                       <BoxAvatar>
-                        <Image url={data.avatar} />
+                        <Image
+                          url={data.avatar}
+                          style={{ objectFit: "cover" }}
+                        />
                         <div className="rating">
                           <h4>Rating</h4>
                           <span>
@@ -119,13 +131,23 @@ const UserIdForm: React.FC<Props> = (props) => {
                         value={data.email}
                       />
                     </FormFields>
+                    <FormFields>
+                      <FormLabel>Phone number</FormLabel>
+                      <Input
+                        inputRef={register}
+                        name="phone"
+                        value={data.phone_number}
+                      />
+                    </FormFields>
 
                     <FormFields>
-                      <FormLabel>Verifed email</FormLabel>
+                      <FormLabel>Verified email</FormLabel>
                       <Input
                         inputRef={register}
                         name="vE"
-                        value={data.email_verified_at}
+                        value={moment(data.email_verified_at).format(
+                          "YYYY-MM-DD hh:mm:ss"
+                        )}
                       />
                     </FormFields>
                     <FormFields>
@@ -133,7 +155,9 @@ const UserIdForm: React.FC<Props> = (props) => {
                       <Input
                         inputRef={register}
                         name="vE"
-                        value={data.phone_verified_at}
+                        value={moment(data.phone_verified_at).format(
+                          "YYYY-MM-DD hh:mm:ss"
+                        )}
                       />
                     </FormFields>
                     <FormFields>
@@ -141,7 +165,7 @@ const UserIdForm: React.FC<Props> = (props) => {
                       <BoxAvatar className="id">
                         <Image
                           className="id"
-                          url={urlServer + data.identify?.left_side_url}
+                          url={data.identity_card?.img_front_url}
                         />
                       </BoxAvatar>
                     </FormFields>
@@ -150,7 +174,7 @@ const UserIdForm: React.FC<Props> = (props) => {
                       <BoxAvatar className="id">
                         <Image
                           className="id"
-                          url={urlServer + data.identify?.right_side_url}
+                          url={data.identity_card?.img_back_url}
                         />
                       </BoxAvatar>
                     </FormFields>
@@ -165,7 +189,7 @@ const UserIdForm: React.FC<Props> = (props) => {
                 onClick={closeDrawer}
                 overrides={{
                   BaseButton: {
-                    style: ({$theme}) => ({
+                    style: ({ $theme }) => ({
                       width: "50%",
                       borderTopLeftRadius: "3px",
                       borderTopRightRadius: "3px",
@@ -186,7 +210,7 @@ const UserIdForm: React.FC<Props> = (props) => {
                 type="button"
                 overrides={{
                   BaseButton: {
-                    style: ({$theme}) => ({
+                    style: ({ $theme }) => ({
                       width: "50%",
                       borderTopLeftRadius: "3px",
                       borderTopRightRadius: "3px",

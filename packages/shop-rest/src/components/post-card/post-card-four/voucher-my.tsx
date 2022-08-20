@@ -1,4 +1,5 @@
 // post card for food
+import { CoinIcon } from "assets/icons/CoinIcon";
 import Image from "components/image/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -44,7 +45,7 @@ const VoucherCard: React.FC<CardProps> = ({
         >
           <FoodImageWrapper>
             <Image
-              url={baseUrl + data?.image}
+              url={data?.image}
               className="post-image"
               style={{ position: "relative" }}
             />
@@ -71,12 +72,7 @@ const VoucherCard: React.FC<CardProps> = ({
             </DeliveryOpt>
 
             <DeliveryOpt className="score">
-              <Image
-                url={
-                  "https://www.flaticon.com/svg/static/icons/svg/550/550638.svg"
-                }
-                alt="coin"
-              />
+              <CoinIcon height="17px" width="17px" />
               {data.type == "personal" ? (
                 <>
                   {"+ "}

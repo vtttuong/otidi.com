@@ -44,7 +44,7 @@ const Topbar = ({ refs }: any) => {
   const [loading, setLoading] = useState(false);
   const [outOfData, setOutOfData] = React.useState(false);
   const [notiUnRead, setNotiUnRead] = React.useState(0);
-  const [allRead, setAllRead] = useState(false);
+  // const [allRead, setAllRead] = useState(false);
   const NOTI_SIZE = 10;
   useEffect(() => {
     const fetchData = async () => {
@@ -65,9 +65,9 @@ const Topbar = ({ refs }: any) => {
     };
 
     fetchData();
-    setAllRead(false);
+    // setAllRead(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, allRead]);
+  }, [page]);
 
   const feedBtnClick = () => {
     if (outOfData) return;
@@ -86,7 +86,12 @@ const Topbar = ({ refs }: any) => {
     setNotiUnRead(0);
     const result = await markAsAllRead();
     if (result) {
-      setAllRead(true);
+      setData(
+        data.map((noti) => ({
+          ...noti,
+          readAt: new Date().toString(),
+        }))
+      );
     }
   };
 
@@ -185,9 +190,9 @@ const Topbar = ({ refs }: any) => {
         <Popover
           content={({ close }) => (
             <UserDropdowItem>
-              <NavLink to={STAFF_MEMBERS} exact={false} onClick={close}>
+              {/* <NavLink to={STAFF_MEMBERS} exact={false} onClick={close}>
                 Staff
-              </NavLink>
+              </NavLink> */}
               {/*<NavLink to={SETTINGS} exact={false} onClick={close}>*/}
               {/*  Settings*/}
               {/*</NavLink>*/}

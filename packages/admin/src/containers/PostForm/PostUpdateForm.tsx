@@ -19,7 +19,7 @@ import {
   Form,
 } from "../DrawerItems/DrawerItems.style";
 import { Wrapper } from "./PostDetail.style";
-import { usePost } from "service/use-posts";
+import { getReports, usePost } from "service/use-posts";
 import { CURRENCY } from "settings/constants";
 
 type Props = any;
@@ -34,8 +34,6 @@ const UpdatePost: React.FC<Props> = () => {
   ]);
 
   const { post, postLoading, error } = usePost(postId);
-  console.log("🚀 ~ file: PostUpdateForm.tsx ~ line 37 ~ postId", postId);
-  console.log("POST", post);
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: post,
@@ -44,7 +42,9 @@ const UpdatePost: React.FC<Props> = () => {
   const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [rLoading, setRLoading] = useState(false);
   const [details, setDetails] = useState([]);
+  const [reports, setReports] = useState(null);
 
   React.useEffect(() => {
     register({ name: "type" });
@@ -62,6 +62,15 @@ const UpdatePost: React.FC<Props> = () => {
 
   const handleUploader = (files) => {
     setValue("image", files[0].path);
+  };
+
+  const viewReport = async () => {
+    setRLoading(true);
+    const result = await getReports(post.id);
+    if (result && result.success) {
+      setReports(result.data);
+    }
+    setRLoading(false);
   };
 
   const onSubmit = async () => {
@@ -86,7 +95,7 @@ const UpdatePost: React.FC<Props> = () => {
     if (res.ok && postResponse.success) {
       dispatch({
         type: "SAVE_APPROVE_POST_ID",
-        data: postResponse.id,
+        data: postResponse.data.id,
       });
 
       alert.success("Approve post successfully");
@@ -158,19 +167,21 @@ const UpdatePost: React.FC<Props> = () => {
               )}
             >
               <Row>
-                <Col lg={4}>
-                  {post.reports ? (
-                    <div>
-                      <DrawerTitle>
-                        All reports: {post.reports.length}
-                      </DrawerTitle>
-                    </div>
+                <Col lg={4} style={{ marginBottom: "20px" }}>
+                  {reports ? (
+                    reports.length !== 0 ? (
+                      <div>
+                        <DrawerTitle>All reports: {reports.length}</DrawerTitle>
+                      </div>
+                    ) : (
+                      <p>There is no any report</p>
+                    )
                   ) : null}
-                  {post.reports && post.reports.length !== 0
-                    ? post.reports.map((i) => (
+                  {reports && reports.length !== 0
+                    ? reports.map((i) => (
                         <Wrapper className="error-box">
-                          <p>{i.error}</p>
-                          <p>{i.content}</p>
+                          <p>{i.phone_number}</p>
+                          <p>{i.type}</p>
                         </Wrapper>
                       ))
                     : null}
@@ -263,12 +274,12 @@ const UpdatePost: React.FC<Props> = () => {
                 overrides={{
                   BaseButton: {
                     style: ({ $theme }) => ({
-                      width: "50%",
+                      width: "33%",
                       borderTopLeftRadius: "3px",
                       borderTopRightRadius: "3px",
                       borderBottomRightRadius: "3px",
                       borderBottomLeftRadius: "3px",
-                      marginRight: "15px",
+                      marginRight: "10px",
                       color: $theme.colors.red400,
                     }),
                   },
@@ -276,25 +287,45 @@ const UpdatePost: React.FC<Props> = () => {
               >
                 Cancel
               </Button>
-
               <Button
-                type="submit"
-                onClick={onSubmit}
+                type="button"
+                isLoading={rLoading}
+                onClick={viewReport}
                 overrides={{
                   BaseButton: {
                     style: ({ $theme }) => ({
-                      width: "50%",
+                      width: "33%",
                       borderTopLeftRadius: "3px",
                       borderTopRightRadius: "3px",
+                      marginRight: "10px",
                       borderBottomRightRadius: "3px",
                       borderBottomLeftRadius: "3px",
                     }),
                   },
                 }}
-                isLoading={loading}
               >
-                {textButton()}
+                View Report
               </Button>
+              {post.status === "waiting" && (
+                <Button
+                  type="submit"
+                  onClick={onSubmit}
+                  overrides={{
+                    BaseButton: {
+                      style: ({ $theme }) => ({
+                        width: "33%",
+                        borderTopLeftRadius: "3px",
+                        borderTopRightRadius: "3px",
+                        borderBottomRightRadius: "3px",
+                        borderBottomLeftRadius: "3px",
+                      }),
+                    },
+                  }}
+                  isLoading={loading}
+                >
+                  {textButton()}
+                </Button>
+              )}
             </ButtonGroup>
           </Form>
         </>

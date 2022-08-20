@@ -18,6 +18,7 @@ import {
   LoaderWrapper,
 } from "../post-grid/post-list/post-list.style";
 import { useRecommendPosts, useTopPosts } from "data/use-posts";
+import { CURRENCY } from "utils/constant";
 const ButtonPrev = styled("button")`
   height: 40px;
   width: 40px;
@@ -162,7 +163,7 @@ export default function CustomCarousel({
 }: Props) {
   const { query } = useRouter();
   const router = useRouter();
-  const { data, error } = useTopPosts();
+  const { data, error } = useTopPosts(20, "views");
 
   if (error) return <ErrorMessage message={error.message} />;
   if (!data) {
@@ -210,11 +211,11 @@ export default function CustomCarousel({
                 key={index}
               >
                 <FoodCard
-                  name={item.name}
+                  name={item.title}
                   image={item.main_image.url}
                   address={item.user.address}
                   createdAt={item.created_at}
-                  price={item.price}
+                  price={item.price_after_tax}
                   unit={item.unit}
                   isFree={false}
                   data={item}
@@ -222,7 +223,7 @@ export default function CustomCarousel({
                   avatar={item.user.avatar}
                   user_name={item.user.name}
                   onClick={() => {
-                    router.push(`/posts/${item.slug}`);
+                    router.push(`/posts/${item.id}`);
                   }}
                 />
               </div>

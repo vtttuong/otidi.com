@@ -13,7 +13,7 @@ import React, { useCallback, useState } from "react";
 import { useAlert } from "react-alert";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useForm } from "react-hook-form";
-import { unDeleteUser, deleteUser, getUserById } from "service/use-users";
+import { getUserById, unblockUser, blockUser } from "service/use-users";
 import {
   ButtonGroup,
   DrawerTitle,
@@ -78,9 +78,9 @@ const UserDetailForm: React.FC<Props> = (props) => {
   const onBlock = async (on) => {
     setLoading(true);
     if (data.status === "inactive") {
-      await unDeleteUser(data.id);
+      await unblockUser(data.id);
     } else {
-      await deleteUser(data.id);
+      await blockUser(data.id);
     }
     on();
     setLoading(false);

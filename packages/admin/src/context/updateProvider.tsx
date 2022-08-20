@@ -1,5 +1,5 @@
-import React from "react";
-import {getUsers} from "service/use-users";
+import React, { useState } from "react";
+import { getUsers } from "service/use-users";
 import Fuse from "fuse.js";
 import UpdateContext from "./updateContext";
 const options = {
@@ -20,29 +20,36 @@ const options = {
 };
 
 const UpdateProvider = (props) => {
-  const [dataUsers, setDataUsers] = React.useState(null);
+  const [dataUsers, setDataUsers] = React.useState([]);
   const [dataSearch, setDataSearch] = React.useState([]);
   const [dataSortType, setDataSortType] = React.useState("id");
+  const [status, setS] = React.useState("");
   const [dataSortDir, setDataSortDir] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(0);
+  const [loading, setLoading] = useState(false);
   const COUNT = 10;
 
   const getUser = async () => {
+    setLoading(true);
     const response = await getUsers({
-      sortType: dataSortType,
-      sortDir: dataSortDir,
+      status: status,
+      // sortDir: dataSortDir,
       page,
       count: COUNT,
     });
-    const users = response.data;
+    setLoading(false);
 
-    setDataUsers(users);
-    setDataSearch(users);
+    if (response) {
+      setDataUsers(response.data);
+      setDataSearch(response.data);
+      setTotalPages(Math.ceil(response.total / COUNT));
+    }
   };
 
   React.useEffect(() => {
     getUser();
-  }, [dataSortType, dataSortDir]);
+  }, [status, dataSortDir, page]);
 
   const searchN = (list, pattern) => {
     const fuse = new Fuse(list, options);
@@ -50,21 +57,24 @@ const UpdateProvider = (props) => {
   };
 
   const searchName = async (text: string) => {
+    setPage(1);
     if (text.length === 0) getUser();
     const results = searchN(dataSearch, text);
     setDataUsers(results);
   };
 
-  const sortType = async (type: string) => {
-    setDataSortType(type.length !== 0 ? type : "");
-  };
-
   const sortDir = async (dir: string) => {
+    setPage(1);
     setDataSortDir(dir.length !== 0 ? dir : "");
   };
 
   const searchPage = async (page: number) => {
     setPage(page > 0 ? page : 1);
+  };
+
+  const setStatus = async (status: string) => {
+    setPage(1);
+    setS(status);
   };
 
   return (
@@ -73,9 +83,12 @@ const UpdateProvider = (props) => {
         dataUsers: dataUsers,
         getUser: getUser,
         searchName: searchName,
-        sortType: sortType,
+        setStatus: setStatus,
         sortDir: sortDir,
         page: page,
+        setPage: searchPage,
+        totalPages: totalPages,
+        loading: loading,
       }}
     >
       {props.children}

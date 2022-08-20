@@ -48,7 +48,6 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   loadingUpdate,
   loadingId,
 }) => {
-  const [first, setFirst] = useState(true);
   const router = useRouter();
   const [changePass, setChangePass] = React.useState(false);
   const [verify, setVerify] = React.useState(false);
@@ -68,8 +67,8 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
     latitude: data.latitude,
     longitude: data.longitude,
   });
-  const [popupLocationActive, setPopupLocationActive] = useState(false);
-  const [textAddress, setTextAddress] = useState(data.address || "");
+  // const [popupLocationActive, setPopupLocationActive] = useState(false);
+  const [textAddress, setTextAddress] = useState("");
 
   // useEffect(() => {
   //   setSelectedLocation({
@@ -124,20 +123,18 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(async () => {
-      if (!first) {
-        setSelectedLocation(null);
-        setPopupLocationActive(true);
-        const data = await searchAddress(textAddress);
-        setLocations(data);
-      }
+      // setPopupLocationActive(true);
+      const data = await searchAddress(textAddress);
+      setLocations(data);
     }, 500);
 
     return () => clearTimeout(timer);
   }, [textAddress]);
 
   const onSelectLocation = (location) => {
-    setPopupLocationActive(false);
-    setTextAddress(location.address);
+    // setPopupLocationActive(false);
+    setLocations([]);
+    setTextAddress("");
     setSelectedLocation(location);
   };
 
@@ -519,28 +516,52 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                     <FormattedMessage id="address" defaultMessage="Address" />
                   </Form.Label>
 
-                  <Form.Control
+                  {/* <Form.Control
                     placeholder="Address"
+                    readOnly={true}
+                    name="address"
+                    style={{
+                      marginBottom: "10px",
+                      background: "transparent",
+                      border: "none",
+                    }}
+                    value={selectedLocation.address || ""}
+                    id="uaosfjcvcns"
+                  /> */}
+                  <div
+                    style={{
+                      margin: "20px 0",
+                      background: "transparent",
+                      border: "none",
+                      width: "100%",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {selectedLocation.address}
+                  </div>
+                  <Form.Control
+                    placeholder="Find location..."
                     name="address"
                     value={textAddress}
                     id="uaosfjcvcns"
                     onChange={(e) => {
-                      setFirst(false);
                       setTextAddress(e.target.value);
                     }}
                   />
-                  {popupLocationActive && (
-                    <ListLocations>
-                      {locations.map((lo) => (
-                        <LocationItem
-                          key={lo.id}
-                          onClick={() => onSelectLocation(lo)}
-                        >
-                          {lo.address}
-                        </LocationItem>
-                      ))}
-                    </ListLocations>
-                  )}
+                  {/* {popupLocationActive && ( */}
+                  <ListLocations>
+                    {locations.map((lo) => (
+                      <LocationItem
+                        key={lo.id}
+                        onClick={() => onSelectLocation(lo)}
+                      >
+                        {lo.address}
+                      </LocationItem>
+                    ))}
+                  </ListLocations>
+                  {/* )} */}
                 </Col>
               </Row>
               {/* <Row>

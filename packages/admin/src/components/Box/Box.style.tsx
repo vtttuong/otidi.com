@@ -2,9 +2,9 @@ import { styled } from "baseui";
 import stylede from "styled-components";
 export const TitleWrapper = styled("div", () => ({
   padding: "30px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-betwween",
+  // display: "flex",
+  // alignItems: "center",
+  // justifyContent: "space-betwween",
 }));
 
 export const BoxHeading = styled("h3", ({ $theme }) => ({
@@ -46,13 +46,13 @@ const BoxWrapper = stylede.div`
   div.select-year{
      height:44px;
     >div{
-      margin-left:20px;
+      margin-left: 0px !important;
       // margin-top: -5px;
       >.react-daterange-picker {
         height: 44px;
         background: #eeeeee; 
         padding: 0 5px;
-        font-family: lato;
+        font-family: sans-serif !important;
         font-weight: 600;
         font-size: 14.5px;
         color: #20286f; 
