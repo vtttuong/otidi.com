@@ -99,7 +99,7 @@ export const Posts: React.FC<PostsProps> = () => {
                 >
                   <PostCard
                     name={item.title}
-                    image={item.main_image.url}
+                    image={item.main_image?.url}
                     address={item.user.address}
                     createdAt={item.created_at}
                     price={item.price}

@@ -38,7 +38,7 @@ const PostDetails: React.FunctionComponent<PostDetailsProps> = ({
       <PostDetailsWrapper className="post-card" dir="ltr">
         <PostDetailsLeft data={data} userId={userId} />
         <AuthorInfor>
-          <AuthorInfo data={user} />
+          <AuthorInfo data={user} postId={data.id} />
         </AuthorInfor>
       </PostDetailsWrapper>
 

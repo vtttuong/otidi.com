@@ -78,6 +78,38 @@ export async function createChat(token: string, postId: any) {
     return { result: false, data: null };
   }
 }
+export async function sendBargin(
+  token: string,
+  message: string,
+  postId: number
+) {
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      post_id: postId,
+      message: message,
+    }),
+  };
+
+  try {
+    const response = await fetch(
+      baseUrl + `/channels/send-message/bargain`,
+      options
+    );
+    const json = await response.json();
+    console.log("🚀 ~ file: chat.ts ~ line 104 ~ json", json);
+    return {
+      result: json.success ? true : false,
+      chanelData: json.success ? json.data : null,
+    };
+  } catch (err) {
+    return { result: false, data: null };
+  }
+}
 
 export async function sendMessage(token: string, content: any, id: number) {
   const options = {

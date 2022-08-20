@@ -513,6 +513,7 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
 
     state.files.forEach((file, index) => {
       if (file.url) {
+        formdata.append(`images[${index}][id]`, file.id);
         formdata.append(`images[${index}][path]`, file.url);
       } else {
         formdata.append(`images[${index}][file]`, file);

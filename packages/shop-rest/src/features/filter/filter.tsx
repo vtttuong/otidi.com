@@ -50,7 +50,7 @@ const orderByOptions = [
   },
   {
     key: "sort",
-    value: "price",
+    value: "price_after_tax",
     label: <FormattedMessage id="price" />,
   },
 ];

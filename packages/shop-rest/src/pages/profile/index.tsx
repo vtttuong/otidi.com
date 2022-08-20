@@ -154,6 +154,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
     data.posts.map((item) => {
       if (item.id == id) {
         item.is_sold = true;
+        item.status = "sold";
         data.sold_posts.push(item);
         return;
       }

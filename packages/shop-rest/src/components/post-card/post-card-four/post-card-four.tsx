@@ -192,7 +192,7 @@ const PostCard: React.FC<CardProps> = ({
         >
           {name}
         </h3>
-        {currentUser == true && !saveNews ? (
+        {currentUser == true && !saveNews && data.status == "active" ? (
           <span
             style={{
               position: "absolute",

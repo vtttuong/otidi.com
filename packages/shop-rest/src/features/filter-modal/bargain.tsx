@@ -1,4 +1,3 @@
-import { MoneyBar } from "assets/icons/MoneyBar";
 import { Button } from "components/button/button";
 import Link from "next/link";
 import React from "react";
@@ -6,8 +5,10 @@ import { FormattedMessage } from "react-intl";
 import NumberFormat from "react-number-format";
 import { Col, Row } from "react-styled-flexboxgrid";
 import { Container, Heading, Wrapper } from "./form.style";
-import { createChat, sendMessage } from "utils/api/chat";
+import { createChat, sendBargin, sendMessage } from "utils/api/chat";
 import { useRouter } from "next/router";
+import { Money } from "assets/icons/Money";
+import { numberWithCommas } from "utils/formatNumber";
 
 type ManagePostProps = {
   deviceType?: {
@@ -29,25 +30,26 @@ const bargainModal: React.FC<ManagePostProps> = ({
   const router = useRouter();
 
   const handleChange = (event: any) => {
+    setShow(event.value);
     if (event.floatValue > 1000) {
-      setShow(event.formattedValue);
       setError(false);
     } else setError(true);
   };
 
   const onBarg = async () => {
-    const response = await createChat(data.token, data.postId);
-    if (response.status == 201 || response.status == 200) {
-      const chat: any = await response.json();
-      const content = `Toi Tra Gia: ${show}  VND`;
-      const message = await sendMessage(data.token, content, chat.id);
-      if (message?.id) {
-        router.push({
-          pathname: "/message",
-          query: { uuid: chat.uuid },
-        });
-      }
+    const content = `Toi Tra Gia: ${numberWithCommas(show)}  VND`;
+    const { result } = await sendBargin(data.token, content, data.postId);
+    if (result) {
+      // const chat: any = await response.json();
+      // const message = await sendMessage(data.token, content, chat.id);
+      // if (message?.id) {
+      //   router.push({
+      //     pathname: "/message",
+      //     query: { uuid: chat.uuid },
+      //   });
+      // }
     }
+    setLoading(false);
   };
   return (
     <Wrapper>
@@ -56,7 +58,7 @@ const bargainModal: React.FC<ManagePostProps> = ({
           <span style={{ marginRight: 10 }}>
             <FormattedMessage id="bargainId" defaultMessage={titleId} />
           </span>
-          <MoneyBar />
+          <Money />
         </Heading>
         <form style={{ marginBottom: 30 }}>
           <Row className="bargain">
@@ -85,6 +87,7 @@ const bargainModal: React.FC<ManagePostProps> = ({
         <Button
           variant="primary"
           size="big"
+          disabled={error}
           style={{ width: "100%" }}
           loading={loading}
           onClick={() => {
