@@ -133,7 +133,7 @@ const Coupon: React.FC<CouponProps> = ({
           value={code}
           placeholder={intl.formatMessage({
             id: "couponPlaceholder",
-            defaultMessage: "Enter Coupon Here",
+            defaultMessage: "Enter voucher code here",
           })}
           {...props}
         />
@@ -155,7 +155,11 @@ const Coupon: React.FC<CouponProps> = ({
         </Error>
       )}
 
-      {valid && <Success>Valid Coupon</Success>}
+      {valid && (
+        <Success>
+          <FormattedMessage id="validVoucher" defaultMessage="Valid voucher" />
+        </Success>
+      )}
     </>
   );
 };

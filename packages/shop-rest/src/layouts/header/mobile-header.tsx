@@ -23,7 +23,7 @@ import { isCategoryPage } from "../is-home-page";
 import useDimensions from "utils/useComponentSize";
 import NavLink from "components/nav-link/nav-link";
 import { AddPost } from "assets/icons/AddPost";
-import { POST_ITEM } from "site-settings/site-navigation";
+import { HOME_PAGE, POSTS, POST_ITEM } from "site-settings/site-navigation";
 import { getCookie } from "utils/session";
 type MobileHeaderProps = {
   className?: string;
@@ -69,7 +69,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
     });
   };
 
-  const isHomePage = pathname === "/";
+  const isHomePage = pathname === HOME_PAGE || pathname === POSTS;
 
   const checkAuth = () => {
     const token = getCookie("access_token");

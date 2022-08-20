@@ -20,6 +20,7 @@ import GoogleLogin from "react-google-login";
 import { setCookie } from "utils/session";
 import { Facebook } from "assets/icons/Facebook";
 import { FaFacebookSquare } from "react-icons/fa";
+import { HOME_PAGE } from "site-settings/site-navigation";
 
 export default function SignInModal() {
   const FACEBOOK_APP_ID = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
@@ -154,7 +155,8 @@ export default function SignInModal() {
         setCookie("access_token", data.access_token);
         authDispatch({ type: "SIGNIN_SUCCESS" });
         if (router.pathname == "/login") {
-          router.back();
+          // router.back();
+          router.push(HOME_PAGE);
         } else {
           closeModal();
         }
@@ -223,7 +225,7 @@ export default function SignInModal() {
             type="submit"
             loading={loading}
           >
-            <FormattedMessage id="continueBtn" defaultMessage="Continue" />
+            <FormattedMessage id="loginBtnText" defaultMessage="L" />
           </Button>
         </form>
         <Divider>

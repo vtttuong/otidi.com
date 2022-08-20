@@ -753,8 +753,8 @@ export const DeliveryOpt = styled.span`
   }
 
   span.person:nth-child(3) {
-    position: absolute;
-    bottom: -35px;
+    // position: absolute;
+    // bottom: -35px;
     right: 130px;
     background: orange;
     padding: 5px 10px;
@@ -765,8 +765,8 @@ export const DeliveryOpt = styled.span`
     // border-bottom-right-radius: 5px;
   }
   span.person:nth-child(4) {
-    position: absolute;
-    bottom: -35px;
+    // position: absolute;
+    // bottom: -35px;
     right: 200px;
     background: red;
     padding: 5px 10px;

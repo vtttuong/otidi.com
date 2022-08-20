@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Modal } from "@redq/reuse-modal";
 import Footer from "layouts/footer";
-import { getCookie } from "utils/session";
+import { getCookie, setCookie } from "utils/session";
 import { FormattedMessage } from "react-intl";
 import Router from "next/router";
 
@@ -56,9 +56,14 @@ export function Welcome() {
   );
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT;
 
 export default function Reset(data) {
+  if (data) {
+    //save cookie email verify at
+    setCookie("email_verified_at", new Date());
+  }
+
   return (
     <Modal>
       <HelpPageWrapper>
@@ -94,12 +99,12 @@ export async function getServerSideProps(context) {
     },
   };
 
-  const url = `${baseUrl}/api/client/v1/me/verify-mail/${context.query.token}/confirm`;
+  const url = `${baseUrl}/me/verify-email/${context.query.token}/confirm`;
   const res = await fetch(url, options);
 
   return {
     props: {
-      data: await res.json(),
+      data: res.ok ? true : false,
     }, // will be passed to the page component as props
   };
 }

@@ -92,7 +92,10 @@ const PostCard: React.FC<CardProps> = ({
           }}
           onClick={onMark}
         >
-          Mark bought
+          <FormattedMessage
+            id="post.markAsSold"
+            defaultMessage="Mark as sold"
+          />
         </p>
       )}
       {data && data.status == "active" && !data.advertise ? (
@@ -102,7 +105,7 @@ const PostCard: React.FC<CardProps> = ({
           }}
           onClick={onPush}
         >
-          Sell faster
+          <FormattedMessage id="post.push" defaultMessage="Sell faster" />
         </p>
       ) : null}
 
@@ -113,7 +116,10 @@ const PostCard: React.FC<CardProps> = ({
           }}
           onClick={onUpdatePackage}
         >
-          Change push start time
+          <FormattedMessage
+            id="post.pushUpdate"
+            defaultMessage=" Change push start time"
+          />
         </p>
       ) : null}
       <p
@@ -122,7 +128,7 @@ const PostCard: React.FC<CardProps> = ({
         }}
         onClick={onDeletePost}
       >
-        Delete
+        <FormattedMessage id="post.delete" defaultMessage="Delete" />
       </p>
     </div>
   );

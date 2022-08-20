@@ -6,6 +6,7 @@ import { ContainerOption, Text } from "./index.style";
 import { ProfileContext } from "contexts/profile/profile.context";
 import { ProfileProvider } from "contexts/profile/profile.provider";
 import { options } from "features/payment/amount-option";
+import { FormattedMessage } from "react-intl";
 
 function Point({ deviceType }) {
   const [choose, setChoose] = useState(false);
@@ -36,8 +37,6 @@ function Point({ deviceType }) {
       setFoundIndex(x);
     }
 
-    console.log("🚀 ~ file: index.tsx ~ line 45 ~ Point ~ state", state);
-
     // dispatch({
     //   type: "SET_PRIMARY_BALANCE",
     //   payload: list.id.toString(),
@@ -57,7 +56,9 @@ function Point({ deviceType }) {
     <>
       <ProfileProvider initData={options}>
         <ContainerOption>
-          <Text>{"Chon Menh Gia !"}</Text>
+          <Text>
+            <FormattedMessage id="choosePrice" defaultMessage="Choose price" />
+          </Text>
 
           {options.balances?.map(function (list) {
             return (
@@ -71,9 +72,13 @@ function Point({ deviceType }) {
             );
           })}
           <Next
-            title={"Nap Ngay"}
+            title={<FormattedMessage id="charge" defaultMessage="Charge now" />}
             onClick={() => onNext()}
-            style={{ backgroundColor: "#009e7f", color: "white" }}
+            style={{
+              backgroundColor: "#009e7f",
+              color: "white",
+              cursor: "pointer",
+            }}
           />
         </ContainerOption>
       </ProfileProvider>

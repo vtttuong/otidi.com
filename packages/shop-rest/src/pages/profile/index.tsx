@@ -187,7 +187,8 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
           enableResizing: false,
           disableDragging: true,
           className: "quick-view-modal",
-          width: "500px",
+          width: "90%",
+          maxWidth: "500px",
           height: "auto",
         },
         componentProps: {
@@ -211,7 +212,8 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
         enableResizing: false,
         disableDragging: true,
         className: "quick-view-modal",
-        width: "500px",
+        width: "90%",
+        maxWidth: "500px",
         height: "auto",
       },
       componentProps: {
@@ -234,10 +236,6 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
       String(formatTime)
     );
 
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 232 ~ onUpdatePackageClick ~ advertise",
-      advertise
-    );
     if (result) {
       data.posts.forEach((item) => {
         if (item.id == advertise[0].post_id) {

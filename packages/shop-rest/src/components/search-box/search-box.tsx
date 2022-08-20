@@ -48,7 +48,9 @@ export const SearchBox: React.FC<Props> = ({
               top: 2,
               position: "relative",
               color: "#009E7F",
+              cursor: "pointer",
             }}
+            onClick={onEnter}
           />
           <StyledInput
             type="search"

@@ -84,10 +84,6 @@ export default function SignOutModal() {
           options
         );
         const data = await res.json();
-        console.log(
-          "🚀 ~ file: register.tsx ~ line 86 ~ registerCallback ~ data",
-          data
-        );
 
         if (data.success) {
           setLoading(false);
@@ -202,7 +198,7 @@ export default function SignOutModal() {
         <Input
           type="password"
           placeholder={intl.formatMessage({
-            id: "passwordConfirmPlaceholder",
+            id: "confirmPasswordPlaceholder",
             defaultMessage: "Confirm Password",
           })}
           value={confirmPass}
@@ -305,7 +301,7 @@ export default function SignOutModal() {
           loading={loading}
           onClick={registerCallback}
         >
-          <FormattedMessage id="continueBtn" defaultMessage="Continue" />
+          <FormattedMessage id="signUpBtnText" defaultMessage="Sign up" />
         </Button>
         <Divider>
           <span>

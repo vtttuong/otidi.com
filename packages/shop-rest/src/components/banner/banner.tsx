@@ -5,7 +5,7 @@ import { Waypoint } from "react-waypoint";
 import { useAppDispatch } from "contexts/app/app.provider";
 import carImage from "assets/images/banner/car.jpg";
 
-export const Banner = () => {
+export const Banner = ({ banner }) => {
   const dispatch = useAppDispatch();
   const setSticky = useCallback(() => dispatch({ type: "SET_STICKY" }), [
     dispatch,
@@ -21,7 +21,7 @@ export const Banner = () => {
 
   return (
     <Box display={["none", "none", "flex"]}>
-      <Image backgroundImage={`url(${carImage})`} />
+      <Image backgroundImage={`url(${banner.url})`} />
       <Content>
         {/* <Title>{"ALLO"}</Title>
         <Description>ALLLOO</Description> */}

@@ -94,7 +94,15 @@ const Accordion: React.FC<AccordionProps> = ({
                 key={item.id}
               >
                 <p key={item.id}>{item.description}</p>
-                <b>{"Áp dụng " + item.max_number_excute + " lần / "}</b>
+                {/* <b>{"Áp dụng " + item.max_number_excute + " lần / "}</b> */}
+                <b>
+                  <FormattedMessage
+                    id="taskApplyText"
+                    values={{ value: item.max_number_excute }}
+                    defaultMessage="Apply {value} times"
+                  />
+                  {" / "}
+                </b>
                 <b>
                   <FormattedMessage id={item.per_unit} />
                 </b>
@@ -122,7 +130,7 @@ const Accordion: React.FC<AccordionProps> = ({
                     }}
                     onClick={() => router.push(item.redirect_link || "/")}
                   >
-                    Khám phá
+                    <FormattedMessage id="discover" defaultMessage="Discover" />
                   </span>
                 </p>
               </Panel>

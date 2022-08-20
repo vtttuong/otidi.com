@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import React from "react";
 // Static Data Import Here
 import { sitePages } from "site-settings/site-pages";
+import getRandomInt from "utils/ramdom";
 import { getCookie } from "utils/session";
 import { useRefScroll } from "utils/use-ref-scroll";
 
@@ -25,7 +26,7 @@ const URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL_INDEX;
 const Sidebar = dynamic(() => import("layouts/sidebar/sidebar"));
 const Posts = dynamic(() => import("components/post-grid/post-list/post-list"));
 
-const HomePage: React.FC<any> = ({ banner, deviceType }) => {
+const HomePage: React.FC<any> = ({ banners, deviceType }) => {
   const { query } = useRouter();
   const { elRef: targetRef, scroll } = useRefScroll({
     percentOfElement: 0,
@@ -47,8 +48,11 @@ const HomePage: React.FC<any> = ({ banner, deviceType }) => {
       <SEO title={page.page_title} description={page.page_description} />
       <ModalProvider>
         <Modal>
-          <MobileBanner intlTitleId={page?.banner_title_id} />
-          <Banner />
+          <MobileBanner
+            intlTitleId={page?.banner_title_id}
+            banner={banners[getRandomInt(0, banners.length - 1)]}
+          />
+          <Banner banner={banners[getRandomInt(0, banners.length - 1)]} />
           <OfferSection>
             <div style={{ margin: "0 -10px" }}>
               <Carousel deviceType={deviceType} />
@@ -76,32 +80,41 @@ const HomePage: React.FC<any> = ({ banner, deviceType }) => {
 
 export async function getServerSideProps(context) {
   const url = `${URL}/banners`;
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
   const options = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "X-API-KEY": API_KEY,
     },
   };
 
-  const data = await fetch(url, options);
+  const fake_banners = [
+    {
+      id: 1,
+      url:
+        "https://otody.s3.ap-southeast-1.amazonaws.com/banners/6n9wbAu1hJE025xd.jpg",
+      created_at: "2022-04-11T08:14:46+00:00",
+      updated_at: "2022-04-11T08:14:46+00:00",
+    },
+  ];
 
-  console.log(data);
+  let banners = [];
 
-  const dataJson = await data.json();
+  try {
+    const data = await fetch(url, options);
 
-  const fake_banner = {
-    id: 1,
-    url:
-      "https://otody.s3.ap-southeast-1.amazonaws.com/banners/6n9wbAu1hJE025xd.jpg",
-    created_at: "2022-04-11T08:14:46+00:00",
-    updated_at: "2022-04-11T08:14:46+00:00",
-  };
-  const banner = fake_banner;
+    const dataJson = await data.json();
+
+    banners = dataJson.success ? dataJson.data : [];
+  } catch (err) {
+    banners = [];
+  }
 
   return {
     props: {
-      banner: banner,
+      banners: banners.length !== 0 ? banners : fake_banners,
     },
   };
 }

@@ -41,6 +41,7 @@ export class TabPanel extends React.Component<props, state> {
               cursor: "pointer",
               transition: "all 0.2s",
               // height: "100%",
+              minWidth: "70px",
               flex: 1,
             }}
             role="presentation"
