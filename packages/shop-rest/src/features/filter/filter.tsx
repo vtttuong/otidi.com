@@ -71,6 +71,7 @@ const dirOptions = [
 const Filter: React.FC<any> = () => {
   const router = useRouter();
   const { pathname, query } = router;
+  console.log("🚀 ~ file: filter.tsx ~ line 74 ~ query", query);
   const [address, setAddress] = React.useState("");
   const [lat, setLat] = React.useState<number>();
   const [long, setLong] = React.useState<number>();
@@ -106,6 +107,7 @@ const Filter: React.FC<any> = () => {
     let queryParams = {
       ...query,
       [field]: e ? e.value : "",
+      text: "",
     };
 
     let newParams = {};
@@ -172,9 +174,8 @@ const Filter: React.FC<any> = () => {
                 <FormattedMessage id="orderBy" defaultMessage={"Order by..."} />
               }
               value={
-                orderByOptions.filter(
-                  (option) => option.value === query.sort
-                )[0]
+                orderByOptions.find((option) => option.value === query.sort) ||
+                null
               }
               onChange={(e) => handleSortData(e, "sort")}
             />
@@ -191,7 +192,7 @@ const Filter: React.FC<any> = () => {
                 <FormattedMessage id="dir" defaultMessage={"Order"} />
               }
               value={
-                dirOptions.filter((option) => option.value === query.dir)[0]
+                dirOptions.find((option) => option.value === query.dir) || null
               }
               onChange={(e) => handleSortData(e, "dir")}
             />

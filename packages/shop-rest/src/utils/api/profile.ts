@@ -183,7 +183,7 @@ export async function pushPost(token: string, post_id, packages_id, schedule) {
   try {
     const res = await fetch(`${baseUrl}/advertises`, options);
     const json = await res.json();
-    console.log("🚀 ~ file: profile.ts ~ line 174 ~ pushPost ~ json", json);
+
     return {
       result: json.success ? true : false,
       advertise: json.success ? json.data : null,

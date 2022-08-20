@@ -75,7 +75,7 @@ const PostCard: React.FC<CardProps> = ({
           <Image
             url={avatar}
             className="post-image top"
-            style={{ position: "relative" }}
+            style={{ position: "relative", objectFit: "cover" }}
             alt={name}
           />
           <h4 className="post-title">{user_name}</h4>

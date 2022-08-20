@@ -89,89 +89,34 @@ const Step1 = (props) => {
       </Row>
 
       <Row>
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={8} sm={8} md={8} lg={8}>
           <Label>
-            <FormattedMessage id="inputPrice" />
+            <FormattedMessage id="originalPrice" />
             <Require>*</Require>
           </Label>
           <InputPrice>
             <NumberFormat
               className="inputPrice"
-              label="Price"
+              label="Origin price"
               name="price"
               thousandSeparator={true}
               allowNegative={false}
               onValueChange={(data) => {
                 dispatch({
                   type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.floatValue, field: "price" },
+                  payload: { value: data.floatValue, field: "originalPrice" },
                 });
               }}
               background="#F7F7F7"
               height="48px"
               placeholder="Enter price"
-              value={state.price}
+              value={state.originalPrice}
               autoComplete={"off"}
             />
           </InputPrice>
         </Col>
 
-        <Col xs={6} sm={6} md={6} lg={6}>
-          <Label>
-            <FormattedMessage id="inputUnit" />
-          </Label>
-          <div style={{ minWidth: "100%" }}>
-            <Select
-              isDisabled={true}
-              instanceId="input-unit"
-              classNamePrefix="filter"
-              styles={CustomStyles}
-              options={unitOptions}
-              defaultValue={unitOptions[0]}
-              value={unitOptions[state.indexOptionUnit]}
-              onChange={(data) => {
-                dispatch({
-                  type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.value, field: "unit" },
-                });
-                dispatch({
-                  type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.index, field: "indexOptionUnit" },
-                });
-              }}
-            />
-          </div>
-        </Col>
-      </Row>
-
-      {/* <Row>
-        <Col xs={6} sm={6} md={6} lg={6}>
-          <Label>
-            <FormattedMessage id="inputPrice" />
-            <Require>*</Require>
-          </Label>
-          <InputPrice>
-            <NumberFormat
-              className="inputPrice"
-              label="Price"
-              name="price"
-              thousandSeparator={true}
-              onValueChange={(data) => {
-                dispatch({
-                  type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.floatValue, field: "discountPrice" },
-                });
-              }}
-              background="#F7F7F7"
-              height="48px"
-              placeholder="Enter discount price"
-              value={state.discountPrice}
-              autoComplete={"off"}
-            />
-          </InputPrice>
-        </Col>
-
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={4} sm={4} md={4} lg={4}>
           <Label>
             <FormattedMessage id="inputUnit" />
           </Label>
@@ -200,33 +145,33 @@ const Step1 = (props) => {
       </Row>
 
       <Row>
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={8} sm={8} md={8} lg={8}>
           <Label>
-            <FormattedMessage id="inputPrice" />
+            <FormattedMessage id="discountPrice" />
             <Require>*</Require>
           </Label>
           <InputPrice>
             <NumberFormat
               className="inputPrice"
-              label="Price"
+              label="Discount price"
               name="price"
               thousandSeparator={true}
               onValueChange={(data) => {
                 dispatch({
                   type: "HANDLE_ON_SELECT_CHANGE",
-                  payload: { value: data.floatValue, field: "priceAfterTax" },
+                  payload: { value: data.floatValue, field: "discountPrice" },
                 });
               }}
               background="#F7F7F7"
               height="48px"
-              placeholder="Enter price after tax"
-              value={state.priceAfterTax}
+              placeholder="Enter discount price"
+              value={state.discountPrice}
               autoComplete={"off"}
             />
           </InputPrice>
         </Col>
 
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={4} sm={4} md={4} lg={4}>
           <Label>
             <FormattedMessage id="inputUnit" />
           </Label>
@@ -252,7 +197,62 @@ const Step1 = (props) => {
             />
           </div>
         </Col>
-      </Row> */}
+      </Row>
+
+      <Row>
+        <Col xs={8} sm={8} md={8} lg={8}>
+          <Label>
+            <FormattedMessage id="priceAfterTax" />
+            <Require>*</Require>
+          </Label>
+          <InputPrice>
+            <NumberFormat
+              className="inputPrice"
+              label="Price after tax"
+              name="price"
+              thousandSeparator={true}
+              onValueChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.floatValue, field: "priceAfterTax" },
+                });
+              }}
+              background="#F7F7F7"
+              height="48px"
+              placeholder="Enter price after tax"
+              value={state.priceAfterTax}
+              autoComplete={"off"}
+            />
+          </InputPrice>
+        </Col>
+
+        <Col xs={4} sm={4} md={4} lg={4}>
+          <Label>
+            <FormattedMessage id="inputUnit" />
+          </Label>
+          <div style={{ minWidth: "100%" }}>
+            <Select
+              isDisabled={true}
+              instanceId="input-unit"
+              classNamePrefix="filter"
+              styles={CustomStyles}
+              options={unitOptions}
+              defaultValue={unitOptions[0]}
+              value={unitOptions[state.indexOptionUnit]}
+              onChange={(data) => {
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.value, field: "unit" },
+                });
+                dispatch({
+                  type: "HANDLE_ON_SELECT_CHANGE",
+                  payload: { value: data.index, field: "indexOptionUnit" },
+                });
+              }}
+            />
+          </div>
+        </Col>
+      </Row>
 
       <Row>
         <Col xs={12} sm={12} md={12} lg={12}>
@@ -506,6 +506,9 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
     formdata.append("brand_id", state.brandId);
     formdata.append("brand_model_id", state.modelId);
     formdata.append("price", state.price);
+    formdata.append("original_price", state.originalPrice);
+    formdata.append("discount_price", state.discountPrice);
+    formdata.append("price_after_tax", state.priceAfterTax);
 
     Object.keys(state.additionalInfo).forEach((key) => {
       formdata.append(`detail[${key}]`, state.additionalInfo[key]);

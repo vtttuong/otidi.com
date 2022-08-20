@@ -8,7 +8,8 @@ import paypal from "./image/paypal.png";
 
 const CardWrapper = styled.label`
   display: flex;
-  max-width: 50% !important;
+  // max-width: 50% !important;
+  flex: 1;
   align-items: center;
   justify-content: space-between;
   flex-direction: row !important;
@@ -29,9 +30,9 @@ const CardWrapper = styled.label`
   font-weight: ${themeGet("fontWeights.regular", "400")};
   color: ${themeGet("colors.text.bold", "#0D1136")};
   line-height: 24px;
-  max-width: 240px;
+  // max-width: 240px;
   cursor: pointer;
-  width: 100%;
+  // width: 100%;
   transition: all 0.25s ease;
 
   &.active {
@@ -84,7 +85,7 @@ const CardContent = styled.span`
   color: #009e7f;
   font-family: ${themeGet("fonts.body", "Lato")};
   font-size: 18px;
-  font-weight:600;
+  font-weight: 600;
   // ${themeGet("fontSizes.base", "15")}px;
   // font-weight: ${themeGet("fontWeights.regular", "400")};
   // color: ${themeGet("colors.text.medium", "#424561")};

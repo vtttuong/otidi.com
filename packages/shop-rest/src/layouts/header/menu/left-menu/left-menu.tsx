@@ -80,26 +80,6 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
 
   const checkAuth = async () => {
     let token = getCookie("access_token");
-    // let phoneNumber = getCookie("userPhone");
-    // console.log(
-    //   "🚀 ~ file: left-menu.tsx ~ line 83 ~ checkAuth ~ phoneNumber",
-    //   phoneNumber
-    // );
-    // let isVerifyPhone = getCookie("phone_verified_at");
-    // console.log(
-    //   "🚀 ~ file: left-menu.tsx ~ line 85 ~ checkAuth ~ isVerifyPhone",
-    //   isVerifyPhone
-    // );
-    // let isVerifyEmail = getCookie("email_verified_at");
-    // console.log(
-    //   "🚀 ~ file: left-menu.tsx ~ line 87 ~ checkAuth ~ isVerifyEmail",
-    //   isVerifyEmail
-    // );
-    // let isVerifyAddress = getCookie("userAddress");
-    // console.log(
-    //   "🚀 ~ file: left-menu.tsx ~ line 89 ~ checkAuth ~ isVerifyAddress",
-    //   isVerifyAddress
-    // );
 
     if (!token) {
       authDispatch({
@@ -110,10 +90,6 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
     }
 
     const myProfile = await getMyprofile(token);
-    console.log(
-      "🚀 ~ file: left-menu.tsx ~ line 113 ~ checkAuth ~ myProfile",
-      myProfile
-    );
 
     if (!myProfile.phone_number || myProfile.phone_number?.length < 8) {
       router.push(PROFILE_SETTING_PAGE);

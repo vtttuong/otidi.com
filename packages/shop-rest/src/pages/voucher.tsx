@@ -23,9 +23,7 @@ import { getCookie } from "utils/session";
 import Accordion from "components/accordion/accordion-voucher";
 import { exchange, getAllVoucher, getMyVoucher } from "utils/api/voucher";
 import Notice from "components/notice/notice";
-import { isNull } from "util";
 import WrapMy from "features/wrap-card/wrap-card-myvoucher";
-import { siteMetadata } from "site-settings/site-metadata";
 import React from "react";
 import { getTasks } from "utils/api/tasks";
 
@@ -71,7 +69,7 @@ const accordionData = [
 const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
   const [activeTab, setActiveTab] = useState("allVoucher");
   const [data, setData] = useState([]);
-  const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
   const posting = [];
 
   const dataTab2 = [
@@ -98,16 +96,16 @@ const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
   const onExchange = async (id) => {
     const result = await exchange(token, id);
     if (result && !result.success) {
-      setError(result.result);
+      setStatus(result.result);
     } else {
-      setError("");
+      setStatus("success");
       dataVoucher.myVouchers.push(
         dataVoucher.allVouchers.find((voucher) => voucher.id === id)
       );
       setActiveTab("myVoucher");
     }
     setTimeout(() => {
-      setError("");
+      setStatus("");
     }, 2000);
   };
   const getProfiles = async () => {
@@ -117,7 +115,7 @@ const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
 
   React.useEffect(() => {
     getProfiles();
-  }, [error]);
+  }, [status]);
   return (
     <>
       <SEO title="voucher - 2hands" description="My voucher" />
@@ -154,11 +152,15 @@ const VoucherPage: NextPage<Props> = ({ token, dataVoucher }) => {
                 </ContentBox>
               </ContentContainer>
             </ContainBody>
-            {error ? (
-              <Notice status={"errror"} content={error} />
-            ) : error && error.length !== 0 ? (
-              <Notice status={"success"} content={"Đổi thành công !"} />
+
+            {status && status.length !== 0 ? (
+              status === "success" ? (
+                <Notice status={"success"} content={"Đổi thành công !"} />
+              ) : (
+                <Notice status={"error"} content={status} />
+              )
             ) : null}
+
             <Footer />
           </PageWrapper>
         </Modal>

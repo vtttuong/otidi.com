@@ -68,11 +68,11 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
       return;
     }
     const { type, ...rest } = query;
-    console.log("🚀 ~ file: search.tsx ~ line 71 ~ onSearch ~ query", query);
 
     router.push({
       pathname: POSTS,
-      query: { ...rest, text: searchTerm.trim() },
+      // query: { ...rest, text: searchTerm.trim() },
+      query: { text: searchTerm.trim() },
     });
 
     // dispatch({ type: "SET_SEARCH_TERM", payload: "" });

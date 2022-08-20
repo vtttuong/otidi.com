@@ -44,7 +44,7 @@ const PopoverNotify: React.FC<PopoverProps> = ({
       Router.push("/login");
     } else {
       e.stopPropagation();
-      setState((state) => true);
+      setState((state) => !state);
     }
   };
 
@@ -52,7 +52,7 @@ const PopoverNotify: React.FC<PopoverProps> = ({
   const handleDocumentClick = (e) => {
     e.stopPropagation();
     if (state) {
-      handleToggle(e);
+      setState(false);
     }
   };
 

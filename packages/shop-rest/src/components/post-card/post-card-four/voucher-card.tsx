@@ -45,8 +45,8 @@ const VoucherCard: React.FC<CardProps> = ({
         />
       </FoodImageWrapper>
       {/* Sử dụng:  */}
-      <PostMeta className="voucher" style={{ marginTop: 40, marginBottom: 18 }}>
-        <DeliveryOpt>
+      <PostMeta className="voucher" style={{ marginTop: 20, marginBottom: 18 }}>
+        <DeliveryOpt className="voucher-info">
           <div
             style={{
               display: "flex",
@@ -90,13 +90,13 @@ const VoucherCard: React.FC<CardProps> = ({
               {" % "}
             </>
           ) : (
-            <div>
+            <div className="exchange-action">
               <span>
                 {" "}
                 Đổi {data.reward_point}{" "}
                 <FormattedMessage id="score" defaultMessage="Score" />
               </span>
-              {data.used < data.total ? (
+              {data.used < data.total && data.is_available ? (
                 <span
                   className="doingay"
                   onClick={() => {
@@ -118,7 +118,7 @@ const VoucherCard: React.FC<CardProps> = ({
                 </span>
               ) : (
                 <span className="doingay dadoi">
-                  <b>Hét</b>
+                  <b>Đổi ngay</b>
                 </span>
               )}
             </div>

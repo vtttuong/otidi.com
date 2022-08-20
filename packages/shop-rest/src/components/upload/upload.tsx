@@ -49,8 +49,10 @@ const Uploader: React.FC<Props> = ({
         //   ),
         // ]);
 
+        setFiles([...files, ...acceptedFiles]);
+
         //revoke url from the previous files
-        setFiles([...acceptedFiles]);
+        // setFiles([...acceptedFiles]);
         onChange(acceptedFiles);
 
         dispatch({
@@ -63,14 +65,9 @@ const Uploader: React.FC<Props> = ({
   });
 
   const removeUploadedImage = (index: number) => {
-    const images = [
-      ...state.files.slice(0, index),
-      ...state.files.slice(index + 1),
-    ];
-
     dispatch({
-      type: "HANDLE_ON_SELECT_CHANGE",
-      payload: { value: images, field: "files" },
+      type: "HANDLE_REMOVE_IMAGE",
+      payload: { field: "files", index: index },
     });
   };
 

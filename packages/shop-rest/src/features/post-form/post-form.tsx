@@ -89,7 +89,7 @@ const Step1 = (props) => {
       </Row>
 
       <Row>
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={8} sm={8} md={8} lg={8}>
           <Label>
             <FormattedMessage id="originalPrice" />
           </Label>
@@ -115,7 +115,7 @@ const Step1 = (props) => {
           </InputPrice>
         </Col>
 
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={4} sm={4} md={4} lg={4}>
           <Label>
             <FormattedMessage id="inputUnit" />
           </Label>
@@ -143,7 +143,7 @@ const Step1 = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={8} sm={8} md={8} lg={8}>
           <Label>
             <FormattedMessage id="discountPrice" />
             <Require>*</Require>
@@ -170,7 +170,7 @@ const Step1 = (props) => {
           </InputPrice>
         </Col>
 
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={4} sm={4} md={4} lg={4}>
           <Label>
             <FormattedMessage id="inputUnit" />
           </Label>
@@ -198,7 +198,7 @@ const Step1 = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={8} sm={8} md={8} lg={8}>
           <Label>
             <FormattedMessage id="priceAfterTax" />
             <Require>*</Require>
@@ -225,7 +225,7 @@ const Step1 = (props) => {
           </InputPrice>
         </Col>
 
-        <Col xs={6} sm={6} md={6} lg={6}>
+        <Col xs={4} sm={4} md={4} lg={4}>
           <Label>
             <FormattedMessage id="inputUnit" />
           </Label>

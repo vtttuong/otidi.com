@@ -34,7 +34,7 @@ const WrapCard: React.FC<Props> = ({ data, token, onExchange }) => {
             </ItemCard>
           ))
         ) : (
-          <p style={{ textAlign: "center" }}>No data</p>
+          <p style={{ textAlign: "center", padding: "20px 0" }}>No data</p>
         )
       ) : (
         <div

@@ -236,7 +236,7 @@ const PostCard: React.FC<CardProps> = ({
               right: 8,
               top: 12,
               cursor: "pointer",
-              zIndex: 150,
+              zIndex: 5,
             }}
             onClick={onClickEdit}
           >

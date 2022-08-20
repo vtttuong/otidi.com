@@ -163,7 +163,7 @@ export default function CustomCarousel({
 }: Props) {
   const { query } = useRouter();
   const router = useRouter();
-  const { data, error } = useTopPosts(20, "views");
+  const { data, error } = useTopPosts(5, "views");
 
   if (error) return <ErrorMessage message={error.message} />;
   if (!data) {

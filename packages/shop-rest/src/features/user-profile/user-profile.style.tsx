@@ -100,6 +100,10 @@ const ItemCard = styled.div`
     width: 50%;
     padding: 5px;
   }
+  @media only screen and (max-width: 450px) {
+    width: 100%;
+    padding: 5px;
+  }
 `;
 
 const TabContain = styled.div`

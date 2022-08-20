@@ -43,7 +43,6 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
   } = useCart();
 
   const { state, dispatch } = useContext(ProfileContext);
-  console.log("🚀 ~ file: checkout-one.tsx ~ line 45 ~ state", state);
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(null);
   const { address, contact, card, schedules } = state;
