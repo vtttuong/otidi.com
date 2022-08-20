@@ -76,6 +76,14 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
       setCookie("email_verified_at", data.email_verified_at);
       setCookie("identity_verified_at", data.identity_verified_at);
       setCookie("balance", data.balance);
+      setCookie(
+        "userFrontId",
+        data.identity_card ? data.identity_card.img_front_url : null
+      );
+      setCookie(
+        "userBackId",
+        data.identity_card ? data.identity_card.img_back_url : null
+      );
     }
   };
 

@@ -38,6 +38,7 @@ import NumberFormat from "react-number-format";
 import { getCookie } from "utils/session";
 import { unitOptions } from "./options";
 import ErrorModel from "features/on-error/error";
+import { useRouter } from "next/router";
 
 const TextArea = dynamic(() => import("../../components/text-area/text-area"), {
   ssr: false,
@@ -395,13 +396,15 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
   const [errorStep, setErrorStep] = useState("");
   const [errorImage, setErrorImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   const ACCEPTED_SIZE = 512 * 1000;
 
   const _next = () => {
     if (currentStep === 1) {
       if (
         state.title &&
-        state.price &&
+        state.originalPrice &&
         state.discountPrice &&
         state.priceAfterTax &&
         state.unit &&
@@ -532,6 +535,10 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
       },
     };
 
+    for (var value of formdata.entries()) {
+      console.log(value);
+    }
+
     axios
       .post(
         process.env.NEXT_PUBLIC_LARAVEL_API_URL_CLIENT + `/posts/${state.id}`,
@@ -539,8 +546,6 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
         configs
       )
       .then((response) => {
-        console.log(response);
-
         if (
           (response.status === 200 || response.status === 201) &&
           response.data.success
@@ -560,6 +565,10 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
             },
             componentProps: { textId: "updateSuccess" },
           });
+
+          setTimeout(() => {
+            router.push("/");
+          }, 2000);
         } else {
           openModal({
             show: true,

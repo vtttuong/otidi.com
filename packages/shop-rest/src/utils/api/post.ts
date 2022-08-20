@@ -27,14 +27,14 @@ export async function getPostBySlug(token, slug) {
   }
 }
 
-export async function getPost(id: number) {
+export async function getPost(idOrSlug: any) {
   const options = {
     method: "GET",
     headers: {
       "X-API-KEY": API_KEY,
     },
   };
-  const res = await fetch(`${baseUrlIndex}/posts/${id}`, options);
+  const res = await fetch(`${baseUrlIndex}/posts/${idOrSlug}`, options);
 
   if (res.status === 200) {
     const resJson = await res.json();

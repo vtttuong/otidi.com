@@ -35,11 +35,12 @@ const SelectItem: React.FC<any> = ({ options }) => {
   }
   const { state, dispatch } = useContext(PostFormContext);
 
-  const defaultItem = {
-    key: options[state.indexBrand].key,
-    value: options[state.indexBrand].value,
-    label: options[state.indexBrand].label,
-  };
+  // const defaultItem = {
+  //   key: options[state.indexBrand].key,
+  //   value: options[state.indexBrand].value,
+  //   label: options[state.indexBrand].label,
+  // };
+  const defaultItem = options.find((item) => item.value === state.brandId);
 
   const [valueCategory, setValueCategory] = React.useState(defaultItem);
 
