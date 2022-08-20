@@ -11,6 +11,7 @@ import {
   POST_ITEM,
   PROFILE_SETTING_PAGE,
   UPDATE_PHONE,
+  VERIFY_EMAIL,
 } from "site-settings/site-navigation";
 import {
   Arrow,
@@ -27,6 +28,7 @@ import {
 import { getCookie } from "utils/session";
 import { AuthContext } from "contexts/auth/auth.context";
 import CreatePostButton from "components/create-post-button/nav-link";
+import { getMyprofile } from "utils/api/profile";
 
 const CategoryIcon = ({ name }) => {
   const TagName = categoryMenuIcons[name];
@@ -76,30 +78,60 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
 
   // const [activeMenu, setActiveMenu] = React.useState(initialMenu ?? brands[0]);
 
-  const checkAuth = () => {
+  const checkAuth = async () => {
     let token = getCookie("access_token");
-    let phoneNumber = getCookie("userPhone");
-    let isVerifyPhone = getCookie("phone_verified_at");
-    let isVerifyEmail = getCookie("email_verified_at");
-    let isVerifyAddress = getCookie("userAddress");
+    // let phoneNumber = getCookie("userPhone");
+    // console.log(
+    //   "🚀 ~ file: left-menu.tsx ~ line 83 ~ checkAuth ~ phoneNumber",
+    //   phoneNumber
+    // );
+    // let isVerifyPhone = getCookie("phone_verified_at");
+    // console.log(
+    //   "🚀 ~ file: left-menu.tsx ~ line 85 ~ checkAuth ~ isVerifyPhone",
+    //   isVerifyPhone
+    // );
+    // let isVerifyEmail = getCookie("email_verified_at");
+    // console.log(
+    //   "🚀 ~ file: left-menu.tsx ~ line 87 ~ checkAuth ~ isVerifyEmail",
+    //   isVerifyEmail
+    // );
+    // let isVerifyAddress = getCookie("userAddress");
+    // console.log(
+    //   "🚀 ~ file: left-menu.tsx ~ line 89 ~ checkAuth ~ isVerifyAddress",
+    //   isVerifyAddress
+    // );
+
     if (!token) {
       authDispatch({
         type: "SIGNIN",
       });
-      Router.push("/login");
+      router.push("/login");
       return;
     }
-    if (token && (!phoneNumber || phoneNumber?.length < 8)) {
-      Router.push(PROFILE_SETTING_PAGE);
-    } else if (token && (!isVerifyPhone || isVerifyPhone.length <= 0)) {
-      Router.push(UPDATE_PHONE);
-    } else if (token && (!isVerifyEmail || isVerifyEmail.length <= 0)) {
-      Router.push(UPDATE_PHONE);
-    } else if (token && (!isVerifyAddress || isVerifyAddress.length <= 0)) {
-      Router.push(UPDATE_PHONE);
-    } else {
-      Router.push(POST_ITEM.href);
+
+    const myProfile = await getMyprofile(token);
+    console.log(
+      "🚀 ~ file: left-menu.tsx ~ line 113 ~ checkAuth ~ myProfile",
+      myProfile
+    );
+
+    if (!myProfile.phone_number || myProfile.phone_number?.length < 8) {
+      router.push(PROFILE_SETTING_PAGE);
+      return;
     }
+    if (!myProfile.phone_verified_at) {
+      router.push(UPDATE_PHONE);
+      return;
+    }
+    if (!myProfile.email_verified_at) {
+      router.push(VERIFY_EMAIL);
+      return;
+    }
+    if (!myProfile.address) {
+      router.push(PROFILE_SETTING_PAGE);
+      return;
+    }
+    router.push(POST_ITEM.href);
   };
 
   return (

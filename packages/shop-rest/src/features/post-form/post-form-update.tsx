@@ -100,6 +100,7 @@ const Step1 = (props) => {
               label="Price"
               name="price"
               thousandSeparator={true}
+              allowNegative={false}
               onValueChange={(data) => {
                 dispatch({
                   type: "HANDLE_ON_SELECT_CHANGE",

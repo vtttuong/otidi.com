@@ -59,7 +59,6 @@ const Header: React.FC<Props> = ({ className, isHome }) => {
 
     if (token != null) {
       const data = await getMyprofile(token);
-      console.log("🚀 ~ file: header.tsx ~ line 62 ~ getData ~ data", data);
 
       const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,

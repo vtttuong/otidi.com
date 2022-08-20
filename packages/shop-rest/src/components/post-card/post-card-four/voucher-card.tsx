@@ -47,14 +47,20 @@ const VoucherCard: React.FC<CardProps> = ({
       {/* Sử dụng:  */}
       <PostMeta className="voucher" style={{ marginTop: 40, marginBottom: 18 }}>
         <DeliveryOpt>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <p className="name">{data.name}</p>
             <span
               className={data.type == "personal" ? "label-persion" : "label"}
             >
               {data.type == "personal"
                 ? data.levels.map((i) => (
-                    <span className="persion">
+                    <span className="person">
                       <FormattedMessage id={i.name} />
                     </span>
                   ))
@@ -76,9 +82,7 @@ const VoucherCard: React.FC<CardProps> = ({
           </span>
         </DeliveryOpt>
         <DeliveryOpt className="score">
-          <span style={{ display: "ïnline-block", marginRight: "5px" }}>
-            <CoinIcon height="17px" width="17px" />
-          </span>
+          <CoinIcon height="17px" width="17px" />
           {data.type == "personal" ? (
             <>
               {"+ "}

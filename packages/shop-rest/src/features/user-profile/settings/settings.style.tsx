@@ -76,6 +76,11 @@ const SettingsFormContent = styled.div`
       padding-left: 7px;
     }
 
+    & .profile-warning {
+      color: #f3c700;
+      display: flex;
+      align-items: center;
+    }
     & ${Col} {
       margin-bottom: 17px;
     }

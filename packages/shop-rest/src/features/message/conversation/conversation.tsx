@@ -1,7 +1,7 @@
 import { MessageItem } from "components/message-item/message-item";
 import { Tabs } from "components/tabs/tabs";
 import { ChatContext } from "contexts/chat/chat.context";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import ChatRole from "../chat-role";
 
@@ -19,12 +19,12 @@ const Conversation: React.FC<ConversationProps> = ({
   const [active, setActive] = useState("all");
   const [selected, setSelected] = useState(chatId);
   const { state, dispatch } = useContext(ChatContext);
-
+  const router = useRouter();
   useEffect(() => {}, [chatId]);
 
   const on = (val) => {
     setActive(val);
-    setSelected(0);
+    // setSelected(0);
   };
 
   const onChangeConversation = (id: number) => {
@@ -32,6 +32,10 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const onClickConversation = async (id: number) => {
+    if (id === state.chatId) {
+      return;
+    }
+
     dispatch({
       type: "SET_CHAT_ID",
       payload: { value: id, field: "chatId" },
@@ -66,7 +70,7 @@ const Conversation: React.FC<ConversationProps> = ({
                 createdAt={chat.created_at}
                 onChange={() => onChangeConversation(chat.id)}
                 onClick={() => onClickConversation(chat.id)}
-                lastMessageAt={chat.last_message.created_at}
+                lastMessageAt={chat.last_message?.created_at}
               />
             );
           })}
@@ -88,7 +92,7 @@ const Conversation: React.FC<ConversationProps> = ({
                   onChange={() => onChangeConversation(chat.id)}
                   onClick={() => onClickConversation(chat.id)}
                   isOnline={true}
-                  lastMessageAt={chat.last_message.created_at}
+                  lastMessageAt={chat.last_message?.created_at}
                 />
               );
             }
@@ -111,7 +115,7 @@ const Conversation: React.FC<ConversationProps> = ({
                   onChange={() => onChangeConversation(chat.id)}
                   onClick={() => onClickConversation(chat.id)}
                   isOnline={true}
-                  lastMessageAt={chat.last_message.created_at}
+                  lastMessageAt={chat.last_message?.created_at}
                 />
               );
             }

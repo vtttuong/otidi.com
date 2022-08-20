@@ -25,6 +25,7 @@ export default function SignInModal() {
     // if (!(phone.match(/\d/g).length === 10)) {
     //   setError("error");
     // }
+    setError("");
     const token = getCookie("access_token");
     if (!token || token.trim().length === 0) {
       router.push("/login");
@@ -49,10 +50,10 @@ export default function SignInModal() {
 
         if (data && !data.success) {
           setLoading(false);
+          setError(data.result);
           return;
         } else {
           setCookie("verify-phone", phone);
-
           router.push("/verify-phone");
           return;
         }
@@ -86,6 +87,7 @@ export default function SignInModal() {
           >
             <FormattedMessage id="continueBtn" defaultMessage="Continue" />
           </Button>
+          {error.length !== 0 && <i style={{ color: "red" }}>{error}</i>}
         </div>
       </Container>
     </Wrapper>

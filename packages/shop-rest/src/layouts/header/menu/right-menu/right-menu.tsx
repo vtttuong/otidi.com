@@ -33,6 +33,7 @@ import {
   NoItem,
 } from "./right-menu.style";
 import { AuthContext } from "contexts/auth/auth.context";
+import { NEW_MESSAGE_CHANNEL, NEW_MESSAGE_EVENT } from "utils/constant";
 
 const AuthMenu = dynamic(() => import("../auth-menu"), { ssr: false });
 
@@ -102,18 +103,6 @@ export const RightMenu: React.FC<Props> = ({
   }, [dataNotiBroadCast]);
 
   useEffect(() => {
-    if (router.pathname === "/message") {
-      return;
-    }
-
-    let messageUnread = state.messageUnread;
-    dispatch({
-      type: "SET_MESSAGE_UNREAD_COUNT",
-      payload: { value: messageUnread + 1, field: "messageUnread" },
-    });
-  }, [dataMessageBroadCast]);
-
-  useEffect(() => {
     getDataNoti();
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER,
@@ -138,16 +127,18 @@ export const RightMenu: React.FC<Props> = ({
       }
     );
 
-    if (router.pathname === "/message") {
+    const channelMessage = pusher.subscribe(`${NEW_MESSAGE_CHANNEL}.${userId}`);
+    channelMessage.bind(NEW_MESSAGE_EVENT, async function (data) {
+      let messageUnread = state.messageUnread || 0;
+      console.log(
+        "🚀 ~ file: right-menu.tsx ~ line 133 ~ messageUnread",
+        messageUnread
+      );
+
       dispatch({
         type: "SET_MESSAGE_UNREAD_COUNT",
-        payload: { value: 0, field: "messageUnread" },
+        payload: { value: messageUnread + 1, field: "messageUnread" },
       });
-    }
-
-    const channelMessage = pusher.subscribe("myMessage." + userId);
-    channelMessage.bind("NewMessage", async function (data) {
-      setDataMessageBroadCast(!dataMessageBroadCast);
     });
 
     if (isAuthenticated == false) {
@@ -202,6 +193,10 @@ export const RightMenu: React.FC<Props> = ({
     if (!token) {
       Router.push("/login");
     } else {
+      dispatch({
+        type: "SET_MESSAGE_UNREAD_COUNT",
+        payload: { value: 0, field: "messageUnread" },
+      });
       Router.push(MESSAGE_ITEM.href);
     }
   };
