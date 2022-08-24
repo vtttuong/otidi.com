@@ -304,14 +304,14 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
           </Detail>
           <PostTitlePriceWrapper>
             <PostTitle>{post.title}</PostTitle>
-            <PostPriceWrapper>
+            {/* <PostPriceWrapper>
               {post.discount_price ? (
                 <SalePrice>
                   {parseInt(post.original_price).toLocaleString()}
                   {CURRENCY}
                 </SalePrice>
               ) : null}
-            </PostPriceWrapper>
+            </PostPriceWrapper> */}
           </PostTitlePriceWrapper>
           <PostPrice>
             <div style={{ display: "block", marginBottom: 33 }}>

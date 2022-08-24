@@ -38,11 +38,16 @@ import { follow, getFollowers, unfollow } from "utils/api/user";
 import { ChatButtons } from "components/post-details/post-details-one/post-details-one.style";
 
 type AuthoInforProps = {
-  data: any;
+  contactInfo: any;
+  user: any;
   postId?: number;
 };
 
-const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
+const AuthoInfor: React.FC<AuthoInforProps> = ({
+  user,
+  postId,
+  contactInfo,
+}) => {
   const router = useRouter();
   const { query } = useRouter();
   const defaultOptions = { scrollwheel: false };
@@ -67,16 +72,24 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
 
   const isCurrentUser = () => {
     const currentId = getCookie("userId");
-    return currentId == data.id;
+    return currentId == user.id;
   };
 
   const MapLayout = (props) => (
     <GoogleMap
       defaultZoom={15}
-      defaultCenter={{ lat: data.latitude, lng: data.longitude }}
+      defaultCenter={{
+        lat: contactInfo.latitude || 0,
+        lng: contactInfo.longitude || 0,
+      }}
       defaultOptions={defaultOptions}
     >
-      <Marker position={{ lat: data.latitude, lng: data.longitude }} />
+      <Marker
+        position={{
+          lat: contactInfo.latitude || 0,
+          lng: contactInfo.longitude || 0,
+        }}
+      />
     </GoogleMap>
   );
 
@@ -90,12 +103,12 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
     } else {
       setFollowLoading(true);
       if (followed == false) {
-        const { result } = await follow(token, data.id);
+        const { result } = await follow(token, user.id);
         if (result) {
           setFollowed(true);
         }
       } else {
-        const { result } = await unfollow(token, data.id);
+        const { result } = await unfollow(token, user.id);
         if (result) {
           setFollowed(false);
         }
@@ -112,7 +125,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
       if (!token) {
         return;
       }
-      const followers = await getFollowers(data.id);
+      const followers = await getFollowers(user.id);
       const isFollowed =
         followers.filter((item) => item.follower_id == +currentId).length > 0;
       setFollowed(isFollowed);
@@ -128,7 +141,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
       router.push("/login");
     } else {
       setChatLoading(true);
-      const { result, chanelData } = await createChat(token, query.id);
+      const { result, chanelData } = await createChat(token, postId);
 
       if (result) {
         const id: number = chanelData.id;
@@ -185,12 +198,15 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
   //   }
   // };
   React.useEffect(() => {
-    verify(data);
+    verify(user);
   }, []);
 
-  if (!data.id) {
+  if (!user.id) {
     return <AuthoInforDf />;
   }
+
+  let phoneNumber =
+    user.phone_number || contactInfo.phone_number[0]?.replace(/[^0-9]+/g, "");
 
   return (
     <InfoBody className={"profile-post"}>
@@ -198,27 +214,30 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
         className={"border"}
         onClick={() => {
           let currentUserId = getCookie("userId");
-          if (data.id == currentUserId) {
+          if (user.id == currentUserId) {
             router.push("/profile");
           } else {
-            router.push("/profile/[id]", `/profile/${data.id}`);
+            router.push("/profile/[id]", `/profile/${user.id}`);
           }
         }}
       >
         <Avatar
-          src={data.avatar}
+          src={
+            user.avatar ||
+            "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+          }
           onClick={() => {
             let currentUserId = getCookie("userId");
-            if (data.id == currentUserId) {
+            if (user.id == currentUserId) {
               router.push("/profile");
             } else {
-              router.push("/profile/[id]", `/profile/${data.id}`);
+              router.push("/profile/[id]", `/profile/${user.id}`);
             }
           }}
         />
         <MainAvatar className={"name"}>
           <Name>
-            {data.name}
+            {user.name}
             {vefifyAccount ? (
               <Verified
                 style={{
@@ -238,7 +257,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
             )}
           </Name>
           <Name className={"status"}>
-            {data.status === "active" ? (
+            {user.status === "active" ? (
               <>
                 <Dot className={"active"} />
                 <FormattedMessage id="onStatus" defaultMessage="onStatus" />
@@ -270,11 +289,11 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
         )}
         <MainAvatar className={"sub subRate"}>
           <Name className={"subInfo rate"}>
-            {"(" + parseFloat(data.rating).toFixed(1) + ")"}
+            {"(" + parseFloat(user.rating).toFixed(1) + ")"}
           </Name>
           <ContainerImage className={"star"}>
             <StarRatings
-              rating={data.rating}
+              rating={user.rating}
               starDimension="20px"
               starSpacing="5px"
               starRatedColor={"#ffc107"}
@@ -334,7 +353,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
             <FormattedMessage id="address" defaultMessage="Address:" />
           </Title>
           <Title className={"infosub"}>
-            <TextFormat>{data.address}</TextFormat>
+            <TextFormat>{user.address || contactInfo.address}</TextFormat>
           </Title>
         </CenterContainerSub>
 
@@ -344,11 +363,9 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({ data, postId }) => {
           </Title>
           <Title className={"infosub phone"}>
             <TextFormat>
-              <a href={`tel:${data.phone_number}`}>
+              <a href={`tel:${phoneNumber}`}>
                 {" "}
-                {data.phone_number.replace(/^\d{1,7}/, (x) =>
-                  x.replace(/./g, "*")
-                )}
+                {phoneNumber?.replace(/^\d{1,7}/, (x) => x.replace(/./g, "*"))}
               </a>
             </TextFormat>
           </Title>

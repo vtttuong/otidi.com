@@ -497,5 +497,7 @@
   "post.pushUpdate": "Change push start time",
   "post.delete": "Delete",
   "password.lengthError": "Password must be at least 6 characters",
-  "invalidToken": "Invalid token"
+  "invalidToken": "Invalid token",
+  "register_province": "Register province",
+  "type": "Type"
 }

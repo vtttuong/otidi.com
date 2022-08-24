@@ -3,6 +3,7 @@ import React, { ReactElement, CSSProperties } from "react";
 import { FormattedMessage } from "react-intl";
 import { CircleFill } from "assets/icons/CircleFill";
 import { formatRelativeTime } from "utils/formatRelativeTime";
+import { AVATAR_PLACEHOLDER } from "utils/constant";
 
 interface props {
   isOnline?: boolean;
@@ -38,7 +39,7 @@ export class MessageItem extends React.Component<props> {
       >
         <div className="left">
           <div className="avatar-left">
-            <Avatar radius="25px" src={user.avatar} />
+            <Avatar radius="25px" src={user.avatar || AVATAR_PLACEHOLDER} />
 
             <div
               style={{

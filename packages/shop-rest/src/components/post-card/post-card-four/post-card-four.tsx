@@ -147,47 +147,6 @@ const PostCard: React.FC<CardProps> = ({
       );
     }
   };
-  // var a: number;
-  // var b: number;
-  // var c: number;
-
-  // if (data && data.advertise) {
-  //   const scheduleTime = data.advertise.end_time;
-
-  //   const now = new Date();
-  //   const endDate = new Date(scheduleTime);
-
-  //   c = endDate.getTime() - now.getTime();
-
-  // const mNow = new Date().getMinutes();
-  // const hNow = new Date().getHours();
-
-  // let mSchedule = moment(scheduleTime, "HH:mm:ss").minutes();
-  // console.log(
-  //   "🚀 ~ file: post-card-four.tsx ~ line 157 ~ moment(scheduleTime, 'HH:mm:ss')",
-  //   moment(scheduleTime, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
-  // );
-
-  // let hSchedule = moment(scheduleTime, "HH:mm:ss").hours();
-
-  // if (mSchedule - mNow >= 0) {
-  //   a = (mSchedule - mNow) * 60000;
-  //   if (hSchedule - hNow >= 0) {
-  //     b = (hSchedule - hNow) * 3600000;
-  //   } else {
-  //     b = (24 + (hSchedule - hNow)) * 3600000;
-  //   }
-  //   c = a + b;
-  // } else {
-  //   a = (60 + (mSchedule - mNow)) * 60000;
-  //   if (hSchedule - hNow >= 0) {
-  //     b = (hSchedule - hNow) * 3600000;
-  //   } else {
-  //     b = (24 + (hSchedule - hNow)) * 3600000;
-  //   }
-  //   c = a + b - 3600000;
-  // }
-  // }
 
   return (
     <FoodCardWrapper className="food-card">
