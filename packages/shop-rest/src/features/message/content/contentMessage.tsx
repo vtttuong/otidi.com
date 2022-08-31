@@ -23,6 +23,7 @@ import { getMessages, sendMessage, readMessage } from "utils/api/chat";
 import { getPost } from "utils/api/post";
 import { getUserById } from "utils/api/user";
 import {
+  AVATAR_PLACEHOLDER,
   CURRENCY,
   NEW_MESSAGE_CHANNEL,
   NEW_MESSAGE_EVENT,
@@ -65,6 +66,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       state.messages[i].isAvatar = true;
     else state.messages[i].isAvatar = false;
   }
+  console.log(client);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -275,7 +277,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
                     width={30}
                     height={30}
                     radius="25px"
-                    src={client?.avatar}
+                    src={client?.avatar || AVATAR_PLACEHOLDER}
                     type={"user"}
                     clientId={client.id}
                   />

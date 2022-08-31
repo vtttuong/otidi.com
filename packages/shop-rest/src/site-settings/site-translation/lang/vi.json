@@ -508,5 +508,7 @@
   "post.delete": "Xóa",
   "password.lengthError": "Mật khẩu ít nhất 6 kí tự",
   "namePlaceholder": "User name",
-  "invalidToken": "Mã không hợp lệ"
+  "invalidToken": "Mã không hợp lệ",
+  "register_province": "Đăng ký tại",
+  "type": "Loại"
 }
