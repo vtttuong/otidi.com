@@ -53,6 +53,7 @@ export default function usePosts(variables: Props) {
     page: page ? page : "",
     count: count ? count : "",
     order_by: sortBy ? "created_at" : "",
+    q: text ? text : "",
   };
 
   let newParams = {};
@@ -79,28 +80,6 @@ export default function usePosts(variables: Props) {
   // const [formattedData, setFormattedData] = useState(false);
 
   let posts = data?.data;
-
-  if (text && data) {
-    posts = search(posts, text);
-  }
-
-  // let localOffset = offset;
-  // let localLimit = limit;
-  // const fetchMore = async (os, lmt) => {
-  //   localOffset = os;
-  //   localLimit = lmt;
-  //   setFormattedData(true);
-  // };
-  // console.log('object');
-  // data: [
-  //   ...state.data,
-  //   ...state.total.slice(
-  //     state.data.length,
-  //     state.data.length + state.limit
-  //   ),
-  // ],
-  // need to implement fetchMore
-  // const hasMore = posts?.length > localOffset + localLimit;
 
   return {
     loading,

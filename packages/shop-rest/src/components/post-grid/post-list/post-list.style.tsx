@@ -44,7 +44,7 @@ export const LoaderWrapper = styled.div`
 `;
 
 export const LoaderItem = styled.div`
-  width: 25%;
+  width: calc(100% - 15px) / 4;
   min-width: 180px;
   padding: 0 15px;
   margin-bottom: 30px;
