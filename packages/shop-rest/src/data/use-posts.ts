@@ -63,10 +63,12 @@ interface Props {
   sort?: string | string[];
   dir?: string | string[];
   text?: string | string[];
+  brandId: string | string[];
+  modelId: string | string[];
 }
 // https://api.otodi.vn/api/index/v1/posts?count=10&page=1&order_by=id&dir=asc&q=ford
 export default function usePosts(variables: Props) {
-  let { page, count, dir, sort, text } = variables ?? {};
+  let { page, count, dir, sort, text, brandId, modelId } = variables ?? {};
   count = count ? count : COUNT_PER_PAGE;
 
   let queryParams = {
@@ -74,6 +76,8 @@ export default function usePosts(variables: Props) {
     dir: dir ? dir : "asc",
     order_by: sort ? sort : "id",
     q: text,
+    brand_ids: brandId,
+    brand_model_ids: modelId,
   };
 
   let newParams = {};

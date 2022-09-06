@@ -35,7 +35,7 @@ export class Avatar extends React.Component<props, state> {
         alt="avatar"
         onClick={() => {
           if (this.props.type == "post") {
-            Router.push("/posts/[id]", `/posts/${this.props.post.id}`);
+            Router.push("/posts/[id]", `/posts/${this.props.post.slug}`);
           } else if (this.props.type == "user") {
             Router.push("/profile/[id]", `/profile/${this.props.clientId}`);
           }

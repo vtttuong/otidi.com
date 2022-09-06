@@ -73,10 +73,20 @@ const Tree = React.memo(
 type Props = {
   className?: any;
   data: any;
+  onBrandClick: (brandId: number) => void;
+  onModelClick: (modelId: number) => void;
   onClick: (slug: string) => void;
-  active: string | string[];
+  activeBrand: number;
+  activeModel: number;
 };
-export const TreeMenu: React.FC<Props> = ({ data, onClick, active }) => {
+export const TreeMenu: React.FC<Props> = ({
+  data,
+  onClick,
+  activeBrand,
+  activeModel,
+  onBrandClick,
+  onModelClick,
+}) => {
   const handler = (children) => {
     return children.map((subOption) => {
       if (!subOption.brand_models || subOption.brand_models.length === 0) {
@@ -86,8 +96,8 @@ export const TreeMenu: React.FC<Props> = ({ data, onClick, active }) => {
             name={subOption.name}
             icon={subOption.icon}
             depth="child"
-            onClick={() => onClick(subOption.name)}
-            defaultOpen={active === subOption.name}
+            onClick={() => onModelClick(subOption.id)}
+            defaultOpen={activeModel === subOption.id}
           />
         );
       }
@@ -98,10 +108,10 @@ export const TreeMenu: React.FC<Props> = ({ data, onClick, active }) => {
           icon={subOption.icon}
           dropdown={!subOption.brand_models.length ? false : true}
           depth="parent"
-          onClick={() => onClick(subOption.name)}
+          onClick={() => onBrandClick(subOption.id)}
           defaultOpen={
-            active === subOption.name ||
-            subOption.brand_models.some((item) => item.name === active)
+            activeBrand === subOption.id ||
+            subOption.brand_models.some((item) => item.id === activeModel)
           }
         >
           {handler(subOption.brand_models)}
