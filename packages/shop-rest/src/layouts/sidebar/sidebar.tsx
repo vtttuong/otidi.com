@@ -35,7 +35,8 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
 
   if (error) return <ErrorMessage message={error.message} />;
   const { pathname, query } = router;
-  const selectedQueries = query.text;
+  const selectedBrand = +query.brandId;
+  const selectedModel = +query.modelId;
   const dispatch = useAppDispatch();
 
   const onCategoryClick = (slug: string) => {
@@ -44,6 +45,24 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
       pathname,
       // query: { ...query, text: slug },
       query: { text: slug },
+    });
+  };
+
+  const onBrandClick = (brandId: number) => {
+    dispatch({ type: "SET_SEARCH_TERM", payload: "" });
+    router.push({
+      pathname,
+      // query: { ...query, text: slug },
+      query: { brandId: brandId },
+    });
+  };
+
+  const onModelClick = (modelId: number) => {
+    dispatch({ type: "SET_SEARCH_TERM", payload: "" });
+    router.push({
+      pathname,
+      // query: { ...query, text: slug },
+      query: { modelId: modelId },
     });
   };
   // const isSidebarSticky = useAppState("isSidebarSticky");
@@ -65,8 +84,11 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
         <CategoryWalker>
           <TreeMenu
             data={data}
+            onBrandClick={onBrandClick}
+            onModelClick={onModelClick}
             onClick={onCategoryClick}
-            active={selectedQueries}
+            activeBrand={selectedBrand}
+            activeModel={selectedModel}
           />
         </CategoryWalker>
       </PopoverWrapper>
@@ -82,9 +104,12 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
         <Scrollbar className="sidebar-scrollbar">
           <TreeWrapper>
             <TreeMenu
+              onBrandClick={onBrandClick}
+              onModelClick={onModelClick}
               data={data}
               onClick={onCategoryClick}
-              active={selectedQueries}
+              activeBrand={selectedBrand}
+              activeModel={selectedModel}
             />
           </TreeWrapper>
         </Scrollbar>

@@ -132,7 +132,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
 
         if (message.sender_id != currentUserId) {
           dispatch({
-            type: "SET_DATA_BROADCAST",
+            type: "7",
             payload: { value: message, field: "messages" },
           });
           scrollRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -50,6 +50,8 @@ export const Posts: React.FC<PostsProps> = () => {
     sort: router.query.sort,
     dir: router.query.dir,
     text: router.query.text,
+    brandId: router.query.brandId,
+    modelId: router.query.modelId,
   });
 
   if (error) return <ErrorMessage message={error.message} />;
