@@ -94,19 +94,19 @@ export default function SignInModal() {
     setError("");
 
     const phoneNumber = PHONE_PREFIX + getCookie("userPhone").substring(1);
-    await getCaptcha();
+    getCaptcha();
+
     let appVerifier = window.recaptchaVerifier;
 
     await signInWithPhoneNumber(authentication, phoneNumber, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
-        console.log(2, window.confirmationResult);
         router.push("/verify-phone");
       })
       .catch((error) => {
         setError("Error. STM not sent. Try again later!");
+        console.log(1, error);
       });
-
     setLoading(false);
   };
 

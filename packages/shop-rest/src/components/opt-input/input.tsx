@@ -87,31 +87,32 @@ const OTPInput: React.FC<Props> = ({ token }) => {
       setErrorC("Vui lòng nhập OTP");
       return;
     }
-    setLoadingSubmit(true);
-    if (values.length === 6) {
-      await window.confirmationResult
-        .confirm(values)
-        .then((result) => {
-          alert("OK");
-          // verifyOTP(values);
-        })
-        .cath((error) => {
-          setErrorC("Invalid OTP");
-          setError(true);
-          setLoadingSubmit(false);
-          setTimeout(() => {
-            setError(false);
-            return;
-          }, 2000);
-        });
-    } else {
-      setError(true);
-      setLoadingSubmit(false);
-      setTimeout(() => {
-        setError(false);
-        return;
-      }, 2000);
+
+    if (values.length !== 6) {
+      return;
     }
+
+    setLoadingSubmit(true);
+    await window.confirmationResult
+      .confirm(values)
+      .then((result) => {
+        alert("OK");
+        // verifyOTP(values);
+        setTimeout(() => {
+          Router.push("/");
+          return;
+        }, 1000);
+      })
+      .catch((error) => {
+        setErrorC("Invalid OTP");
+        setError(true);
+        setLoadingSubmit(false);
+        setTimeout(() => {
+          setError(false);
+          return;
+        }, 2000);
+      });
+
     setLoadingSubmit(false);
   };
 
