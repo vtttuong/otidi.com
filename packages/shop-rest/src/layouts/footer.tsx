@@ -26,12 +26,12 @@ const Footer = () => {
   return (
     <Box>
       <FormattedMessage
-        id="siteFooter"
-        defaultMessage="SecondHandShop is a post of"
+        id="siteFooter1"
+        defaultMessage="Copyright © 2021 - 2022 by"
       />
       &nbsp;
-      <a href="#" target="_blank">
-        M&HTeam, Inc.
+      <a href="https://haitech.co" target="_blank">
+        Otodi.vn.
       </a>
     </Box>
   );
