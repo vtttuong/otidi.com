@@ -53,7 +53,7 @@ const Post: NextPage<Props> = ({ brands, deviceType }) => {
     <>
       <SEO
         post={true}
-        title="Post - SecondHandShop"
+        title="Otodi.vn - Kênh thông tin mua bán ô tô mới cũ hàng đầu"
         description="Create Post"
       />
       <PostFormProvider initData={initData}>

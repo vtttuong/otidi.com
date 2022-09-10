@@ -71,7 +71,7 @@ const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
     <>
       <SEO
         post={true}
-        title="Post - SecondHandShop"
+        title="Otodi.vn - Kênh thông tin mua bán ô tô mới cũ hàng đầu"
         description="Update Post"
       />
       <PostFormProvider initData={initData}>

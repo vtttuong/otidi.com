@@ -18,7 +18,7 @@ const CheckoutPage: NextPage<Props> = ({ deviceType }) => {
 
   return (
     <>
-      <SEO title="Checkout - SecondHandShop" description="Checkout Details" />
+      <SEO title="Checkout - Otodi.vn" description="Checkout Details" />
       <ProfileProvider>
         <Modal>
           <Checkout token={token} deviceType={deviceType} />

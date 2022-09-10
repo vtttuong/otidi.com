@@ -20,7 +20,7 @@ const CheckoutPage: NextPage<Props> = ({ token, deviceType }) => {
   return (
     <>
       <SEO
-        title="Payment Subcription - SecondHandShop"
+        title="Payment Subcription - Otodi.vn"
         description="Payment Subcription"
       />
       <ProfileProvider initData={options}>

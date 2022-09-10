@@ -23,7 +23,7 @@ type Props = {
 const ProfilePage: NextPage<Props> = ({ deviceType }) => {
   return (
     <>
-      <SEO title="Profile - SecondHandShop" description="Profile Details" />
+      <SEO title="Profile - Otodi.vn" description="Profile Details" />
       <ProfileProvider>
         <Modal>
           <PageWrapper>
