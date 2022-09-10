@@ -35,8 +35,8 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
 
   if (error) return <ErrorMessage message={error.message} />;
   const { pathname, query } = router;
-  const selectedBrand = +query.brandId;
-  const selectedModel = +query.modelId;
+  const selectedBrand = useAppState("brandId");
+  const selectedModel = useAppState("modelId");
   const dispatch = useAppDispatch();
 
   const onCategoryClick = (slug: string) => {
@@ -48,21 +48,26 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
     });
   };
 
-  const onBrandClick = (brandId: number) => {
+  const onBrandClick = (brand: any) => {
     dispatch({ type: "SET_SEARCH_TERM", payload: "" });
+    dispatch({ type: "SET_BRAND_ID", payload: brand.id });
+    dispatch({ type: "SET_MODEL_ID", payload: null });
+
     router.push({
       pathname,
       // query: { ...query, text: slug },
-      query: { brandId: brandId },
+      query: { brand: brand.name },
     });
   };
 
-  const onModelClick = (modelId: number) => {
+  const onModelClick = (model: any) => {
     dispatch({ type: "SET_SEARCH_TERM", payload: "" });
+    dispatch({ type: "SET_BRAND_ID", payload: null });
+    dispatch({ type: "SET_MODEL_ID", payload: model.id });
     router.push({
       pathname,
       // query: { ...query, text: slug },
-      query: { modelId: modelId },
+      query: { model: model.name },
     });
   };
   // const isSidebarSticky = useAppState("isSidebarSticky");

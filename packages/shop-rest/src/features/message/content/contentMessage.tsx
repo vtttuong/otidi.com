@@ -28,7 +28,7 @@ import {
   NEW_MESSAGE_CHANNEL,
   NEW_MESSAGE_EVENT,
 } from "utils/constant";
-import { numberWithCommas } from "utils/formatNumber";
+import { formatMoney, numberWithCommas } from "utils/formatNumber";
 import { formatRelativeTime } from "utils/formatRelativeTime";
 import { formatCreatedAtTime } from "utils/formatTime";
 import ChatRole from "../chat-role";
@@ -66,7 +66,10 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
       state.messages[i].isAvatar = true;
     else state.messages[i].isAvatar = false;
   }
-  console.log(client);
+
+  const { value, unit } = formatMoney(
+    chat.post.discount_price || chat.post.price_after_tax
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -377,9 +380,7 @@ const ContentMessage: React.FC<ContentMessageProp> = ({
                   <div className="header-infor">
                     <div className="name">{chat.post.title}</div>
                     <div className="money">
-                      {numberWithCommas(chat.post.price_after_tax)}
-                      {"   "}
-                      {CURRENCY}
+                      {value} {unit}
                     </div>
                   </div>
                 </div>

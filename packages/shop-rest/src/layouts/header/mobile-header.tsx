@@ -25,6 +25,7 @@ import NavLink from "components/nav-link/nav-link";
 import { AddPost } from "assets/icons/AddPost";
 import { HOME_PAGE, POSTS, POST_ITEM } from "site-settings/site-navigation";
 import { getCookie } from "utils/session";
+import CreatePostButton from "components/create-post-button/nav-link";
 type MobileHeaderProps = {
   className?: string;
   closeSearch?: any;
@@ -71,15 +72,6 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
 
   const isHomePage = pathname === HOME_PAGE || pathname === POSTS;
 
-  const checkAuth = () => {
-    const token = getCookie("access_token");
-    if (!token) {
-      Router.push("/login");
-    } else {
-      Router.push(POST_ITEM.href);
-    }
-  };
-
   return (
     <MobileHeaderWrapper>
       <MobileHeaderInnerWrapper className={className} ref={mobileHeaderRef}>
@@ -89,10 +81,9 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
 
         <LogoWrapper>
           <Logo imageUrl={LogoImage} alt="shop logo" />
-          <TextColor onClick={() => checkAuth()}>
-            <NavLink
+          <TextColor>
+            <CreatePostButton
               className="menu-item"
-              href={"/post"}
               label={POST_ITEM.defaultMessage}
               intlId={POST_ITEM.id}
               iconClass="menu-icon"

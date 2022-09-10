@@ -510,5 +510,8 @@
   "namePlaceholder": "User name",
   "invalidToken": "Mã không hợp lệ",
   "register_province": "Đăng ký tại",
-  "type": "Loại"
+  "type": "Loại",
+  "billion": "Tỷ",
+  "million": "Triệu",
+  "thousand": "Nghìn"
 }

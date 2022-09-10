@@ -215,8 +215,7 @@ export default function CustomCarousel({
                   image={item.main_image.url}
                   address={item.user.address}
                   createdAt={item.created_at}
-                  price={item.price_after_tax}
-                  unit={item.unit}
+                  price={item.discount_price}
                   isFree={false}
                   data={item}
                   prioriry={item.is_priority}

@@ -499,5 +499,8 @@
   "password.lengthError": "Password must be at least 6 characters",
   "invalidToken": "Invalid token",
   "register_province": "Register province",
-  "type": "Type"
+  "type": "Type",
+  "billion": "Billion",
+  "million": "Million",
+  "thousand": "Thousand"
 }

@@ -682,6 +682,7 @@ export const TextColor = styled.div`
   border-radius: 10px;
   padding: 5px;
   background: #fff;
+  cursor: pointer;
 
   @media only screen and (max-width: 426px) {
     padding: 0;

@@ -92,23 +92,23 @@ export const TreeMenu: React.FC<Props> = ({
       if (!subOption.brand_models || subOption.brand_models.length === 0) {
         return (
           <Tree
-            key={subOption.name}
+            key={subOption.id}
             name={subOption.name}
             icon={subOption.icon}
             depth="child"
-            onClick={() => onModelClick(subOption.id)}
+            onClick={() => onModelClick(subOption)}
             defaultOpen={activeModel === subOption.id}
           />
         );
       }
       return (
         <Tree
-          key={subOption.name}
+          key={subOption.id}
           name={subOption.name}
           icon={subOption.icon}
           dropdown={!subOption.brand_models.length ? false : true}
           depth="parent"
-          onClick={() => onBrandClick(subOption.id)}
+          onClick={() => onBrandClick(subOption)}
           defaultOpen={
             activeBrand === subOption.id ||
             subOption.brand_models.some((item) => item.id === activeModel)

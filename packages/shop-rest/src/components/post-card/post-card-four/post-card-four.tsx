@@ -28,6 +28,7 @@ import {
   SellLabelTop,
 } from "../post-card.style";
 import { CURRENCY } from "utils/constant";
+import { formatMoney } from "utils/formatNumber";
 
 type CardProps = {
   name?: string;
@@ -63,8 +64,6 @@ const PostCard: React.FC<CardProps> = ({
   onMark,
   onPush,
   address,
-  price,
-  unit,
   isFree,
   createdAt,
   typeOfPost,
@@ -148,9 +147,12 @@ const PostCard: React.FC<CardProps> = ({
     }
   };
 
+  const { value, unit } = formatMoney(
+    data.discount_price || data.price_after_tax
+  );
   return (
-    <FoodCardWrapper className="food-card">
-      <FoodImageWrapper onClick={onClick}>
+    <FoodCardWrapper onClick={onClick} className="food-card">
+      <FoodImageWrapper>
         <Image
           url={image}
           className="post-image"
@@ -212,13 +214,17 @@ const PostCard: React.FC<CardProps> = ({
 
         <PostMeta onClick={onClick} style={{ marginTop: "auto" }}>
           <DeliveryOpt>
-            <NumberFormat
-              value={data.price_after_tax}
+            {/* <NumberFormat
+              value={data.discount_price || data.price_after_tax}
               displayType={"text"}
               thousandSeparator={true}
               suffix={CURRENCY}
               renderText={(value) => <div>{value}</div>}
-            />
+            /> */}
+            <div className="price">
+              {value + " "}
+              <FormattedMessage id={unit} defaultMessage={unit} />
+            </div>
             {/* <span>{CURRENCY}</span> */}
             {/*<FormattedMessage id='deliveryText' defaultMessage='Delivery' />*/}
           </DeliveryOpt>

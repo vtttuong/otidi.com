@@ -36,6 +36,7 @@ import {
 } from "./author-infor.style";
 import { follow, getFollowers, unfollow } from "utils/api/user";
 import { ChatButtons } from "components/post-details/post-details-one/post-details-one.style";
+import { display } from "styled-system";
 
 type AuthoInforProps = {
   contactInfo: any;
@@ -132,7 +133,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
     };
 
     checkFollowed();
-  }, []);
+  }, [user]);
 
   const onChat = async () => {
     const token = getCookie("access_token");
@@ -205,8 +206,8 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
     return <AuthoInforDf />;
   }
 
-  let phoneNumber =
-    user.phone_number || contactInfo.phone_number[0]?.replace(/[^0-9]+/g, "");
+  // let phoneNumber =
+  //   user.phone_number || contactInfo.phone_number[0]?.replace(/[^0-9]+/g, "");
 
   return (
     <InfoBody className={"profile-post"}>
@@ -363,10 +364,19 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
           </Title>
           <Title className={"infosub phone"}>
             <TextFormat>
-              <a href={`tel:${phoneNumber}`}>
-                {" "}
-                {phoneNumber?.replace(/^\d{1,7}/, (x) => x.replace(/./g, "*"))}
-              </a>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                {contactInfo.phone_number.map((number) => {
+                  let pNumber = number.replace(/[^0-9]/g, "");
+                  return (
+                    <a key={pNumber} href={`tel:${pNumber}`}>
+                      {" "}
+                      {pNumber?.replace(/^\d{1,7}/, (x) =>
+                        x.replace(/./g, "*")
+                      )}{" "}
+                    </a>
+                  );
+                })}
+              </div>
             </TextFormat>
           </Title>
         </CenterContainerSub>

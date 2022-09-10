@@ -19,13 +19,13 @@ import AddressIcon from "../../../assets/images/location.png";
 import { formatRelativeTime } from "utils/formatRelativeTime";
 import NumberFormat from "react-number-format";
 import { CURRENCY } from "utils/constant";
+import { formatMoney } from "utils/formatNumber";
 
 type CardProps = {
   name: string;
   image: any;
   address: string;
   price: string;
-  unit: string;
   isFree?: boolean;
   createdAt?: string;
   avatar?: string;
@@ -40,7 +40,6 @@ const PostCard: React.FC<CardProps> = ({
   image,
   address,
   price,
-  unit,
   isFree,
   createdAt,
   data,
@@ -51,6 +50,10 @@ const PostCard: React.FC<CardProps> = ({
   ...props
 }) => {
   let formatTime = formatRelativeTime(createdAt);
+
+  let { value, unit } = formatMoney(
+    data.discount_price || data.price_after_tax
+  );
   return (
     <FoodCardWrapper onClick={onClick} className="food-card-top">
       <FoodImageWrapper className="top">
@@ -96,16 +99,10 @@ const PostCard: React.FC<CardProps> = ({
         </Category>
         <PostMeta style={{ marginTop: "auto" }} className="top">
           <DeliveryOpt>
-            <NumberFormat
-              value={price}
-              displayType={"text"}
-              thousandSeparator={true}
-              suffix={CURRENCY}
-              renderText={(value) => <div>{value}</div>}
-            />
-            <span style={{ position: "absolute", left: "121%", top: 0 }}>
-              {unit}
-            </span>
+            <div className="price">
+              {value + " "}
+              <FormattedMessage id={unit} defaultMessage={unit} />
+            </div>
             {/*<FormattedMessage id='deliveryText' defaultMessage='Delivery' />*/}
           </DeliveryOpt>
           <Duration>

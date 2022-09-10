@@ -2,7 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import * as Icons from "assets/icons/menu-profile-icons";
-
+import { getCookie } from "utils/session";
+import { useRouter } from "next/router";
+import { getMyprofile } from "utils/api/profile";
+import {
+  POST_ITEM,
+  PROFILE_SETTING_PAGE,
+  UPDATE_PHONE,
+  VERIFY_EMAIL,
+} from "site-settings/site-navigation";
+import { AuthContext } from "contexts/auth/auth.context";
 type NavLinkProps = {
   number?: string;
   router?: any;
@@ -31,9 +40,47 @@ const CreatePostButton: React.FC<NavLinkProps> = ({
   iconClass,
 }: any) => {
   const IconProfile = Icons[icon] || Icons["CreatePost"];
+  const router = useRouter();
+  const {
+    authState: { isAuthenticated },
+    authDispatch,
+  } = React.useContext<any>(AuthContext);
+
+  const checkAuth = async () => {
+    router.push(POST_ITEM.href);
+
+    let token = getCookie("access_token");
+
+    if (!token) {
+      authDispatch({
+        type: "SIGNIN",
+      });
+      router.push("/login");
+      return;
+    }
+
+    const myProfile = await getMyprofile(token);
+
+    if (
+      !myProfile.phone_number ||
+      myProfile.phone_number?.length < 10 ||
+      !myProfile.address
+    ) {
+      router.push(PROFILE_SETTING_PAGE);
+      return;
+    }
+    if (!myProfile.phone_verified_at) {
+      router.push(UPDATE_PHONE);
+      return;
+    }
+    if (!myProfile.email_verified_at) {
+      router.push(VERIFY_EMAIL);
+      return;
+    }
+  };
 
   return (
-    <div className={className ? className : ""}>
+    <div className={className ? className : ""} onClick={checkAuth}>
       <div>
         <div
           style={{
