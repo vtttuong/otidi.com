@@ -36,6 +36,7 @@ import {
 } from "./author-infor.style";
 import { follow, getFollowers, unfollow } from "utils/api/user";
 import { ChatButtons } from "components/post-details/post-details-one/post-details-one.style";
+import { display } from "styled-system";
 
 type AuthoInforProps = {
   contactInfo: any;
@@ -75,19 +76,23 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
     return currentId == user.id;
   };
 
+  const [longitude, latitude] = contactInfo
+    ? [contactInfo.longitude, contactInfo.latitude]
+    : [user.longitude, user.latitude];
+
   const MapLayout = (props) => (
     <GoogleMap
       defaultZoom={15}
       defaultCenter={{
-        lat: contactInfo.latitude || 0,
-        lng: contactInfo.longitude || 0,
+        lat: latitude,
+        lng: longitude,
       }}
       defaultOptions={defaultOptions}
     >
       <Marker
         position={{
-          lat: contactInfo.latitude || 0,
-          lng: contactInfo.longitude || 0,
+          lat: latitude,
+          lng: longitude,
         }}
       />
     </GoogleMap>
@@ -132,7 +137,7 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
     };
 
     checkFollowed();
-  }, []);
+  }, [user]);
 
   const onChat = async () => {
     const token = getCookie("access_token");
@@ -205,8 +210,8 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
     return <AuthoInforDf />;
   }
 
-  let phoneNumber =
-    user.phone_number || contactInfo.phone_number[0]?.replace(/[^0-9]+/g, "");
+  // let phoneNumber =
+  //   user.phone_number || contactInfo.phone_number[0]?.replace(/[^0-9]+/g, "");
 
   return (
     <InfoBody className={"profile-post"}>
@@ -363,10 +368,23 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
           </Title>
           <Title className={"infosub phone"}>
             <TextFormat>
-              <a href={`tel:${phoneNumber}`}>
-                {" "}
-                {phoneNumber?.replace(/^\d{1,7}/, (x) => x.replace(/./g, "*"))}
-              </a>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                {contactInfo
+                  ? contactInfo.phone_number.map((number) => {
+                      let pNumber = number.replace(/[^0-9]/g, "");
+                      return (
+                        <a key={pNumber} href={`tel:${pNumber}`}>
+                          {" "}
+                          {pNumber?.replace(/^\d{1,7}/, (x) =>
+                            x.replace(/./g, "*")
+                          )}{" "}
+                        </a>
+                      );
+                    })
+                  : user.phone_number.replace(/^\d{1,7}/, (x) =>
+                      x.replace(/./g, "*")
+                    )}
+              </div>
             </TextFormat>
           </Title>
         </CenterContainerSub>

@@ -37,6 +37,9 @@ const Search: React.FC<Props> = ({ onSubmit, onGetText, ...props }) => {
     const { value } = e.target;
     setValueSaved(value);
     dispatch({ type: "SET_SEARCH_TERM", payload: value });
+    dispatch({ type: "SET_BRAND_ID", payload: null });
+    dispatch({ type: "SET_MODEL_ID", payload: null });
+
     if (value.length >= 2) {
       setIsShowSave(true);
     } else if (value.length < 2) {

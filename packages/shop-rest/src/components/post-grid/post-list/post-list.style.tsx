@@ -39,15 +39,18 @@ export const LoaderWrapper = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 15px;
 `;
 
 export const LoaderItem = styled.div`
-  width: calc(100% - 15px) / 4;
-  min-width: 180px;
-  padding: 0 15px;
+  width: calc(100% - 30px * 3) / 4;
   margin-bottom: 30px;
+
+  @media (max-width: 900px) {
+    width: calc(100% - 15px) / 2;
+  }
 `;
 
 export const PostCardWrapper = styled.div`

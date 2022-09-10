@@ -1,5 +1,5 @@
 import Notice from "components/notice/notice";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import OtpInput from "react-otp-input";
@@ -18,37 +18,60 @@ const OTPInput: React.FC<Props> = ({ token }) => {
   const [success, setSuccess] = React.useState(false);
   const [loadingClear, setLoadingClear] = React.useState(false);
 
-  const onSubmit = async () => {
-    if (!values || values.trim().length === 0) {
-      setError(true);
-      setErrorC("Vui lòng nhập OTP");
-      return;
-    }
-    setLoadingSubmit(true);
-    if (values.length === 6) {
-      const object = {
-        verify_code: values,
-      };
-      const data = await sendOtp(object, token);
+  // const onSubmit = async () => {
+  //   if (!values || values.trim().length === 0) {
+  //     setError(true);
+  //     setErrorC("Vui lòng nhập OTP");
+  //     return;
+  //   }
+  //   setLoadingSubmit(true);
+  //   if (values.length === 6) {
+  //     const object = {
+  //       verify_code: values,
+  //     };
+  //     const data = await sendOtp(object, token);
 
-      if (data && data.success) {
-        setSuccess(true);
-        setLoadingSubmit(false);
-        setCookie("phone_verified_at", new Date());
-        setTimeout(() => {
-          Router.push("/");
-          return;
-        }, 1000);
-      } else {
-        setErrorC("Invalid OTP");
-        setError(true);
-        setLoadingSubmit(false);
-        setTimeout(() => {
-          setError(false);
-          return;
-        }, 2000);
-      }
+  //     if (data && data.success) {
+  //       setSuccess(true);
+  //       setLoadingSubmit(false);
+  //       setCookie("phone_verified_at", new Date());
+  //       setTimeout(() => {
+  //         Router.push("/");
+  //         return;
+  //       }, 1000);
+  //     } else {
+  //       setErrorC("Invalid OTP");
+  //       setError(true);
+  //       setLoadingSubmit(false);
+  //       setTimeout(() => {
+  //         setError(false);
+  //         return;
+  //       }, 2000);
+  //     }
+  //   } else {
+  //     setError(true);
+  //     setLoadingSubmit(false);
+  //     setTimeout(() => {
+  //       setError(false);
+  //       return;
+  //     }, 2000);
+  //   }
+  // };
+  const verifyOTP = async (otp) => {
+    const object = {
+      verify_code: otp,
+    };
+    const data = await sendOtp(object, token);
+    if (data && data.success) {
+      setSuccess(true);
+      setLoadingSubmit(false);
+      setCookie("phone_verified_at", new Date());
+      setTimeout(() => {
+        Router.push("/");
+        return;
+      }, 1000);
     } else {
+      setErrorC("Invalid OTP");
       setError(true);
       setLoadingSubmit(false);
       setTimeout(() => {
@@ -57,6 +80,37 @@ const OTPInput: React.FC<Props> = ({ token }) => {
       }, 2000);
     }
   };
+
+  const onSubmit = async () => {
+    if (!values || values.trim().length === 0) {
+      setError(true);
+      setErrorC("Vui lòng nhập OTP");
+      return;
+    }
+
+    if (values.length !== 6) {
+      return;
+    }
+
+    setLoadingSubmit(true);
+    await window.confirmationResult
+      .confirm(values)
+      .then((result) => {
+        verifyOTP(values);
+      })
+      .catch((error) => {
+        setErrorC("Invalid OTP");
+        setError(true);
+        setLoadingSubmit(false);
+        setTimeout(() => {
+          setError(false);
+          return;
+        }, 2000);
+      });
+
+    setLoadingSubmit(false);
+  };
+
   setTimeout(() => {
     setValue("");
   }, 60000);

@@ -40,22 +40,6 @@ export class MessageItem extends React.Component<props> {
         <div className="left">
           <div className="avatar-left">
             <Avatar radius="25px" src={user.avatar || AVATAR_PLACEHOLDER} />
-
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 5,
-                display: "flex",
-              }}
-            >
-              {lastMessageAt ? null : (
-                <CircleFill
-                  style={{ fontSize: 14, color: "#008000" }}
-                  width={14}
-                />
-              )}
-            </div>
           </div>
           <div className="wrap-middle-item">
             <div className="name">

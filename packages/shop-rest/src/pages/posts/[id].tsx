@@ -28,6 +28,8 @@ type Props = {
 };
 
 const PostPage: NextPage<Props> = ({ post, userId, token, deviceType }) => {
+  console.log(1, post);
+
   if (!post) {
     return <NotFound />;
   }
@@ -78,7 +80,6 @@ export async function getServerSideProps(context) {
   const userId = getCookie("userId", context);
   const token = getCookie("access_token", context);
   const post = await getPost(id);
-  console.log(post);
 
   return {
     props: {

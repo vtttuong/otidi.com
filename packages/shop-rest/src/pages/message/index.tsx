@@ -30,6 +30,7 @@ const ProfilePage: NextPage<Props> = ({
   initialChatId,
 }) => {
   const router = useRouter();
+  console.log(chats);
 
   let initialData = {
     chatId: chatId,
@@ -61,7 +62,6 @@ const ProfilePage: NextPage<Props> = ({
       <ChatProvider initData={initialData}>
         <PageWrapper className={"message-chat"}>
           <Conversation chatId={chatId} currentUserId={userId} chats={chats} />
-
           {contentMessageHandle()}
         </PageWrapper>
       </ChatProvider>

@@ -1,6 +1,7 @@
 import { Button } from "components/button/button";
 import NoResultFound from "components/no-result/no-result";
 import Placeholder from "components/placeholder/placeholder";
+import { useAppState } from "contexts/app/app.provider";
 import usePosts, { useRecommendPosts } from "data/use-posts";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -35,6 +36,9 @@ type PostsProps = {
 export const Posts: React.FC<PostsProps> = () => {
   const router = useRouter();
   const [pageNum, setPageNum] = useState(1);
+  const brandId = useAppState("brandId");
+  const modelId = useAppState("modelId");
+
   const SIZE = 8;
   const {
     posts,
@@ -50,8 +54,8 @@ export const Posts: React.FC<PostsProps> = () => {
     sort: router.query.sort,
     dir: router.query.dir,
     text: router.query.text,
-    brandId: router.query.brandId,
-    modelId: router.query.modelId,
+    brandId: brandId,
+    modelId: modelId,
   });
 
   if (error) return <ErrorMessage message={error.message} />;
@@ -104,8 +108,6 @@ export const Posts: React.FC<PostsProps> = () => {
                     image={item.main_image?.url}
                     address={item.user.address}
                     createdAt={item.created_at}
-                    price={item.price}
-                    unit={item.unit}
                     isFree={false}
                     typeOfPost={item.type}
                     data={item}

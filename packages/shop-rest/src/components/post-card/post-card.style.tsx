@@ -823,6 +823,10 @@ export const DeliveryOpt = styled.span`
     }
   }
 
+  div.price {
+    font-size: 16px;
+  }
+
   font-family: ${themeGet("fonts.body", "sans-serif")};
   font-size: 15px;
   font-weight: ${themeGet("fontWeights.bold", "700")};

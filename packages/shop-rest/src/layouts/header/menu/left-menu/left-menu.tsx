@@ -76,44 +76,10 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
     authDispatch,
   } = React.useContext<any>(AuthContext);
 
-  // const [activeMenu, setActiveMenu] = React.useState(initialMenu ?? brands[0]);
-
-  const checkAuth = async () => {
-    let token = getCookie("access_token");
-
-    if (!token) {
-      authDispatch({
-        type: "SIGNIN",
-      });
-      router.push("/login");
-      return;
-    }
-
-    const myProfile = await getMyprofile(token);
-
-    if (!myProfile.phone_number || myProfile.phone_number?.length < 8) {
-      router.push(PROFILE_SETTING_PAGE);
-      return;
-    }
-    if (!myProfile.phone_verified_at) {
-      router.push(UPDATE_PHONE);
-      return;
-    }
-    if (!myProfile.email_verified_at) {
-      router.push(VERIFY_EMAIL);
-      return;
-    }
-    if (!myProfile.address) {
-      router.push(PROFILE_SETTING_PAGE);
-      return;
-    }
-    router.push(POST_ITEM.href);
-  };
-
   return (
     <LeftMenuBox>
       <Logo imageUrl={logo} alt={"Shop Logo"} />
-      <TextColor onClick={() => checkAuth()}>
+      <TextColor>
         <CreatePostButton
           className="menu-item"
           label={POST_ITEM.defaultMessage}

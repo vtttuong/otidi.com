@@ -58,6 +58,7 @@ import {
   Span,
   SubDetail,
 } from "./post-details-one.style";
+import { formatMoney } from "utils/formatNumber";
 
 type PostDetailsProps = {
   data: any;
@@ -80,11 +81,13 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   const [locationHref, setLocationHref] = React.useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
+  console.log(locationHref);
 
   useEffect(() => {
     getPost();
     setLocationHref(window.location.href);
-  }, [locationHref, post]);
+  }, [data]);
+
   useEffect(() => {
     onCheckLike();
   }, [dataLike]);
@@ -253,6 +256,13 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   const onFollowOther = (id) => {
     alert(id);
   };
+
+  let price = post.discount_price;
+
+  let price_after_tax = post.price_after_tax
+    ? post.price_after_tax
+    : post.discount_price;
+
   if (!post.id) {
     return <PostDetailsLeftDf />;
   }
@@ -320,22 +330,24 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
                   Giá:{" "}
                 </span>
                 <span style={{ fontSize: 20, fontWeight: 600 }}>
-                  {post.discount_price
-                    ? `${parseInt(post.discount_price).toLocaleString()}`
-                    : `${parseInt(post.original_price).toLocaleString()}`}
+                  {formatMoney(price).value + " "}
+                  <FormattedMessage
+                    id={formatMoney(price).unit}
+                    defaultMessage={formatMoney(price).unit}
+                  />
                 </span>
-                <span style={{ marginLeft: 5 }}>{CURRENCY}</span>
               </div>
               <div>
                 <span style={{ display: "inline-block", width: "115px" }}>
                   Giá sau thuế:{" "}
                 </span>
                 <span style={{ fontSize: 20, fontWeight: 600 }}>
-                  {post.price_after_tax
-                    ? `${parseInt(post.price_after_tax).toLocaleString()}`
-                    : `${parseInt(post.original_price).toLocaleString()}`}
+                  {formatMoney(price_after_tax).value + " "}
+                  <FormattedMessage
+                    id={formatMoney(price_after_tax).unit}
+                    defaultMessage={formatMoney(price_after_tax).unit}
+                  />
                 </span>
-                <span style={{ marginLeft: 5 }}>{CURRENCY}</span>
               </div>
               {/* <BackButton className={"saveIcon"}>
                 <div

@@ -14,6 +14,7 @@ export const TextColor = styled.div`
   border-radius: 10px;
   padding: 5px;
   background: #fff;
+  cursor: pointer;
 
   .menu-item {
     font-weight: 700;
