@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import * as Icons from "assets/icons/menu-profile-icons";
@@ -12,6 +12,7 @@ import {
   VERIFY_EMAIL,
 } from "site-settings/site-navigation";
 import { AuthContext } from "contexts/auth/auth.context";
+import Loading from "components/loading";
 type NavLinkProps = {
   number?: string;
   router?: any;
@@ -41,14 +42,14 @@ const CreatePostButton: React.FC<NavLinkProps> = ({
 }: any) => {
   const IconProfile = Icons[icon] || Icons["CreatePost"];
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const {
     authState: { isAuthenticated },
     authDispatch,
   } = React.useContext<any>(AuthContext);
 
   const checkAuth = async () => {
-    router.push(POST_ITEM.href);
-
+    setLoading(true);
     let token = getCookie("access_token");
 
     if (!token) {
@@ -67,16 +68,14 @@ const CreatePostButton: React.FC<NavLinkProps> = ({
       !myProfile.address
     ) {
       router.push(PROFILE_SETTING_PAGE);
-      return;
-    }
-    if (!myProfile.phone_verified_at) {
+    } else if (!myProfile.phone_verified_at) {
       router.push(UPDATE_PHONE);
-      return;
-    }
-    if (!myProfile.email_verified_at) {
+    } else if (!myProfile.email_verified_at) {
       router.push(VERIFY_EMAIL);
-      return;
+    } else {
+      router.push(POST_ITEM.href);
     }
+    setLoading(false);
   };
 
   return (
@@ -100,7 +99,10 @@ const CreatePostButton: React.FC<NavLinkProps> = ({
           )}
 
           <span className="label">
-            {intlId ? (
+            {" "}
+            {loading ? (
+              <Loading color="rgb(0, 158, 127)" />
+            ) : intlId ? (
               <FormattedMessage
                 id={intlId ? intlId : "defaultNavLinkId"}
                 defaultMessage={label}

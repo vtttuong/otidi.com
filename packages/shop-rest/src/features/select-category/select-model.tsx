@@ -19,8 +19,6 @@ const SelectModel: React.FC<SelectModel> = ({ brands }) => {
       ?.brand_models;
   }
 
-  console.log(state);
-
   function onLick(model) {
     let value = model.name;
     dispatch({

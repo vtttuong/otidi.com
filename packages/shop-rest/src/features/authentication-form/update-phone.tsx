@@ -80,9 +80,7 @@ export default function SignInModal() {
       "recaptcha-container",
       {
         size: "invisible",
-        callback: (response) => {
-          console.log(1, response);
-        },
+        callback: (response) => {},
       },
       authentication
     );
@@ -104,6 +102,8 @@ export default function SignInModal() {
         router.push("/verify-phone");
       })
       .catch((error) => {
+        console.log(error);
+
         setError("Too many request. Try again later!");
       });
     setLoading(false);

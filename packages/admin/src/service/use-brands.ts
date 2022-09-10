@@ -93,8 +93,6 @@ interface Brand {
 }
 
 export async function addBrand(brand: Brand) {
-  console.log(brand);
-
   var formdata = new FormData();
   formdata.append("name", brand.name);
   formdata.append("logo", brand.logo[0]);
@@ -111,7 +109,6 @@ export async function addBrand(brand: Brand) {
   };
   const response = await fetch(`${baseUrl}/brands`, options);
   const json = await response.json();
-  console.log(json);
 
   return json;
 }

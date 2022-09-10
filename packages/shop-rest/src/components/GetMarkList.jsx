@@ -13,9 +13,7 @@ const GetMarkList = () => {
       .then((response) => {
         setMarkList(response.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   const fetchInitialData = async () => {

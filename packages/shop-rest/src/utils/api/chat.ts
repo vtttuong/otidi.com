@@ -103,7 +103,6 @@ export async function sendBargin(
       options
     );
     const json = await response.json();
-    console.log("🚀 ~ file: chat.ts ~ line 104 ~ json", json);
     return {
       result: json.success ? true : false,
       chanelData: json.success ? json.data : null,

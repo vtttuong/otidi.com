@@ -226,7 +226,6 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
 
   const onUpdatePackageClick = async (packId: number, time: string) => {
     const formatTime = moment(time).format("YYYY-MM-DD HH:mm");
-    console.log(packId, formatTime);
 
     closeModal();
     setLoading(true);

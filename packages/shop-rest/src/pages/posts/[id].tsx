@@ -28,8 +28,6 @@ type Props = {
 };
 
 const PostPage: NextPage<Props> = ({ post, userId, token, deviceType }) => {
-  console.log(1, post);
-
   if (!post) {
     return <NotFound />;
   }

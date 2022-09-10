@@ -66,7 +66,6 @@ export async function createUser(email, name, password) {
   try {
     const usersResponse = await fetch(`${baseUrl}/users`, options);
     const users = await usersResponse.json();
-    console.log(users);
     return await users.json();
   } catch (ex) {
     return {

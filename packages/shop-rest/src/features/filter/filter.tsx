@@ -71,7 +71,6 @@ const dirOptions = [
 const Filter: React.FC<any> = () => {
   const router = useRouter();
   const { pathname, query } = router;
-  console.log("🚀 ~ file: filter.tsx ~ line 74 ~ query", query);
   const [address, setAddress] = React.useState("");
   const [lat, setLat] = React.useState<number>();
   const [long, setLong] = React.useState<number>();
@@ -102,8 +101,6 @@ const Filter: React.FC<any> = () => {
   };
 
   const handleSortData = async (e, field) => {
-    console.log(e);
-
     let queryParams = {
       ...query,
       [field]: e ? e.value : "",

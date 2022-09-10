@@ -121,7 +121,6 @@ export default function Posts() {
 
   React.useEffect(() => {
     mutate();
-    console.log("MUTATE");
   }, [approvedPostId]);
 
   React.useEffect(() => {

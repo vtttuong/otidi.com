@@ -77,8 +77,11 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
   };
 
   const [longitude, latitude] = contactInfo
-    ? [contactInfo.longitude, contactInfo.latitude]
-    : [user.longitude, user.latitude];
+    ? [Number(contactInfo.longitude), Number(contactInfo.latitude)]
+    : [
+        Number(user.longitude) || 10.7752187,
+        Number(user.latitude) || 106.6808529,
+      ];
 
   const MapLayout = (props) => (
     <GoogleMap

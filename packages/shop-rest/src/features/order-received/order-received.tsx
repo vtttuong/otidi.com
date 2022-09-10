@@ -21,8 +21,6 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const { query } = router;
   const isSuccess = !query.errorCode || query.errorCode.length === 0;
 
-  console.log("🚀 ~ file: order-received.tsx ~ line 22 ~ query", query);
-
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>

@@ -42,7 +42,6 @@ const QuickForm = (props: ComponentProps) => {
 
   const defaultOptions = { scrollwheel: true };
   const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
-  console.log(googleMapURL);
   const mapEnvironment = compose(
     withProps({
       googleMapURL,

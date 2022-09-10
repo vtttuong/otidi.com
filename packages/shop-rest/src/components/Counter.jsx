@@ -6,12 +6,10 @@ class Counter extends Component {
   number = 0;
 
   increase() {
-    console.log(this.number);
     this.number++;
   }
 
   decrease = () => {
-    console.log(this.number);
     this.number--;
   };
 

@@ -329,8 +329,6 @@ const Step2 = (props) => {
     return <div></div>;
   }
 
-  console.log("STATE: ", state);
-
   return (
     <div>
       <Row>

@@ -33,8 +33,6 @@ const CarAdditionalInfo = ({ brands }) => {
     brands?.filter((item) => item.id === state.brandId)[0]?.brand_models
   );
 
-  console.log("STATE", state);
-
   useEffect(() => {
     if (!first) {
       dispatch({
