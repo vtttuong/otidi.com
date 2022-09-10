@@ -299,7 +299,7 @@ const ProfilePage: NextPage<Props> = ({ datas, token }) => {
 
   return (
     <>
-      <SEO title="Profile - SecondHandApp" description="Profile Details" />
+      <SEO title="Profile - Otodi.vn" description="Profile Details" />
       <ProfileProvider>
         <Modal>
           <PageWrapper>

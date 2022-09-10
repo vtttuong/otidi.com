@@ -6,7 +6,7 @@ import React from "react";
 const TestPage: NextPage = () => {
   return (
     <>
-      <SEO title="Post - SecondHandApp" description="Order Details" />
+      <SEO title="Post - Otodi.vn" description="Order Details" />
       <Modal>
         <p></p>
       </Modal>

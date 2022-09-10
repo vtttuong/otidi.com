@@ -53,7 +53,7 @@ const Faqs: React.FC<FaqsProps> = ({ faqs }) => {
   console.log("🚀 ~ file: help.tsx ~ line 53 ~ faqs", faqs);
   return (
     <Modal>
-      <SEO title="F.A.Q - SecondHandApp" description="F.A.Q Details" />
+      <SEO title="F.A.Q - Otodi.vn" description="F.A.Q Details" />
       <HelpPageWrapper>
         <HelpPageContainer>
           <Heading>F.A.Q</Heading>

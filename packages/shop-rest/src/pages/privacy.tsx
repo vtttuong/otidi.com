@@ -25,7 +25,7 @@ const PrivacyPage: NextPage<{}> = () => {
 
   return (
     <>
-      <SEO title={title} description="SecondHandApp privacy page" />
+      <SEO title={title} description="Otodi.vn privacy page" />
 
       <StyledContainer>
         <Heading title={title} subtitle={`Last update: ${date}`} />

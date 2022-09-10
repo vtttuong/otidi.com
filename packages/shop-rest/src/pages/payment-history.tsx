@@ -35,7 +35,7 @@ type Props = {
 const OrderPage: NextPage<Props> = ({ data, token, deviceType }) => {
   return (
     <>
-      <SEO title="Profile - SecondHandApp" description="Profile Details" />
+      <SEO title="Profile - Otodi.vn" description="Profile Details" />
       <ProfileProvider>
         <PageWrapper>
           <ContainBody>

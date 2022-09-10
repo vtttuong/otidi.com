@@ -11,7 +11,7 @@ import React from "react";
 const OrderPage: NextPage = () => {
   return (
     <>
-      <SEO title="Order - SecondHandApp" description="Order Details" />
+      <SEO title="Order - Otodi.vn" description="Order Details" />
       <Modal>
         <PageWrapper>
           <SidebarSection>{/* <Sidebar /> */}</SidebarSection>

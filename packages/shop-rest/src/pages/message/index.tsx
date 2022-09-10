@@ -58,7 +58,7 @@ const ProfilePage: NextPage<Props> = ({
 
   return (
     <>
-      <SEO title="Message - SecondHandApp" description="Conversation" />
+      <SEO title="Message - Otodi.vn" description="Conversation" />
       <ChatProvider initData={initialData}>
         <PageWrapper className={"message-chat"}>
           <Conversation chatId={chatId} currentUserId={userId} chats={chats} />
