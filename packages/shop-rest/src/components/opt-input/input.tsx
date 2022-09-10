@@ -96,12 +96,7 @@ const OTPInput: React.FC<Props> = ({ token }) => {
     await window.confirmationResult
       .confirm(values)
       .then((result) => {
-        alert("OK");
-        // verifyOTP(values);
-        setTimeout(() => {
-          Router.push("/");
-          return;
-        }, 1000);
+        verifyOTP(values);
       })
       .catch((error) => {
         setErrorC("Invalid OTP");

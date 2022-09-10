@@ -2,7 +2,7 @@ import { closeModal } from "@redq/reuse-modal";
 import { Input } from "components/forms/input";
 import { AuthContext } from "contexts/auth/auth.context";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { getCookie, setCookie } from "utils/session";
 import {
@@ -30,6 +30,7 @@ export default function SignInModal() {
   const [phone, setPhone] = React.useState("");
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const ref = useRef(null);
 
   // async function phoneCallback(e) {
   //   // if (!(phone.match(/\d/g).length === 10)) {
@@ -74,18 +75,17 @@ export default function SignInModal() {
   //   }
   // }
   const getCaptcha = () => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: (response) => {
-            console.log(1, response);
-          },
+    ref.current.innerHtml = "";
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          console.log(1, response);
         },
-        authentication
-      );
-    }
+      },
+      authentication
+    );
   };
 
   const phoneCallback = async (e) => {
@@ -104,8 +104,7 @@ export default function SignInModal() {
         router.push("/verify-phone");
       })
       .catch((error) => {
-        setError("Error. STM not sent. Try again later!");
-        console.log(1, error);
+        setError("Too many request. Try again later!");
       });
     setLoading(false);
   };
@@ -136,7 +135,11 @@ export default function SignInModal() {
           </Button>
           {error.length !== 0 && <i style={{ color: "red" }}>{error}</i>}
         </div>
-        <div id="recaptcha-container" className="justify-center flex"></div>
+        <div
+          ref={ref}
+          id="recaptcha-container"
+          className="justify-center flex"
+        ></div>
       </Container>
     </Wrapper>
   );

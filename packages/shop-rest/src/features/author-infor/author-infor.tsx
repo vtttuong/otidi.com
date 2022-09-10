@@ -76,19 +76,23 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
     return currentId == user.id;
   };
 
+  const [longitude, latitude] = contactInfo
+    ? [contactInfo.longitude, contactInfo.latitude]
+    : [user.longitude, user.latitude];
+
   const MapLayout = (props) => (
     <GoogleMap
       defaultZoom={15}
       defaultCenter={{
-        lat: contactInfo.latitude || 0,
-        lng: contactInfo.longitude || 0,
+        lat: latitude,
+        lng: longitude,
       }}
       defaultOptions={defaultOptions}
     >
       <Marker
         position={{
-          lat: contactInfo.latitude || 0,
-          lng: contactInfo.longitude || 0,
+          lat: latitude,
+          lng: longitude,
         }}
       />
     </GoogleMap>
@@ -365,17 +369,21 @@ const AuthoInfor: React.FC<AuthoInforProps> = ({
           <Title className={"infosub phone"}>
             <TextFormat>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                {contactInfo.phone_number.map((number) => {
-                  let pNumber = number.replace(/[^0-9]/g, "");
-                  return (
-                    <a key={pNumber} href={`tel:${pNumber}`}>
-                      {" "}
-                      {pNumber?.replace(/^\d{1,7}/, (x) =>
-                        x.replace(/./g, "*")
-                      )}{" "}
-                    </a>
-                  );
-                })}
+                {contactInfo
+                  ? contactInfo.phone_number.map((number) => {
+                      let pNumber = number.replace(/[^0-9]/g, "");
+                      return (
+                        <a key={pNumber} href={`tel:${pNumber}`}>
+                          {" "}
+                          {pNumber?.replace(/^\d{1,7}/, (x) =>
+                            x.replace(/./g, "*")
+                          )}{" "}
+                        </a>
+                      );
+                    })
+                  : user.phone_number.replace(/^\d{1,7}/, (x) =>
+                      x.replace(/./g, "*")
+                    )}
               </div>
             </TextFormat>
           </Title>
