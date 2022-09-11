@@ -1,4 +1,5 @@
 import axios from "axios";
+import NotFound from "components/notfound";
 import Notice from "components/notice/notice";
 import { SEO } from "components/seo";
 import { ProfileProvider } from "contexts/profile/profile.provider";
@@ -10,7 +11,7 @@ import {
 } from "features/user-profile/user-profile.style";
 import Footer from "layouts/footer";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { getSettingProfile } from "utils/api/profile";
 import { getCookie, setCookie } from "utils/session";
@@ -25,6 +26,10 @@ type Props = {
 };
 
 const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
+  if (!data || data == undefined) {
+    return <NotFound />;
+  }
+
   const [dataUser, setDataUser] = useState(data);
   const [isAlert, setisAlert] = useState(false);
   const [idError, setIdError] = useState(null);
@@ -163,16 +168,18 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
         <PageWrapper>
           <ContainBody>
             <ContentContainer>
-              <SettingsContent
-                handleSubmit={handleSubmit}
-                data={dataUser}
-                deviceType={deviceType}
-                alert={isAlert}
-                error={infoError}
-                loadingUpdate={loadingUpdate}
-                loadingId={loadingId}
-                token={token}
-              />
+              {dataUser && (
+                <SettingsContent
+                  handleSubmit={handleSubmit}
+                  data={dataUser}
+                  deviceType={deviceType}
+                  alert={isAlert}
+                  error={infoError}
+                  loadingUpdate={loadingUpdate}
+                  loadingId={loadingId}
+                  token={token}
+                />
+              )}
             </ContentContainer>
           </ContainBody>
           {isAlertId ? (
@@ -204,6 +211,7 @@ export async function getServerSideProps(context) {
     context.res.end();
   }
   const data = await getSettingProfile(token);
+  console.log(data);
 
   return {
     props: {

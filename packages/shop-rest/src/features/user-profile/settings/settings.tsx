@@ -63,9 +63,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   const [successPass, setSuccessPass] = React.useState(false);
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState({
-    address: data.address,
-    latitude: data.latitude,
-    longitude: data.longitude,
+    address: data?.address,
+    latitude: data?.latitude,
+    longitude: data?.longitude,
   });
   // const [popupLocationActive, setPopupLocationActive] = useState(false);
   const [textAddress, setTextAddress] = useState("");
@@ -73,11 +73,11 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
 
   // useEffect(() => {
   //   setSelectedLocation({
-  //     address: data.address,
-  //   latitude: data.latitude,
-  //   longitude: data.longitude,
+  //     address: data?.address,
+  //   latitude: data?.latitude,
+  //   longitude: data?.longitude,
   //   });
-  // }, [data.address]);
+  // }, [data?.address]);
 
   const handleSubmitPassword = async () => {
     if (oldPass.length < 6 || pass.length < 6 || confirmPass.length < 6) {
@@ -88,15 +88,15 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
       setErrorPass(false);
       const data = await updatePass(token, oldPass, pass, confirmPass);
 
-      if (data.error) {
+      if (data?.error) {
         setErrorContent(
           "Update password failed. Try again"
-          // data.error.password ? data.error.password : data.error.new_password
+          // data?.error.password ? data?.error.password : data?.error.new_password
         );
         setErrorPass(true);
-      } else if (!data.success) {
+      } else if (!data?.success) {
         setErrorContent(
-          data.data.password ? data.data.password : data.data.new_password
+          data?.data?.password ? data?.data?.password : data?.data?.new_password
         );
         setErrorPass(true);
       } else {
@@ -114,7 +114,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
     verifyAc();
   }, []);
   const verifyAc = () => {
-    if (data.identity_verified_at) {
+    if (data?.identity_verified_at) {
       setVefifyAccount(true);
     } else {
       setVefifyAccount(false);
@@ -358,10 +358,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
               </Row>
             </div>
             <div className="profile-right">
-              {(!data.email_verified_at ||
-                !data.phone_verified_at ||
-                !data.address ||
-                data.address.length === 0) && (
+              {(!data?.email_verified_at ||
+                !data?.phone_verified_at ||
+                !data?.address ||
+                data?.address.length === 0) && (
                 <Row>
                   <div className="profile-warning">
                     <Warning />
@@ -390,7 +390,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                       />{" "}
                       )
                     </span>
-                    {data.email_verified_at ? (
+                    {data?.email_verified_at ? (
                       <b style={{ color: "#2c96e9" }}>
                         --- <FormattedMessage id="verified" />
                       </b>
@@ -404,7 +404,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                     )}
                   </Form.Label>
                   <Form.Control
-                    value={data.email}
+                    value={data?.email}
                     readOnly={true}
                     placeholder="email"
                     id="osdjfndjsksdm"
@@ -418,7 +418,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                     />
                   </Form.Label>
                   <Form.Control
-                    defaultValue={data.name}
+                    defaultValue={data?.name}
                     placeholder="name"
                     name="name"
                     id="ysifhbdhgxgd"
@@ -431,7 +431,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                       id="contactNumberTitle"
                       defaultMessage="Phone number"
                     />
-                    {data.phone_verified_at ? (
+                    {data?.phone_verified_at ? (
                       <span>
                         {"---"}
                         <b style={{ color: "#2c96e9" }}>
@@ -450,7 +450,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                   </Form.Label>
                   <Form.Control
                     name="phone"
-                    defaultValue={data.phone_number || ""}
+                    defaultValue={data?.phone_number || ""}
                     placeholder="012122121"
                     id="jhgdsdsbhv"
                   />
@@ -472,7 +472,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                           />
                         }
                         type="radio"
-                        defaultChecked={data.sex == "male" ? true : false}
+                        defaultChecked={data?.sex == "male" ? true : false}
                         // defaultChecked
                         name="sex"
                         value="male"
@@ -487,7 +487,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                           />
                         }
                         value="female"
-                        defaultChecked={data.sex == "female" ? true : false}
+                        defaultChecked={data?.sex == "female" ? true : false}
                         type="radio"
                         name="sex"
                       />
@@ -507,7 +507,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
                     <Form.Control
                       type="date"
                       name="birthday"
-                      defaultValue={data.birthday}
+                      defaultValue={data?.birthday}
                       placeholder="Date of Birth"
                       id="isdonndndjsf"
                     />
@@ -580,7 +580,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
 
                     <Form.Control
                       id="qdsdsd"
-                      defaultValue={data.facebook}
+                      defaultValue={data?.facebook}
                       placeholder="Url facebook"
                       name="facebook"
                     />
@@ -592,7 +592,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
 
                     <Form.Control
                       id="xvasdsa"
-                      defaultValue={data.skype}
+                      defaultValue={data?.skype}
                       placeholder="Url skype"
                       name="skype"
                     />
@@ -659,7 +659,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
           />
         ) : null}
 
-        {error !== null ? (
+        {error ? (
           <>
             {error.address ? (
               <Notice status="error" content={error.address} />

@@ -8,6 +8,7 @@ import { Push } from "assets/icons/Push";
 import { Review } from "assets/icons/Review";
 import { Sold } from "assets/icons/Sold";
 import ErrorMessage from "components/error-message/error-message";
+import NotFound from "components/notfound";
 import Notice from "components/notice/notice";
 import { SEO } from "components/seo";
 import { TabPanel } from "components/TabPanel/tabpanel";
@@ -60,6 +61,10 @@ const post_status = {
 };
 
 const ProfilePage: NextPage<Props> = ({ datas, token }) => {
+  if (!datas) {
+    return <NotFound />;
+  }
+
   const [activeTab, setActiveTab] = useState("postingPosts");
   const [successPush, setSuccessPush] = useState(false);
   const [data, setData] = useState(datas);
@@ -448,6 +453,7 @@ export async function getServerSideProps(context) {
       datas: data,
       token: token,
     }, // will be passed to the page component as props
+    fallback: "blocking",
   };
 }
 

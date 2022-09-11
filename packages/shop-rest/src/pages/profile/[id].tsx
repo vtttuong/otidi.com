@@ -198,7 +198,7 @@ export async function getServerSideProps(context) {
       data: data,
       currentId: currentId,
       // paths: paths,
-      fallback: true,
+      fallback: false,
       token: token,
     },
     // will be passed to the page component as props
