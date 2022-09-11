@@ -162,77 +162,77 @@ export default function CustomCarousel({
 }: Props) {
   const { query } = useRouter();
   const router = useRouter();
-  const { data, error } = useRecommendPosts();
+  // const { data, error } = useRecommendPosts();
 
-  if (error) return <ErrorMessage message={error.message} />;
-  if (!data) {
-    return (
-      <LoaderWrapper>
-        <LoaderItem>
-          <Placeholder uniqueKey="1" />
-        </LoaderItem>
-        <LoaderItem>
-          <Placeholder uniqueKey="2" />
-        </LoaderItem>
-        <LoaderItem>
-          <Placeholder uniqueKey="3" />
-        </LoaderItem>
-        <LoaderItem>
-          <Placeholder uniqueKey="4" />
-        </LoaderItem>
-      </LoaderWrapper>
-    );
-  }
-  return (
-    <div dir="ltr">
-      <Carousel
-        arrows={false}
-        responsive={responsive}
-        showDots={false}
-        slidesToSlide={1}
-        infinite={infinite}
-        containerClass="container-with-dots"
-        itemClass={itemClass}
-        autoPlay={autoPlay}
-        autoPlaySpeed={3000}
-        renderButtonGroupOutside={true}
-        additionalTransfrom={0}
-        customButtonGroup={<ButtonGroup />}
-        {...props}
-        // use dir ltr when rtl true
-      >
-        {data &&
-          data.map((item: any, index: number) => {
-            if (component) return component(item);
-            return (
-              <div
-                style={{ padding: "0 15px", overflow: "hidden" }}
-                key={index}
-              >
-                <FoodCard
-                  name={item.name}
-                  image={item.main_image.url}
-                  address={item.user.address}
-                  createdAt={item.created_at}
-                  price={item.price}
-                  unit={item.unit}
-                  isFree={false}
-                  typeOfPost={item.type}
-                  data={item}
-                  prioriry={item.is_priority}
-                  avatar={item.user.avatar}
-                  user_name={item.user.name}
-                  onClick={() => {
-                    router.push(
-                      "/[type]/[slug]",
-                      `/${item.category_type}/${item.slug}`
-                    );
-                  }}
-                />
-              </div>
-            );
-          })}
-      </Carousel>
-    </div>
-  );
+  // if (error) return <ErrorMessage message={error.message} />;
+  // if (!data) {
+  //   return (
+  //     <LoaderWrapper>
+  //       <LoaderItem>
+  //         <Placeholder uniqueKey="1" />
+  //       </LoaderItem>
+  //       <LoaderItem>
+  //         <Placeholder uniqueKey="2" />
+  //       </LoaderItem>
+  //       <LoaderItem>
+  //         <Placeholder uniqueKey="3" />
+  //       </LoaderItem>
+  //       <LoaderItem>
+  //         <Placeholder uniqueKey="4" />
+  //       </LoaderItem>
+  //     </LoaderWrapper>
+  //   );
+  // }
+  // return (
+  //   <div dir="ltr">
+  //     <Carousel
+  //       arrows={false}
+  //       responsive={responsive}
+  //       showDots={false}
+  //       slidesToSlide={1}
+  //       infinite={infinite}
+  //       containerClass="container-with-dots"
+  //       itemClass={itemClass}
+  //       autoPlay={autoPlay}
+  //       autoPlaySpeed={3000}
+  //       renderButtonGroupOutside={true}
+  //       additionalTransfrom={0}
+  //       customButtonGroup={<ButtonGroup />}
+  //       {...props}
+  //       // use dir ltr when rtl true
+  //     >
+  //       {data &&
+  //         data.map((item: any, index: number) => {
+  //           if (component) return component(item);
+  //           return (
+  //             <div
+  //               style={{ padding: "0 15px", overflow: "hidden" }}
+  //               key={index}
+  //             >
+  //               <FoodCard
+  //                 name={item.name}
+  //                 image={item.main_image.url}
+  //                 address={item.user.address}
+  //                 createdAt={item.created_at}
+  //                 price={item.price}
+  //                 // unit={item.unit}
+  //                 isFree={false}
+  //                 // typeOfPost={item.type}
+  //                 data={item}
+  //                 prioriry={item.is_priority}
+  //                 avatar={item.user.avatar}
+  //                 user_name={item.user.name}
+  //                 onClick={() => {
+  //                   router.push(
+  //                     "/[type]/[slug]",
+  //                     `/${item.category_type}/${item.slug}`
+  //                   );
+  //                 }}
+  //               />
+  //             </div>
+  //           );
+  //         })}
+  //     </Carousel>
+  //   </div>
+  // );
 }

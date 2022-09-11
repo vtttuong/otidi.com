@@ -10,7 +10,7 @@ import {
   PostInfo,
   SellLabel,
   ButtonText,
-} from "../post-card.style";
+} from "../product-card.style";
 import { useCart } from "contexts/cart/use-cart";
 import { Counter } from "components/counter/counter";
 import { cartAnimation } from "utils/cart-animation";

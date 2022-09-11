@@ -8,7 +8,7 @@ import {
   PostCardWrapper,
   PostImageWrapper,
   PostInfo,
-} from "../post-card.style";
+} from "../product-card.style";
 import { useModal } from "contexts/modal/use-modal";
 import { useRouter } from "next/router";
 const QuickViewMobile = dynamic(

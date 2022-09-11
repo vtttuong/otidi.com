@@ -9,7 +9,7 @@ import {
   PostName,
   AuthorInfo,
   SellLabel,
-} from "../post-card.style";
+} from "../product-card.style";
 
 type PostCardProps = {
   title: string;

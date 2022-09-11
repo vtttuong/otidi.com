@@ -13,7 +13,7 @@ import {
   SellLabel,
   SellLabelTop,
   BoxAvatar,
-} from "../post-card.style";
+} from "../product-card.style";
 import { FormattedMessage } from "react-intl";
 import AddressIcon from "../../../assets/images/location.png";
 import { formatRelativeTime } from "utils/formatRelativeTime";

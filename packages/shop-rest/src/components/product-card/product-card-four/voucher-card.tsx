@@ -9,7 +9,7 @@ import {
   FoodCardWrapper,
   FoodImageWrapper,
   PostMeta,
-} from "../post-card.style";
+} from "../product-card.style";
 
 type CardProps = {
   data?: any;
