@@ -386,11 +386,6 @@ export async function getNotifications(
       notifications.push(notification);
     });
 
-    console.log(
-      "🚀 ~ file: profile.ts ~ line 302 ~ notifications",
-      notifications
-    );
-
     return notifications;
   } catch (err) {
     return [];

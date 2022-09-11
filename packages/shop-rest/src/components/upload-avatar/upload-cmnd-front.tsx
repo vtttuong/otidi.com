@@ -8,6 +8,7 @@ import { Button } from "../button/button";
 import { Camera } from "assets/icons/camera";
 import { getCookie } from "utils/session";
 import placeholder from "./placeholder.png";
+import Image from "components/image/image";
 
 export const verifyFile = (file, acceptedFileExtensions) => {
   const { name } = file;
@@ -73,7 +74,9 @@ const UploadCMND: React.FC<{}> = () => {
     return (
       <img
         className="front-image"
-        src={profileImage || placeholder}
+        src={`${
+          profileImage && profileImage !== "null" ? profileImage : placeholder
+        }`}
         alt="user-logo"
       />
     );

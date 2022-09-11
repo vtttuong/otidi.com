@@ -82,13 +82,19 @@ export const MobileBanner: React.FC<Props> = ({ intlTitleId, banner }) => {
 
   return (
     <Box
-      style={{
-        backgroundImage: `url(${banner.url})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-      }}
+      // style={{
+      //   backgroundImage: `url(${banner.url})`,
+      //   backgroundSize: "cover",
+      //   backgroundRepeat: "no-repeat",
+      // }}
       display={["flex", "flex", "none"]}
     >
+      <Image>
+        <img
+          src={banner.url}
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      </Image>
       <Content>
         {/* <ContentRow>
           <Description>

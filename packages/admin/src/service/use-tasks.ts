@@ -59,8 +59,6 @@ export async function sortTasks(object: any) {
 }
 
 export async function updateTask(id: number, vc: Task) {
-  console.log(vc);
-
   const options = {
     method: "PUT",
     headers: {

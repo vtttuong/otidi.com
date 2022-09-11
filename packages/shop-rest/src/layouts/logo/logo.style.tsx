@@ -10,9 +10,6 @@ export const LogoBox = styled.span(
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    "@media (max-width: 426px)": {
-      width: "50px",
-    },
   })
 );
 
@@ -20,7 +17,7 @@ export const LogoImage = styled.img({
   display: "block",
   backfaceVisibility: "hidden",
   maxWidth: 150,
-  "@media (max-width: 426px)": {
-    maxWidth: "70px",
+  "@media (max-width: 768px)": {
+    maxWidth: "80px",
   },
 });

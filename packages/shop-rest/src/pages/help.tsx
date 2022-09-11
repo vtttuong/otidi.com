@@ -50,7 +50,6 @@ type FaqsProps = {
   faqs: any;
 };
 const Faqs: React.FC<FaqsProps> = ({ faqs }) => {
-  console.log("🚀 ~ file: help.tsx ~ line 53 ~ faqs", faqs);
   return (
     <Modal>
       <SEO title="F.A.Q - Otodi.vn" description="F.A.Q Details" />
@@ -68,10 +67,6 @@ const Faqs: React.FC<FaqsProps> = ({ faqs }) => {
 
 export async function getServerSideProps(context) {
   const faqs = await getFaqs();
-  console.log(
-    "🚀 ~ file: help.tsx ~ line 95 ~ getServerSideProps ~ faqs",
-    faqs
-  );
   return {
     props: {
       faqs: faqs,

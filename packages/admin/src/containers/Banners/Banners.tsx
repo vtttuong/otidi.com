@@ -93,13 +93,9 @@ export default function BannersAll() {
   }
 
   const onEdit = React.useCallback(() => {
-    console.log(checkedId);
-
     let updatedBanner = datas
       ? datas.filter((i) => i.id === checkedId.slice(-1)[0])[0]
       : null;
-
-    console.log(updatedBanner);
 
     if (updatedBanner) {
       dispatch({

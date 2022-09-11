@@ -30,7 +30,6 @@ const ProfilePage: NextPage<Props> = ({
   initialChatId,
 }) => {
   const router = useRouter();
-  console.log(chats);
 
   let initialData = {
     chatId: chatId,

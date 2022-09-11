@@ -282,8 +282,6 @@ const Step2 = (props) => {
     return <div></div>;
   }
 
-  console.log("STATE: ", state);
-
   return (
     <div>
       <Row>
@@ -536,7 +534,6 @@ const PostFormUpdate: React.FC<Props> = ({ deviceType, title, brands }) => {
     };
 
     for (var value of formdata.entries()) {
-      console.log(value);
     }
 
     axios

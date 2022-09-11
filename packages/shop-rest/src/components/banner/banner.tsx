@@ -21,7 +21,12 @@ export const Banner = ({ banner }) => {
 
   return (
     <Box display={["none", "none", "flex"]}>
-      <Image backgroundImage={`url(${banner.url})`} />
+      <Image>
+        <img
+          src={banner.url}
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      </Image>
       <Content>
         {/* <Title>{"ALLO"}</Title>
         <Description>ALLLOO</Description> */}

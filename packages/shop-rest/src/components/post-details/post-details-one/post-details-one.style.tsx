@@ -331,6 +331,10 @@ export const SubDetail = styled.div`
       content: "";
     }
   }
+  @media (max-width: 786px) {
+    width: 100%;
+    margin: 5px 0;
+  }
 `;
 export const Detail = styled.div`
   display: flex;

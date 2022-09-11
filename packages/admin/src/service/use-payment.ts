@@ -50,8 +50,6 @@ export default function usePayments(variables: Props) {
 
   let url = baseUrl + "/payment-transactions?" + parsed;
 
-  console.log(url);
-
   const { data, mutate, error } = useSWR(url, productFetcher);
 
   const loading = !data && !error;

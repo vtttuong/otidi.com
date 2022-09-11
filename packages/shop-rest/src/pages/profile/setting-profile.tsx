@@ -129,8 +129,6 @@ const ProfilePage: NextPage<Props> = ({ data, token, deviceType }) => {
         } else if (response.data && !response.data.success) {
           const error = response.data.data;
 
-          console.log(error);
-
           setInfoError({
             name: error.name
               ? "User name must have length greater than 0!"

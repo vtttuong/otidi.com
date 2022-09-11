@@ -39,7 +39,7 @@ export const Posts: React.FC<PostsProps> = () => {
   const brandId = useAppState("brandId");
   const modelId = useAppState("modelId");
 
-  const SIZE = 8;
+  const SIZE = 12;
   const {
     posts,
     error,

@@ -118,8 +118,6 @@ export default function Vouchers() {
     text,
   });
 
-  console.log("DATA: ", data);
-
   const Image = styled("img", () => ({
     width: "100%",
     height: "auto",

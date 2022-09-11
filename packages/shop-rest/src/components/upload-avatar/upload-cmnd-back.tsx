@@ -73,7 +73,9 @@ const UploadCMNDBack: React.FC<{}> = () => {
     return (
       <img
         className="front-image"
-        src={profileImage || placeholder}
+        src={
+          profileImage && profileImage !== "null" ? profileImage : placeholder
+        }
         alt="user-logo"
       />
     );

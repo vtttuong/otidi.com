@@ -36,7 +36,6 @@ type Props = {
 const EditPost: NextPage<Props> = ({ brands, post, deviceType }) => {
   const router = useRouter();
 
-  console.log(post);
   if (!post) {
     return <NotFound />;
   }

@@ -280,8 +280,6 @@ const Step2 = (props) => {
     return <div></div>;
   }
 
-  console.log("STATE: ", state);
-
   return (
     <div>
       <Row>
@@ -533,8 +531,6 @@ const PostForm: React.FC<Props> = ({ deviceType, title, brands }) => {
         configs
       )
       .then((response) => {
-        console.log(response);
-
         if (
           (response.status === 200 || response.status === 201) &&
           response.data.success

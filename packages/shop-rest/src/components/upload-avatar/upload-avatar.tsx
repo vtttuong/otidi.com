@@ -72,12 +72,14 @@ const UploadAvatar: React.FC<{}> = () => {
     const profileImage = imageData.userProfileImage
       ? imageData.userProfileImage
       : avatar;
-    console.log("RENDER");
 
-    return profileImage ? (
-      <img src={profileImage} alt="user-logo" />
-    ) : (
-      <Image url={placeholder} />
+    return (
+      <img
+        src={
+          profileImage && profileImage != "null" ? profileImage : placeholder
+        }
+        alt="user-logo"
+      />
     );
   };
 

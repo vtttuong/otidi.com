@@ -31,7 +31,6 @@ const VoucherCard: React.FC<CardProps> = ({
   setTimeout(() => {
     setLoadding(0);
   }, 2000);
-  console.log(data, 888);
   var used = false;
   if (data.used_at || data.voucher?.deleted_at) {
     used = true;

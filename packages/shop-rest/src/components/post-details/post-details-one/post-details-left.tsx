@@ -81,7 +81,6 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
   const [locationHref, setLocationHref] = React.useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
-  console.log(locationHref);
 
   useEffect(() => {
     getPost();
@@ -381,7 +380,7 @@ const PostDetailsLeft: React.FunctionComponent<PostDetailsProps> = ({
             </div>
           </PostPrice>
 
-          <Detail className={"detail"}>
+          <Detail>
             <H4Text>
               <FormattedMessage id="detailPost" defaultMessage="Detail post" />
             </H4Text>

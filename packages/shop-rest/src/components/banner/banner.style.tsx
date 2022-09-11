@@ -10,6 +10,7 @@ import {
   border,
 } from "styled-system";
 import css from "@styled-system/css";
+import { ContainBody } from "features/user-profile/user-profile.style";
 
 export const BoxSave = styled.div`
   width: 100%;
@@ -88,7 +89,7 @@ export const BtnRemove = styled.button`
 
 export const Box = styled.div<any>(
   css({
-    height: ["auto", "auto", "750px"],
+    height: ["auto", "auto", "fit-content"],
   }),
   {
     display: "flex",
@@ -97,38 +98,30 @@ export const Box = styled.div<any>(
     alignItems: "center",
     width: "100%",
     position: "relative",
+    marginTop: "95px",
 
-    "@media (max-width: 990px)": {
-      padding: "80px 0 25px",
-      height: "600px",
-    },
-    "@media (max-width: 1441px)": {
-      height: "600px",
-    },
-    "@media (max-width: 768px)": {
-      height: "auto",
-    },
+    // "@media (max-width: 990px)": {
+    //   padding: "80px 0 25px",
+    //   height: "365px",
+    // },
+    // "@media (max-width: 1441px)": {
+    //   height: "365px",
+    // },
+    // "@media (max-width: 768px)": {
+    //   height: "auto",
+    // },
   },
   compose(space, color, layout, position, flexbox, border)
 );
 export const Image = styled.div<any>(
   css({
-    backgroundSize: ["contain"],
+    // backgroundSize: ["contain"],
   }),
   {
-    width: "100%",
-    height: "100%",
-    backgroundPosition: "bottom",
-    backgroundRepeat: "no-repeat",
-    backgroundColor: "#f9f9f9",
-    position: "absolute",
-    top: 0,
-    left: 0,
     "@media (max-width: 990px) and (min-width: 768px)": {
       backgroundPosition: "inherit",
     },
-  },
-  background
+  }
 );
 
 export const Content = styled.div(
@@ -137,16 +130,8 @@ export const Content = styled.div(
     pt: [0],
   }),
   {
-    position: "relative",
     zIndex: 2,
     width: "100%",
-    top: -40,
-    "@media (max-width: 990px)": {
-      top: 20,
-    },
-    "@media (max-width: 426px)": {
-      top: 0,
-    },
   }
 );
 export const Title = styled.h2(
