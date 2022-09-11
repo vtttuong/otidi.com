@@ -30,7 +30,9 @@ const Uploader: React.FC<Props> = ({
   const ACCEPTED_SIZE = 512 * 1000;
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/*",
+    accept: {
+      "image/*": [".jpeg", ".png"],
+    },
     multiple: true,
     onDrop: useCallback(
       (acceptedFiles) => {

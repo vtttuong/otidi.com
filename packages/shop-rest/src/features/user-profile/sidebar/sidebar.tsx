@@ -32,7 +32,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
   const [show, setShow] = useState(false);
   const [pushN, setPush] = useState([]);
   React.useEffect(() => {
-    dataPost.posts.map((d) => (d.advertise == true ? pushN.push(d) : null));
+    dataPost?.posts.map((d) => (d.advertise == true ? pushN.push(d) : null));
     setPush(pushN);
   }, [dataPost]);
 
@@ -80,7 +80,9 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             </div>
             <div>
               <FormattedMessage id="post" defaultMessage="Post" />:{" "}
-              <span style={{ color: "#009E7F" }}>{dataPost.posts?.length}</span>{" "}
+              <span style={{ color: "#009E7F" }}>
+                {dataPost?.posts?.length}
+              </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
           </div>
@@ -91,7 +93,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             <div>
               <FormattedMessage id="push" defaultMessage="Push" />:{" "}
               <span style={{ color: "#009E7F" }}>
-                {dataPost.pushing_posts?.length}
+                {dataPost?.pushing_posts?.length}
               </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
@@ -103,7 +105,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             <div>
               <FormattedMessage id="waitingPosts" defaultMessage="Vip posts" />:{" "}
               <span style={{ color: "#009E7F" }}>
-                {dataPost.waiting_approve_posts.length}
+                {dataPost?.waiting_approve_posts.length}
               </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
@@ -115,7 +117,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
             <div>
               <FormattedMessage id="soldPosts" defaultMessage="Sold" />:{" "}
               <span style={{ color: "#009E7F" }}>
-                {dataPost.sold_posts.length}
+                {dataPost?.sold_posts.length}
               </span>{" "}
               <FormattedMessage id="times" defaultMessage="Times" />
             </div>
@@ -169,7 +171,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                     defaultMessage="Posting Posts"
                   />{" "}
                   <span style={{ color: "#009E7F" }}>
-                    ({dataPost.active_posts.length})
+                    ({dataPost?.active_posts.length})
                   </span>{" "}
                 </div>
               </div>
@@ -191,7 +193,7 @@ const SidebarCategory: React.FC<SidebarProps> = ({
                     defaultMessage="Waiting Posts"
                   />{" "}
                   <span style={{ color: "#009E7F" }}>
-                    ({dataPost.waiting_approve_posts.length})
+                    ({dataPost?.waiting_approve_posts.length})
                   </span>{" "}
                 </div>
               </div>

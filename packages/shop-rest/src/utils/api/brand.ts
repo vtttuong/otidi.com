@@ -11,7 +11,6 @@ export async function getBrands() {
 
   const data = await fetch(baseUrl + `/brands`, options);
   const dataJson = await data.json();
-  console.log(dataJson);
 
   return dataJson ? dataJson.data : [];
 }
